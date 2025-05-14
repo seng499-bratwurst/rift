@@ -1,2 +1,2 @@
 # bratbase
-Backend for Bratwurst project
+Backend for Bratwurst project. The backend is written in GO.
