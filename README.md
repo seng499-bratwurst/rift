@@ -5,10 +5,18 @@ Backend for Bratwurst project written in C# using the .NET framework.
 
 To get started with developing the Rift project, install the [.NET 9.0 SDK](https://dotnet.microsoft.com/en-us/download).
 
-Once installed, to run the server:
+For making and running DB migrations install [EF Tools](https://learn.microsoft.com/en-us/ef/core/cli/dotnet#installing-the-tools)
+
+Once installed, to run the api and database:
 
 * Navigate to the `/App` subdirectory
-* Run `dotnet run` in the shell of your choice
+* Run `docker compose up --build` in the shell of your choice
+
+## Creating and Running Migrations
+
+1. Make changes to model classes (/App/Models)
+2. run `dotnet ef migration add <migration-name>`
+3. run `dotnet ef database update`
 
 ## Contributions
 
