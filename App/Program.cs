@@ -11,6 +11,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddControllers();
 
+builder.Services.AddScoped<UserService>();
+
 var app = builder.Build();
 
 app.UseRouting();

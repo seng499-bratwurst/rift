@@ -5,18 +5,17 @@ using Rift.Models;
 [Route("api/[controller]")]
 public class UserController : ControllerBase
 {
-    private readonly ApplicationDbContext _dbContext;
+    private readonly UserService _userService;
 
-    public UserController(ApplicationDbContext dbContext)
+    public UserController(UserService userService)
     {
-        _dbContext = dbContext;
+        _userService = userService;
     }
 
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] User data)
     {
-        _dbContext.Users.Add(data);
-        await _dbContext.SaveChangesAsync();
-        return Created($"/register/{data.id}", data);
+        var registeredUser = await _userService.RegisterUserAsync(data);
+        return Created($"/register/{registeredUser.id}", registeredUser);
     }
 }
