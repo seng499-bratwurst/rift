@@ -11,6 +11,8 @@ Once installed, to run the api and database:
 
 * Navigate to the `/App` subdirectory
 * Run `docker compose up --build` in the shell of your choice
+* Once running, view the current endpoints [Here](http://localhost:5000/swagger/index.html)
+
 
 ## Creating and Running Migrations
 

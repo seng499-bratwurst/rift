@@ -1,7 +1,20 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Rift.Models;
+using NSwag;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddOpenApiDocument(options =>
+{
+    options.PostProcess = document =>
+    {
+        document.Info = new OpenApiInfo
+        {
+            Version = "v1",
+            Title = "Rift API",
+            Description = "The backend API for the ONC chatbot",
+        };
+    };
+});
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
@@ -21,5 +34,11 @@ app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();
 });
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseOpenApi();
+    app.UseSwaggerUi();
+}
 
 app.Run();
