@@ -5,7 +5,7 @@ using Rift.LLM;
 using DotNetEnv;
 
 
-DotNetEnv.Env.Load(".env");
+
 
 var builder = WebApplication.CreateBuilder(args);
 
