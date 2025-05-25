@@ -9,8 +9,6 @@ DotNetEnv.Env.Load(".env");
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Configuration
-    .AddEnvironmentVariables(); 
 
 builder.Services.AddOpenApiDocument(options =>
 {

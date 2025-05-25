@@ -9,6 +9,9 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: "Development"
       ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD};Database=${POSTGRES_DB}"
+      LlmSettings__TogetherAI__ApiKey: ${TOGETHER_API_KEY}
+    volumes:
+      - ./.env:/.env 
     depends_on:
       - postgres
   
