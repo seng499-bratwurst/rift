@@ -33,7 +33,7 @@ builder.Services.AddControllers();
 
 builder.Services.AddScoped<UserService>();
 
-var llmProviderName = builder.Configuration["LlmSettings:Provider"];
+var llmProviderName = builder.Configuration["LLmSettings:Provider"];
 
 switch (llmProviderName)
 {

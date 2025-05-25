@@ -14,24 +14,34 @@ namespace Rift.LLM
         private readonly string _endpoint;
         private readonly string _model;
 
+        // Constructor reads values from appsettings.json
         public HuggingFace(IConfiguration config)
         {
             _httpClient = new HttpClient();
 
-            _apiKey = config["LlmSettings:TogetherAI:ApiKey"]!;
-            _endpoint = config["LlmSettings:TogetherAI:Endpoint"]!;
-            _model = config["LlmSettings:TogetherAI:Model"]!;
+            // Loading API Key, endpoint, and model from appsettings.json
+            _apiKey = config["LLmSettings:HuggingFace:ApiKey"]!;
+            _endpoint = config["LLmSettings:HuggingFace:Endpoint"]!;
+            _model = config["LLmSettings:HuggingFace:Model"]!;
         }
 
+        // Sends a chat completion request to Hugging Face endpoint
         public async Task<string> GenerateResponseAsync(string prompt)
         {
+            // Equivalent cURL:
+            // curl https://router.huggingface.co/together/v1/chat/completions \
+            // -H 'Authorization: Bearer hf_xxx' \
+            // -H 'Content-Type: application/json' \
+            // -d '{ "messages": [{ "role": "user", "content": "..." }], "model": "...", "stream": false }'
+
             var payload = new
             {
                 model = _model,
                 messages = new[]
                 {
                     new { role = "user", content = prompt }
-                }
+                },
+                stream = false
             };
 
             var json = JsonSerializer.Serialize(payload);
@@ -55,7 +65,10 @@ namespace Rift.LLM
                             .GetProperty("content")
                             .GetString();
 
-            return result ?? "No response from model.";
+            
+            Console.WriteLine($"[DEBUG] Hugging Face Endpoint: {_endpoint}");
+
+            return result ?? "No response from Hugging Face model.";
         }
     }
 }
