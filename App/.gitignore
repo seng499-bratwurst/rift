@@ -6,7 +6,6 @@
 # Environment & User-Specific Files #
 ##################
 .env
-sample.env
 *.rsuser
 *.suo
 *.user
