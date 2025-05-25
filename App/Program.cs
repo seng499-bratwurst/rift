@@ -1,7 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NSwag;
+using Rift;
+using Rift.LLM;
+using DotNetEnv;
+
+
+
 
 var builder = WebApplication.CreateBuilder(args);
+
 
 builder.Services.AddOpenApiDocument(options =>
 {
@@ -25,6 +32,20 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddControllers();
 
 builder.Services.AddScoped<UserService>();
+
+var llmProviderName = builder.Configuration["LlmSettings:Provider"];
+
+switch (llmProviderName)
+{
+    case "TogetherAI":
+        builder.Services.AddScoped<ILlmProvider, TogetherAI>();
+        break;
+    case "HuggingFace":
+        builder.Services.AddScoped<ILlmProvider, HuggingFace>();
+        break;
+    default:
+        throw new Exception($"Unsupported LLM provider: {llmProviderName}");
+}
 
 var app = builder.Build();
 
