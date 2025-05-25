@@ -31,6 +31,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddControllers();
 
+builder.Services.AddHttpClient<ChromaDBClient>();
 builder.Services.AddScoped<UserService>();
 
 var llmProviderName = builder.Configuration["LLmSettings:Provider"];

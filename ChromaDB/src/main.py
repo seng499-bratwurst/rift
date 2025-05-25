@@ -14,7 +14,7 @@ class AddRequest(BaseModel):
     text: str
 
 class QueryRequest(BaseModel):
-    text: list[float]
+    text: str
     n_results: int = 5
 
 @app.post("/add")
