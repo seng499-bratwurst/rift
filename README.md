@@ -20,6 +20,17 @@ Once installed, to run the api and database:
 2. run `dotnet ef migration add <migration-name>`
 3. run `dotnet ef database update`
 
+## ChromaDB
+
+The [ChromaDB](https://docs.trychroma.com/docs/overview/introduction) stores the document embeddings and is accessed though a small Python API found in the `/ChromaDB` subdirectory.
+
+For contributing to the Python API you will need to complete the following steps:
+
+* **(Optional)** Setup a Python virtual environment by running `python3 -m venv .venv` in the root directory of the project. Don't forget to activate the venv when working on the API!
+* Install the required packages by running `pip install -r requirements.txt` in the `/ChromaDB` subdirectory
+
+
+
 ## Contributions
 
 We will be using the [Microsoft .NET Coding Conventions](https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/). A linter will be set up soon, but until then I trust y'all to self-police.
