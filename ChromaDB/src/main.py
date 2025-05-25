@@ -1,21 +1,34 @@
+from fastapi import FastAPI
 import chromadb
+from chromadb.config import Settings
+from pydantic import BaseModel
 
-chroma_client = chromadb.Client()
+app = FastAPI()
 
+
+chroma_client = chromadb.Client(Settings(persist_directory="/chroma_data"))
 collection = chroma_client.create_collection(name="test_collection")
 
-collection.upsert(
-  documents=[
-    "This is a document about water.",
-    "This is a document about land.",
-    "This is a document about coding.",
-  ],
-  ids=["id1", "id2", "id3"],
-)
+class AddRequest(BaseModel):
+    id: str
+    text: str
 
-results = collection.query(
-  query_texts=["This is a query about the Oceans."],
-  n_results=3
-)
+class QueryRequest(BaseModel):
+    text: list[float]
+    n_results: int = 5
 
-print("Results:", results)
+@app.post("/add")
+def add(req: AddRequest):
+    collection.add(
+        documents=[req.text],
+        ids=[req.id],
+    )
+    return {"status": "added"}
+
+@app.post("/query")
+def query(req: QueryRequest):
+    result = collection.query(
+        query_texts=[req.text],
+        n_results=req.n_results
+    )
+    return result
