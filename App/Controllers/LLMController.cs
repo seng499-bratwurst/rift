@@ -43,16 +43,20 @@ namespace Rift.Controllers
     var query = System.Web.HttpUtility.ParseQueryString(string.Empty);
 
     foreach (var prop in json.EnumerateObject())
+{
+    if (prop.Name == "token")
     {
-        if (prop.Name == "token")
-        {
-            query["token"] = token; // override placeholder token
-        }
-        else if (prop.Name != "service" && !string.IsNullOrWhiteSpace(prop.Value.ToString()))
+        query["token"] = token; // override placeholder token
+    }
+    else if (prop.Name == "method" || prop.Name == "locationName")
+    {
+        if (!string.IsNullOrWhiteSpace(prop.Value.ToString()))
         {
             query[prop.Name] = prop.Value.ToString();
         }
     }
+}
+
 
             // Step 5: Construct the full ONC API URL
     var rawQuery = query.ToString()?.Replace("+", " ");
@@ -60,7 +64,7 @@ namespace Rift.Controllers
         Console.WriteLine("[DEBUG] ONC API URL: " + oncApiUrl);
 
         // Step 6: Call the ONC API
-        var oncResponse = await _httpClient.GetAsync("https://data.oceannetworks.ca/api/locations?method=get&token=436325df-ad3e-43e8-a00f-69c214700472&locationName=Cambridge Bay");
+        var oncResponse = await _httpClient.GetAsync(oncApiUrl);
         if (!oncResponse.IsSuccessStatusCode)
             return StatusCode((int)oncResponse.StatusCode, $"ONC API error: {oncResponse.StatusCode}");
 
