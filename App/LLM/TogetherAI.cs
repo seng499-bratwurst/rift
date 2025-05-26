@@ -20,9 +20,9 @@ namespace Rift.LLM
             _httpClient = new HttpClient();
 
             // Loading API Key, endpoint, and model form appsetting.json
-            _apiKey = config["LlmSettings:TogetherAI:ApiKey"]!;
-            _endpoint = config["LlmSettings:TogetherAI:Endpoint"]!;
-            _model = config["LlmSettings:TogetherAI:Model"]!;
+            _apiKey = config["LLmSettings:TogetherAI:ApiKey"]!;
+            _endpoint = config["LLmSettings:TogetherAI:Endpoint"]!;
+            _model = config["LLmSettings:TogetherAI:Model"]!;
         }
 
         // Main function which creates the cURL request and sends it to the LLM
@@ -83,6 +83,7 @@ namespace Rift.LLM
                             .GetProperty("content")
                             .GetString();
 
+            Console.WriteLine($"[DEBUG] TogetherAI Endpoint: {_endpoint}");
             // returning the message received form TogetherAI, if no reponse return the default message
             return result ?? "No response from model.";
         }
