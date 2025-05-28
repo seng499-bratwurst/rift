@@ -2,7 +2,7 @@ version: '3.8'
 services:
   app:
     build:
-      context: .
+      context: ./App
       dockerfile: Dockerfile
     ports:
       - "5000:8080"
@@ -16,6 +16,15 @@ services:
     depends_on:
       - postgres
   
+  chromadb:
+    build: 
+      context: ./ChromaDB
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - chroma_data:/chroma_data
+
   postgres:
     image: postgres:latest
     environment:
@@ -26,6 +35,7 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-  
+
 volumes:
   postgres_data:
+  chroma_data:
