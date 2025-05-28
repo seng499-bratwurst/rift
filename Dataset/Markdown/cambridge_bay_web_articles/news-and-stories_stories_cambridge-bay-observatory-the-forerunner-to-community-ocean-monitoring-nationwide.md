@@ -1,0 +1,25 @@
+# Source: https://www.oceannetworks.ca/news-and-stories/stories/cambridge-bay-observatory-the-forerunner-to-community-ocean-monitoring-nationwide/
+
+True ocean observation involves multiple perspectives, which was a key driver behind western science and Indigenous ocean knowledge joining forces with the launch of Canadaâs first community-run cabled ocean observatory in October 2012.
+Ten years on, the pioneering partnership between Ocean Networks Canada (ONC) and the people of Cambridge Bay is going strong, and it has been the inspiration for a network of other community-run observatories on all three coasts of Canada.
+Community Ocean Observatories supported by ONC.
+Extensive community consultations have shaped how the Cambridge Bay Observatory was equipped, and all modifications and upgrades since then. ONC works closely with the community to support their current information needs in addition to collecting valuable ocean data for the benefit of generations to come. This model has shaped how ONC engages with community partners, with an emphasis on local leadership.
+In September 2022 a maintenance team from ONC visited Cambridge Bayâit was the first full recovery of the observatory platform since 2019 due to COVID-19 restrictions. While there, the team interviewed community members and partners to share their memories and vision for the Cambridge Bay Observatory.
+We invite you to watch these videos recorded by Ryan Flagg, manager, community based monitoring, one of the ONC staff who has been involved throughout the decade.
+Videos: Meet Bruce Kambarami (Cambridge Bay resident); Gerry Chidley and Daniel McIsaac (from Arctic Research Foundation); Mia Otokiak (Cambridge Bay resident & ONC's first Youth Science Ambassador); and Millie Mannering (Scholar, Our World Underwater Scholarship Society).
+Research in the Arctic
+The observatoryâwhich consists of an onshore meteorological station and a shallow underwater cabled sensor networkâcollects valuable baseline and long-series data for tracking the changing ocean and sea ice conditions. Research from the observatory has yielded scientific publications including the following.
+Lucianne Marshall, now an ONC Community Support Specialist, wrote her masterâs thesis on the nutrient, phytoplankton and environmental dynamics in the Cambridge Bay inlet during the transition from sea-ice to open waters in the 2016 spring-summer season.
+Phytoplankton produce oxygen and nutrients for other organisms through photosynthesis. With 71% of the Earth covered by the ocean, phytoplankton are responsible for producing up to 50% of the oxygen we breathe.
+The study provided a first-time comparison between physical measurements with observations gathered via the Cambridge Bay Observatory's sensors.
+Luci Marshall lowers incubation bottles into the water to study carbon fixation and nutrient uptake by phytoplankton in Cambridge Bay. This helps us understand the primary production (phytoplankton growth) in the Arctic from sea-ice to open waters.
+UVic PhD candidate Patrick Duke also examined seasonal processes in the Arctic. His paper explored the marine carbon system processes through the complete cycle of sea-ice growth and melt using the ONC Cambridge Bay Observatoryâs unique ocean carbon measurements.
+"Studying CO2 in the ocean helps us understand how the ocean will be impacted by climate change and respond to increasing fossil fuel emissions,â says Duke, âWe [my co-authors and I] analyzed processes impacting the marine carbon cycle at the site and discovered the Canadian Arctic is already severely impacted by ocean acidification.â
+Patrick Duke & Vishnu Nandan taking calibration samples for the ONC sensors in June 2016.
+Jeannette Bedard, now an ONC Scientific Data Specialist, conducted a year-long study of the underwater soundscape of Cambridge Bay in 2015.
+âUnlike other Arctic locations considered to date, this site was louder when covered in ice with the loudest times occurring in April,â says Bedard, âSounds of anthropogenic origin dominated the soundscape with ten times more snowmobile traffic on ice than open water boat traffic.â
+The study would later be a chapter (âUnderwater Soundscape of Cambridge Bayâ) in Bedard's dissertation.
+âThe Arctic is experiencing more rapid climate change than regions at lower latitudes,â says Richard Dewey, ONC associate director, science. âA long-standing prediction is that, with warmer temperatures and longer summers, sea-ice melt and sea-ice freeze-up would occur earlier and later in the year, respectively. We now have some direct evidence of this.â
+In 2020, the data revealed that sea ice freeze-up occurred on October 27, the latest date in eight years of monitoring the Arctic Ocean. By comparison, since 2012 the average date of freeze-up is October 5, a full three weeks earlier than 2020.
+Arctic Observing is a science priority for ONC, and as we look forward to the next decade, ONC and Cambridge Bay will continue to support ocean and planet sustainability for future generations.
+Read the full anniversary story and explore the timeline.

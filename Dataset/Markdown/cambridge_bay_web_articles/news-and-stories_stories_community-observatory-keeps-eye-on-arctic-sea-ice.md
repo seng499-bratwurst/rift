@@ -1,0 +1,10 @@
+# Source: https://www.oceannetworks.ca/news-and-stories/stories/community-observatory-keeps-eye-on-arctic-sea-ice/
+
+The University of Victoriaâs Ocean Networks Canada (ONC) is making its first foray into the Arctic, just as the sea ice extent is setting a new record low.
+The observatory has been granted a five-year research license from the Nunavut Research Institute for a cabled seafloor observatory system and surface weather station in the coastal hamlet of Cambridge Bay, Nunavut. The community observatory, using technologies developed by UVicâs VENUS and NEPTUNE observatories, intends to provide year-round, near real-time undersea monitoring of the northern environment, and to make research data available to the community for educational and other purposes.
+Cambridge Bay, located in Canada's Arctic, will be the home of ONC's newest community observatory
+Installation is planned for completion before the ice returns in late September. With a few more weeks left in the melt season, the sea ice hit its lowest levels over the weekend, as measured by satellite index dating back to1979.
+âThe significance of having continuous monitoring of the Arctic Ocean cannot be overstated,â says Dr. Kate Moran, president and CEO of ONC, who led the first drilling expedition to the central Arctic Ocean in 2004 with the Ocean Drilling Program, an international joint initiative. âThis specially designed scaled-down version of our seafloor networks will support longer-term science-based understanding of dramatic changes taking place in the fragile northern ecosystemâsuch as the historic receding of the Arctic sea ice we are seeing this year.â
+ONC is the worldâs largest and most advanced cabled ocean observatoryâmade up of UVicâs NEPTUNE and VENUS observatories. It is changing the way we study the oceans, providing scientific evidence on a wide range of critical issues, and developing new world-leading technologies. An initiative of UVic, the observatory is a national facility supported through funding from the governments of Canada and BC.
+For more information:
+Arctic Sea Ice FAQ
