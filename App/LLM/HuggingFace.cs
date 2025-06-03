@@ -70,7 +70,7 @@ namespace Rift.LLM
 
             return result ?? "No response from Hugging Face model.";
         }
-        
+
         public string GatherONCAPIData(string userQuery)
         {
             throw new NotImplementedException("GatherONCAPIData is not implemented using HuggingFace.");
