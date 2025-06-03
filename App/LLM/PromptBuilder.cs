@@ -4,16 +4,15 @@ namespace Rift.LLM;
 public class PromptBuilder
 {
     private readonly string _systemPrompt;
-    private readonly string _userPrompt;
 
-    public PromptBuilder(string systemPrompt, string userPrompt)
+    public PromptBuilder(string systemPrompt)
     {
-        _systemPrompt = systemPrompt;
-        _userPrompt = userPrompt;
+        _systemPrompt = systemPrompt;;
     }
 
-  public string BuildPrompt(string userQuery, string relevantData)
-  {
-      throw new NotImplementedException("Prompt building logic is not implemented yet.");
+    public string BuildPrompt(string userQuery, string relevantData)
+    {
+        // Here 
+        throw new NotImplementedException("Prompt building logic is not implemented yet.");
     }
 }

@@ -33,6 +33,14 @@ builder.Services.AddControllers();
 
 builder.Services.AddHttpClient<ChromaDBClient>();
 builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<RAGService>();
+builder.Services.AddScoped<ReRanker>();
+builder.Services.AddScoped<ResponseProcessor>();
+builder.Services.AddScoped(provider =>
+{
+    var systemPrompt = "Placeholder";
+    return new PromptBuilder(systemPrompt);
+});
 
 var llmProviderName = builder.Configuration["LLmSettings:Provider"];
 
