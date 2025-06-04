@@ -1,10 +1,12 @@
 using System.Threading.Tasks;
+using System.Text.Json;
 
 namespace Rift.LLM
 {
     public interface ILlmProvider
     {
-        string GatherONCAPIData(string userQuery);
-        Task<string> GenerateResponseAsync(string prompt);
+        Task<string> GenerateJSON(string prompt);
+        Task<string> GenerateFinalResponse(string prompt, JsonElement onc_api_response);
+        // string GatherONCAPIData(string userQuery);
     }
 }
