@@ -45,7 +45,7 @@ namespace Rift.LLM
             // -d '{ "messages": [{ "role": "user", "content": "..." }], "model": "...", "stream": false }'
 
             // string file_path = "App\LLM\sys_prompt_small_llm.md";
-            string system_Prompt = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "LLM", "sys_prompt_small_llm.md"));
+            string system_Prompt = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "LLM/SystemPrompts", "sys_prompt_small_llm.md"));
 
             // Console.WriteLine("=== System Prompt Start ===");
             // Console.WriteLine(system_Prompt);
