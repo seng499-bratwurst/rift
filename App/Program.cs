@@ -1,10 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NSwag;
-using Rift;
 using Rift.LLM;
-using DotNetEnv;
-
-
 
 
 var builder = WebApplication.CreateBuilder(args);
