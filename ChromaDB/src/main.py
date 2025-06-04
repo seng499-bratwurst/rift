@@ -19,6 +19,8 @@ class QueryRequest(BaseModel):
 
 @app.post("/add")
 def add(req: AddRequest):
+    # clean data func
+    # embed func
     collection.add(
         documents=[req.text],
         ids=[req.id],
