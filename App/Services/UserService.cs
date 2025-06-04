@@ -15,4 +15,9 @@ public class UserService
         await _dbContext.SaveChangesAsync();
         return data;
     }
+
+    public string GatherMessageHistoryAsync(User user)
+    {
+        throw new NotImplementedException("Gathering message history is not implemented yet.");
+    }
 }

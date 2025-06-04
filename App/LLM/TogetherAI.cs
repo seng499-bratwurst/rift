@@ -87,5 +87,10 @@ namespace Rift.LLM
             // returning the message received form TogetherAI, if no reponse return the default message
             return result ?? "No response from model.";
         }
+
+        public string GatherONCAPIData(string userQuery)
+        {
+            throw new NotImplementedException("GatherONCAPIData is not implemented in TogetherAI.");
+        }
     }
 }

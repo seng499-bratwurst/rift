@@ -65,10 +65,15 @@ namespace Rift.LLM
                             .GetProperty("content")
                             .GetString();
 
-            
+
             Console.WriteLine($"[DEBUG] Hugging Face Endpoint: {_endpoint}");
 
             return result ?? "No response from Hugging Face model.";
+        }
+
+        public string GatherONCAPIData(string userQuery)
+        {
+            throw new NotImplementedException("GatherONCAPIData is not implemented using HuggingFace.");
         }
     }
 }
