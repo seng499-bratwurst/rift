@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Rift.LLM;
 
 public class RAGService
@@ -28,7 +29,8 @@ public class RAGService
         /// This is a rough outline of how the RAG service might work and is a starting point to
         /// work from. Please modify and update each of these methods as we build up the pipeline.
 
-        string ONCAPIData = _llmProvider.GatherONCAPIData(userQuery);
+        // string ONCAPIJson = await _llmProvider.GenerateONCAPICall(userQuery);
+        string ONCAPIData = "";
 
         string relevantData = _chromaDbClient.GetRelevantDataAsync(userQuery);
 
@@ -38,7 +40,7 @@ public class RAGService
         string prompt = _promptBuilder.BuildPrompt(userQuery, reRankedData);
 
         // Generate a response using the LLM provider
-        string responseFromLLM = await _llmProvider.GenerateResponseAsync(prompt);
+        string responseFromLLM = await _llmProvider.GenerateFinalResponse(prompt, new JsonElement());
 
         string cleanedResponse = _responseProcessor.ProcessResponse(responseFromLLM);
 

@@ -29,14 +29,14 @@ namespace Rift.LLM
             _modelBig = config["LLmSettings:HuggingFace:ModelBig"]!;
             _ONCToken = config["ONC_TOKEN"]!;
         }
-        
+
         // public string GatherONCAPIData(string userQuery)
         // {
         //     throw new NotImplementedException();
         // }
 
         // Sends a chat completion request to Hugging Face endpoint
-        public async Task<string> GenerateJSON(string prompt)
+        public async Task<string> GenerateONCAPICall(string prompt)
         {
             // Equivalent cURL:
             // curl https://router.huggingface.co/together/v1/chat/completions \

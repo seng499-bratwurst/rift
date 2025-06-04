@@ -33,7 +33,7 @@ namespace Rift.LLM
     
 
         // Sends a chat completion request to Hugging Face endpoint
-        public async Task<string> GenerateJSON(string prompt)
+        public async Task<string> GenerateONCAPICall(string prompt)
         {
             // Equivalent cURL:
             // curl https://router.huggingface.co/together/v1/chat/completions \
@@ -142,10 +142,5 @@ namespace Rift.LLM
             return result ?? "No response from Hugging Face model.";
             // return result ?? "{}";
         }
-
-        // public string GatherONCAPIData(string userQuery)
-        // {
-        //     throw new NotImplementedException();
-        // }
     }
 }
