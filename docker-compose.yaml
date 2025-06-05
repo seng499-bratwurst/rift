@@ -11,6 +11,7 @@ services:
       ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD};Database=${POSTGRES_DB}"
       LLmSettings__TogetherAI__ApiKey: ${TOGETHER_API_KEY}
       LLmSettings__HuggingFace__ApiKey: ${HF_API_KEY}
+      ONC_TOKEN: ${ONC_TOKEN}
     env_file:
       - .env
     depends_on:
