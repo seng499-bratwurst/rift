@@ -19,6 +19,10 @@ public class OncAPI
     string? description = null,
     string? propertyCode = null)
     {
+        string endpoint = "https://data.oceannetworks.ca/api/deviceCategories";
+        // sample URL: https://data.oceannetworks.ca/api/deviceCategories?deviceCategoryCode=ACCELEROMETER&token=
+        // https://data.oceannetworks.ca/api/deviceCategories?token=
+        // https://data.oceannetworks.ca/api/deviceCategories?deviceCategoryCode=CTD&deviceCategoryName=Conductivity&description=Temperature&token=
         // logic for /deviceCategories
 
     }
