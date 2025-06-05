@@ -5,6 +5,8 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using System.IO;
+using System.Text.Json.Nodes;
+using App.LLM;
 
 namespace Rift.LLM
 {
@@ -44,6 +46,11 @@ namespace Rift.LLM
             // string file_path = "App\LLM\sys_prompt_small_llm.md";
             string system_Prompt = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "LLM/SystemPrompts", "sys_prompt_small_llm.md"));
 
+            var func_call = new JsonArray
+            {
+                FunctionSchemas.deviceCategories
+            };
+
             // Console.WriteLine("=== System Prompt Start ===");
             // Console.WriteLine(system_Prompt);
             // Console.WriteLine("=== System Prompt End ===");
@@ -56,7 +63,8 @@ namespace Rift.LLM
                     new { role = "system", content = system_Prompt },
                     new { role = "user", content = prompt }
                 },
-                stream = false
+                stream = false,
+                tools = func_call
             };
 
             var json = JsonSerializer.Serialize(payload);
