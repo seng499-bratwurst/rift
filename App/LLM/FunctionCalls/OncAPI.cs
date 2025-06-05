@@ -21,7 +21,7 @@ public class OncAPI
     string? description = null,
     string? propertyCode = null)
     {
-        var endpoint = new StringBuilder("https://data.oceannetworks.ca/api/deviceCategories?token" + _token);
+        var endpoint = new StringBuilder("https://data.oceannetworks.ca/api/deviceCategories?token=" + _token);
         Console.WriteLine("[DEBUG] ONC API base URL: " + endpoint);
         // sample URL: https://data.oceannetworks.ca/api/deviceCategories?deviceCategoryCode=ACCELEROMETER&token=
         // https://data.oceannetworks.ca/api/deviceCategories?token=
@@ -35,22 +35,22 @@ public class OncAPI
 
         if (!string.IsNullOrWhiteSpace(deviceCategoryName))
         {
-            endpoint.Append("&deviceCategoryCode=" + deviceCategoryName);
+            endpoint.Append("&deviceCategoryName=" + deviceCategoryName);
         }
 
         if (!string.IsNullOrWhiteSpace(locationCode))
         {
-            endpoint.Append("&deviceCategoryCode=" + locationCode);
+            endpoint.Append("&locationCode=" + locationCode);
         }
 
         if (!string.IsNullOrWhiteSpace(description))
         {
-            endpoint.Append("&deviceCategoryCode=" + description);
+            endpoint.Append("&description=" + description);
         }
 
         if (!string.IsNullOrWhiteSpace(propertyCode))
         {
-            endpoint.Append("&deviceCategoryCode=" + propertyCode);
+            endpoint.Append("&propertyCode=" + propertyCode);
         }
 
         string final_onc_url = endpoint.ToString();

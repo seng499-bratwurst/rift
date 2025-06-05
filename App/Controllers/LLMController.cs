@@ -29,50 +29,51 @@ namespace Rift.Controllers
 
             var response = await _llmProvider.GenerateONCAPICall(request.Prompt);
             
-            using var doc = JsonDocument.Parse(response);
-
-            // Clone it so we can return it after the doc is disposed
-            var json = doc.RootElement.Clone();
             
-            string service = json.GetProperty("service").GetString() ?? "locations";
-            var token = _config["ONC_TOKEN"];
+             using var doc = JsonDocument.Parse(response);
 
-            if (string.IsNullOrWhiteSpace(token))
-                return StatusCode(500, "ONC_TOKEN is not set in configuration or environment variables.");
+            //             // Clone it so we can return it after the doc is disposed
+                         JsonElement json = doc.RootElement.Clone();
 
-    // Step 4: Build the query string (excluding "service", and injecting real token)
-    var query = System.Web.HttpUtility.ParseQueryString(string.Empty);
+            //             string service = json.GetProperty("service").GetString() ?? "locations";
+            //             var token = _config["ONC_TOKEN"];
 
-    foreach (var prop in json.EnumerateObject())
-{
-    if (prop.Name == "token")
-    {
-        query["token"] = token; // override placeholder token
-    }
-    else if (prop.Name == "method" || prop.Name == "locationName")
-    {
-        if (!string.IsNullOrWhiteSpace(prop.Value.ToString()))
-        {
-            query[prop.Name] = prop.Value.ToString();
-        }
-    }
-}
+            //             if (string.IsNullOrWhiteSpace(token))
+            //                 return StatusCode(500, "ONC_TOKEN is not set in configuration or environment variables.");
+
+            //     // Step 4: Build the query string (excluding "service", and injecting real token)
+            //     var query = System.Web.HttpUtility.ParseQueryString(string.Empty);
+
+            //     foreach (var prop in json.EnumerateObject())
+            // {
+            //     if (prop.Name == "token")
+            //     {
+            //         query["token"] = token; // override placeholder token
+            //     }
+            //     else if (prop.Name == "method" || prop.Name == "locationName")
+            //     {
+            //         if (!string.IsNullOrWhiteSpace(prop.Value.ToString()))
+            //         {
+            //             query[prop.Name] = prop.Value.ToString();
+            //         }
+            //     }
+            // }
 
 
-            // Step 5: Construct the full ONC API URL
-    var rawQuery = query.ToString()?.Replace("+", " ");
-        var oncApiUrl = $"https://data.oceannetworks.ca/api/{service}?{rawQuery}";
-        Console.WriteLine("[DEBUG] ONC API URL: " + oncApiUrl);
+            //             // Step 5: Construct the full ONC API URL
+            //     var rawQuery = query.ToString()?.Replace("+", " ");
+            //         var oncApiUrl = $"https://data.oceannetworks.ca/api/{service}?{rawQuery}";
+            //         Console.WriteLine("[DEBUG] ONC API URL: " + oncApiUrl);
 
-        // Step 6: Call the ONC API
-        var oncResponse = await _httpClient.GetAsync(oncApiUrl);
-        if (!oncResponse.IsSuccessStatusCode)
-            return StatusCode((int)oncResponse.StatusCode, $"ONC API error: {oncResponse.StatusCode}");
+            //         // Step 6: Call the ONC API
+            //         var oncResponse = await _httpClient.GetAsync(oncApiUrl);
+            //         if (!oncResponse.IsSuccessStatusCode)
+            //             return StatusCode((int)oncResponse.StatusCode, $"ONC API error: {oncResponse.StatusCode}");
 
-        var oncContent = await oncResponse.Content.ReadAsStringAsync();
-        var oncData = JsonDocument.Parse(oncContent).RootElement.Clone();
+            //         var oncContent = await oncResponse.Content.ReadAsStringAsync();
+            //         var oncData = JsonDocument.Parse(oncContent).RootElement.Clone();
 
-            var fina_res = await _llmProvider.GenerateFinalResponse(request.Prompt, oncData);
+            var fina_res = await _llmProvider.GenerateFinalResponse(request.Prompt, json);
 
 
             return Ok(fina_res);

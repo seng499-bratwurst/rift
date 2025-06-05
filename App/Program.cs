@@ -39,6 +39,7 @@ builder.Services.AddScoped(provider =>
 });
 
 var llmProviderName = builder.Configuration["LLmSettings:Provider"];
+builder.Services.AddSingleton<OncAPI>();
 
 switch (llmProviderName)
 {
