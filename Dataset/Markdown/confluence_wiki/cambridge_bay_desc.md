@@ -1,4 +1,7 @@
-﻿Cambridge Bay Coastal Community Observatory
+﻿# Source: https://data.oceannetworks.ca/Dashboards/embed/id/172
+# ID: CambridgeBayDescription
+
+Cambridge Bay Coastal Community Observatory
 
 Background
 

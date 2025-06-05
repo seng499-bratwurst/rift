@@ -1,4 +1,5 @@
 # Source: https://www.oceannetworks.ca/news-and-stories/stories/maintaining-the-arctics-internet-connected-ocean-is-no-picnic/
+# ID: MaintainingArcticsInternet
 
 Monitoring the rapidly changing Arctic is vital to climate science. However installing and maintaining real-time ocean observing infrastructure in Canadaâs remote and icy north is complex. Every instrument must be designed to withstand sub-freezing temperatures on land, in the water, andâ¯for most of the yearâ¯under sea ice. Access to a reliable high-speed Internet connection in remote regions can be challenging, and thatâs assuming youâve figured out how to transport the specialized high-tech gear thousands of kilometres to the Arctic circle in the first place.
 After five years of gathering real-time Arctic Ocean and sea ice data, Ocean Networks Canadaâs (ONC) Cambridge Bay community observatory infrastructure received a major overhaul in September 2017. In addition to annual maintenance, the original network equipment and servers were replaced and all dock electronics and shore instruments were relocated to a new secure shore station.

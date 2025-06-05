@@ -1,4 +1,5 @@
 # Source: https://www.oceannetworks.ca/news-and-stories/stories/three-weeks-late-cambridge-bay-sea-ice-freeze-up-2020/
+# ID: ThreeWeeksLateCambridgeBay
 
 Figure 1. Sea ice forming on the shores of Cambridge Bay, Nunavut
 Ocean Networks Canadaâs (ONC) cabled observatory in Cambridge Bay, Nunavut has been gathering real-time oceanographic data since 2012. This year, the data reveals that sea ice freeze-up occurred on 27 October, the latest date in eight years of monitoring the Arctic Ocean. By comparison, since 2012 the mean or average date of freeze-up is 5 October, a full three weeks earlier than 2020.

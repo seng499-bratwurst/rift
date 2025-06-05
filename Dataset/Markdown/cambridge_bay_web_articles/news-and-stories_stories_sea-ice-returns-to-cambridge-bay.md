@@ -1,4 +1,5 @@
 # Source: https://www.oceannetworks.ca/news-and-stories/stories/sea-ice-returns-to-cambridge-bay/
+# ID: SeaIceReturnsCambridgeBay
 
 Unseen beneath the surface of the Arctic Ocean, the Ocean Networks Canada ocean observatory in Cambridge Bay, Nunavut, monitors ocean conditions 24/7. During the night of 13 October, sensors detected the seasonal return of surface sea ice.
 Twilight at Cambridge Bay, Nunavut.

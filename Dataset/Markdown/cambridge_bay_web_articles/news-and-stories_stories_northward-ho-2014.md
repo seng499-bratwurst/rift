@@ -1,4 +1,5 @@
 # Source: https://www.oceannetworks.ca/news-and-stories/stories/northward-ho-2014/
+# ID: NorthwardHo
 
 In September 2012, Ocean Networks Canada installed a cabled community observatory in Cambridge Bay, Nunavutâthe first of its kind to be installed in Canadaâs North.
 Each year, ONC teams travel to this northern hamlet for an important maintenance expedition to clean and upgrade the observatory infrastructure and instruments. Itâs also a great opportunity to reconnect with the residents of Cambridge Bay.
