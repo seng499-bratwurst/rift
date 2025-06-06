@@ -95,7 +95,7 @@ namespace Rift.LLM
             var message = doc.RootElement.GetProperty("choices")[0].GetProperty("message");
             // Console.WriteLine("[DEBUG] message"+message);
 
-            // ✅ Handle function_call
+            // Handle function_call
            if (message.TryGetProperty("tool_calls", out var toolCalls) && toolCalls.ValueKind == JsonValueKind.Array)
             {
                 foreach (var call in toolCalls.EnumerateArray())
@@ -103,7 +103,7 @@ namespace Rift.LLM
                     var function = call.GetProperty("function");
                     var name = function.GetProperty("name").GetString();
                     
-                    // ✅ arguments is a JSON string → parse it
+                    // arguments is a JSON string → parse it
                     var rawArgs = function.GetProperty("arguments").GetString();
                     var args = JsonDocument.Parse(rawArgs!).RootElement;
 
