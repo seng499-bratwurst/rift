@@ -5,6 +5,9 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using System.IO;
+using System.Text.Json.Nodes;
+using App.LLM;
+
 
 namespace Rift.LLM
 {
@@ -16,9 +19,10 @@ namespace Rift.LLM
         private readonly string _modelSmall;
         private readonly string _modelBig;
         private readonly string _ONCToken;
+        private readonly OncAPI _oncApiClient;
 
         // Constructor reads values from appsettings.json
-        public HuggingFace(IConfiguration config)
+        public HuggingFace(IConfiguration config, OncAPI oncApiClient)
         {
             _httpClient = new HttpClient();
 
@@ -28,6 +32,7 @@ namespace Rift.LLM
             _modelSmall = config["LLmSettings:HuggingFace:ModelSmall"]!;
             _modelBig = config["LLmSettings:HuggingFace:ModelBig"]!;
             _ONCToken = config["ONC_TOKEN"]!;
+            _oncApiClient = oncApiClient;
         }
 
     
@@ -42,7 +47,12 @@ namespace Rift.LLM
             // -d '{ "messages": [{ "role": "user", "content": "..." }], "model": "...", "stream": false }'
 
             // string file_path = "App\LLM\sys_prompt_small_llm.md";
-            string system_Prompt = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "LLM/SystemPrompts", "sys_prompt_small_llm.md"));
+            string system_Prompt = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "LLM/SystemPrompts", "sys_prompt_small.md"));
+            Console.WriteLine("[DEBUG] function called generateonc api call");
+            var func_call = new JsonArray
+            {
+                FunctionSchemas.deviceCategories
+            };
 
             // Console.WriteLine("=== System Prompt Start ===");
             // Console.WriteLine(system_Prompt);
@@ -56,7 +66,8 @@ namespace Rift.LLM
                     new { role = "system", content = system_Prompt },
                     new { role = "user", content = prompt }
                 },
-                stream = false
+                stream = false,
+                tools = func_call
             };
 
             var json = JsonSerializer.Serialize(payload);
@@ -75,21 +86,61 @@ namespace Rift.LLM
 
             using var doc = JsonDocument.Parse(responseContent);
 
-            var result = doc.RootElement
-                            .GetProperty("choices")[0]
-                            .GetProperty("message")
-                            .GetProperty("content")
-                            .GetString();
+            // var result = doc.RootElement
+            //                 .GetProperty("choices")[0]
+            //                 .GetProperty("message")
+            //                 .GetProperty("content")
+            //                 .GetString();
+
+            var message = doc.RootElement.GetProperty("choices")[0].GetProperty("message");
+            // Console.WriteLine("[DEBUG] message"+message);
+
+            // Handle function_call
+           if (message.TryGetProperty("tool_calls", out var toolCalls) && toolCalls.ValueKind == JsonValueKind.Array)
+            {
+                foreach (var call in toolCalls.EnumerateArray())
+                {
+                    var function = call.GetProperty("function");
+                    var name = function.GetProperty("name").GetString();
+                    
+                    // arguments is a JSON string → parse it
+                    var rawArgs = function.GetProperty("arguments").GetString();
+                    var args = JsonDocument.Parse(rawArgs!).RootElement;
+
+                    Console.WriteLine("[DEBUG] Tool function: " + name);
+                    Console.WriteLine("[DEBUG] Arguments: " + rawArgs);
+
+                    if (name == "deviceCategories")
+                    {
+                        // Helper to extract optional args
+                        string? GetArg(JsonElement e, string key) =>
+                            e.TryGetProperty(key, out var val) ? val.GetString() : null;
+
+                        var result = await _oncApiClient.GetDeviceCategoriesAsync(
+                            deviceCategoryCode: GetArg(args, "deviceCategoryCode"),
+                            deviceCategoryName: GetArg(args, "deviceCategoryName"),
+                            description: GetArg(args, "description"),
+                            locationCode: GetArg(args, "locationCode"),
+                            propertyCode: GetArg(args, "propertyCode")
+                        );
+
+                        return JsonSerializer.Serialize(result, new JsonSerializerOptions { WriteIndented = true });
+                    }
+                }
+            }
 
 
+            // Fallback to content
+            var resultContent = message.GetProperty("content").GetString();
 
-            Console.WriteLine(result);
+
+            Console.WriteLine(resultContent);
             Console.WriteLine($"[DEBUG] Hugging Face Endpoint: {_endpoint}");
 
             // return result ?? "No response from Hugging Face model.";
 
 
-            return result ?? "{}";
+            return resultContent ?? "{}";
         }
         
        
