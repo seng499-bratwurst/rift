@@ -46,8 +46,8 @@ namespace Rift.LLM
             // -H 'Content-Type: application/json' \
             // -d '{ "messages": [{ "role": "user", "content": "..." }], "model": "...", "stream": false }'
 
-            // string file_path = "App\LLM\sys_prompt_small_llm.md";
-            string system_Prompt = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "LLM/SystemPrompts", "sys_prompt_small.md"));
+            // string file_path = "App\LLM\sys_prompt_small_llm.md"; 
+            string system_Prompt = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "LLM/SystemPrompts", "function_call_required_or_not.md"));
             Console.WriteLine("[DEBUG] function called generateonc api call");
             var func_call = new JsonArray
             {
@@ -67,7 +67,7 @@ namespace Rift.LLM
                     new { role = "user", content = prompt }
                 },
                 stream = false,
-                tools = func_call
+                // tools = func_call
             };
 
             var json = JsonSerializer.Serialize(payload);
@@ -93,7 +93,7 @@ namespace Rift.LLM
             //                 .GetString();
 
             var message = doc.RootElement.GetProperty("choices")[0].GetProperty("message");
-            // Console.WriteLine("[DEBUG] message"+message);
+            Console.WriteLine("[DEBUG] message"+message.ToString());
 
             // Handle function_call
            if (message.TryGetProperty("tool_calls", out var toolCalls) && toolCalls.ValueKind == JsonValueKind.Array)
