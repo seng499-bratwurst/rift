@@ -1,14 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NSwag;
-using Rift;
 using Rift.LLM;
-using DotNetEnv;
-
-
+using Microsoft.AspNetCore.Identity;
+using Rift.Models;
 
 
 var builder = WebApplication.CreateBuilder(args);
-
 
 builder.Services.AddOpenApiDocument(options =>
 {
@@ -28,6 +25,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
     options.UseNpgsql(connectionString);
 });
+
+// Add Identity
+builder.Services.AddIdentity<User, IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
 
 builder.Services.AddControllers();
 
@@ -49,6 +51,12 @@ switch (llmProviderName)
 }
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    await SeedRoles.SeedRolesAndAdminAsync(services);
+}
 
 app.UseRouting();
 

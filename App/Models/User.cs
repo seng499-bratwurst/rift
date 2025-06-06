@@ -1,11 +1,9 @@
 namespace Rift.Models;
 
-// purely an example model class we can build on
+using Microsoft.AspNetCore.Identity;
 
-public class User
+public class User : IdentityUser
 {
-    public int id { get; set; }
-    public required string name { get; set; }
-    public required string email { get; set; }
-    public string? apiToken { get; set; }
+    public required string Name { get; set; }
+    public string? ONCApiToken { get; set; } = null;
 }
