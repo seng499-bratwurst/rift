@@ -8,4 +8,5 @@ public class Conversation
     public DateTime FirstInteraction { get; set; }
     public DateTime LastInteraction { get; set; }
 
+    public User? User { get; set; }
 }

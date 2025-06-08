@@ -6,27 +6,27 @@ using Microsoft.AspNetCore.Mvc;
 
 public class VectorDBController : ControllerBase
 {
-  private readonly ChromaDBClient _chroma;
+    private readonly ChromaDBClient _chroma;
 
-  public VectorDBController(ChromaDBClient chroma)
-  {
-    _chroma = chroma;
-  }
+    public VectorDBController(ChromaDBClient chroma)
+    {
+        _chroma = chroma;
+    }
 
-  [HttpPost("add")]
-  public async Task<IActionResult> AddDocument([FromBody] AddRequest request)
-  {
-    if (!ModelState.IsValid || string.IsNullOrWhiteSpace(request.Text) || string.IsNullOrWhiteSpace(request.Id))
-      return BadRequest("Fields must be filled.");
+    [HttpPost("add")]
+    public async Task<IActionResult> AddDocument([FromBody] AddRequest request)
+    {
+        if (!ModelState.IsValid || string.IsNullOrWhiteSpace(request.Text) || string.IsNullOrWhiteSpace(request.Id))
+            return BadRequest("Fields must be filled.");
 
-    var response = await _chroma.AddAsync(request);
-    return response ? Ok("Document added successfully.") : BadRequest("Failed to add document.");
-  }
+        var response = await _chroma.AddAsync(request);
+        return response ? Ok("Document added successfully.") : BadRequest("Failed to add document.");
+    }
 
-  [HttpPost("query")]
-  public async Task<IActionResult> QueryVectorDB([FromBody] QueryRequest request)
-  {
-    var result = await _chroma.QueryAsync(request);
-    return Ok(result);
-  }
+    [HttpPost("query")]
+    public async Task<IActionResult> QueryVectorDB([FromBody] QueryRequest request)
+    {
+        var result = await _chroma.QueryAsync(request);
+        return Ok(result);
+    }
 }

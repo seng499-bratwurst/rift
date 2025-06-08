@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Rift.Migrations
 {
     /// <inheritdoc />
-    public partial class initialmigration : Migration
+    public partial class initalmigrations : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -51,22 +51,6 @@ namespace Rift.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Conversations",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    UserId = table.Column<string>(type: "text", nullable: true),
-                    Title = table.Column<string>(type: "text", nullable: true),
-                    FirstInteraction = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    LastInteraction = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Conversations", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -190,6 +174,27 @@ namespace Rift.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Conversations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    UserId = table.Column<string>(type: "text", nullable: true),
+                    Title = table.Column<string>(type: "text", nullable: true),
+                    FirstInteraction = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    LastInteraction = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Conversations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Conversations_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Messages",
                 columns: table => new
                 {
@@ -250,6 +255,11 @@ namespace Rift.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Conversations_UserId",
+                table: "Conversations",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Messages_ConversationId",
                 table: "Messages",
                 column: "ConversationId");
@@ -283,10 +293,10 @@ namespace Rift.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "Conversations");
 
             migrationBuilder.DropTable(
-                name: "Conversations");
+                name: "AspNetUsers");
         }
     }
 }

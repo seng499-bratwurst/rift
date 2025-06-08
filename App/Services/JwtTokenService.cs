@@ -42,4 +42,23 @@ public class JwtTokenService
 
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
+
+    public string GetUserIdFromBearerToken(string authHeader)
+    {
+        if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
+            return "";
+
+        var token = authHeader.Substring("Bearer ".Length);
+        var handler = new JwtSecurityTokenHandler();
+
+        try
+        {
+            var jwtToken = handler.ReadJwtToken(token);
+            return jwtToken.Claims.FirstOrDefault(c => c.Type == "sub")?.Value ?? "";
+        }
+        catch
+        {
+            return "";
+        }
+    }
 }

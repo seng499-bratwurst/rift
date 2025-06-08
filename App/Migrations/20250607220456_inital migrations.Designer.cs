@@ -11,8 +11,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Rift.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250606214734_initial migration")]
-    partial class initialmigration
+    [Migration("20250607220456_inital migrations")]
+    partial class initalmigrations
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -177,6 +177,8 @@ namespace Rift.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Conversations");
                 });
@@ -353,6 +355,15 @@ namespace Rift.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Rift.Models.Conversation", b =>
+                {
+                    b.HasOne("Rift.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Rift.Models.Message", b =>

@@ -175,6 +175,8 @@ namespace Rift.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("Conversations");
                 });
 
@@ -350,6 +352,15 @@ namespace Rift.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Rift.Models.Conversation", b =>
+                {
+                    b.HasOne("Rift.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Rift.Models.Message", b =>

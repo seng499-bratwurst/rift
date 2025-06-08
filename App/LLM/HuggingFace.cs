@@ -65,7 +65,7 @@ namespace Rift.LLM
                             .GetProperty("content")
                             .GetString();
 
-            
+
             Console.WriteLine($"[DEBUG] Hugging Face Endpoint: {_endpoint}");
 
             return result ?? "No response from Hugging Face model.";

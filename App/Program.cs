@@ -1,8 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.EntityFrameworkCore;
 using NSwag;
 using Rift.LLM;
 using Microsoft.AspNetCore.Identity;
 using Rift.Models;
+using Rift.Services;
+using Rift.Repositories;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -34,7 +39,12 @@ builder.Services.AddIdentity<User, IdentityRole>()
 builder.Services.AddControllers();
 
 builder.Services.AddHttpClient<ChromaDBClient>();
-builder.Services.AddScoped<UserService>();
+
+builder.Services.AddScoped<IUserService, UserService>();
+
+builder.Services.AddScoped<IConversationService, ConversationService>();
+builder.Services.AddScoped<IConversationRepository, ConversationRepository>();
+
 
 var llmProviderName = builder.Configuration["LLmSettings:Provider"];
 
@@ -50,6 +60,35 @@ switch (llmProviderName)
         throw new Exception($"Unsupported LLM provider: {llmProviderName}");
 }
 
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    var jwtKey = builder.Configuration["Jwt:Key"];
+    if (string.IsNullOrEmpty(jwtKey))
+    {
+        throw new InvalidOperationException("JWT key is not configured.");
+    }
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidAudience = builder.Configuration["Jwt:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(jwtKey))
+    };
+});
+
+// Add Authorization
+builder.Services.AddAuthorization();
+
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
@@ -60,9 +99,12 @@ using (var scope = app.Services.CreateScope())
 
 app.UseRouting();
 
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.UseEndpoints(endpoints =>
 {
-    endpoints.MapControllers();
+    _ = endpoints.MapControllers();
 });
 
 if (app.Environment.IsDevelopment())

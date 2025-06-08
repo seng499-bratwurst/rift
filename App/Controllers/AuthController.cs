@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using Rift.Models;
 using Rift.Services;
+using Microsoft.AspNetCore.Authorization;
 
 [ApiController]
 [Route("api")]
@@ -22,6 +23,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("register")]
+    [AllowAnonymous]
     public async Task<IActionResult> Register([FromBody] RegisterModel model)
     {
 
@@ -52,6 +54,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
+    [AllowAnonymous]
     public async Task<IActionResult> Login([FromBody] LoginModel model)
     {
         var user = await _userManager.FindByEmailAsync(model.Email);
