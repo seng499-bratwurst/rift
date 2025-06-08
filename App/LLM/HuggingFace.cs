@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using System.IO;
 using System.Text.Json.Nodes;
 using App.LLM;
+using System.Text.RegularExpressions;
 
 
 namespace Rift.LLM
@@ -35,7 +36,7 @@ namespace Rift.LLM
             _oncApiClient = oncApiClient;
         }
 
-    
+
 
         // Sends a chat completion request to Hugging Face endpoint
         public async Task<string> GenerateONCAPICall(string prompt)
@@ -49,14 +50,7 @@ namespace Rift.LLM
             // string file_path = "App\LLM\sys_prompt_small_llm.md"; 
             string system_Prompt = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "LLM/SystemPrompts", "function_call_required_or_not.md"));
             Console.WriteLine("[DEBUG] function called generateonc api call");
-            var func_call = new JsonArray
-            {
-                FunctionSchemas.deviceCategories
-            };
 
-            // Console.WriteLine("=== System Prompt Start ===");
-            // Console.WriteLine(system_Prompt);
-            // Console.WriteLine("=== System Prompt End ===");
 
             var payload = new
             {
@@ -67,7 +61,7 @@ namespace Rift.LLM
                     new { role = "user", content = prompt }
                 },
                 stream = false,
-                // tools = func_call
+
             };
 
             var json = JsonSerializer.Serialize(payload);
@@ -86,47 +80,25 @@ namespace Rift.LLM
 
             using var doc = JsonDocument.Parse(responseContent);
 
-            // var result = doc.RootElement
-            //                 .GetProperty("choices")[0]
-            //                 .GetProperty("message")
-            //                 .GetProperty("content")
-            //                 .GetString();
 
             var message = doc.RootElement.GetProperty("choices")[0].GetProperty("message");
-            Console.WriteLine("[DEBUG] message"+message.ToString());
+            Console.WriteLine("[DEBUG] full message by llm: " + message.ToString());
 
-            // Handle function_call
-           if (message.TryGetProperty("tool_calls", out var toolCalls) && toolCalls.ValueKind == JsonValueKind.Array)
+            string content_llm = message.GetProperty("content").GetString() ?? string.Empty;
+            Console.WriteLine("[DEBUG] content by llm: " + content_llm);
+
+            using JsonDocument innerDoc = JsonDocument.Parse(content_llm);
+            bool useFunction = innerDoc.RootElement.GetProperty("use_function").GetBoolean();
+            if (!useFunction)
             {
-                foreach (var call in toolCalls.EnumerateArray())
-                {
-                    var function = call.GetProperty("function");
-                    var name = function.GetProperty("name").GetString();
-                    
-                    // arguments is a JSON string → parse it
-                    var rawArgs = function.GetProperty("arguments").GetString();
-                    var args = JsonDocument.Parse(rawArgs!).RootElement;
-
-                    Console.WriteLine("[DEBUG] Tool function: " + name);
-                    Console.WriteLine("[DEBUG] Arguments: " + rawArgs);
-
-                    if (name == "deviceCategories")
-                    {
-                        // Helper to extract optional args
-                        string? GetArg(JsonElement e, string key) =>
-                            e.TryGetProperty(key, out var val) ? val.GetString() : null;
-
-                        var result = await _oncApiClient.GetDeviceCategoriesAsync(
-                            deviceCategoryCode: GetArg(args, "deviceCategoryCode"),
-                            deviceCategoryName: GetArg(args, "deviceCategoryName"),
-                            description: GetArg(args, "description"),
-                            locationCode: GetArg(args, "locationCode"),
-                            propertyCode: GetArg(args, "propertyCode")
-                        );
-
-                        return JsonSerializer.Serialize(result, new JsonSerializerOptions { WriteIndented = true });
-                    }
-                }
+                Console.WriteLine($"[DEBUG] No need to call ONC API");
+                return "{}";
+            }
+            else if (useFunction)
+            {
+                Console.WriteLine($"[DEBUG] Need to call ONC API");
+                var (functionName, args) = ExtractFunctionAndArgsFromContent(content_llm);
+                return await ONC_API_Call(functionName, args);
             }
 
 
@@ -142,8 +114,10 @@ namespace Rift.LLM
 
             return resultContent ?? "{}";
         }
-        
-       
+
+
+
+
 
         public async Task<string> GenerateFinalResponse(string prompt, JsonElement onc_api_response)
         {
@@ -193,5 +167,55 @@ namespace Rift.LLM
             return result ?? "No response from Hugging Face model.";
             // return result ?? "{}";
         }
+
+
+
+        private (string functionName, Dictionary<string, string?> args) ExtractFunctionAndArgsFromContent(string content_llm)
+        {
+            // Sanitize for trailing commas
+            content_llm = Regex.Replace(content_llm, @",\s*}", "}");
+            content_llm = Regex.Replace(content_llm, @",\s*]", "]");
+
+            using JsonDocument innerDoc = JsonDocument.Parse(content_llm);
+            var root = innerDoc.RootElement;
+
+            string functionName = root.GetProperty("function").GetString() ?? string.Empty;
+            Console.WriteLine($"[DEBUG] Function Name: {functionName}");
+
+            var argsElement = root.GetProperty("args");
+            Console.WriteLine($"[DEBUG] Arguments: {argsElement.ToString()}");
+
+            var args = new Dictionary<string, string?>();
+            foreach (var prop in argsElement.EnumerateObject())
+            {
+                args[prop.Name] = prop.Value.ValueKind == JsonValueKind.Null ? null : prop.Value.ToString();
+            }
+            return (functionName, args);
+        }
+
+        private async Task<string> ONC_API_Call(string functionName, Dictionary<string, string?> args)
+        {
+            switch (functionName)
+            {
+                case "deviceCategories":
+                    var result = await _oncApiClient.GetDeviceCategoriesAsync(
+                                deviceCategoryCode: args.GetValueOrDefault("deviceCategoryCode"),
+                                deviceCategoryName: args.GetValueOrDefault("deviceCategoryName"),
+                                description: args.GetValueOrDefault("description"),
+                                locationCode: args.GetValueOrDefault("locationCode"),
+                                propertyCode: args.GetValueOrDefault("propertyCode")
+                            );
+
+                    return JsonSerializer.Serialize(result, new JsonSerializerOptions { WriteIndented = true });
+                default:
+                    Console.WriteLine($"[WARN] Unknown function: {functionName}");
+                    return "{}"; 
+            }
+        }
+
+
+
     }
 }
+
+
