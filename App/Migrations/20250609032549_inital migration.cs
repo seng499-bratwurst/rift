@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Rift.Migrations
 {
     /// <inheritdoc />
-    public partial class initalmigrations : Migration
+    public partial class initalmigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -205,6 +205,7 @@ namespace Rift.Migrations
                     OncApiQuery = table.Column<string>(type: "text", nullable: true),
                     OncApiResponse = table.Column<string>(type: "text", nullable: true),
                     IsHelpful = table.Column<bool>(type: "boolean", nullable: true),
+                    Role = table.Column<string>(type: "text", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>

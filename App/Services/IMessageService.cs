@@ -9,9 +9,7 @@ public interface IMessageService
     Task<Message?> CreateMessageAsync(
         int? conversationId,
         string content,
-        string? oncApiQuery,
-        string? oncApiResponse,
-        bool? isHelpful
+        string role
     );
     Task<List<Message>> GetMessagesForConversationAsync(int? conversationId);
 }

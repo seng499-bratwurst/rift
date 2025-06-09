@@ -16,4 +16,9 @@ public class ConversationService : IConversationService
     {
         return await _repository.GetConversationsByUserIdAsync(userId);
     }
+
+    public async Task<Conversation> CreateConversation(string userId)
+    {
+        return await _repository.CreateConversation(userId);
+    }
 }

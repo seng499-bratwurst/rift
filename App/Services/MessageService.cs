@@ -17,22 +17,15 @@ public class MessageService : IMessageService
     public async Task<Message?> CreateMessageAsync(
         int? conversationId,
         string content,
-        string? oncApiQuery,
-        string? oncApiResponse,
-        bool? isHelpful
+        string role
     )
     {
-        if (conversationId == null)
-            return null;
-
         var message = new Message
         {
             ConversationId = conversationId,
             Content = content,
-            OncApiQuery = oncApiQuery,
-            OncApiResponse = oncApiResponse,
-            IsHelpful = isHelpful,
-            CreatedAt = DateTime.UtcNow
+            CreatedAt = DateTime.UtcNow,
+            Role = role,
         };
         return await _messageRepository.CreateAsync(message);
     }

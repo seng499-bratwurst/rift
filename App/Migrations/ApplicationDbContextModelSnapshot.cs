@@ -206,6 +206,10 @@ namespace Rift.Migrations
                     b.Property<string>("OncApiResponse")
                         .HasColumnType("text");
 
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ConversationId");

@@ -8,6 +8,7 @@ public class Message
     public string? OncApiQuery { get; set; }
     public string? OncApiResponse { get; set; }
     public bool? IsHelpful { get; set; }
+    public string Role { get; set; } = "user";
     public DateTime CreatedAt { get; set; }
 
     // Navigation properties

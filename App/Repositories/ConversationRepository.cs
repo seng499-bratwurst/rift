@@ -18,4 +18,19 @@ public class ConversationRepository : IConversationRepository
             .Where(c => c.UserId == userId)
             .ToListAsync();
     }
+
+    public async Task<Conversation> CreateConversation(string userId)
+    {
+        var conversation = new Conversation
+        {
+            UserId = userId,
+            FirstInteraction = DateTime.UtcNow,
+            LastInteraction = DateTime.UtcNow
+        };
+
+        _context.Conversations.Add(conversation);
+        await _context.SaveChangesAsync();
+
+        return conversation;
+    }
 }
