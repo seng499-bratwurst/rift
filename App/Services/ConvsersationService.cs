@@ -21,4 +21,9 @@ public class ConversationService : IConversationService
     {
         return await _repository.CreateConversation(userId);
     }
+
+    public async Task<Conversation?> DeleteConversation(string userId, int conversationId)
+    {
+        return await _repository.DeleteConversation(userId, conversationId);
+    }
 }

@@ -33,4 +33,22 @@ public class ConversationRepository : IConversationRepository
 
         return conversation;
     }
+
+    public async Task<Conversation?> DeleteConversation(string userId, int conversationId)
+    {
+        var conversation = await _context.Conversations
+            .FirstOrDefaultAsync(c => c.Id == conversationId && c.UserId == userId);
+
+        if (conversation == null)
+        {
+            return null;
+        }
+
+        _context.Messages.RemoveRange(
+            _context.Messages.Where(m => m.ConversationId == conversationId));
+        _context.Conversations.Remove(conversation);
+        await _context.SaveChangesAsync();
+
+        return conversation;
+    }
 }
