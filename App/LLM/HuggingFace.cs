@@ -47,10 +47,7 @@ namespace Rift.LLM
             // -H 'Content-Type: application/json' \
             // -d '{ "messages": [{ "role": "user", "content": "..." }], "model": "...", "stream": false }'
 
-            // string file_path = "App\LLM\sys_prompt_small_llm.md"; 
             string system_Prompt = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "LLM/SystemPrompts", "function_call_required_or_not.md"));
-            Console.WriteLine("[DEBUG] function called generateonc api call");
-
 
             var payload = new
             {
@@ -82,41 +79,29 @@ namespace Rift.LLM
 
 
             var message = doc.RootElement.GetProperty("choices")[0].GetProperty("message");
-            Console.WriteLine("[DEBUG] full message by llm: " + message.ToString());
 
             string content_llm = message.GetProperty("content").GetString() ?? string.Empty;
-            Console.WriteLine("[DEBUG] content by llm: " + content_llm);
+           
 
             using JsonDocument innerDoc = JsonDocument.Parse(content_llm);
+
             bool useFunction = innerDoc.RootElement.GetProperty("use_function").GetBoolean();
+
             if (!useFunction)
             {
-                Console.WriteLine($"[DEBUG] No need to call ONC API");
                 return "{}";
             }
             else if (useFunction)
             {
-                Console.WriteLine($"[DEBUG] Need to call ONC API");
                 var (functionName, args) = ExtractFunctionAndArgsFromContent(content_llm);
                 return await ONC_API_Call(functionName, args);
             }
 
-
             // Fallback to content
             var resultContent = message.GetProperty("content").GetString();
 
-
-            Console.WriteLine(resultContent);
-            Console.WriteLine($"[DEBUG] Hugging Face Endpoint: {_endpoint}");
-
-            // return result ?? "No response from Hugging Face model.";
-
-
             return resultContent ?? "{}";
         }
-
-
-
 
 
         public async Task<string> GenerateFinalResponse(string prompt, JsonElement onc_api_response)
@@ -161,11 +146,7 @@ namespace Rift.LLM
                             .GetProperty("content")
                             .GetString();
 
-
-            Console.WriteLine($"[DEBUG] Hugging Face Endpoint: {_endpoint}");
-
             return result ?? "No response from Hugging Face model.";
-            // return result ?? "{}";
         }
 
 
@@ -180,10 +161,8 @@ namespace Rift.LLM
             var root = innerDoc.RootElement;
 
             string functionName = root.GetProperty("function").GetString() ?? string.Empty;
-            Console.WriteLine($"[DEBUG] Function Name: {functionName}");
-
+        
             var argsElement = root.GetProperty("args");
-            Console.WriteLine($"[DEBUG] Arguments: {argsElement.ToString()}");
 
             var args = new Dictionary<string, string?>();
             foreach (var prop in argsElement.EnumerateObject())
@@ -208,7 +187,6 @@ namespace Rift.LLM
 
                     return JsonSerializer.Serialize(result, new JsonSerializerOptions { WriteIndented = true });
                 default:
-                    Console.WriteLine($"[WARN] Unknown function: {functionName}");
                     return "{}"; 
             }
         }

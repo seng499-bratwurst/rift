@@ -22,7 +22,6 @@ public class OncAPI
     string? propertyCode = null)
     {
         var endpoint = new StringBuilder("https://data.oceannetworks.ca/api/deviceCategories?token=" + _token);
-        Console.WriteLine("[DEBUG] ONC API base URL: " + endpoint);
         // sample URL: https://data.oceannetworks.ca/api/deviceCategories?deviceCategoryCode=ACCELEROMETER&token=
         // https://data.oceannetworks.ca/api/deviceCategories?token=
         // https://data.oceannetworks.ca/api/deviceCategories?deviceCategoryCode=CTD&deviceCategoryName=Conductivity&description=Temperature&token=
@@ -55,8 +54,6 @@ public class OncAPI
 
         string final_onc_url = endpoint.ToString();
 
-        Console.WriteLine("[DEBUG] ONC API full URL: " + final_onc_url);
-
         var oncResponse = await _httpClient.GetAsync(final_onc_url);
         if (!oncResponse.IsSuccessStatusCode)
             throw new HttpRequestException($"ONC API error: {oncResponse.StatusCode}");
@@ -64,7 +61,6 @@ public class OncAPI
 
         var oncContent = await oncResponse.Content.ReadAsStringAsync();
         var oncData = JsonDocument.Parse(oncContent).RootElement.Clone();
-        Console.WriteLine("[DEBUG] ONC API Data: " + oncData);
 
         return oncData;
     }
@@ -79,7 +75,6 @@ public class OncAPI
     string? dateTo = null)
     {
         var endpoint = new StringBuilder("https://data.oceannetworks.ca/api/deployments?token=" + _token);
-        Console.WriteLine("[DEBUG] ONC API base URL: " + endpoint);
         // sample URL: https://data.oceannetworks.ca/api/deviceCategories?deviceCategoryCode=ACCELEROMETER&token=
         // https://data.oceannetworks.ca/api/deviceCategories?token=
         // https://data.oceannetworks.ca/api/deployments?deviceCategoryCode=AISRECEIVER&dateFrom=2015-09-17T00%3A00%3A00.000Z&dateTo=2015-09-17T13%3A00%3A00.000Z&token=
@@ -117,7 +112,6 @@ public class OncAPI
 
         string final_onc_url = endpoint.ToString();
 
-        Console.WriteLine("[DEBUG] ONC API full URL: " + final_onc_url);
 
         var oncResponse = await _httpClient.GetAsync(final_onc_url);
         if (!oncResponse.IsSuccessStatusCode)
@@ -126,7 +120,7 @@ public class OncAPI
 
         var oncContent = await oncResponse.Content.ReadAsStringAsync();
         var oncData = JsonDocument.Parse(oncContent).RootElement.Clone();
-        Console.WriteLine("[DEBUG] ONC API Data: " + oncData);
+        
 
         return oncData;
     }
