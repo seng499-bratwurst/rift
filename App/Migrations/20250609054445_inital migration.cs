@@ -201,6 +201,7 @@ namespace Rift.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     ConversationId = table.Column<int>(type: "integer", nullable: true),
+                    PromptMessageId = table.Column<int>(type: "integer", nullable: true),
                     Content = table.Column<string>(type: "text", nullable: true),
                     OncApiQuery = table.Column<string>(type: "text", nullable: true),
                     OncApiResponse = table.Column<string>(type: "text", nullable: true),
@@ -215,6 +216,11 @@ namespace Rift.Migrations
                         name: "FK_Messages_Conversations_ConversationId",
                         column: x => x.ConversationId,
                         principalTable: "Conversations",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Messages_Messages_PromptMessageId",
+                        column: x => x.PromptMessageId,
+                        principalTable: "Messages",
                         principalColumn: "Id");
                 });
 
@@ -264,6 +270,11 @@ namespace Rift.Migrations
                 name: "IX_Messages_ConversationId",
                 table: "Messages",
                 column: "ConversationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Messages_PromptMessageId",
+                table: "Messages",
+                column: "PromptMessageId");
         }
 
         /// <inheritdoc />

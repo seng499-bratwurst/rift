@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Rift.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250609032549_inital migration")]
+    [Migration("20250609054445_inital migration")]
     partial class initalmigration
     {
         /// <inheritdoc />
@@ -209,6 +209,9 @@ namespace Rift.Migrations
                     b.Property<string>("OncApiResponse")
                         .HasColumnType("text");
 
+                    b.Property<int?>("PromptMessageId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Role")
                         .IsRequired()
                         .HasColumnType("text");
@@ -216,6 +219,8 @@ namespace Rift.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ConversationId");
+
+                    b.HasIndex("PromptMessageId");
 
                     b.ToTable("Messages");
                 });
@@ -376,7 +381,13 @@ namespace Rift.Migrations
                         .WithMany()
                         .HasForeignKey("ConversationId");
 
+                    b.HasOne("Rift.Models.Message", "PromptMessage")
+                        .WithMany()
+                        .HasForeignKey("PromptMessageId");
+
                     b.Navigation("Conversation");
+
+                    b.Navigation("PromptMessage");
                 });
 #pragma warning restore 612, 618
         }

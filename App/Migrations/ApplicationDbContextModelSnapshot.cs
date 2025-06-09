@@ -206,6 +206,9 @@ namespace Rift.Migrations
                     b.Property<string>("OncApiResponse")
                         .HasColumnType("text");
 
+                    b.Property<int?>("PromptMessageId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Role")
                         .IsRequired()
                         .HasColumnType("text");
@@ -213,6 +216,8 @@ namespace Rift.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ConversationId");
+
+                    b.HasIndex("PromptMessageId");
 
                     b.ToTable("Messages");
                 });
@@ -373,7 +378,13 @@ namespace Rift.Migrations
                         .WithMany()
                         .HasForeignKey("ConversationId");
 
+                    b.HasOne("Rift.Models.Message", "PromptMessage")
+                        .WithMany()
+                        .HasForeignKey("PromptMessageId");
+
                     b.Navigation("Conversation");
+
+                    b.Navigation("PromptMessage");
                 });
 #pragma warning restore 612, 618
         }

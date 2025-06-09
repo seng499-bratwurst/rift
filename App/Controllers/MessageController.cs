@@ -68,8 +68,9 @@ public class MessageController : ControllerBase
         var conversationId = request.ConversationId ?? conversation?.Id;
 
         // Create the message with the users prompt
-        await _messageService.CreateMessageAsync(
+        var promptMessage = await _messageService.CreateMessageAsync(
             conversationId,
+            null,
             request.Content,
             "user"
         );
@@ -77,6 +78,7 @@ public class MessageController : ControllerBase
         // Create the message with the LLM response
         await _messageService.CreateMessageAsync(
             conversationId,
+            promptMessage?.Id,
             response,
             "assistant"
         );

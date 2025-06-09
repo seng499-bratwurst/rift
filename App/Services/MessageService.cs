@@ -16,6 +16,7 @@ public class MessageService : IMessageService
 
     public async Task<Message?> CreateMessageAsync(
         int? conversationId,
+        int? promptMessageId,
         string content,
         string role
     )
@@ -23,6 +24,7 @@ public class MessageService : IMessageService
         var message = new Message
         {
             ConversationId = conversationId,
+            PromptMessageId = promptMessageId,
             Content = content,
             CreatedAt = DateTime.UtcNow,
             Role = role,

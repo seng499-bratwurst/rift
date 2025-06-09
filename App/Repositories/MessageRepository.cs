@@ -26,6 +26,18 @@ public class MessageRepository : IMessageRepository
     {
         return await _context.Messages
             .Where(m => m.ConversationId == conversationId)
+            .Select(m => new Message
+            {
+                Id = m.Id,
+                ConversationId = m.ConversationId,
+                PromptMessageId = m.PromptMessageId,
+                Content = m.Content,
+                OncApiQuery = m.OncApiQuery,
+                OncApiResponse = m.OncApiResponse,
+                IsHelpful = m.IsHelpful,
+                Role = m.Role,
+                CreatedAt = m.CreatedAt,
+            })
             .OrderBy(m => m.CreatedAt)
             .ToListAsync();
     }

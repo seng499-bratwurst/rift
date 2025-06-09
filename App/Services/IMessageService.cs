@@ -8,6 +8,7 @@ public interface IMessageService
 {
     Task<Message?> CreateMessageAsync(
         int? conversationId,
+        int? promptMessageId,
         string content,
         string role
     );
