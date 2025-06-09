@@ -81,6 +81,7 @@ namespace Rift.LLM
             var message = doc.RootElement.GetProperty("choices")[0].GetProperty("message");
 
             string content_llm = message.GetProperty("content").GetString() ?? string.Empty;
+            Console.WriteLine("LLM Conent: " + content_llm);
            
 
             using JsonDocument innerDoc = JsonDocument.Parse(content_llm);
@@ -109,7 +110,7 @@ namespace Rift.LLM
             string jsonInput = JsonSerializer.Serialize(onc_api_response, new JsonSerializerOptions
             {
                 WriteIndented = true
-            });
+            }); 
             var systemPrompt =
                     "You are a helpful oncean network canada assistant that interprets the data given and answers the user prompt with accuracy.";
 
@@ -161,6 +162,7 @@ namespace Rift.LLM
             var root = innerDoc.RootElement;
 
             string functionName = root.GetProperty("function").GetString() ?? string.Empty;
+            Console.WriteLine("Function called: " + functionName);
         
             var argsElement = root.GetProperty("args");
 
@@ -177,7 +179,7 @@ namespace Rift.LLM
             switch (functionName)
             {
                 case "deviceCategories":
-                    var result = await _oncApiClient.GetDeviceCategoriesAsync(
+                    var result_device_cat = await _oncApiClient.GetDeviceCategoriesAsync(
                                 deviceCategoryCode: args.GetValueOrDefault("deviceCategoryCode"),
                                 deviceCategoryName: args.GetValueOrDefault("deviceCategoryName"),
                                 description: args.GetValueOrDefault("description"),
@@ -185,7 +187,21 @@ namespace Rift.LLM
                                 propertyCode: args.GetValueOrDefault("propertyCode")
                             );
 
-                    return JsonSerializer.Serialize(result, new JsonSerializerOptions { WriteIndented = true });
+                    return JsonSerializer.Serialize(result_device_cat, new JsonSerializerOptions { WriteIndented = true });
+                
+                case "deployments":
+                    var result_deployments = await _oncApiClient.GetDeploymentsAsync(
+                                deviceCategoryCode: args.GetValueOrDefault("deviceCategoryCode"),
+                                deviceCode: args.GetValueOrDefault("deviceCode"),
+                                locationCode: args.GetValueOrDefault("locationCode"),
+                                propertyCode: args.GetValueOrDefault("propertyCode"),
+                                dateFrom: args.GetValueOrDefault("dateFrom"),
+                                dateTo: args.GetValueOrDefault("dateTo")
+                            );
+                    Console.WriteLine("result deployments:" + result_deployments.ToString());
+
+                    return JsonSerializer.Serialize(result_deployments, new JsonSerializerOptions { WriteIndented = true });
+
                 default:
                     return "{}"; 
             }
