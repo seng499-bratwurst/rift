@@ -45,4 +45,9 @@ public class UserService : IUserService
 
         return user;
     }
+
+    public string GatherMessageHistoryAsync(User user)
+    {
+        throw new NotImplementedException("Gathering message history is not implemented yet.");
+    }
 }

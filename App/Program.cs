@@ -47,8 +47,18 @@ builder.Services.AddScoped<IConversationRepository, ConversationRepository>();
 
 builder.Services.AddScoped<IMessageRepository, MessageRepository>();
 builder.Services.AddScoped<IMessageService, MessageService>();
+builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<RAGService>();
+builder.Services.AddScoped<ReRanker>();
+builder.Services.AddScoped<ResponseProcessor>();
+builder.Services.AddScoped(provider =>
+{
+    var systemPrompt = "Placeholder";
+    return new PromptBuilder(systemPrompt);
+});
 
 var llmProviderName = builder.Configuration["LLmSettings:Provider"];
+builder.Services.AddSingleton<OncAPI>();
 
 switch (llmProviderName)
 {

@@ -23,4 +23,9 @@ public class ChromaDBClient
 
         return result;
     }
+
+    public string GetRelevantDataAsync(string query)
+    {
+        throw new NotImplementedException("The Gathering of relevant data is from DB is not implemented yet.");
+    }
 }
