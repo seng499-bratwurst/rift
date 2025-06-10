@@ -183,7 +183,7 @@ public class MessageController : ControllerBase
             });
         }
 
-        var messages = await _messageService.GetMessagesForConversationAsync(conversationId);
+        var messages = await _messageService.GetMessagesForConversationAsync(userId, conversationId);
 
         return Ok(new ApiResponse<List<Message>>
         {

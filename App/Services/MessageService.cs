@@ -32,9 +32,8 @@ public class MessageService : IMessageService
         return await _messageRepository.CreateAsync(message);
     }
 
-    public async Task<List<Message>> GetMessagesForConversationAsync(int? conversationId)
+    public async Task<List<Message>> GetMessagesForConversationAsync(string userId, int conversationId)
     {
-        if (conversationId == null) return new List<Message>();
-        return await _messageRepository.GetMessagesByConversationIdAsync(conversationId.Value);
+        return await _messageRepository.GetMessagesByConversationIdAsync(userId, conversationId);
     }
 }

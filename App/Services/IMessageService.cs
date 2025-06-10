@@ -12,5 +12,5 @@ public interface IMessageService
         string content,
         string role
     );
-    Task<List<Message>> GetMessagesForConversationAsync(int? conversationId);
+    Task<List<Message>> GetMessagesForConversationAsync(string userId, int conversationId);
 }

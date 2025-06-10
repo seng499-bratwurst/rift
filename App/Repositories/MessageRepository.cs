@@ -22,10 +22,11 @@ public class MessageRepository : IMessageRepository
         return message;
     }
 
-    public async Task<List<Message>> GetMessagesByConversationIdAsync(int conversationId)
+    public async Task<List<Message>> GetMessagesByConversationIdAsync(string userId, int conversationId)
     {
         return await _context.Messages
             .Where(m => m.ConversationId == conversationId)
+            .Where(m => m.Conversation != null && m.Conversation.UserId == userId)
             .Select(m => new Message
             {
                 Id = m.Id,

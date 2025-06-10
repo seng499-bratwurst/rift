@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Rift.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250610184745_InitialMigration")]
+    [Migration("20250610203009_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
