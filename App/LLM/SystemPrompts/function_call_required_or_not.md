@@ -69,6 +69,18 @@ If the user's request is general, or not ONC specific respond with:
   }
 }
 
+**User Prompt:**
+> List the properites available.
+
+**Expected Response:**
+{
+  "use_function": true,
+  "function": "properties",
+  "args": {
+    
+  }
+}
+
 
 ---
 
@@ -129,4 +141,17 @@ All parameters are optional and should **only be used when the user provides rel
 - `dateTo` — Return deployments ending on or before a specific date (ISO 8601 format, e.g., `2015-09-18T13:00:00Z`).
 
 
+### Tool 3: `properties`
 
+What the **properties** tool does: The API **properties** service returns all properties defined in Oceans 3.0 that meet a filter criteria. Properties are observable phenomena (aka, variables) and are the common names given to sensor types (i.e., oxygen, pressure, temperature, etc) The primary purpose of this service, is to find the available properties of the data you want to access; the service provides the propertyCode that you can use to request a data product via the dataProductDelivery web service.
+
+
+#### Parameters for the properties tool:  
+All parameters are optional and should **only be used when the user provides relevant information otherwise fill null**:
+
+- `propertyCode` — Return a single property matching a specific property code (e.g., `conductivity`).
+- `propertyName` — Return all properties where the property name contains a keyword.
+- `description` — Return all properties where the description contains a keyword.
+- `locationCode` — Return all properties available at a specific location (e.g., `BACAX`).
+- `deviceCategoryCode` — Return all properties that belong to a specific device category (e.g., `CTD`).
+- `deviceCode` — Return all properties associated with or measured by a specific device.

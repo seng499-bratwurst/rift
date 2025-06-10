@@ -40,6 +40,14 @@ builder.Services.AddScoped(provider =>
 
 var llmProviderName = builder.Configuration["LLmSettings:Provider"];
 builder.Services.AddSingleton<OncAPI>();
+builder.Services.AddScoped<FunctionCallSwitch>();
+builder.Services.AddScoped<Properties>();
+builder.Services.AddScoped<Deployments>();
+builder.Services.AddScoped<DeviceCategories>();
+
+
+
+
 
 switch (llmProviderName)
 {
