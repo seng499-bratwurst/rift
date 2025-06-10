@@ -11,8 +11,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Rift.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250609054445_inital migration")]
-    partial class initalmigration
+    [Migration("20250610184745_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -169,6 +169,9 @@ namespace Rift.Migrations
 
                     b.Property<DateTime>("LastInteraction")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("SessionId")
+                        .HasColumnType("text");
 
                     b.Property<string>("Title")
                         .HasColumnType("text");

@@ -77,7 +77,7 @@ public class MessageController : ControllerBase
         Conversation? conversation = null;
         if (request.ConversationId == null)
         {
-            conversation = await _conversationService.CreateConversation(userId);
+            conversation = await _conversationService.CreateConversationByUserId(userId);
         }
 
         var conversationId = request.ConversationId ?? conversation?.Id;
@@ -131,7 +131,7 @@ public class MessageController : ControllerBase
         Conversation? conversation = null;
         if (request.ConversationId == null)
         {
-            conversation = await _conversationService.CreateConversation(sessionId);
+            conversation = await _conversationService.CreateConversationBySessionId(sessionId);
         }
 
         var conversationId = request.ConversationId ?? conversation?.Id;
@@ -194,29 +194,4 @@ public class MessageController : ControllerBase
         });
     }
 
-    // [HttpPatch("messages/{messageId}")]
-    // [Authorize(AuthenticationSchemes = "Bearer")]
-    // public async Task<IActionResult> UpdateHelpfulness(int messageId)
-    // {
-    //     var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-    //     if (string.IsNullOrEmpty(userId))
-    //     {
-    //         return Unauthorized(new ApiResponse<List<Message>>
-    //         {
-    //             Success = false,
-    //             Error = "Unauthorized",
-    //             Data = null
-    //         });
-    //     }
-
-    //     var messages = await _messageService.GetMessagesForConversationAsync(conversationId);
-
-    //     return Ok(new ApiResponse<List<Message>>
-    //     {
-    //         Success = true,
-    //         Error = null,
-    //         Data = messages
-    //     });
-    // }
 }

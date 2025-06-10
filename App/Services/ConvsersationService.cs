@@ -17,9 +17,14 @@ public class ConversationService : IConversationService
         return await _repository.GetConversationsByUserIdAsync(userId);
     }
 
-    public async Task<Conversation> CreateConversation(string userId)
+    public async Task<Conversation> CreateConversationByUserId(string userId)
     {
-        return await _repository.CreateConversation(userId);
+        return await _repository.CreateConversationByUserId(userId);
+    }
+
+    public async Task<Conversation> CreateConversationBySessionId(string sessionId)
+    {
+        return await _repository.CreateConversationByUserId(sessionId);
     }
 
     public async Task<Conversation?> DeleteConversation(string userId, int conversationId)

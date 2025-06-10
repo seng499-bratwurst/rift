@@ -19,11 +19,27 @@ public class ConversationRepository : IConversationRepository
             .ToListAsync();
     }
 
-    public async Task<Conversation> CreateConversation(string userId)
+    public async Task<Conversation> CreateConversationByUserId(string userId)
     {
         var conversation = new Conversation
         {
             UserId = userId,
+            FirstInteraction = DateTime.UtcNow,
+            LastInteraction = DateTime.UtcNow
+        };
+
+        _context.Conversations.Add(conversation);
+        await _context.SaveChangesAsync();
+
+        return conversation;
+    }
+
+    public async Task<Conversation> CreateConversationBySessionId(string sessionId)
+    {
+        var conversation = new Conversation
+        {
+            SessionId = sessionId,
+            UserId = null,
             FirstInteraction = DateTime.UtcNow,
             LastInteraction = DateTime.UtcNow
         };

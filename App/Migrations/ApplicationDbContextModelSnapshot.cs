@@ -167,6 +167,9 @@ namespace Rift.Migrations
                     b.Property<DateTime>("LastInteraction")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("SessionId")
+                        .HasColumnType("text");
+
                     b.Property<string>("Title")
                         .HasColumnType("text");
 
