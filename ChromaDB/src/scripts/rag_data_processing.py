@@ -95,7 +95,7 @@ if __name__ == "__main__":
 
         print(f"Processed {len(all_docs)} chunks across all data types.")
         if all_docs:
-            first_doc_metadata = all_docs[480]['metadata']
+            first_doc_metadata = all_docs[0]['metadata']
             print("\nSample first doc metadata:\n")
             print("Source type: ", first_doc_metadata['source_type'])
             print("length: ", first_doc_metadata['length'])
@@ -103,6 +103,6 @@ if __name__ == "__main__":
             print("Source: ", first_doc_metadata['source'])
             print("ID: ", first_doc_metadata['id'])
             print("Chunk index: ", first_doc_metadata['chunk_index'], "\n")
-            print("Chunk Text:\n", all_docs[1]['text'], "\n")
+            print("Chunk Text:\n", all_docs[0]['text'], "\n")
     except Exception as e:
         print(f"An error occurred during processing: {e}")
