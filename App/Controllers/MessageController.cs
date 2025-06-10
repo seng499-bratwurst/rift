@@ -13,7 +13,6 @@ public class MessageController : ControllerBase
 {
     private readonly IMessageService _messageService;
     private readonly IConversationService _conversationService;
-
     private readonly ILlmProvider _llmProvider;
 
     public MessageController(IMessageService messageService, IConversationService conversationService, ILlmProvider llmProvider)
@@ -29,6 +28,22 @@ public class MessageController : ControllerBase
         public string Content { get; set; } = string.Empty;
     }
 
+    // Helper to get or create a temporary session UUID (24-hour)
+    private string GetOrCreateSessionId()
+    {
+        if (Request.Headers.TryGetValue("Temporary-Session-Id", out var sessionId) && Guid.TryParse(sessionId, out _))
+        {
+            return sessionId!;
+        }
+        var newSessionId = Guid.NewGuid().ToString();
+        Response.Headers["Temporary-Session-Id"] = newSessionId;
+
+        return newSessionId;
+    }
+
+    /// <summary>
+    /// Endpoint for authenticated and anonymous users (existing behavior).
+    /// </summary>
     [HttpPost("messages")]
     [AllowAnonymous]
     public async Task<IActionResult> CreateMessage([FromBody] CreateMessageRequest request)
@@ -88,6 +103,68 @@ public class MessageController : ControllerBase
             Success = true,
             Error = null,
             Data = response
+        });
+    }
+
+    /// <summary>
+    /// Endpoint for unauthenticated users using a temporary UUID session.
+    /// </summary>
+    [HttpPost("messages/guest")]
+    [AllowAnonymous]
+    public async Task<IActionResult> CreateGuestMessage([FromBody] CreateMessageRequest request)
+    {
+        var sessionId = GetOrCreateSessionId();
+
+        if (string.IsNullOrWhiteSpace(request.Content))
+        {
+            return BadRequest(new ApiResponse<Message>
+            {
+                Success = false,
+                Error = "Message content cannot be empty.",
+                Data = null
+            });
+        }
+
+        var response = await _llmProvider.GenerateResponseAsync(request.Content);
+
+        // If there is no conversationId, create a new conversation for the session
+        Conversation? conversation = null;
+        if (request.ConversationId == null)
+        {
+            conversation = await _conversationService.CreateConversation(sessionId);
+        }
+
+        var conversationId = request.ConversationId ?? conversation?.Id;
+
+        // Store the user's message
+        var promptMessage = await _messageService.CreateMessageAsync(
+            conversationId,
+            null,
+            request.Content,
+            "user"
+        );
+
+        // Store the LLM's response
+        var assistantMessage = await _messageService.CreateMessageAsync(
+            conversationId,
+            promptMessage?.Id,
+            response,
+            "assistant"
+        );
+
+        // Return the LLM response and the session UUID (for client to persist)
+        Response.Headers["Temporary-Session-Id"] = sessionId;
+        return Ok(new ApiResponse<object>
+        {
+            Success = true,
+            Error = null,
+            Data = new
+            {
+                ConversationId = conversationId,
+                UserMessage = promptMessage,
+                AssistantMessage = assistantMessage,
+                SessionId = sessionId
+            }
         });
     }
 
