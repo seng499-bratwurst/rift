@@ -126,10 +126,11 @@ public class MessageController : ControllerBase
         }
 
         var response = await _llmProvider.GenerateResponseAsync(request.Content);
-
+        
         // If there is no conversationId, create a new conversation for the session
-        Conversation? conversation = null;
-        if (request.ConversationId == null)
+        Conversation? conversation = await _conversationService.GetConversationsForSessionAsync(sessionId);
+
+        if (conversation == null)
         {
             conversation = await _conversationService.CreateConversationBySessionId(sessionId);
         }
@@ -160,9 +161,7 @@ public class MessageController : ControllerBase
             Error = null,
             Data = new
             {
-                ConversationId = conversationId,
-                UserMessage = promptMessage,
-                AssistantMessage = assistantMessage,
+                Response = response,
                 SessionId = sessionId
             }
         });

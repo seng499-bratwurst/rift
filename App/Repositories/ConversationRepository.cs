@@ -19,6 +19,13 @@ public class ConversationRepository : IConversationRepository
             .ToListAsync();
     }
 
+    public async Task<Conversation?> GetConversationsBySessionIdAsync(string sessionId)
+    {
+        return await _context.Conversations
+            .Where(c => c.SessionId == sessionId)
+            .SingleOrDefaultAsync();
+    }
+
     public async Task<Conversation> CreateConversationByUserId(string userId)
     {
         var conversation = new Conversation
