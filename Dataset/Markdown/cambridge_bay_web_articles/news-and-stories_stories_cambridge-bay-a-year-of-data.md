@@ -1,4 +1,5 @@
 # Source: https://www.oceannetworks.ca/news-and-stories/stories/cambridge-bay-a-year-of-data/
+# ID: YearOfData
 
 A panorama taken at ONC's Cambridge Bay community observatory.
 As the ice returns to cover much of the Arctic coastal waters, Ocean Networks Canada's community observatory at Cambridge Bay marks its first year of continuous operations.

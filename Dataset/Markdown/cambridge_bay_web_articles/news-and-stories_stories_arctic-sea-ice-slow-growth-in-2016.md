@@ -1,4 +1,5 @@
 # Source: https://www.oceannetworks.ca/news-and-stories/stories/arctic-sea-ice-slow-growth-in-2016/
+# ID: ArcticSeaIceSlowGrowth
 
 While global temperature tracking is suggesting 2016 will follow 2014 and 2015 as the warmest year on record, the effects are acute and immediate in the Canadian Arctic where climate change has already warmed more than twice the global average.
 This warming is having a dramatic effect on Arctic sea ice, with reports of both low geographic coverage and low total thickness.

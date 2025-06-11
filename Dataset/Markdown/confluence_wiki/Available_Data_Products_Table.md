@@ -1,4 +1,5 @@
-# Available Data Products
+# Source: https://wiki.oceannetworks.ca/spaces/O2A/pages/48697035/Available+Data+Products
+# ID: AvailableDataProducts
 
 |     | dataProductCode     | dataProductName                                     | extension    | helpDocument                                   |
 |-----|---------------------|-----------------------------------------------------|--------------|------------------------------------------------|

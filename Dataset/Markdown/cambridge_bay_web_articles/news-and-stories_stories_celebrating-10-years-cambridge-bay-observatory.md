@@ -1,4 +1,5 @@
 # Source: http://oceannetworks.ca/news-and-stories/stories/celebrating-10-years-cambridge-bay-observatory/
+# ID: TenYearsCambridgeBay
 
 Oct. 2, 2022 marks the 10-year anniversary of the community-led Cambridge Bay cabled ocean observatory, a pioneering partnership between Ocean Networks Canada and the people of Cambridge Bay, the impact of which extends well beyond its Arctic location.
 Follow the timeline of the Cambridge Bay Observatory.

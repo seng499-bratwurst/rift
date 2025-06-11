@@ -1,4 +1,5 @@
 # Source: https://www.oceannetworks.ca/news-and-stories/stories/cambridge-bay-at-the-crossroads-of-history-and-climate-science-2016/
+# ID: CambridgeBayCrossroads
 
 In late summer 2016, Cambridge Bay, Nunavut found itself at the centre of an arctic crossroads of sorts: a pivotal meeting place where ice-bound history is melting into climate science. A week after the first luxury cruise ship sailed through a virtually ice-free Northwest Passage and anchored in Cambridge Bay, the wreck of Franklinâs ship The Terrorâabandoned in 1845 due to impenetrable sea-iceâwas finally discovered in Terror Bay, just 200 km east.
 The coincidence in time and place of these two iconic voyages poignantly highlights how quickly the arctic climate is changing, the need to monitor these changes, and the growing importance of Cambridge Bay as an emerging arctic hub.

@@ -1,4 +1,5 @@
 # Source: https://www.oceannetworks.ca/news-and-stories/stories/cambridge-bay-observatory-the-forerunner-to-community-ocean-monitoring-nationwide/
+# ID: CambridgeBayForerunner
 
 True ocean observation involves multiple perspectives, which was a key driver behind western science and Indigenous ocean knowledge joining forces with the launch of Canadaâs first community-run cabled ocean observatory in October 2012.
 Ten years on, the pioneering partnership between Ocean Networks Canada (ONC) and the people of Cambridge Bay is going strong, and it has been the inspiration for a network of other community-run observatories on all three coasts of Canada.

@@ -1,4 +1,5 @@
 # Source: https://www.oceannetworks.ca/news-and-stories/stories/expanding-the-cambridge-bay-observatory-2015/
+# ID: ExpandingCambridgeBayObservatory
 
 Ocean Networks Canada (ONC) is in its third year of delivering ocean data from the Arctic Ocean with a new observatory platform and expanded suite of instruments and sensors that monitor the health of the northern ocean.
 From 15 to 31 August, an ONC operations and user services team visited the hamlet of Cambridge Bay, Nunavut, to service and upgrade both the underwater platforms and the above ground weather station located steps from the busy community dock. The platform now hosts three times as many sensors as the original version.
