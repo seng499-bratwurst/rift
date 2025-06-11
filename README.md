@@ -16,7 +16,7 @@ Once installed, to run the api and database:
 
 ## Creating and Running Migrations
 
-1. Make changes to model classes (/App/Models)
+1. Navigate to the `App` subdirectory
 2. run `dotnet ef database update`
 
 ## ChromaDB
