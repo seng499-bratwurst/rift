@@ -1,61 +1,123 @@
 import re
+import json
 from typing import List, Dict
 from base_document_processor import BaseDocumentProcessor
+import os
+import sys
+from pathlib import Path
 
 class ConfluenceDocuments(BaseDocumentProcessor):
-    def __init__(self, docs: List[str]):
+    def __init__(self, docs: List[Dict]):
         super().__init__(docs)
-
-    def clean(self) -> List[str]:
-        cleaned = []
-        for doc in self.docs:
-            text = re.sub(r'<[^>]+>', '', doc)
-            text = re.sub(r'\r?\n', '\n', text).strip()
-            cleaned.append(text)
-        return cleaned
-
-    def create_metadata(self) -> List[Dict]:
-        metas = []
-        for doc in self.docs:
-            source = self._extract_source(doc)
-            doc_id = self._extract_id(doc)
-            description = self._extract_description(doc)
-            metas.append({
-                'source_type': 'wiki',
-                'source': source,
-                'id': doc_id,
-                'description': description
-            })
-        return metas
-
+        
     def chunk_with_metadata(self) -> List[Dict]:
-        cleaned = self.clean()
-        metas = self.create_metadata()
-        all_chunks = []
-        for doc_text, base_meta in zip(cleaned, metas):
-            lines = doc_text.split('\n')
-            header_idx = next((i for i,l in enumerate(lines) if l.strip().startswith('|') and '|' in l and not l.strip().startswith('|-')), None)
-            if header_idx is None:
+        """
+        Process documents and create chunks with metadata.
+        Each chunk will contain relevant information from the JSON structure.
+        """
+        chunks = []
+        
+        for doc in self.docs:
+            try:
+                # Parse the JSON content
+                json_data = json.loads(doc['content'])
+                source_file = doc['filename']
+                
+                # Handle both array and single object cases
+                if isinstance(json_data, list):
+                    for item in json_data:
+                        chunks.extend(self._process_item(item, source_file))
+                else:
+                    chunks.extend(self._process_item(json_data, source_file))
+                    
+            except json.JSONDecodeError as e:
+                print(f"Error parsing JSON: {e}")
                 continue
-            header_line = lines[header_idx]
-            cols = [c.strip() for c in header_line.strip('|').split('|')]
-            row_start = header_idx + 2
-            row_lines = [l for l in lines[row_start:] if l.strip().startswith('|')]
-            for row in row_lines:
-                parts = [c.strip() for c in row.strip('|').split('|')]
-                if len(parts) < len(cols):
-                    parts += [''] * (len(cols) - len(parts))
-                row_data = dict(zip(cols, parts))
-                text = ' '.join(f"{k}: {v}" for k,v in row_data.items() if v)
-                if not text.strip():
-                    continue
-                meta = base_meta.copy()
-                meta['row_data'] = row_data
-                all_chunks.append({'text': text, 'metadata': meta})
-        return all_chunks
+                
+        return chunks
+    
+    def _process_item(self, item: Dict, source_file: str) -> List[Dict]:
+        """
+        Process a single JSON item and create chunks with metadata.
+        """
+        chunks = []
+        
+        # Extract basic metadata
+        metadata = {
+            'type': 'confluence_wiki',
+            'source_doc': source_file.replace('.json', '')
+        }
+        
+        # Add appropriate code and name based on the JSON structure
+        if 'propertyCode' in item:
+            metadata['code'] = item['propertyCode']
+            metadata['name'] = item.get('propertyName', '')
+        elif 'deviceCode' in item:
+            metadata['code'] = item['deviceCode']
+            metadata['name'] = item.get('deviceName', '')
+        elif 'deviceCategoryCode' in item:
+            metadata['code'] = item['deviceCategoryCode']
+            metadata['name'] = item.get('deviceCategoryName', '')
+        elif 'locationCode' in item:
+            metadata['code'] = item['locationCode']
+            metadata['name'] = item.get('locationName', '')
+        elif 'dataProductCode' in item:
+            metadata['code'] = item['dataProductCode']
+            metadata['name'] = item.get('dataProductName', '')
+        
+        # Create text representation of the item
+        text_parts = []
+        
+        # Add all fields to text
+        for key, value in item.items():
+            if isinstance(value, dict):
+                # Handle nested dictionaries (like cvTerm, bbox, citation)
+                for nested_key, nested_value in value.items():
+                    if isinstance(nested_value, list):
+                        text_parts.append(f"{nested_key}: {', '.join(str(v) for v in nested_value)}")
+                    else:
+                        text_parts.append(f"{nested_key}: {nested_value}")
+            elif isinstance(value, list):
+                # Handle lists (like dataRating)
+                if value:
+                    text_parts.append(f"{key}: {', '.join(str(v) for v in value)}")
+            else:
+                # Handle simple values
+                text_parts.append(f"{key}: {value}")
+        
+        # Create the text chunk
+        text = "\n".join(text_parts)
+        
+        # Add the chunk if it has content
+        if text.strip():
+            chunks.append({
+                'text': text,
+                'metadata': metadata
+            })
+            
+        return chunks
 
+if __name__ == "__main__":
+    # Example usage: process all confluence_wiki files and print the first chunk
 
-    @staticmethod
-    def _extract_description(doc: str) -> str:
-        m = re.search(r'^# Description:\s*(.+)$', doc, re.MULTILINE)
-        return m.group(1).strip() if m else ''
+    # Ensure the script can import from the parent directory if needed
+    sys.path.append(str(Path(__file__).parent))
+
+    # Dummy class for demonstration if not already defined
+    try:
+        from rag_data_processing import process_data_by_type
+    except ImportError:
+        print("Could not import process_data_by_type from rag_data_processing.")
+        sys.exit(1)
+
+    DATA_DIR = Path(__file__).resolve().parents[3] / "Dataset" / "Markdown"
+    TYPE_DIR = "confluence_wiki"
+    SOURCE_TYPE = "wiki"
+
+    # Process the data
+    chunks = process_data_by_type(TYPE_DIR, SOURCE_TYPE, ConfluenceDocuments)
+
+    print(f"Processed {len(chunks)} chunks from {TYPE_DIR}.")
+    if chunks:
+        print("\nFirst chunk text:\n", chunks[1]['text'])
+        print("\nFirst chunk metadata:\n", chunks[0]['metadata'])

@@ -1,4 +1,5 @@
 import os
+import json
 from pathlib import Path
 from typing import List, Dict
 
@@ -8,24 +9,27 @@ from cambridge_bay_articles import CambridgeBayArticles
 
 DATA_DIR = Path(__file__).resolve().parents[3] / "Dataset" / "Markdown"
 SUPPORTED_TYPES = {
-    # "cambridge_bay_papers": ("paper", ResearchPapers),
-    # "cambridge_bay_web_articles": ("web_article", CambridgeBayArticles),
+    "cambridge_bay_papers": ("paper", ResearchPapers),
+    "cambridge_bay_web_articles": ("web_article", CambridgeBayArticles),
     "confluence_wiki": ("wiki", ConfluenceDocuments)
 }
 
-def load_markdown_files_from_dir(directory: Path) -> List[str]:
+def load_files_from_dir(directory: Path) -> List[Dict]:
     """
-    Load all markdown files from a given directory.
-    Returns a list of file contents as strings.
+    Load all files from a given directory.
+    Returns a list of dictionaries containing file contents and filenames.
     """
     if not directory.exists():
         raise FileNotFoundError(f"Directory not found: {directory}")
     
     documents = []
-    for file_path in sorted(directory.glob("*.md")):
+    for file_path in sorted(directory.glob("*")):
         try:
             with open(file_path, "r", encoding="utf-8") as file:
-                documents.append(file.read())
+                documents.append({
+                    'content': file.read(),
+                    'filename': file_path.name
+                })
         except Exception as e:
             print(f"Error reading file {file_path}: {e}")
     return documents
@@ -36,7 +40,7 @@ def process_data_by_type(type_dir: str, source_type: str, handler_cls) -> List[D
     Returns a list of dicts with 'text' and 'metadata'.
     """
     full_path = Path(os.path.join(DATA_DIR, type_dir))
-    raw_docs = load_markdown_files_from_dir(full_path)
+    raw_docs = load_files_from_dir(full_path)
     processor = handler_cls(raw_docs)
     chunks_with_meta = processor.chunk_with_metadata()
 
@@ -74,7 +78,7 @@ if __name__ == "__main__":
 
         print(f"Processed {len(all_docs)} chunks across all data types.")
         if all_docs:
-            print("\n", all_docs[1]['text'])
+            print("\n", all_docs[4]['text'])
             print("\n", all_docs[2]['metadata'], "\n")
     except Exception as e:
         print(f"An error occurred during processing: {e}")
