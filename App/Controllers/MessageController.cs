@@ -4,6 +4,7 @@ using System.Security.Claims;
 using Rift.Models;
 using Rift.Services;
 using Rift.LLM;
+using System.Text.Json;
 
 namespace Rift.Controllers;
 
@@ -60,7 +61,13 @@ public class MessageController : ControllerBase
             });
         }
 
-        var response = await _llmProvider.GenerateResponseAsync(request.Content);
+        var response = await _llmProvider.GenerateONCAPICall(request.Content);
+        using var doc = JsonDocument.Parse(response);
+
+        // Clone it so we can return it after the doc is disposed
+        JsonElement json = doc.RootElement.Clone();
+
+        var finalRes = await _llmProvider.GenerateFinalResponse(request.Content, json);
 
         // If userId is null, send the response back without storing it
         if (string.IsNullOrEmpty(userId))
@@ -69,7 +76,7 @@ public class MessageController : ControllerBase
             {
                 Success = true,
                 Error = null,
-                Data = response
+                Data = finalRes
             });
         }
 
@@ -94,7 +101,7 @@ public class MessageController : ControllerBase
         await _messageService.CreateMessageAsync(
             conversationId,
             promptMessage?.Id,
-            response,
+            finalRes,
             "assistant"
         );
 
@@ -102,7 +109,7 @@ public class MessageController : ControllerBase
         {
             Success = true,
             Error = null,
-            Data = response
+            Data = finalRes
         });
     }
 
@@ -125,8 +132,14 @@ public class MessageController : ControllerBase
             });
         }
 
-        var response = await _llmProvider.GenerateResponseAsync(request.Content);
-        
+        var response = await _llmProvider.GenerateONCAPICall(request.Content);
+        Console.WriteLine($"\n\n\nLLM Response\n\n\n: {response}");
+        using var doc = JsonDocument.Parse(response);
+
+        // Clone it so we can return it after the doc is disposed
+        JsonElement json = doc.RootElement.Clone();
+
+        var finalRes = await _llmProvider.GenerateFinalResponse(request.Content, json);
         // If there is no conversationId, create a new conversation for the session
         Conversation? conversation = await _conversationService.GetConversationsForSessionAsync(sessionId);
 
@@ -149,7 +162,7 @@ public class MessageController : ControllerBase
         var assistantMessage = await _messageService.CreateMessageAsync(
             conversationId,
             promptMessage?.Id,
-            response,
+            finalRes,
             "assistant"
         );
 
@@ -161,7 +174,7 @@ public class MessageController : ControllerBase
             Error = null,
             Data = new
             {
-                Response = response,
+                Response = finalRes,
                 SessionId = sessionId
             }
         });
