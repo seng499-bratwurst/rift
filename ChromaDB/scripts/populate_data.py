@@ -11,7 +11,7 @@ import json
 import logging
 import os
 import sys
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Dict, List, Any, Optional
 
@@ -56,7 +56,7 @@ class OceanographicDataPopulator:
                 "description": description or f"Collection for {collection_name} data",
                 "metadata": {
                     "created_by": "populate_data_script",
-                    "created_at": datetime.utcnow().isoformat(),
+                    "created_at": datetime.now(timezone.utc).isoformat(),
                     "data_source": "oceanographic"
                 }
             }
@@ -99,10 +99,17 @@ class OceanographicDataPopulator:
             # Convert to expected format
             batch_docs = []
             for doc in documents:
+                metadata = doc.get("metadata", {}).copy()
+                
+                # Convert any list values to comma-separated strings
+                for key, value in metadata.items():
+                    if isinstance(value, list):
+                        metadata[key] = ",".join(str(item) for item in value)
+                
                 batch_docs.append({
                     "id": doc["id"],
                     "text": doc["text"],
-                    "metadata": doc.get("metadata", {})
+                    "metadata": metadata
                 })
             
             data = {
@@ -150,7 +157,7 @@ class OceanographicDataPopulator:
                     "data_type": "location_info",
                     "location": "Folger Passage",
                     "timestamp": "2024-01-15T00:00:00Z",
-                    "tags": ["navigation", "tidal_currents", "marine_life", "bathymetry"]
+                    "tags": "navigation,tidal_currents,marine_life,bathymetry"
                 }
             },
             {
@@ -161,7 +168,7 @@ class OceanographicDataPopulator:
                     "data_type": "instrument_spec",
                     "instrument_type": "CTD",
                     "timestamp": "2024-01-10T00:00:00Z",
-                    "tags": ["conductivity", "temperature", "depth", "salinity", "oceanography"]
+                    "tags": "conductivity,temperature,depth,salinity,oceanography"
                 }
             },
             {
@@ -174,7 +181,7 @@ class OceanographicDataPopulator:
                     "depth": 15.0,
                     "instrument_type": "temperature_sensor",
                     "timestamp": "2024-01-20T12:00:00Z",
-                    "tags": ["temperature", "time_series", "seasonal_variation", "marine_heatwave"]
+                    "tags": "temperature,time_series,seasonal_variation,marine_heatwave"
                 }
             },
             {
@@ -185,7 +192,7 @@ class OceanographicDataPopulator:
                     "data_type": "research_data",
                     "location": "Strait of Georgia",
                     "timestamp": "2024-01-25T00:00:00Z",
-                    "tags": ["oxygen", "hypoxia", "climate_change", "biogeochemistry", "monitoring"]
+                    "tags": "oxygen,hypoxia,climate_change,biogeochemistry,monitoring"
                 }
             },
             {
@@ -197,7 +204,7 @@ class OceanographicDataPopulator:
                     "location": "Pacific Ocean",
                     "instrument_type": "DART_buoy",
                     "timestamp": "2024-01-18T00:00:00Z",
-                    "tags": ["tsunami", "warning_system", "DART", "seismic", "emergency_response"]
+                    "tags": "tsunami,warning_system,DART,seismic,emergency_response"
                 }
             },
             {
@@ -208,7 +215,7 @@ class OceanographicDataPopulator:
                     "data_type": "conservation_info",
                     "location": "British Columbia",
                     "timestamp": "2024-01-12T00:00:00Z",
-                    "tags": ["MPA", "conservation", "rockfish", "fisheries", "habitat_protection"]
+                    "tags": "MPA,conservation,rockfish,fisheries,habitat_protection"
                 }
             },
             {
@@ -220,7 +227,7 @@ class OceanographicDataPopulator:
                     "location": "Salish Sea",
                     "instrument_type": "hydrophone",
                     "timestamp": "2024-01-22T00:00:00Z",
-                    "tags": ["marine_mammals", "acoustics", "whales", "hydrophone", "conservation"]
+                    "tags": "marine_mammals,acoustics,whales,hydrophone,conservation"
                 }
             },
             {
@@ -231,7 +238,7 @@ class OceanographicDataPopulator:
                     "data_type": "research_data",
                     "location": "Pacific Northwest",
                     "timestamp": "2024-01-28T00:00:00Z",
-                    "tags": ["ocean_acidification", "pH", "carbonate_chemistry", "climate_change", "shellfish"]
+                    "tags": "ocean_acidification,pH,carbonate_chemistry,climate_change,shellfish"
                 }
             }
         ]
@@ -408,8 +415,18 @@ class OceanographicDataPopulator:
                 
                 logger.info(f"Found {len(documents)} results:")
                 for i, (doc, dist) in enumerate(zip(documents, distances)):
-                    similarity = 1 - dist if distances else 'N/A'
-                    logger.info(f"  {i+1}. Similarity: {similarity:.3f if isinstance(similarity, float) else similarity}")
+                    # ChromaDB typically returns cosine distance, where smaller is better
+                    # Convert to similarity score (higher is better)
+                    if distances and isinstance(dist, (int, float)):
+                        # For cosine distance: similarity = 1 - distance
+                        # Clamp to [0, 1] range for display
+                        similarity = max(0, min(1, 1 - dist))
+                        similarity_str = f"{similarity:.3f}"
+                    else:
+                        similarity_str = "N/A"
+                    
+                    dist_str = f"{dist:.3f}" if isinstance(dist, (int, float)) else str(dist)
+                    logger.info(f"  {i+1}. Similarity: {similarity_str} (Distance: {dist_str})")
                     logger.info(f"     Text: {doc[:200]}...")
             else:
                 logger.info("No results found")

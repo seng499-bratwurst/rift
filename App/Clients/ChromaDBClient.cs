@@ -33,6 +33,22 @@ public class ChromaDBClient
     {
         try
         {
+            // Preprocess metadata to handle any remaining lists that might be in the Dictionary<string, object>
+            if (request.Metadata != null)
+            {
+                foreach (var key in request.Metadata.Keys.ToList())
+                {
+                    if (request.Metadata[key] is List<string> list)
+                    {
+                        request.Metadata[key] = string.Join(",", list);
+                    }
+                    else if (request.Metadata[key] is List<object> objectList)
+                    {
+                        request.Metadata[key] = string.Join(",", objectList.Select(o => o.ToString()));
+                    }
+                }
+            }
+            
             var response = await _httpClient.PostAsJsonAsync($"{_baseUrl}/documents/add", request, _jsonOptions);
             
             if (response.IsSuccessStatusCode)
@@ -60,6 +76,9 @@ public class ChromaDBClient
     {
         try
         {
+            // No need for additional preprocessing since we've updated the model
+            // to use string for Tags instead of List<string>
+            
             var response = await _httpClient.PostAsJsonAsync($"{_baseUrl}/documents/batch", request, _jsonOptions);
             
             if (response.IsSuccessStatusCode)
@@ -481,10 +500,14 @@ public class ChromaDBClient
 
                         if (metadata.TryGetValue("tags", out var tagsObj) && tagsObj is JsonElement tagsElement && tagsElement.ValueKind == JsonValueKind.Array)
                         {
-                            relevantDoc.Metadata.Tags = tagsElement.EnumerateArray()
+                            relevantDoc.Metadata.Tags = string.Join(",", tagsElement.EnumerateArray()
                                 .Where(tag => tag.ValueKind == JsonValueKind.String)
-                                .Select(tag => tag.GetString()!)
-                                .ToList();
+                                .Select(tag => tag.GetString()!));
+                        }
+                        else if (metadata.TryGetValue("tags", out var tagsStrObj) && tagsStrObj is string tagsStr)
+                        {
+                            // If tags are already a comma-separated string
+                            relevantDoc.Metadata.Tags = tagsStr;
                         }
                     }
 

@@ -48,7 +48,7 @@ class DocumentMetadata(BaseModel):
     location: Optional[str] = None
     depth: Optional[float] = None
     instrument_type: Optional[str] = None
-    tags: Optional[List[str]] = None
+    tags: Optional[str] = None  # Comma-separated string of tags instead of List[str]
 
 class Document(BaseModel):
     id: str
@@ -174,10 +174,17 @@ async def add_document(request: AddRequest):
                 name=request.collection_name
             )
         
-        # Clean metadata to remove None values
-        clean_metadata = None
+        # Clean metadata to remove None values and convert lists to strings
+        metadata = None
         if request.metadata:
+            # Convert any list values to comma-separated strings
+            for key, value in request.metadata.items():
+                if isinstance(value, list):
+                    request.metadata[key] = ",".join(str(item) for item in value)
+            
+            # Remove None values
             clean_metadata = {k: v for k, v in request.metadata.items() if v is not None}
+            metadata = clean_metadata if clean_metadata else None
             
         collection.add(
             documents=[request.text],
@@ -209,11 +216,20 @@ async def add_batch_documents(request: BatchDocuments):
         documents = [doc.text for doc in request.documents]
         ids = [doc.id for doc in request.documents]
         
-        # Clean metadatas to remove None values
+        # Clean metadatas to remove None values and convert lists to strings
         metadatas = []
         for doc in request.documents:
             if doc.metadata:
-                clean_metadata = {k: v for k, v in doc.metadata.dict().items() if v is not None}
+                # Convert the model to dict
+                metadata_dict = doc.metadata.dict()
+                
+                # Convert any list values to comma-separated strings
+                for key, value in metadata_dict.items():
+                    if isinstance(value, list):
+                        metadata_dict[key] = ",".join(str(item) for item in value)
+                
+                # Remove None values
+                clean_metadata = {k: v for k, v in metadata_dict.items() if v is not None}
                 metadatas.append(clean_metadata if clean_metadata else None)
             else:
                 metadatas.append(None)

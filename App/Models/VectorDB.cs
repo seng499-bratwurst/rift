@@ -25,7 +25,7 @@ public class DocumentMetadata
     public string? InstrumentType { get; set; }
 
     [JsonPropertyName("tags")]
-    public List<string>? Tags { get; set; }
+    public string? Tags { get; set; }
 }
 
 // Single document model
