@@ -58,7 +58,10 @@ builder.Services.AddScoped(provider =>
 });
 
 var llmProviderName = builder.Configuration["LLmSettings:Provider"];
-builder.Services.AddSingleton<OncAPI>();
+builder.Services.AddHttpClient<OncAPI>(client =>
+{
+    client.BaseAddress = new Uri($"https://data.oceannetworks.ca/api/");
+});
 builder.Services.AddScoped<FunctionCallSwitch>();
 builder.Services.AddScoped<Properties>();
 builder.Services.AddScoped<Deployments>();

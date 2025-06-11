@@ -17,13 +17,20 @@ namespace Rift.LLM
         private readonly Properties _oncPropertiesClient;
         private readonly Deployments _oncDeploymentClient;
         private readonly DeviceCategories _oncDeviceCategoriesClient;
+        private readonly OncAPI _oncApiClient;
 
-        public FunctionCallSwitch(Properties oncPropertiesClient, Deployments oncDeploymentClient, DeviceCategories oncDeviceCategoriesClient)
+        public FunctionCallSwitch(
+            Properties oncPropertiesClient,
+            Deployments oncDeploymentClient,
+            DeviceCategories oncDeviceCategoriesClient,
+            OncAPI oncApiClient    
+        )
         {
             _oncPropertiesClient = oncPropertiesClient!;
             _oncDeploymentClient = oncDeploymentClient!;
             _oncDeviceCategoriesClient = oncDeviceCategoriesClient!;
-    }
+            _oncApiClient = oncApiClient;
+        }
 
 
         public (string functionName, Dictionary<string, string?> args) ExtractFunctionAndArgsFromContent(string content_llm)
@@ -48,47 +55,54 @@ namespace Rift.LLM
 
         public async Task<string> ONC_API_Call(string functionName, Dictionary<string, string?> args)
         {
-            switch (functionName)
-            {
-                case "deviceCategories":
-                    Console.WriteLine("Device Cat switch worked");
-                    var result_device_cat = await _oncDeviceCategoriesClient.GetDeviceCategoriesAsync(
-                                deviceCategoryCode: args.GetValueOrDefault("deviceCategoryCode"),
-                                deviceCategoryName: args.GetValueOrDefault("deviceCategoryName"),
-                                description: args.GetValueOrDefault("description"),
-                                locationCode: args.GetValueOrDefault("locationCode"),
-                                propertyCode: args.GetValueOrDefault("propertyCode")
-                            );
 
-                    return JsonSerializer.Serialize(result_device_cat, new JsonSerializerOptions { WriteIndented = true });
-                
-                case "deployments":
-                    var result_deployments = await _oncDeploymentClient.GetDeploymentsAsync(
-                                deviceCategoryCode: args.GetValueOrDefault("deviceCategoryCode"),
-                                deviceCode: args.GetValueOrDefault("deviceCode"),
-                                locationCode: args.GetValueOrDefault("locationCode"),
-                                propertyCode: args.GetValueOrDefault("propertyCode"),
-                                dateFrom: args.GetValueOrDefault("dateFrom"),
-                                dateTo: args.GetValueOrDefault("dateTo")
-                            );
+            var response = await _oncApiClient.GetDataAsync(functionName, args);
+            var str_respone = JsonSerializer.Serialize(response, new JsonSerializerOptions { WriteIndented = true });
+            
+            Console.WriteLine($"ONC API Response: {str_respone}");
 
-                    return JsonSerializer.Serialize(result_deployments, new JsonSerializerOptions { WriteIndented = true });
-                
-                case "properties":
-                    var result_properties = await _oncPropertiesClient.GetPropertiesAsync(
-                                deviceCategoryCode: args.GetValueOrDefault("deviceCategoryCode"),
-                                deviceCode: args.GetValueOrDefault("deviceCode"),
-                                locationCode: args.GetValueOrDefault("locationCode"),
-                                propertyCode: args.GetValueOrDefault("propertyCode"),
-                                description: args.GetValueOrDefault("description"),
-                                propertyName: args.GetValueOrDefault("propertyName")
-                            );
+            return str_respone;
+            // switch (functionName)
+            // {
+            //     case "deviceCategories":
+            //         Console.WriteLine("Device Cat switch worked");
+            //         var result_device_cat = await _oncDeviceCategoriesClient.GetDeviceCategoriesAsync(
+            //                     deviceCategoryCode: args.GetValueOrDefault("deviceCategoryCode"),
+            //                     deviceCategoryName: args.GetValueOrDefault("deviceCategoryName"),
+            //                     description: args.GetValueOrDefault("description"),
+            //                     locationCode: args.GetValueOrDefault("locationCode"),
+            //                     propertyCode: args.GetValueOrDefault("propertyCode")
+            //                 );
 
-                    return JsonSerializer.Serialize(result_properties, new JsonSerializerOptions { WriteIndented = true });
+            //         return JsonSerializer.Serialize(result_device_cat, new JsonSerializerOptions { WriteIndented = true });
 
-                default:
-                    return "{}"; 
-            }
+            //     case "deployments":
+            //         var result_deployments = await _oncDeploymentClient.GetDeploymentsAsync(
+            //                     deviceCategoryCode: args.GetValueOrDefault("deviceCategoryCode"),
+            //                     deviceCode: args.GetValueOrDefault("deviceCode"),
+            //                     locationCode: args.GetValueOrDefault("locationCode"),
+            //                     propertyCode: args.GetValueOrDefault("propertyCode"),
+            //                     dateFrom: args.GetValueOrDefault("dateFrom"),
+            //                     dateTo: args.GetValueOrDefault("dateTo")
+            //                 );
+
+            //         return JsonSerializer.Serialize(result_deployments, new JsonSerializerOptions { WriteIndented = true });
+
+            //     case "properties":
+            //         var result_properties = await _oncPropertiesClient.GetPropertiesAsync(
+            //                     deviceCategoryCode: args.GetValueOrDefault("deviceCategoryCode"),
+            //                     deviceCode: args.GetValueOrDefault("deviceCode"),
+            //                     locationCode: args.GetValueOrDefault("locationCode"),
+            //                     propertyCode: args.GetValueOrDefault("propertyCode"),
+            //                     description: args.GetValueOrDefault("description"),
+            //                     propertyName: args.GetValueOrDefault("propertyName")
+            //                 );
+
+            //         return JsonSerializer.Serialize(result_properties, new JsonSerializerOptions { WriteIndented = true });
+
+            //     default:
+            //         return "{}"; 
+            // }
         }
 
 

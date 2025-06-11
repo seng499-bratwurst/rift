@@ -30,15 +30,14 @@ namespace Rift.Controllers
             var response = await _llmProvider.GenerateONCAPICall(request.Prompt);
             
             
-             using var doc = JsonDocument.Parse(response);
+            using var doc = JsonDocument.Parse(response);
 
             // Clone it so we can return it after the doc is disposed
             JsonElement json = doc.RootElement.Clone();
 
-            var fina_res = await _llmProvider.GenerateFinalResponse(request.Prompt, json);
+            var final_res = await _llmProvider.GenerateFinalResponse(request.Prompt, json);
 
-
-            return Ok(fina_res);
+            return Ok(final_res);
             // return Ok(new { response });
         }
 
