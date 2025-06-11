@@ -1,8 +1,7 @@
 # Source: https://wiki.oceannetworks.ca/spaces/O2A/pages/49447553/Available+Locations
 # ID: AvailableLocations
+# Description: The locationCode values can be used as a filter on the devices, deviceCategories, properties, dataProducts and dataProductDelivery services. Filters on the locationCode, locationName and description columns can be used to reduce the results returned from the locations service. The dataSearchURL column provides a link to the location in the Data Search, for interactive download of data. The hasDeviceData indicates that data products can be requested using a device category code for the location and the hasPropertyData indicates that data products can be requested using a property code for the location.
 
-The following is a dynamic list of all of the locations that have data. It is being pulled from the locations web service using the URL http://data.oceannetworks.ca/api/locations?method=get&token=[YOUR\_TOKEN\_HERE]
-The locationCode values can be used as a filter on the devices, deviceCategories, properties, dataProducts and dataProductDelivery services. Filters on the locationCode, locationName and description columns can be used to reduce the results returned from the locations service. The dataSearchURL column provides a link to the location in the Data Search, for interactive download of data. The hasDeviceData indicates that data products can be requested using a device category code for the location and the hasPropertyData indicates that data products can be requested using a property code for the location.
 | locationCode | locationName | description | dataSearchURL | hasDeviceData | hasPropertyData | deployments | lat | lon | depth |
 |---|---|---|---|---|---|---|---|---|---|
 | AAAGV | Arnold Cove | Arnold Cove is located in Placentia Bay in Newfoundland. |

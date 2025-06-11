@@ -1,5 +1,6 @@
 ﻿# Source: https://data.oceannetworks.ca/Dashboards/embed/id/172
 # ID: CambridgeBayDescription
+# Description: A description of the background of Cambridge Bay and its partnership with Ocean Networks Canada.
 
 Cambridge Bay Coastal Community Observatory
 

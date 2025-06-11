@@ -8,8 +8,9 @@ from cambridge_bay_articles import CambridgeBayArticles
 
 DATA_DIR = Path(__file__).resolve().parents[3] / "Dataset" / "Markdown"
 SUPPORTED_TYPES = {
-    "cambridge_bay_papers": ("paper", ResearchPapers),
-    "cambridge_bay_web_articles": ("web_article", CambridgeBayArticles)
+    # "cambridge_bay_papers": ("paper", ResearchPapers),
+    # "cambridge_bay_web_articles": ("web_article", CambridgeBayArticles),
+    "confluence_wiki": ("wiki", ConfluenceDocuments)
 }
 
 def load_markdown_files_from_dir(directory: Path) -> List[str]:
@@ -73,7 +74,7 @@ if __name__ == "__main__":
 
         print(f"Processed {len(all_docs)} chunks across all data types.")
         if all_docs:
-            print("\n", all_docs[0]['text'])
-            print("\n", all_docs[0]['metadata'], "\n")
+            print("\n", all_docs[1]['text'])
+            print("\n", all_docs[2]['metadata'], "\n")
     except Exception as e:
         print(f"An error occurred during processing: {e}")

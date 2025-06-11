@@ -1,8 +1,7 @@
 # Source: https://wiki.oceannetworks.ca/spaces/O2A/pages/48697045/Available+Devices
 # ID: AvailableDevices
+# Description: The deviceCode values can be used as a filter on the locations, properties, dataProducts and dataProductDelivery services. Filters on the deviceCode and deviceName columns can be used to reduce the results returned from the devices service. The deviceLink column provides a link to the Device Listing page for the specific device.
 
-The following is dynamic list of all of the devices that have data. It is being pulled from the devices web service using the URL http://data.oceannetworks.ca/api/devices?method=get&token=[YOUR\_TOKEN\_HERE]
-The deviceCode values can be used as a filter on the locations, properties, dataProducts and dataProductDelivery services. Filters on the deviceCode and deviceName columns can be used to reduce the results returned from the devices service. The deviceLink column provides a link to the Device Listing page for the specific device.
 | deviceCode | deviceName | deviceId | deviceLink |
 |---|---|---|---|
 | 3DTEMPARRAY01 | 3D Temperature Array 01 | 23624 | |

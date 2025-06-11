@@ -1,9 +1,7 @@
 # Source: https://wiki.oceannetworks.ca/spaces/O2A/pages/48697035/Available+Data+Products
 # ID: AvailableDataProducts
+# Description: The dataProductCode values can be used as a filter on the locations and devices services and along with extension values on the dataProductDelivery service. Filters on the dataProductCode, dataProductName and extension columns can be used to reduce the results returned from the dataProducts service. The helpDocument column provides a link to the Help documentation for the specific Data Product. All of the information about the data product options and their usage, needed to successfully request a data product, can be found in the documentation.
 
-|     | dataProductCode     | dataProductName                                     | extension    | helpDocument                                   |
-|-----|---------------------|-----------------------------------------------------|--------------|------------------------------------------------|
-|   0 | | dataProductCode | | dataProductName |                                   | extension |  | helpDocument |                                 |
 |   1 | | 3DCIS |           | 3D Camera Image Stitching |                         | tar |        | https://wiki.oceannetworks.ca/display/DP/86 |  |
 |   2 | | 3DCR |            | 3D Camera Reconstruction |                          | tar |        | https://wiki.oceannetworks.ca/display/DP/85 |  |
 |   3 | | AAPTS |           | ASL Acoustic Profiler Time Series |                 | 01a |        | https://wiki.oceannetworks.ca/display/DP/24 |  |
