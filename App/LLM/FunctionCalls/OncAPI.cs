@@ -19,12 +19,11 @@ public class OncAPI
     }
 
     public async Task<JsonElement> GetDataAsync(
-        string endpoint,
+        string DataEndpoint,
         Dictionary<string, string?>? queryParams = null
     )
     {
-
-        var urlPath = new StringBuilder(endpoint);
+        var urlPath = new StringBuilder(DataEndpoint);
         urlPath.Append("?token=" + _oncToken);
 
         if (queryParams != null && queryParams.Count > 0)

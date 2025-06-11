@@ -62,14 +62,7 @@ builder.Services.AddHttpClient<OncAPI>(client =>
 {
     client.BaseAddress = new Uri($"https://data.oceannetworks.ca/api/");
 });
-builder.Services.AddScoped<FunctionCallSwitch>();
-builder.Services.AddScoped<Properties>();
-builder.Services.AddScoped<Deployments>();
-builder.Services.AddScoped<DeviceCategories>();
-
-
-
-
+builder.Services.AddScoped<OncFunctionParser>();
 
 switch (llmProviderName)
 {
