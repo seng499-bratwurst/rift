@@ -1,3 +1,6 @@
+# Source: Dorval, J. (2017). Variation temporelle à haute resolution de la dynamique des assemblages benthiques infratidales a cambridge bay, NU (arctique) (Order No. 11014838). Available from Canadian Business & Current Affairs Database; ProQuest Dissertations & Theses A&I. (2161312777). Retrieved from https://ezproxy.library.uvic.ca/login?url=https://www.proquest.com/dissertations-theses/variation-temporelle-à-haute-resolution-de-la/docview/2161312777/se-2
+# ID: VariationTemporelle
+
 VARIATION TEMPORELLE À HAUTE RESOLUTION DE LA 
 DYNAMIQUE DES ASSEMBLAGES BENTHIQUES INFRATIDALES A 
 CAMBRIDGE BAY, NU (ARCTIQUE) 

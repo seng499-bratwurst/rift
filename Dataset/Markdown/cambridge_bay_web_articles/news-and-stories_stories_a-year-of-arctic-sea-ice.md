@@ -1,4 +1,5 @@
 # Source: https://www.oceannetworks.ca/news-and-stories/stories/a-year-of-arctic-sea-ice/
+# ID: YearOfArcticSeaIce
 
 A winter's passage has been captured by cameras and instruments measuring ice thickness, salinity, oxygen and phytoplankton abundance in Cambridge Bay, Nunavut. These data are being analyzed by staff scientist Akash Sastri and Scientific Data Specialist Alice Olga Victoria Bui, revealing new insights into how conditions evolve beneath the ice over the long Arctic winter. The data are being collected by instrumentation attached to a community observatory operating at a depth of approximately 6 metres below the surface and connected by cable to a nearby wharf for realtime data collection.
 A Greenland cod (Gadus ogac) swims beneath the winter ice in Cambridge Bay, Nunavut, 14 February 2014.

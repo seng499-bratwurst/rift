@@ -1,4 +1,5 @@
 # Source: https://www.oceannetworks.ca/news-and-stories/stories/building-northern-led-sensor-technology-skills-to-monitor-the-changing-arctic-ocean/
+# ID: BuildingNorthernLedSensor
 
 The dramatic pace of environmental change in Canadaâs north requires monitoring and research to help inform decisions relating to everything from environmental protection and stewardship to sustainable development and more. The collection and analysis of these data often requires specialized scientific instruments and software.
 Ocean Networks Canada (ONC) and Nunavut Arctic College are collaborating on the design and delivery of a course in Instrument Technology that will train local marine biology students in the use of ocean sensor technology in ocean and freshwater environments, both in ice-covered and open-water conditions. Using a collaborative interdisciplinary approach that includes both science and Indigenous knowledge, this course, a component of the college's Environmental Technology Program, expands the potential for northern-led monitoring of snow, sea ice, and ocean conditions as part of a larger POLAR Knowledge project.

@@ -1,4 +1,5 @@
 # Source: https://wiki.oceannetworks.ca/spaces/O2A/pages/48697051/Available+Properties
+# ID: AvailableProperties
 
 The following is a dynamic list of all of the properties are being pulled from the properties web service using the URL http://data.oceannetworks.ca/api/properties?method=get&token=[YOUR\_TOKEN\_HERE]
 The propertyCode values can be used as a filter on the locations, devices, deviceCategories, properties, dataProducts and dataProductDelivery services. Filters on the propertyCode, propertyName and description columns can be used to reduce the results returned from the properties service.

@@ -1,3 +1,6 @@
+# Source: Xu, C., Mikhael, W., Myers, P. G., Else, B., Sims, R. P., & Zhou, Q. (2021). Effects of Seasonal Ice Coverage on the Physical Oceanographic Conditions of the Kitikmeot Sea in the Canadian Arctic Archipelago. Atmosphere-Ocean, 59(4–5), 214–232. https://doi.org/10.1080/07055900.2021.1965531
+# ID: EffectsOfSeasonalIceCoverage
+
 Atmosphere-Ocean
 ISSN: 0705-5900 (Print) 1480-9214 (Online) Journal homepage: www.tandfonline.com/journals/tato20
 Eﬀects of Seasonal Ice Coverage on the Physical

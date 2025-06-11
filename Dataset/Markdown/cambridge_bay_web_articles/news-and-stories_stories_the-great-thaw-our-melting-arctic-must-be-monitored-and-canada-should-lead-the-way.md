@@ -1,4 +1,5 @@
 # Source: https://www.oceannetworks.ca/news-and-stories/stories/the-great-thaw-our-melting-arctic-must-be-monitored-and-canada-should-lead-the-way/
+# ID: GreatThaw
 
 The following OpEd written by Ocean Networks Canada President Kate Moran was published in The Hill Times on Monday, 8 May 2017.
 Imagine autumn in the Gatineauâs without trees, or the Rideau River without water. Now imagine the Arctic without ice. All unimaginable images, yet despite our proud âGreat White Northâ designation, the problem in grasping the magnitude of this meltdown is that it seems so far away. In fact, the vast majority of Canadaâs 35 million citizens know only of the Arctic through the pages of school textbooks, and itâs easy to see why. According to the 2016 census, 66% of Canadians live within 100 kilometres of the U.S. border, as far from the Arctic as possible, representing just 4% of Canadaâs total territory.

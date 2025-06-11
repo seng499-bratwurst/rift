@@ -1,4 +1,5 @@
 # Source: https://wiki.oceannetworks.ca/spaces/O2A/pages/48697037/Available+Device+Categories
+# ID: AvailableDeviceCategories
 
 The following is a dynamic list of all of the device categories are being pulled from the deviceCategories web service using the URL https://data.oceannetworks.ca/api/deviceCategories?method=get&token=[YOUR\_TOKEN\_HERE]
 The deviceCategoryCode values can be used as a filter on the locations, devices, properties, dataProducts and dataProductDelivery services. Filters on the deviceCategoryCode, deviceCategoryName, description and longDescription columns can be used to reduce the results returned from the deviceCategories service.

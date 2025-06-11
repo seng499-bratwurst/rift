@@ -1,4 +1,5 @@
 # Source: https://www.oceannetworks.ca/news-and-stories/stories/community-observatory-keeps-eye-on-arctic-sea-ice/
+# ID: CommunityObservatory
 
 The University of Victoriaâs Ocean Networks Canada (ONC) is making its first foray into the Arctic, just as the sea ice extent is setting a new record low.
 The observatory has been granted a five-year research license from the Nunavut Research Institute for a cabled seafloor observatory system and surface weather station in the coastal hamlet of Cambridge Bay, Nunavut. The community observatory, using technologies developed by UVicâs VENUS and NEPTUNE observatories, intends to provide year-round, near real-time undersea monitoring of the northern environment, and to make research data available to the community for educational and other purposes.
