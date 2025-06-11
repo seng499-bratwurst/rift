@@ -133,7 +133,6 @@ public class MessageController : ControllerBase
         }
 
         var response = await _llmProvider.GenerateONCAPICall(request.Content);
-        Console.WriteLine($"\n\n\nLLM Response\n\n\n: {response}");
         using var doc = JsonDocument.Parse(response);
 
         // Clone it so we can return it after the doc is disposed
