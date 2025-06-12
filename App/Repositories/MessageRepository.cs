@@ -38,6 +38,8 @@ public class MessageRepository : IMessageRepository
                 IsHelpful = m.IsHelpful,
                 Role = m.Role,
                 CreatedAt = m.CreatedAt,
+                XCoordinate = m.XCoordinate,
+                YCoordinate = m.YCoordinate,
             })
             .OrderBy(m => m.CreatedAt)
             .ToListAsync();

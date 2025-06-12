@@ -123,8 +123,11 @@ var app = builder.Build();
 // Automatically apply migrations on startup
 using (var scope = app.Services.CreateScope())
 {
-    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    db.Database.Migrate();
+    var appDb = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    appDb.Database.Migrate();
+
+    var fileDb = scope.ServiceProvider.GetRequiredService<FileDbContext>();
+    fileDb.Database.Migrate();
 
     var services = scope.ServiceProvider;
     await SeedRoles.SeedRolesAndAdminAsync(services);
