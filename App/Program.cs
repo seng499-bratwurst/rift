@@ -31,6 +31,12 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(connectionString);
 });
 
+builder.Services.AddDbContext<FileDbContext>(options =>
+{
+    var fileDbConnectionString = builder.Configuration.GetConnectionString("FileDbConnection");
+    options.UseNpgsql(fileDbConnectionString);
+});
+
 // Add Identity
 builder.Services.AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -47,6 +53,9 @@ builder.Services.AddScoped<IConversationRepository, ConversationRepository>();
 
 builder.Services.AddScoped<IMessageRepository, MessageRepository>();
 builder.Services.AddScoped<IMessageService, MessageService>();
+
+builder.Services.AddScoped<IFileRepository, FileRepository>();
+builder.Services.AddScoped<IFileService, FileService>();
 
 builder.Services.AddScoped<RAGService>();
 builder.Services.AddScoped<ReRanker>();

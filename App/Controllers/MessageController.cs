@@ -105,11 +105,15 @@ public class MessageController : ControllerBase
             "assistant"
         );
 
-        return Ok(new ApiResponse<string>
+        return Ok(new ApiResponse<object>
         {
             Success = true,
             Error = null,
-            Data = finalRes
+            Data = new
+            {
+                ConversationId = conversationId,
+                Response = finalRes
+            }
         });
     }
 
@@ -147,7 +151,7 @@ public class MessageController : ControllerBase
             conversation = await _conversationService.CreateConversationBySessionId(sessionId);
         }
 
-        var conversationId = request.ConversationId ?? conversation?.Id;
+        var conversationId = conversation?.Id;
 
         // Store the user's message
         var promptMessage = await _messageService.CreateMessageAsync(
@@ -174,7 +178,7 @@ public class MessageController : ControllerBase
             Data = new
             {
                 Response = finalRes,
-                SessionId = sessionId
+                SessionId = sessionId,
             }
         });
     }
