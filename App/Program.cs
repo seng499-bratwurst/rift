@@ -3,11 +3,12 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
 using NSwag;
-using Rift.LLM;
 using Microsoft.AspNetCore.Identity;
+using Rift.LLM;
 using Rift.Models;
 using Rift.Services;
 using Rift.Repositories;
+using Rift.App.Clients;
 
 
 var builder = WebApplication.CreateBuilder(args);
