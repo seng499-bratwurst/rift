@@ -944,7 +944,7 @@ public class VectorDBController : ControllerBase
     /// <summary>
     /// Legacy query endpoint for backward compatibility
     /// </summary>
-    [HttpPost("query")]
+    [HttpPost("query/legacy")]
     [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
     [Obsolete("Use POST /api/vectordb/query instead")]
     public async Task<IActionResult> QueryLegacy([FromBody] QueryRequest request)
