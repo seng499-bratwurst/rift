@@ -10,6 +10,8 @@ public class Message
     public string? OncApiResponse { get; set; }
     public bool? IsHelpful { get; set; }
     public string Role { get; set; } = "user";
+    public required float XCoordinate { get; set; }
+    public required float YCoordinate { get; set; }
     public DateTime CreatedAt { get; set; }
 
     // Navigation properties

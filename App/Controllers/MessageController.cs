@@ -27,6 +27,8 @@ public class MessageController : ControllerBase
     {
         public int? ConversationId { get; set; }
         public string Content { get; set; } = string.Empty;
+        public float XCoordinate { get; set; }
+        public float YCoordinate { get; set; }
     }
 
     // Helper to get or create a temporary session UUID (24-hour)
@@ -94,7 +96,9 @@ public class MessageController : ControllerBase
             conversationId,
             null,
             request.Content,
-            "user"
+            "user",
+            request.XCoordinate,
+            request.YCoordinate
         );
 
         // Create the message with the LLM response
@@ -102,14 +106,20 @@ public class MessageController : ControllerBase
             conversationId,
             promptMessage?.Id,
             finalRes,
-            "assistant"
+            "assistant",
+            request.XCoordinate,
+            request.YCoordinate
         );
 
-        return Ok(new ApiResponse<string>
+        return Ok(new ApiResponse<object>
         {
             Success = true,
             Error = null,
-            Data = finalRes
+            Data = new
+            {
+                ConversationId = conversationId,
+                Response = finalRes
+            }
         });
     }
 
@@ -147,14 +157,16 @@ public class MessageController : ControllerBase
             conversation = await _conversationService.CreateConversationBySessionId(sessionId);
         }
 
-        var conversationId = request.ConversationId ?? conversation?.Id;
+        var conversationId = conversation?.Id;
 
         // Store the user's message
         var promptMessage = await _messageService.CreateMessageAsync(
             conversationId,
             null,
             request.Content,
-            "user"
+            "user",
+            request.XCoordinate,
+            request.YCoordinate
         );
 
         // Store the LLM's response
@@ -162,7 +174,9 @@ public class MessageController : ControllerBase
             conversationId,
             promptMessage?.Id,
             finalRes,
-            "assistant"
+            "assistant",
+            request.XCoordinate,
+            request.YCoordinate
         );
 
         // Return the LLM response and the session UUID (for client to persist)
@@ -174,7 +188,7 @@ public class MessageController : ControllerBase
             Data = new
             {
                 Response = finalRes,
-                SessionId = sessionId
+                SessionId = sessionId,
             }
         });
     }

@@ -10,7 +10,9 @@ public interface IMessageService
         int? conversationId,
         int? promptMessageId,
         string content,
-        string role
+        string role,
+        float xCoordinate,
+        float yCoordinate
     );
     Task<List<Message>> GetMessagesForConversationAsync(string userId, int conversationId);
 }

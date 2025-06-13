@@ -18,7 +18,9 @@ public class MessageService : IMessageService
         int? conversationId,
         int? promptMessageId,
         string content,
-        string role
+        string role,
+        float xCoordinate,
+        float yCoordinate
     )
     {
         var message = new Message
@@ -28,6 +30,8 @@ public class MessageService : IMessageService
             Content = content,
             CreatedAt = DateTime.UtcNow,
             Role = role,
+            XCoordinate = xCoordinate,
+            YCoordinate = yCoordinate,
         };
         return await _messageRepository.CreateAsync(message);
     }
