@@ -5,9 +5,7 @@ permissions:
 on:
   push:
     branches:
-      - jordan-test
       - main
-      - api-doc-test
 
 jobs:
   deploy-doc:
