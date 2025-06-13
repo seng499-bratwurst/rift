@@ -22,7 +22,7 @@ jobs:
         with:
           doc: astrolabe-api
           token: ${{secrets.BUMP_SH_TOKEN}}
-          file: doc/astrolabe-api-openapi-source.yml
+          file: doc/astrolabe-api-openapi-source.yaml
   api-diff:
     if: ${{ github.event_name == 'pull_request' }}
     name: Check API diff on Bump.sh
@@ -35,7 +35,7 @@ jobs:
         with:
           doc: astrolabe-api
           token: ${{secrets.BUMP_SH_TOKEN}}
-          file: doc/astrolabe-api-openapi-source.yml
+          file: doc/astrolabe-api-openapi-source.yaml
           command: diff
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
