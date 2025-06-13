@@ -146,8 +146,8 @@ using (var scope = app.Services.CreateScope())
 app.UseRouting();
 
 app.UseAuthentication();
-app.UseAuthorization();
 app.UseCors("AllowAllOrigins");
+app.UseAuthorization();
 
 app.UseEndpoints(endpoints =>
 {
