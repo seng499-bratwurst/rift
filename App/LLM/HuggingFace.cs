@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using System.IO;
 using System.Text.Json.Nodes;
 using App.LLM;
+using System.Text.RegularExpressions;
 
 
 namespace Rift.LLM
@@ -18,11 +19,10 @@ namespace Rift.LLM
         private readonly string _endpoint;
         private readonly string _modelSmall;
         private readonly string _modelBig;
-        private readonly string _ONCToken;
-        private readonly OncAPI _oncApiClient;
+        private readonly FunctionCallSwitch _switch;
 
         // Constructor reads values from appsettings.json
-        public HuggingFace(IConfiguration config, OncAPI oncApiClient)
+        public HuggingFace(IConfiguration config, FunctionCallSwitch Switch)
         {
             _httpClient = new HttpClient();
 
@@ -31,11 +31,10 @@ namespace Rift.LLM
             _endpoint = config["LLmSettings:HuggingFace:Endpoint"]!;
             _modelSmall = config["LLmSettings:HuggingFace:ModelSmall"]!;
             _modelBig = config["LLmSettings:HuggingFace:ModelBig"]!;
-            _ONCToken = config["ONC_TOKEN"]!;
-            _oncApiClient = oncApiClient;
+            _switch = Switch;
         }
 
-    
+
 
         // Sends a chat completion request to Hugging Face endpoint
         public async Task<string> GenerateONCAPICall(string prompt)
@@ -46,17 +45,7 @@ namespace Rift.LLM
             // -H 'Content-Type: application/json' \
             // -d '{ "messages": [{ "role": "user", "content": "..." }], "model": "...", "stream": false }'
 
-            // string file_path = "App\LLM\sys_prompt_small_llm.md";
-            string system_Prompt = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "LLM/SystemPrompts", "sys_prompt_small.md"));
-            Console.WriteLine("[DEBUG] function called generateonc api call");
-            var func_call = new JsonArray
-            {
-                FunctionSchemas.deviceCategories
-            };
-
-            // Console.WriteLine("=== System Prompt Start ===");
-            // Console.WriteLine(system_Prompt);
-            // Console.WriteLine("=== System Prompt End ===");
+            string system_Prompt = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "LLM/SystemPrompts", "function_call_required_or_not.md"));
 
             var payload = new
             {
@@ -67,7 +56,7 @@ namespace Rift.LLM
                     new { role = "user", content = prompt }
                 },
                 stream = false,
-                tools = func_call
+
             };
 
             var json = JsonSerializer.Serialize(payload);
@@ -86,71 +75,39 @@ namespace Rift.LLM
 
             using var doc = JsonDocument.Parse(responseContent);
 
-            // var result = doc.RootElement
-            //                 .GetProperty("choices")[0]
-            //                 .GetProperty("message")
-            //                 .GetProperty("content")
-            //                 .GetString();
 
             var message = doc.RootElement.GetProperty("choices")[0].GetProperty("message");
-            // Console.WriteLine("[DEBUG] message"+message);
 
-            // Handle function_call
-           if (message.TryGetProperty("tool_calls", out var toolCalls) && toolCalls.ValueKind == JsonValueKind.Array)
+            string content_llm = message.GetProperty("content").GetString() ?? string.Empty;
+           
+
+            using JsonDocument innerDoc = JsonDocument.Parse(content_llm);
+
+            bool useFunction = innerDoc.RootElement.GetProperty("use_function").GetBoolean();
+
+            if (!useFunction)
             {
-                foreach (var call in toolCalls.EnumerateArray())
-                {
-                    var function = call.GetProperty("function");
-                    var name = function.GetProperty("name").GetString();
-                    
-                    // arguments is a JSON string → parse it
-                    var rawArgs = function.GetProperty("arguments").GetString();
-                    var args = JsonDocument.Parse(rawArgs!).RootElement;
-
-                    Console.WriteLine("[DEBUG] Tool function: " + name);
-                    Console.WriteLine("[DEBUG] Arguments: " + rawArgs);
-
-                    if (name == "deviceCategories")
-                    {
-                        // Helper to extract optional args
-                        string? GetArg(JsonElement e, string key) =>
-                            e.TryGetProperty(key, out var val) ? val.GetString() : null;
-
-                        var result = await _oncApiClient.GetDeviceCategoriesAsync(
-                            deviceCategoryCode: GetArg(args, "deviceCategoryCode"),
-                            deviceCategoryName: GetArg(args, "deviceCategoryName"),
-                            description: GetArg(args, "description"),
-                            locationCode: GetArg(args, "locationCode"),
-                            propertyCode: GetArg(args, "propertyCode")
-                        );
-
-                        return JsonSerializer.Serialize(result, new JsonSerializerOptions { WriteIndented = true });
-                    }
-                }
+                return "{}";
+            }
+            else if (useFunction)
+            {
+                var (functionName, args) = _switch.ExtractFunctionAndArgsFromContent(content_llm);
+                
+                return await _switch.ONC_API_Call(functionName, args);
             }
 
-
-            // Fallback to content
             var resultContent = message.GetProperty("content").GetString();
-
-
-            Console.WriteLine(resultContent);
-            Console.WriteLine($"[DEBUG] Hugging Face Endpoint: {_endpoint}");
-
-            // return result ?? "No response from Hugging Face model.";
-
 
             return resultContent ?? "{}";
         }
-        
-       
+
 
         public async Task<string> GenerateFinalResponse(string prompt, JsonElement onc_api_response)
         {
             string jsonInput = JsonSerializer.Serialize(onc_api_response, new JsonSerializerOptions
             {
                 WriteIndented = true
-            });
+            }); 
             var systemPrompt =
                     "You are a helpful oncean network canada assistant that interprets the data given and answers the user prompt with accuracy.";
 
@@ -187,11 +144,8 @@ namespace Rift.LLM
                             .GetProperty("content")
                             .GetString();
 
-
-            Console.WriteLine($"[DEBUG] Hugging Face Endpoint: {_endpoint}");
-
             return result ?? "No response from Hugging Face model.";
-            // return result ?? "{}";
         }
+
     }
 }

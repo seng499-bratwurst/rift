@@ -14,11 +14,11 @@ Once installed, to run the api and database:
 * Once running, view the current endpoints [Here](http://localhost:5000/swagger/index.html)
 
 
-## Creating and Running Migrations
+## Migrations
 
-1. Make changes to model classes (/App/Models)
-2. run `dotnet ef migration add <migration-name>`
-3. run `dotnet ef database update`
+1. Migrations run automatically upon app startup
+2. If you need to generate new migrations `dotnet ef migrations add <MigrationName>`
+3. If you need to run them manually run `dotnet ef database update` in the 'App' directory
 
 ## ChromaDB
 

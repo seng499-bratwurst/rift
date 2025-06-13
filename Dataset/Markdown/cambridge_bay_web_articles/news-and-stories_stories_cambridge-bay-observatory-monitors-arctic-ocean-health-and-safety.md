@@ -1,4 +1,5 @@
 # Source: https://www.oceannetworks.ca/news-and-stories/stories/cambridge-bay-observatory-monitors-arctic-ocean-health-and-safety/
+# ID: CambridgeBayMonitorsArctic
 
 As shrinking sea ice ushers in a new era for arctic tourism, Ocean Networks Canadaâs (ONC) newly expanded Cambridge Bay observatory becomes a vital tool for monitoring ocean health and marine safety.
 Map of Ocean Networks Canada data sources and installations in the Arctic.

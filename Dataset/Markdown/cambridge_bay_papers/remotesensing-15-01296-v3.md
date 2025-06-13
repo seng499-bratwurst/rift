@@ -1,3 +1,6 @@
+# Source: Zhu, Y., Zhou, C., Zhu, D., Wang, T., & Zhang, T. (2023). Interannual Variation of Landfast Ice Using Ascending and Descending Sentinel-1 Images from 2019 to 2021: A Case Study of Cambridge Bay. Remote Sensing, 15(5), 1296. https://doi.org/10.3390/rs15051296
+# ID: InterannualVariation
+
 Citation: Zhu, Y.; Zhou, C.; Zhu, D.;
 Wang, T.; Zhang, T. Interannual
 Variation of Landfast Ice Using

@@ -1,4 +1,5 @@
 # Source: https://www.oceannetworks.ca/news-and-stories/stories/all-eyes-on-cambridge-bay-nunavut/
+# ID: AllEyesOnCambridgeBayNunavut
 
 The arrival of the historic Canada Coast-to-Coast-to-Coast (Canada C3) expedition and Fish Eye Projectâs Arctic live dive eventâ¯broadcast across the nation on Sunday 27 Augustâ¯turns a tiny Nunavut hamlet into an innovative ocean literacy and climate science hub.
 Figure 1. Members of the Fish Eye Project team prepare for the Arctic live dive as the Canada C3 ship arrives in Cambridge Bay, Nunavut.

@@ -96,6 +96,17 @@ class UpdateDocumentRequest(BaseModel):
     text: Optional[str] = None
     metadata: Optional[Dict[str, Any]] = None
 
+# This was added - unsure what it's going to be for?
+@app.post("/add")
+def add(req: AddRequest):
+    # clean data func
+    # embed func
+    collection.add(
+        documents=[req.text],
+        ids=[req.id],
+    )
+    return {"status": "added"}
+
 # Collection Management
 @app.post("/collections", status_code=status.HTTP_201_CREATED)
 async def create_collection(collection_info: CollectionInfo):

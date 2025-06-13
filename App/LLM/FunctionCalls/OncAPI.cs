@@ -22,7 +22,6 @@ public class OncAPI
     string? propertyCode = null)
     {
         var endpoint = new StringBuilder("https://data.oceannetworks.ca/api/deviceCategories?token=" + _token);
-        Console.WriteLine("[DEBUG] ONC API base URL: " + endpoint);
         // sample URL: https://data.oceannetworks.ca/api/deviceCategories?deviceCategoryCode=ACCELEROMETER&token=
         // https://data.oceannetworks.ca/api/deviceCategories?token=
         // https://data.oceannetworks.ca/api/deviceCategories?deviceCategoryCode=CTD&deviceCategoryName=Conductivity&description=Temperature&token=
@@ -55,8 +54,6 @@ public class OncAPI
 
         string final_onc_url = endpoint.ToString();
 
-        Console.WriteLine("[DEBUG] ONC API full URL: " + final_onc_url);
-
         var oncResponse = await _httpClient.GetAsync(final_onc_url);
         if (!oncResponse.IsSuccessStatusCode)
             throw new HttpRequestException($"ONC API error: {oncResponse.StatusCode}");
@@ -64,11 +61,10 @@ public class OncAPI
 
         var oncContent = await oncResponse.Content.ReadAsStringAsync();
         var oncData = JsonDocument.Parse(oncContent).RootElement.Clone();
-        Console.WriteLine("[DEBUG] ONC API Data: " + oncData);
 
         return oncData;
     }
-    
+
     // /deployments API
     public async Task<JsonElement> GetDeploymentsAsync(
     string? deviceCategoryCode = null,
@@ -79,11 +75,8 @@ public class OncAPI
     string? dateTo = null)
     {
         var endpoint = new StringBuilder("https://data.oceannetworks.ca/api/deployments?token=" + _token);
-        Console.WriteLine("[DEBUG] ONC API base URL: " + endpoint);
-        // sample URL: https://data.oceannetworks.ca/api/deviceCategories?deviceCategoryCode=ACCELEROMETER&token=
-        // https://data.oceannetworks.ca/api/deviceCategories?token=
-        // https://data.oceannetworks.ca/api/deployments?deviceCategoryCode=AISRECEIVER&dateFrom=2015-09-17T00%3A00%3A00.000Z&dateTo=2015-09-17T13%3A00%3A00.000Z&token=
-        // logic for /deviceCategories
+        // sample URL: https://data.oceannetworks.ca/api/deployments?deviceCategoryCode=AISRECEIVER&dateFrom=2015-09-17T00%3A00%3A00.000Z&dateTo=2015-09-17T13%3A00%3A00.000Z&token=
+        // https://data.oceannetworks.ca/api/deployments?token=
 
         if (!string.IsNullOrWhiteSpace(deviceCategoryCode))
         {
@@ -116,8 +109,8 @@ public class OncAPI
         }
 
         string final_onc_url = endpoint.ToString();
+        Console.WriteLine("ONC url:" + final_onc_url);
 
-        Console.WriteLine("[DEBUG] ONC API full URL: " + final_onc_url);
 
         var oncResponse = await _httpClient.GetAsync(final_onc_url);
         if (!oncResponse.IsSuccessStatusCode)
@@ -126,7 +119,65 @@ public class OncAPI
 
         var oncContent = await oncResponse.Content.ReadAsStringAsync();
         var oncData = JsonDocument.Parse(oncContent).RootElement.Clone();
-        Console.WriteLine("[DEBUG] ONC API Data: " + oncData);
+
+
+        return oncData;
+    }
+    
+    public async Task<JsonElement> GetPropertiesAsync(
+    string? deviceCategoryCode = null,
+    string? deviceCode = null,
+    string? locationCode = null,
+    string? propertyCode = null,
+    string? description = null,
+    string? propertyName = null)
+    {
+        var endpoint = new StringBuilder("https://data.oceannetworks.ca/api/properties?token=" + _token);
+        // sample URL: https://data.oceannetworks.ca/api/deployments?deviceCategoryCode=AISRECEIVER&dateFrom=2015-09-17T00%3A00%3A00.000Z&dateTo=2015-09-17T13%3A00%3A00.000Z&token=
+        // https://data.oceannetworks.ca/api/deployments?token=
+
+        if (!string.IsNullOrWhiteSpace(deviceCategoryCode))
+        {
+            endpoint.Append("&deviceCategoryCode=" + deviceCategoryCode);
+        }
+
+        if (!string.IsNullOrWhiteSpace(deviceCode))
+        {
+            endpoint.Append("&deviceCode=" + deviceCode);
+        }
+
+        if (!string.IsNullOrWhiteSpace(locationCode))
+        {
+            endpoint.Append("&locationCode=" + locationCode);
+        }
+
+        if (!string.IsNullOrWhiteSpace(propertyCode))
+        {
+            endpoint.Append("&propertyCode=" + propertyCode);
+        }
+
+        if (!string.IsNullOrWhiteSpace(description))
+        {
+            endpoint.Append("&description=" + description);
+        }
+
+        if (!string.IsNullOrWhiteSpace(propertyName))
+        {
+            endpoint.Append("&propertyName=" + propertyName);
+        }
+
+        string final_onc_url = endpoint.ToString();
+        Console.WriteLine("ONC url:" + final_onc_url);
+
+
+        var oncResponse = await _httpClient.GetAsync(final_onc_url);
+        if (!oncResponse.IsSuccessStatusCode)
+            throw new HttpRequestException($"ONC API error: {oncResponse.StatusCode}");
+
+
+        var oncContent = await oncResponse.Content.ReadAsStringAsync();
+        var oncData = JsonDocument.Parse(oncContent).RootElement.Clone();
+        
 
         return oncData;
     }
