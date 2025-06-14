@@ -2,6 +2,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using Rift.App.Models;
 
 
 namespace Rift.LLM
@@ -29,7 +30,7 @@ namespace Rift.LLM
         }
 
         // Sends a chat completion request to Hugging Face endpoint
-        public async Task<string> GenerateONCAPICall(string prompt)
+        public async Task<string> GatherOncAPIData(string prompt)
         {
             // Equivalent cURL:
             // curl https://router.huggingface.co/together/v1/chat/completions \
@@ -114,7 +115,7 @@ namespace Rift.LLM
             string jsonInput = JsonSerializer.Serialize(oncAPIResponse, new JsonSerializerOptions
             {
                 WriteIndented = true
-            }); 
+            });
             var systemPrompt =
                     "You are a helpful oncean network canada assistant that interprets the data given and answers the user prompt with accuracy.";
 
@@ -156,6 +157,60 @@ namespace Rift.LLM
 
             return result ?? "No response from Hugging Face model.";
         }
+        
 
+        public async Task<string> GenerateFinalResponseRAG(Prompt prompt)
+        {
+
+            var fullUserPrompt = new StringBuilder();
+            fullUserPrompt.Append("This is the User Query and what they are asking:\n");
+            fullUserPrompt.Append(prompt.UserQuery);
+            fullUserPrompt.Append("\n\nHere is the ONC API response in JSON format:\n");
+            fullUserPrompt.Append(prompt.OncAPIData);
+            fullUserPrompt.Append("\n\nHere is the relevant documents from the vector database:\n");
+            foreach (var relevantDoc in prompt.RelevantDocuments)
+            {
+                fullUserPrompt.Append($"- {relevantDoc.Content}\n");
+            }
+            fullUserPrompt.Append("\n\nHere is the message history for added context:\n");
+            foreach (var message in prompt.MessageHistory)
+            {
+                fullUserPrompt.Append($"- {message.Content}\n");
+            }
+
+            var payload = new
+            {
+                model = _modelBig,
+                messages = new[]
+                {
+                    new { role = "system", content = prompt.SystemPrompt },
+                    new { role = "user", content = fullUserPrompt.ToString() }
+                },
+                stream = false
+            };
+
+            var json = JsonSerializer.Serialize(payload);
+
+            var request = new HttpRequestMessage(HttpMethod.Post, _endpoint)
+            {
+                Content = new StringContent(json, Encoding.UTF8, "application/json")
+            };
+
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
+
+            var response = await _httpClient.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+
+            var responseContent = await response.Content.ReadAsStringAsync();
+
+            using var doc = JsonDocument.Parse(responseContent);
+            var result = doc.RootElement
+                            .GetProperty("choices")[0]
+                            .GetProperty("message")
+                            .GetProperty("content")
+                            .GetString();
+
+            return result ?? "No response from Hugging Face model.";
+        }
     }
 }

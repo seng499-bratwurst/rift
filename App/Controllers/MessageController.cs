@@ -182,7 +182,7 @@ public class MessageController : ControllerBase
             });
         }
 
-        var response = await _llmProvider.GenerateONCAPICall(request.Content);
+        var response = await _llmProvider.GatherOncAPIData(request.Content);
         using var doc = JsonDocument.Parse(response);
 
         // Clone it so we can return it after the doc is disposed

@@ -81,7 +81,9 @@ builder.Services.AddScoped<RAGService>();
 builder.Services.AddScoped<ResponseProcessor>();
 builder.Services.AddScoped(provider =>
 {
-    var systemPrompt = "Placeholder";
+    var systemPrompt =
+        "You are a helpful ocean network canada assistant that interprets " +
+        "the data given and answers the user prompt with accuracy.";
     return new PromptBuilder(systemPrompt);
 });
 

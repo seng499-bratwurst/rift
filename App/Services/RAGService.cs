@@ -2,10 +2,12 @@ using System.Text.Json;
 using Rift.LLM;
 using Rift.App.Clients;
 using Rift.App.Models;
+using Rift.Services;
 
 public class RAGService
 {
 
+    private readonly IMessageService _messageService;
     private readonly ILlmProvider _llmProvider;
     private readonly ChromaDBClient _chromaDbClient;
     private readonly PromptBuilder _promptBuilder;
@@ -13,12 +15,14 @@ public class RAGService
     private readonly ResponseProcessor _responseProcessor;
 
     public RAGService(
+        IMessageService messageService,
         ILlmProvider llmProvider,
         ChromaDBClient chromaDbClient,
         PromptBuilder promptBuilder,
         ReRankerClient reRankerClient,
         ResponseProcessor responseProcessor)
     {
+        _messageService = messageService;
         _llmProvider = llmProvider;
         _chromaDbClient = chromaDbClient;
         _promptBuilder = promptBuilder;
@@ -26,36 +30,39 @@ public class RAGService
         _responseProcessor = responseProcessor;
     }
 
-    public async Task<string> GenerateResponseAsync(string userQuery)
+    public async Task<string> GenerateResponseAsync(string userQuery, string userId, int conversationId)
     {
-        /// This is a rough outline of how the RAG service might work and is a starting point to
-        /// work from. Please modify and update each of these methods as we build up the pipeline.
+        /* 
+        Rough outline of the steps to generate a response a response:
+            1. Get userID from the JWT token
+            2. Gather User Converstion History
+            3. Gather ONC API Data using small LLM
+            4. Get relevant data from vector database
+            5. Re-rank data
+            6. Build prompt using PromptBuilder
+            7. Generate final response using larger LLM
+            8. Process response using ResponseProcessor
+            9. Return the final response to the user
+        */
 
-        // string ONCAPIJson = await _llmProvider.GenerateONCAPICall(userQuery);
-        string ONCAPIData = "";
+        var messageHistory = await _messageService.GetMessagesForConversationAsync(userId, conversationId);
 
-        var ragContext = await _chromaDbClient.GetRelevantDataAsync(userQuery);
-        string relevantData = string.Join("\n", ragContext.RelevantDocuments.Select(d => d.Content));
+        var oncApiData = await _llmProvider.GatherOncAPIData(userQuery);
 
-        var relevantDocs = ragContext.RelevantDocuments.Select(d => d.Content).ToList();
+        // Will probably want to clean this up and have the RAGContext object created in
+        // here and have these methods update it or something.
+        var relevantData = await _chromaDbClient.GetRelevantDataAsync(userQuery);
 
-        var rerankRequest = new RerankRequest
-        {
-            Query = userQuery,
-            Docs = relevantDocs
-        };
-        var rerankResponse = await _reRankerClient.RerankAsync(rerankRequest);
-        string reRankedData = string.Join("\n", rerankResponse.Reranked_Docs);
+        // var reRankedData = _reRanker.ReRankAsync(oncApiData, RelevantDocuments.RelevantDocuments);
 
-        // Build the prompt using the PromptBuilder
-        string prompt = _promptBuilder.BuildPrompt(userQuery, reRankedData);
+        // Might not be necessary to use the PromptBilder but we could move the system prompt into here as well
+        // and maybe some extra context/items here. (userType, specialInstructions, etc.)
+        var prompt = _promptBuilder.BuildPrompt(userQuery, messageHistory, oncApiData, relevantData.RelevantDocuments);
 
-        // Generate a response using the LLM provider
-        string responseFromLLM = await _llmProvider.GenerateFinalResponse(prompt, new JsonElement());
+        var finalResponse = await _llmProvider.GenerateFinalResponseRAG(prompt);
 
-        string cleanedResponse = _responseProcessor.ProcessResponse(responseFromLLM);
+        var cleanedResponse = _responseProcessor.ProcessResponse(finalResponse);
 
-        // Return the generated response
         return cleanedResponse;
     }
 }
