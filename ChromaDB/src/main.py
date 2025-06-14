@@ -102,8 +102,10 @@ class UpdateDocumentRequest(BaseModel):
     text: Optional[str] = None
     metadata: Optional[Dict[str, Any]] = None
 
-def get_or_create_collection(collection_name: str):
-    """Gets a collection or creates it if it doesn't exist."""
+# Collection Management
+@app.post("/collections", status_code=status.HTTP_201_CREATED)
+async def create_collection(collection_info: CollectionInfo):
+    """Create a new collection with specified configuration."""
     try:
         collection = chroma_client.get_collection(name=collection_name)
         logger.info(f"Found existing collection: {collection_name}")
