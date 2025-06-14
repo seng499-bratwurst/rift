@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using Rift.Models;         // For PromptRequest model
 using Rift.LLM;            // For ILlmProvider interface
 using System.Text.Json;
-using Microsoft.Extensions.Configuration;
 
 namespace Rift.Controllers
 {
@@ -11,14 +10,10 @@ namespace Rift.Controllers
     public class LLMController : ControllerBase
     {
         private readonly ILlmProvider _llmProvider;
-        private readonly IConfiguration _config;
-         private readonly HttpClient _httpClient;
 
-        public LLMController(ILlmProvider llmProvider, IConfiguration config)
+        public LLMController(ILlmProvider llmProvider)
         {
             _llmProvider = llmProvider;
-            _config = config;
-            _httpClient = new HttpClient();
         }
 
         [HttpPost("ask")]
@@ -28,18 +23,15 @@ namespace Rift.Controllers
                 return BadRequest("Prompt cannot be empty.");
 
             var response = await _llmProvider.GenerateONCAPICall(request.Prompt);
-            
-            
-             using var doc = JsonDocument.Parse(response);
+                       
+            using var doc = JsonDocument.Parse(response);
 
             // Clone it so we can return it after the doc is disposed
             JsonElement json = doc.RootElement.Clone();
 
-            var fina_res = await _llmProvider.GenerateFinalResponse(request.Prompt, json);
+            var finalResponse = await _llmProvider.GenerateFinalResponse(request.Prompt, json);
 
-
-            return Ok(fina_res);
-            // return Ok(new { response });
+            return Ok(finalResponse);
         }
 
 

@@ -1,13 +1,6 @@
-using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
-using System.IO;
-using System.Text.Json.Nodes;
-using App.LLM;
-using System.Text.RegularExpressions;
 
 
 namespace Rift.LLM
@@ -19,10 +12,10 @@ namespace Rift.LLM
         private readonly string _endpoint;
         private readonly string _modelSmall;
         private readonly string _modelBig;
-        private readonly FunctionCallSwitch _switch;
+        private readonly OncFunctionParser _parser;
 
         // Constructor reads values from appsettings.json
-        public HuggingFace(IConfiguration config, FunctionCallSwitch Switch)
+        public HuggingFace(IConfiguration config, OncFunctionParser parser)
         {
             _httpClient = new HttpClient();
 
@@ -31,10 +24,8 @@ namespace Rift.LLM
             _endpoint = config["LLmSettings:HuggingFace:Endpoint"]!;
             _modelSmall = config["LLmSettings:HuggingFace:ModelSmall"]!;
             _modelBig = config["LLmSettings:HuggingFace:ModelBig"]!;
-            _switch = Switch;
+            _parser = parser;
         }
-
-
 
         // Sends a chat completion request to Hugging Face endpoint
         public async Task<string> GenerateONCAPICall(string prompt)
@@ -45,14 +36,14 @@ namespace Rift.LLM
             // -H 'Content-Type: application/json' \
             // -d '{ "messages": [{ "role": "user", "content": "..." }], "model": "...", "stream": false }'
 
-            string system_Prompt = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "LLM/SystemPrompts", "function_call_required_or_not.md"));
+            string systemPrompt = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "LLM/SystemPrompts", "function_call_required_or_not.md"));
 
             var payload = new
             {
                 model = _modelSmall,
                 messages = new[]
                 {
-                    new { role = "system", content = system_Prompt },
+                    new { role = "system", content = systemPrompt },
                     new { role = "user", content = prompt }
                 },
                 stream = false,
@@ -78,10 +69,10 @@ namespace Rift.LLM
 
             var message = doc.RootElement.GetProperty("choices")[0].GetProperty("message");
 
-            string content_llm = message.GetProperty("content").GetString() ?? string.Empty;
+            string LLMContent = message.GetProperty("content").GetString() ?? string.Empty;
            
 
-            using JsonDocument innerDoc = JsonDocument.Parse(content_llm);
+            using JsonDocument innerDoc = JsonDocument.Parse(LLMContent);
 
             bool useFunction = innerDoc.RootElement.GetProperty("use_function").GetBoolean();
 
@@ -91,9 +82,9 @@ namespace Rift.LLM
             }
             else if (useFunction)
             {
-                var (functionName, args) = _switch.ExtractFunctionAndArgsFromContent(content_llm);
+                var (functionName, functionParams) = _parser.ExtractFunctionAndQueries(LLMContent);
                 
-                return await _switch.ONC_API_Call(functionName, args);
+                return await _parser.OncAPICall(functionName, functionParams);
             }
 
             var resultContent = message.GetProperty("content").GetString();
@@ -102,9 +93,9 @@ namespace Rift.LLM
         }
 
 
-        public async Task<string> GenerateFinalResponse(string prompt, JsonElement onc_api_response)
+        public async Task<string> GenerateFinalResponse(string prompt, JsonElement oncAPIResponse)
         {
-            string jsonInput = JsonSerializer.Serialize(onc_api_response, new JsonSerializerOptions
+            string jsonInput = JsonSerializer.Serialize(oncAPIResponse, new JsonSerializerOptions
             {
                 WriteIndented = true
             }); 
