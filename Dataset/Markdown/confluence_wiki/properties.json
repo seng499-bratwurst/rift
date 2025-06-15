@@ -1,0 +1,3377 @@
+[
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/HPAX/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Pressure: air, absolute barometric",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "absolutebarometricpressure",
+        "propertyName": "Absolute Barometric Pressure",
+        "uom": "hPa"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UGCC/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Humidity: absolute",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "absolutehumidity",
+        "propertyName": "Absolute Humidity",
+        "uom": "g/m^3"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UUUU/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Absorbance: LED light",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "absorbance",
+        "propertyName": "Absorbance",
+        "uom": "NA"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/MPS2/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Acceleration",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "acceleration",
+        "propertyName": "Acceleration",
+        "uom": "m/s2"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UKMC/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Density: air",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "airdensity",
+        "propertyName": "Air Density",
+        "uom": "kg/m3"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UPAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Temperature: air",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "airtemperature",
+        "propertyName": "Air Temperature",
+        "uom": "C"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/ULAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Depth: altitude",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "altitude",
+        "propertyName": "Altitude",
+        "uom": "m"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": []
+        },
+        "description": "Altitude Source: For altitude values",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "altitudesource",
+        "propertyName": "Altitude Source",
+        "uom": "ON/OFF"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": []
+        },
+        "description": "Amperage",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "amperage",
+        "propertyName": "Amperage",
+        "uom": "A"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UCNT/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Amplitude: beam 1",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "amplitudebeam1",
+        "propertyName": "Amplitude Beam 1",
+        "uom": "Count"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UCNT/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Amplitude: beam 2",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "amplitudebeam2",
+        "propertyName": "Amplitude Beam 2",
+        "uom": "Count"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UCNT/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Amplitude: beam 3",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "amplitudebeam3",
+        "propertyName": "Amplitude Beam 3",
+        "uom": "Count"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/DGPS/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Angular Rate",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "angularrate",
+        "propertyName": "Angular rate",
+        "uom": "°/s"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UPCT/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Aperture of Camera Lens",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "aperture",
+        "propertyName": "Aperture",
+        "uom": "%"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UMSC/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "AR computation time",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "arcomputationtime",
+        "propertyName": "AR Computation Time",
+        "uom": "ms"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": []
+        },
+        "description": "Auto Exposure",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "autoexposure",
+        "propertyName": "Auto Exposure",
+        "uom": "ON/OFF"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": []
+        },
+        "description": "Auto Focus State",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "autofocusstate",
+        "propertyName": "Auto Focus State",
+        "uom": "ON/OFF"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": []
+        },
+        "description": "Barometric Trend",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "barometrictrend",
+        "propertyName": "Barometric Trend",
+        "uom": "NA"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": []
+        },
+        "description": "Battery Capacity",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "batterycapacity",
+        "propertyName": "Battery Capacity",
+        "uom": "Ah"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UPCT/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Battery Charge",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "batterycharge",
+        "propertyName": "Battery Charge",
+        "uom": "%"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": []
+        },
+        "description": "Position of the pitch battery",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "batteryposition",
+        "propertyName": "Battery Position",
+        "uom": "in"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UCNT/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Beam position",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "beamposition",
+        "propertyName": "Beam Position",
+        "uom": "Count"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": []
+        },
+        "description": "Bender Electrical Resistance",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "benderelectricalresistance",
+        "propertyName": "Bender Electrical Resistance",
+        "uom": "mega-ohm"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": []
+        },
+        "description": "Biofouling Prevention",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "biofoulingprevention",
+        "propertyName": "Biofouling Prevention",
+        "uom": "ON/OFF"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": []
+        },
+        "description": "ONC CIB Port Fault Code bits: 4=Overcurrent; 6=Open Load; 7=Thermal Shut Down; 8=High Accuracy Sense Invalid",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "board_fault_code",
+        "propertyName": "Port Fault Code",
+        "uom": "NA"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": []
+        },
+        "description": "ONC CIB Board Fault Code bits: 0=Ground Fault to the Negative Rail; 1=Ground Fault to the Positive Rail; 2=Undervoltage; 3=Overvoltage; 4=Overcurrent; 5=Software Error",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "boardfaultcode",
+        "propertyName": "Board Fault Code",
+        "uom": "NA"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": []
+        },
+        "description": "Bottom Lock: Sensor ability to see bottom",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "bottomlock",
+        "propertyName": "Bottom Lock",
+        "uom": "ON/OFF"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UPCT/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Light Brightness",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "brightness",
+        "propertyName": "Brightness",
+        "uom": "%"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UAAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Calibrated Phase Angle",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "calibratedphaseangle",
+        "propertyName": "Calibrated Phase Angle",
+        "uom": "deg"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UPCT/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Camera Light",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "cameralight",
+        "propertyName": "Camera Light",
+        "uom": "%"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UAAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Camera Pan",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "camerapan",
+        "propertyName": "Camera Pan",
+        "uom": "deg"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UPCT/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Camera Strobe",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "camerastrobe",
+        "propertyName": "Camera Strobe",
+        "uom": "%"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UAAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Camera Tilt",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "cameratilt",
+        "propertyName": "Camera Tilt",
+        "uom": "deg"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": []
+        },
+        "description": "Colored Dissolved Organic Matter (CDOM)",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "cdom",
+        "propertyName": "CDOM",
+        "uom": "ppb QSDE"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UPPB/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "CDOM Fluorescence",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "cdomfluorescence",
+        "propertyName": "CDOM Fluorescence",
+        "uom": "ppb"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UGPL/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Chlorophyll",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "chlorophyll",
+        "propertyName": "Chlorophyll",
+        "uom": "ug/l"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": []
+        },
+        "description": "Time: instrument clock",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "clock",
+        "propertyName": "Clock",
+        "uom": "NA"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UPPM/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Concentration: carbon dioxide",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "co2concentration",
+        "propertyName": "CO2 Concentration",
+        "uom": "ppm"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UMPM/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Concentration: carbon dioxide, linearized",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "co2concentrationlinearized",
+        "propertyName": "CO2 Concentration Linearized",
+        "uom": "umol/mol"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": []
+        },
+        "description": "Pressure: carbon dioxide, partial pressure",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "co2partialpressure",
+        "propertyName": "CO2 Partial Pressure",
+        "uom": "pCO2 uatm"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UAAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Compensated Phase Angle",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "compensatedphaseangle",
+        "propertyName": "Compensated Phase Angle",
+        "uom": "deg"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UECA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Conductivity: siemens per metre",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "conductivity",
+        "propertyName": "Conductivity",
+        "uom": "S/m"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UPCT/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Light Contrast",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "contrast",
+        "propertyName": "Contrast",
+        "uom": "%"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UTBB/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Correction Age",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "correctionage",
+        "propertyName": "Correction Age",
+        "uom": "s"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UPCT/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Correlation",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "correlation",
+        "propertyName": "Correlation",
+        "uom": "%"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": []
+        },
+        "description": "Crude Oil Fluorescence",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "crudeoilfluoroscence",
+        "propertyName": "Crude Oil Fluorescence",
+        "uom": "ppm OL Crude Oil Eq."
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UAAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Current Direction: from North in degree",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "currentdirection",
+        "propertyName": "Current Direction",
+        "uom": "deg"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UVAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Current Velocity: current speed calculated",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "currentvelocity",
+        "propertyName": "Current Velocity",
+        "uom": "m/s"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UVAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Current Velocity: beam1-x-east",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "currentvelocitybeam1xeast",
+        "propertyName": "Current Velocity Beam1-X-East",
+        "uom": "m/s"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UVAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Current Velocity: beam2-y-north",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "currentvelocitybeam2ynorth",
+        "propertyName": "Current Velocity Beam2-Y-North",
+        "uom": "m/s"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UVAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Current Velocity: beam3-z-up",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "currentvelocitybeam3zup",
+        "propertyName": "Current Velocity Beam3-Z-Up",
+        "uom": "m/s"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": []
+        },
+        "description": "Defog: Remove fog effect from image",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "defog",
+        "propertyName": "Defog",
+        "uom": "ON/OFF"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UPCT/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Defog Effect: Amount of defog effect",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "defog_effect",
+        "propertyName": "Defog Effect",
+        "uom": "%"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UKMC/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Density",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "density",
+        "propertyName": "Density",
+        "uom": "kg/m3"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/ULAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Depth",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "depth",
+        "propertyName": "Depth",
+        "uom": "m"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UUUU/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Detection Ratio: Short to Long Term Average",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "detectionratio",
+        "propertyName": "Detection Ratio",
+        "uom": "NA"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UPAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Dew Point",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "dewpoint",
+        "propertyName": "Dew Point",
+        "uom": "C"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UPDB/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Pressure: differential Pressure Gauge",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "differentialpressuregauge",
+        "propertyName": "Differential Pressure Gauge",
+        "uom": "decibar"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UPAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Temperature: differential",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "differentialtemperature",
+        "propertyName": "Differential Temperature",
+        "uom": "C"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/ULAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Displacement",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "displacement",
+        "propertyName": "Displacement",
+        "uom": "m"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UPBB/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Pressure: dissolved gas",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "dissolvedgaspressure",
+        "propertyName": "Dissolved Gas Pressure",
+        "uom": "mbar"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UFAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Radiation: atmospheric long-wave, downward",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "downwardatmosphericlongwaveradiation",
+        "propertyName": "Downward Atmospheric Long-Wave Radiation",
+        "uom": "W/m^2"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/ULAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Easting: UTM",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "easting",
+        "propertyName": "Easting",
+        "uom": "m"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UOHM/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Electrical Resistance",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "electricalresistance",
+        "propertyName": "Electrical Resistance",
+        "uom": "ohm"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": []
+        },
+        "description": "Electric Charge",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "electriccharge",
+        "propertyName": "Electric Charge",
+        "uom": "mAh"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UCNT/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Count: engineering data",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "engineeringcount",
+        "propertyName": "Engineering Count",
+        "uom": "Count"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": []
+        },
+        "description": "Count: engineering data, count in thousands",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "engineeringcount1000s",
+        "propertyName": "Engineering Count 1000s",
+        "uom": "kCount"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": []
+        },
+        "description": "Error Code",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "errorcode",
+        "propertyName": "Error Code",
+        "uom": "NA"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UCNT/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Count: scientific event counter",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "eventcount",
+        "propertyName": "Event Count",
+        "uom": "Count"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UPCT/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Level of Exposure to Light",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "exposure_level",
+        "propertyName": "Exposure Level",
+        "uom": "%"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": []
+        },
+        "description": "Exposure mode: 0=Auto, 10=Shutter Priority, 11=Iris Priority, 3=Manual",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "exposure_mode",
+        "propertyName": "Exposure Mode",
+        "uom": "NA"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": []
+        },
+        "description": "Exposure Value",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "exposurevalue",
+        "propertyName": "Exposure Value",
+        "uom": "NA"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": []
+        },
+        "description": "Fault flags",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "faultflag",
+        "propertyName": "Fault Flags",
+        "uom": "NA"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UCNT/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Count: file",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "filecount",
+        "propertyName": "File Count",
+        "uom": "Count"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UCNT/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Focus",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "focus",
+        "propertyName": "Focus",
+        "uom": "Count"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/ULAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Forward range",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "forwardrange",
+        "propertyName": "Forward Range",
+        "uom": "m"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UTHZ/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Frequency",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "frequency",
+        "propertyName": "Frequency",
+        "uom": "Hz"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UPCT/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Saturation: of gas",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "gassaturation",
+        "propertyName": "Gas Saturation",
+        "uom": "%"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UPDB/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Pressure: for dissolved gas sensors",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "gasstreampressure",
+        "propertyName": "Gas Stream Pressure",
+        "uom": "decibar"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": []
+        },
+        "description": "Gimbal Delay Time",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "gimbaldelay",
+        "propertyName": "Gimbal Delay Time ",
+        "uom": "us"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UTBB/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Time: GPS interval time of week",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "gpsintervaltimeofweek",
+        "propertyName": "GPS Interval Time of Week",
+        "uom": "s"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": []
+        },
+        "description": "Gravitational Acceleration",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "gravitationalacceleration",
+        "propertyName": "Gravitational Acceleration",
+        "uom": "g m/s2"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": []
+        },
+        "description": "Gravity: measured",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "gravity",
+        "propertyName": "Gravity",
+        "uom": "gal"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": []
+        },
+        "description": "Time: Gregorian days since 19700101T000000Z",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "gregoriantime",
+        "propertyName": "Gregorian Time",
+        "uom": "Gregorian days since 19700101T000000Z"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UPCT/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Ground Fault",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "groundfault",
+        "propertyName": "Ground Fault",
+        "uom": "%"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/ULAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Heave",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "heave",
+        "propertyName": "Heave",
+        "uom": "m"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/ULAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Ice Draft",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "icedraft",
+        "propertyName": "Ice Draft",
+        "uom": "m"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/ULAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Thickness: ice",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "icethickness",
+        "propertyName": "Ice Thickness",
+        "uom": "m"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UCNT/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Image Gain",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "image_gain",
+        "propertyName": "Image Gain",
+        "uom": "Count"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UCNT/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Instrument level",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "instrumentlevel",
+        "propertyName": "Instrument level",
+        "uom": "Count"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UPCT/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Humidity: internal to calibrate instrument",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "internalhumidity",
+        "propertyName": "Internal Humidity",
+        "uom": "%"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UUPH/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "pH: internal or reference pH",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "internalph",
+        "propertyName": "Internal pH",
+        "uom": "pH"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UPDB/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Pressure: internal pressure of instrument",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "internalpressure",
+        "propertyName": "Internal Pressure",
+        "uom": "decibar"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UPAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Temperature: instrument internal temperature",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "internaltemperature",
+        "propertyName": "Internal Temperature",
+        "uom": "C"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": []
+        },
+        "description": "Pressure: internal vacuum pressure",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "internalvacuumpressure",
+        "propertyName": "Internal Vacuum Pressure",
+        "uom": "in Hg"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UPCT/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Infrared Light Threshold",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "ir_threshold",
+        "propertyName": "IR Threshold",
+        "uom": "%"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UPOX/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Concentration: iron",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "ironconcentration",
+        "propertyName": "Iron Concentration",
+        "uom": "umol/l"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": []
+        },
+        "description": "ISO",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "iso",
+        "propertyName": "ISO",
+        "uom": "ISO"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": []
+        },
+        "description": "Laser",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "laser",
+        "propertyName": "Laser",
+        "uom": "ON/OFF"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UUUU/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Laser Diode",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "laserdiode",
+        "propertyName": "Laser Diode",
+        "uom": "NA"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": []
+        },
+        "description": "Laser Pulsewidth",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "laserpulsewidth",
+        "propertyName": "Laser Pulsewidth",
+        "uom": "ns"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UAAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Latitude: in degrees",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "latitude",
+        "propertyName": "Latitude",
+        "uom": "deg"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/ULAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Length",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "length",
+        "propertyName": "Length",
+        "uom": "m"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/ULAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Length Standard Deviation",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "lengthstddev",
+        "propertyName": "Length Standard Deviation",
+        "uom": "m"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": []
+        },
+        "description": "Lock Aperture of Camera",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "lock_aperture",
+        "propertyName": "Lock Aperture",
+        "uom": "ON/OFF"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UAAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Longitude: in degrees",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "longitude",
+        "propertyName": "Longitude",
+        "uom": "deg"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UAAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Magnetic Declination",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "magneticdeclination",
+        "propertyName": "Magnetic Declination",
+        "uom": "deg"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UAAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Magnetic Heading",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "magneticheading",
+        "propertyName": "Magnetic Heading",
+        "uom": "deg"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": []
+        },
+        "description": "Magnetic flux density",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "magnetometer",
+        "propertyName": "Magnetometer",
+        "uom": "uT"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UUUU/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Magnet Unitless Sensor",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "magnetunitlesssensor",
+        "propertyName": "Magnet Unitless Sensor",
+        "uom": "NA"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": []
+        },
+        "description": "Magnitude",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "magnitude",
+        "propertyName": "Magnitude",
+        "uom": "NA"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UPCT/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Mass Position",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "massposition",
+        "propertyName": "Mass Position",
+        "uom": "%"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UPCT/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Maximum Gain",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "max_gain",
+        "propertyName": "Maximum Gain",
+        "uom": "%"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": []
+        },
+        "description": "Maximum exposure time of Camera in microsec",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "max_shutter",
+        "propertyName": "Max Exposure Time",
+        "uom": "us"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/ULAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Wave Height: maximum wave",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "maximumwaveheight",
+        "propertyName": "Maximum Wave Height",
+        "uom": "m"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UTBB/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Wave Period: maximum wave period",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "maximumwaveperiod",
+        "propertyName": "Maximum Wave Period",
+        "uom": "s"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UAAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Wave Direction: mean wave direction",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "meanwavedirection",
+        "propertyName": "Mean Wave Direction",
+        "uom": "deg"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UAAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Mean Wave Spread",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "meanwavespread",
+        "propertyName": "Mean Wave Spread",
+        "uom": "deg"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UPPM/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Concentration: methane",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "methaneconcentration",
+        "propertyName": "Methane Concentration",
+        "uom": "ppm"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UPOX/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Concentration: methane",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "methanemolarconcentration",
+        "propertyName": "Methane Molar Concentration",
+        "uom": "umol/l"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": []
+        },
+        "description": "Pressure: methane, partial pressure",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "methanepartialpressure",
+        "propertyName": "Methane Partial Pressure",
+        "uom": "pCH4 uatm"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": []
+        },
+        "description": "Acceleration: micro-g",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "microgacceleration",
+        "propertyName": "Micro-g Acceleration",
+        "uom": "ug"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UGKG/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Mixing Ratio",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "mixingratio",
+        "propertyName": "Mixing Ratio",
+        "uom": "g/kg"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": []
+        },
+        "description": "Modified Mercalli Intensity",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "modifiedmercalliintensity",
+        "propertyName": "Modified Mercalli Intensity",
+        "uom": "Modified Mercalli Intensity Scale"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UPCT/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Motor Power",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "motorpower",
+        "propertyName": "Motor Power",
+        "uom": "%"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": []
+        },
+        "description": "Motor Speed",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "motorspeed",
+        "propertyName": "Motor Speed",
+        "uom": "RPM"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UFAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Radiation: net radiation",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "netradiation",
+        "propertyName": "Net Radiation",
+        "uom": "W/m^2"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UPOX/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Concentration: nitrate",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "nitrateconcentration",
+        "propertyName": "Nitrate Concentration",
+        "uom": "umol/l"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/ULAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Northing: UTM",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "northing",
+        "propertyName": "Northing",
+        "uom": "m"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": []
+        },
+        "description": "On/Off Sensor",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "onoffsensor",
+        "propertyName": "On/Off Sensor",
+        "uom": "ON/OFF"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": []
+        },
+        "description": "Unclassified sensor type",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "other",
+        "propertyName": "Other",
+        "uom": "NA"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UUMV/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Oxidation-Reduction Potential",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "oxidationreductionpotential",
+        "propertyName": "ORP",
+        "uom": "mV"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UMLL/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Oxygen: optode sensor",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "oxygen",
+        "propertyName": "Oxygen",
+        "uom": "ml/l"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": []
+        },
+        "description": "PADIWA",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "padiwa",
+        "propertyName": "PADIWA ",
+        "uom": "DAC"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": []
+        },
+        "description": "Radiation: par, photon",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "parphotonbased",
+        "propertyName": "PAR Photon-based",
+        "uom": "umol / m^2 s"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/ULAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Peak Ground Displacement",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "peakgrounddisplacement",
+        "propertyName": "Peak Ground Displacement",
+        "uom": "m"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UTBB/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Wave Period : wave peak period",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "peakperiod",
+        "propertyName": "Peak Period",
+        "uom": "s"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UTBB/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Peak Position of return pulse",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "peakposition",
+        "propertyName": "Peak Position",
+        "uom": "s"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UUPH/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "pH",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "ph",
+        "propertyName": "pH",
+        "uom": "pH"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": []
+        },
+        "description": "Status:Pressure Inverted Echo Sounder",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "pies",
+        "propertyName": "Pressure Inverted Echo Sounder",
+        "uom": "NA"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UMSC/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Ping time to target",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "pingtime",
+        "propertyName": "Ping Time",
+        "uom": "ms"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UAAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Pitch",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "pitch",
+        "propertyName": "Pitch",
+        "uom": "deg"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": []
+        },
+        "description": "ONC CIB Port State: 0=Power Off; 1=Power On; 2=Relay Closed; 3=DCDC Enabled; 4=Fault Detected; 5=Duty Cycle; 6=Check Command",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "portstate",
+        "propertyName": "Port State",
+        "uom": "NA"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/ULAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Position offset",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "positionoffset",
+        "propertyName": "Position Offset",
+        "uom": "m"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/WATT/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Power",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "power",
+        "propertyName": "Power",
+        "uom": "W"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UPDB/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Pressure",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "pressure",
+        "propertyName": "Pressure",
+        "uom": "decibar"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/368/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Pump flow in l/min",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "pumpflow",
+        "propertyName": "Pump Flow",
+        "uom": "l/min"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/MMPH/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Rainfall Rate",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "rainfallrate",
+        "propertyName": "Rainfall Rate",
+        "uom": "mm/hr"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UVLT/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Redox",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "redox",
+        "propertyName": "Redox",
+        "uom": "V"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UPPB/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Refined Fuel Fluorescene",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "refinedfuelfluorescene",
+        "propertyName": "Refined Fuel Fluorescence",
+        "uom": "ppb"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/HPAX/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Pressure: air, relative barometric",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "relativebarometricpressure",
+        "propertyName": "Relative Barometric Pressure",
+        "uom": "hPa"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UPCT/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Humidity: relative",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "relativehumidity",
+        "propertyName": "Relative Humidity",
+        "uom": "%"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/VVML/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Reservoir Volume",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "resevoirvolume",
+        "propertyName": "Resevoir Volume",
+        "uom": "ml"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UAAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Roll",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "roll",
+        "propertyName": "Roll",
+        "uom": "deg"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UTBB/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Runtime Sensor",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "runtimesensor",
+        "propertyName": "Runtime Sensor",
+        "uom": "s"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": []
+        },
+        "description": "Salinity",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "salinity",
+        "propertyName": "Salinity",
+        "uom": "psu"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UCNT/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Count: satellite",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "satellitecount",
+        "propertyName": "Satellite Count",
+        "uom": "Count"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UPCT/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Light Saturation",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "saturation",
+        "propertyName": "Saturation",
+        "uom": "%"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UCNT/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Count: scientific data counter",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "scientificcount",
+        "propertyName": "Scientific Count",
+        "uom": "Count"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/ULAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Seafloor depth below Sea Surface",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "seafloordepthbelowseasurface",
+        "propertyName": "Seafloor depth below Sea Surface",
+        "uom": "m"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UPAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Temperature: sea ice",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "seaicetemperature",
+        "propertyName": "Sea Ice Temperature",
+        "uom": "C"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UPAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Temperature: sea water",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "seawatertemperature",
+        "propertyName": "Sea Water Temperature",
+        "uom": "C"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UPAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Temperature: sediment surface",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "sedimentsurfacetemperature",
+        "propertyName": "Sediment Surface Temperature",
+        "uom": "C"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UPAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Temperature: sediment",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "sedimenttemperature",
+        "propertyName": "Sediment Temperature",
+        "uom": "C"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UPCT/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Light Sharpness",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "sharpness",
+        "propertyName": "Sharpness",
+        "uom": "%"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UAAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Ship Course",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "shipcourse",
+        "propertyName": "Ship Course",
+        "uom": "deg"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UTBB/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Shutter Speed",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "shutterspeed",
+        "propertyName": "Shutter Speed",
+        "uom": "s"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UKMC/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Sigma-t",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "sigmat",
+        "propertyName": "Sigma-t",
+        "uom": "kg/m3"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UKMC/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Sigma-theta",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "sigmatheta",
+        "propertyName": "Sigma-theta",
+        "uom": "kg/m3"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/ULAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Wave Height: significant wave",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "significantwaveheight",
+        "propertyName": "Significant Wave Height",
+        "uom": "m"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UTBB/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Wave Period: significant wave period",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "significantwaveperiod",
+        "propertyName": "Significant Wave Period",
+        "uom": "s"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/ULAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Thickness: snow",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "snowthickness",
+        "propertyName": "Snow Thickness",
+        "uom": "m"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UFAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Solar Radiation",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "solarradiation",
+        "propertyName": "Solar Radiation",
+        "uom": "W/m^2"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": []
+        },
+        "description": "Sound Pressure Level",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "soundpressurelevel",
+        "propertyName": "Sound Pressure Level",
+        "uom": "Uncalibrated Amplitude"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UVAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Sound Speed: sound velocity sensor",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "soundspeed",
+        "propertyName": "Sound Speed",
+        "uom": "m/s"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": []
+        },
+        "description": "Specific Enthalpy",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "specificenthalpy",
+        "propertyName": "Specific Enthalpy",
+        "uom": "kJ/kg"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UVAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Speed over Ground",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "speedoverground",
+        "propertyName": "Speed over Ground",
+        "uom": "m/s"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UPAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Temperature: air, snow, ice, sea water",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "srslicebalancebuoytemperature",
+        "propertyName": "SRSL Ice Balance Buoy Temperature",
+        "uom": "C"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": []
+        },
+        "description": "Status Code",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "statuscode",
+        "propertyName": "Status Code",
+        "uom": "NA"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UPCT/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Tank Level",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "tanklevel",
+        "propertyName": "Tank Level",
+        "uom": "%"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UTBB/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Target Persistence",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "targetpersistence",
+        "propertyName": "Target Persistence",
+        "uom": "s"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": []
+        },
+        "description": "Tension",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "tension",
+        "propertyName": "Tension",
+        "uom": "N"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UAAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Tilt: tilt sensor",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "tilt",
+        "propertyName": "Tilt",
+        "uom": "deg"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UMSC/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Time of flight",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "timeofflight",
+        "propertyName": "Time of flight",
+        "uom": "ms"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UTBB/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Timeout",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "timeout",
+        "propertyName": "Timeout",
+        "uom": "s"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UPCT/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Tone Mapping of Light",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "tone_mapping",
+        "propertyName": "Tone Mapping",
+        "uom": "%"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": []
+        },
+        "description": "Torque",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "torque",
+        "propertyName": "Torque",
+        "uom": "N�m"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UMSC/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Total Computation Time",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "totalcomputationtime",
+        "propertyName": "Total Computation Time",
+        "uom": "ms"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UPDB/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Pressure: total depth pressure sensor",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "totalpressure",
+        "propertyName": "Total Pressure",
+        "uom": "decibar"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UPCT/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Transmission: transmission sensor",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "transmission",
+        "propertyName": "Transmission",
+        "uom": "%"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UAAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "True Heading",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "trueheading",
+        "propertyName": "True Heading",
+        "uom": "deg"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": []
+        },
+        "description": "Turbidity: formazin turbidity units",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "turbidityftu",
+        "propertyName": "Turbidity FTU",
+        "uom": "FTU"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/USTU/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Turbidity: nephelometric turbidity units",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "turbidityntu",
+        "propertyName": "Turbidity NTU",
+        "uom": "NTU"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UFAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Upward Irradiance of Detector",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "upwardirradianceofdetector",
+        "propertyName": "Upward Irradiance of Detector",
+        "uom": "W/m^2"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UUUU/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "UTM Zone: for longitude band, positive north",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "utmzone",
+        "propertyName": "UTM Zone",
+        "uom": "NA"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UUUU/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "UV Index",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "uvindex",
+        "propertyName": "UV Index",
+        "uom": "NA"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UAAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Current Direction: calculated",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "vectordirection",
+        "propertyName": "Vector Direction",
+        "uom": "deg"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UVAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Velocity",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "velocity",
+        "propertyName": "Velocity",
+        "uom": "m/s"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UPAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Temperature: vent fluid",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "ventfluidtemperature",
+        "propertyName": "Vent Fluid Temperature",
+        "uom": "C"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UVLT/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Voltage: voltage sensor",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "voltage",
+        "propertyName": "Voltage",
+        "uom": "V"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UAAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Wave Direction: wave direction at peak period",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "wavedirectionatpeakperiod",
+        "propertyName": "Wave Direction at Peak Period",
+        "uom": "deg"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UPAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Temperature: wet bulb",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "wetbulbtemperature",
+        "propertyName": "Wet Bulb Temperature",
+        "uom": "C"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": []
+        },
+        "description": "Axis White Balance: 0=auto, 1=hold, 2=fixed_outdoor1, 3=fixed_outdoor2, 4=fixed_indoor, 5=fixed_fluor1, 6=fixed_fluor2, 7=auto_outdoor",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "white_balance",
+        "propertyName": "Axis White Balance",
+        "uom": "NA"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": []
+        },
+        "description": "Z3 White Balance: 0=wb_auto_mode, 1=wb_autotrace_mode, 2=wb_manual_mode, 3=wb_indoor_mode, 4=wb_outdoor_mode, 5=wb_onepush_mode, 6=wb_sodium_lamp_auto_mode",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "white_balance_z3",
+        "propertyName": "Z3 White Balance",
+        "uom": "NA"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": []
+        },
+        "description": "Rayfin White Balance: 0=Off, 1=Auto, 2=Aquorea MK2, 3=Aquorea MK3, 4=CloudyDaylight, 5=Daylight, 6=Fluorescent, 7=Incandescent, 8=Manual, 9=Shade, 10=Shallow Water, 11=Twilight",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "whitebalance",
+        "propertyName": "White Balance",
+        "uom": "NA"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UPAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Temperature: air, wind chill",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "windchilltemperature",
+        "propertyName": "Wind Chill Temperature",
+        "uom": "C"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UAAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Wind Direction",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "winddirection",
+        "propertyName": "Wind Direction",
+        "uom": "deg"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UAAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Wind Direction: corrected by compass",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "winddirectioncorrectedbycompass",
+        "propertyName": "Wind Direction Corrected by Compass",
+        "uom": "deg"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UAAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Wind Direction: uncorrected by compass",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "winddirectionuncorrectedbycompass",
+        "propertyName": "Wind Direction Uncorrected by Compass",
+        "uom": "deg"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UVAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Wind Speed",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "windspeed",
+        "propertyName": "Wind Speed",
+        "uom": "m/s"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UVAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Wind Speed Maximum",
+        "hasDeviceData": "true",
+        "hasPropertyData": "true",
+        "propertyCode": "windspeedmax",
+        "propertyName": "Wind Speed Maximum",
+        "uom": "m/s"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UAAA/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Yaw",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "yaw",
+        "propertyName": "Yaw",
+        "uom": "deg"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": []
+        },
+        "description": "Z3 Camera Auto Focus State: 0=Manual, 1=Auto",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "z3autofocusstate",
+        "propertyName": "Z3 Camera Auto Focus State",
+        "uom": "NA"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UCNT/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Zoom",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "zoom",
+        "propertyName": "Zoom",
+        "uom": "Count"
+    },
+    {
+        "cvTerm": {
+            "property": [],
+            "uom": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/P06/current/UCNT/",
+                    "vocabulary": "BODC data storage units"
+                }
+            ]
+        },
+        "description": "Zoom Step Size",
+        "hasDeviceData": "true",
+        "hasPropertyData": "false",
+        "propertyCode": "zoom_step_size",
+        "propertyName": "Zoom Step Size",
+        "uom": "Count"
+    }
+]

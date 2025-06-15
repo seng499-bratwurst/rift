@@ -1,0 +1,1707 @@
+[
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/307/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Accelerometer",
+        "deviceCategoryCode": "ACCELEROMETER",
+        "deviceCategoryName": "Accelerometer",
+        "hasDeviceData": "true",
+        "longDescription": " Accelerometers are instruments that measure accelerations. Acceleration can be static such as gravity pulling objects toward the earth, or dynamic as caused by oscillatory movements of the instrument."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/POS23/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Acoustic Receiver",
+        "deviceCategoryCode": "ACOUSTICRECEIVER",
+        "deviceCategoryName": "Acoustic Receiver",
+        "hasDeviceData": "true",
+        "longDescription": " Acoustic receivers detect and decode transmissions from acoustic tags. Receivers are categorized as passive or active which define how the receivers are used."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/DLOG/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Acoustic Transponder",
+        "deviceCategoryCode": "ACOUSTICTRANSPONDER",
+        "deviceCategoryName": "Acoustic Transponder",
+        "hasDeviceData": "true",
+        "longDescription": " An acoustic transponder is a device that can transmit and receive acoustic signals. When it receives a specific interrogation signal it responds by transmitting a specific reply signal. Transponders can be used for calculating distances or positioning information."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": []
+        },
+        "description": "Adapter",
+        "deviceCategoryCode": "ADAPTER",
+        "deviceCategoryName": "Adapter",
+        "hasDeviceData": "true",
+        "longDescription": " Instrument adapters connect a variety of sensors and instruments. Typically, these devices do not collect any data, and our digital infrastructure system does not communicate with them."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/115/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Acoustic Doppler Current Profiler 1200 kHz ",
+        "deviceCategoryCode": "ADCP1200KHZ",
+        "deviceCategoryName": "Acoustic Doppler Current Profiler 1200 kHz",
+        "hasDeviceData": "true",
+        "longDescription": " Acoustic Doppler Current Profilers are hydroacoustic instruments, similar to sonars. ADCPs measure current speed and direction at multiple predetermined depths simultaneously. ADCPs use the Doppler effect of sound waves that are scattered by particles in seawater over a depth range."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/115/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Acoustic Doppler Current Profiler 150 kHz ",
+        "deviceCategoryCode": "ADCP150KHZ",
+        "deviceCategoryName": "Acoustic Doppler Current Profiler 150 kHz",
+        "hasDeviceData": "true",
+        "longDescription": " Acoustic Doppler Current Profilers (ADCP) are hydroacoustic instruments, similar to sonars. ADCPs measure current speed and direction at multiple predetermined depths simultaneously. ADCPs use the Doppler effect of sound waves that are scattered by particles in seawater over a depth range."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/115/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Acoustic Doppler Current Profiler 1 MHz ",
+        "deviceCategoryCode": "ADCP1MHZ",
+        "deviceCategoryName": "Acoustic Doppler Current Profiler 1 MHz",
+        "hasDeviceData": "true",
+        "longDescription": " Acoustic Doppler Current Profilers are hydroacoustic instruments, similar to sonars. ADCPs measure current speed and direction at multiple predetermined depths simultaneously. ADCPs use the Doppler effect of sound waves that are scattered by particles in seawater over a depth range."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/115/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Acoustic Doppler Current Profiler 2 MHz ",
+        "deviceCategoryCode": "ADCP2MHZ",
+        "deviceCategoryName": "Acoustic Doppler Current Profiler 2 MHz",
+        "hasDeviceData": "true",
+        "longDescription": " Acoustic Doppler Current Profilers are hydroacoustic instruments, similar to sonars. ADCPs measure current speed and direction at multiple predetermined depths simultaneously. ADCPs use the Doppler effect of sound waves that are scattered by particles in seawater over a depth range."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/115/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Acoustic Doppler Current Profiler 300 kHz ",
+        "deviceCategoryCode": "ADCP300KHZ",
+        "deviceCategoryName": "Acoustic Doppler Current Profiler 300 kHz",
+        "hasDeviceData": "true",
+        "longDescription": " Acoustic Doppler Current Profilers (ADCP) are hydroacoustic instruments, similar to sonars. ADCPs measure current speed and direction at multiple predetermined depths simultaneously. ADCPs use the Doppler effect of sound waves that are scattered by particles in seawater over a depth range."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/115/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Acoustic Doppler Current Profiler 400 kHz ",
+        "deviceCategoryCode": "ADCP400KHZ",
+        "deviceCategoryName": "Acoustic Doppler Current Profiler 400 kHz",
+        "hasDeviceData": "true",
+        "longDescription": " Acoustic Doppler Current Profilers are hydroacoustic instruments, similar to sonars. ADCPs measure current speed and direction at multiple predetermined depths simultaneously. ADCPs use the Doppler effect of sound waves that are scattered by particles in seawater over a depth range."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/115/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Acoustic Doppler Current Profiler 55 kHz ",
+        "deviceCategoryCode": "ADCP55KHZ",
+        "deviceCategoryName": "Acoustic Doppler Current Profiler 55 kHz",
+        "hasDeviceData": "true",
+        "longDescription": " Acoustic Doppler Current Profilers are hydroacoustic instruments, similar to sonars. ADCPs measure current speed and direction at multiple predetermined depths simultaneously. ADCPs use the Doppler effect of sound waves that are scattered by particles in seawater over a depth range."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/115/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Acoustic Doppler Current Profiler 600 kHz ",
+        "deviceCategoryCode": "ADCP600KHZ",
+        "deviceCategoryName": "Acoustic Doppler Current Profiler 600 kHz",
+        "hasDeviceData": "true",
+        "longDescription": " Acoustic Doppler Current Profilers (ADCP) are hydroacoustic instruments, similar to sonars. ADCPs measure current speed and direction at multiple predetermined depths simultaneously. ADCPs use the Doppler effect of sound waves that are scattered by particles in seawater over a depth range."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/115/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Acoustic Doppler Current Profiler 75 kHz ",
+        "deviceCategoryCode": "ADCP75KHZ",
+        "deviceCategoryName": "Acoustic Doppler Current Profiler 75 kHz",
+        "hasDeviceData": "true",
+        "longDescription": " Acoustic Doppler Current Profilers (ADCP) are hydroacoustic instruments, similar to sonars. ADCPs measure current speed and direction at multiple predetermined depths simultaneously. ADCPs use the Doppler effect of sound waves that are scattered by particles in seawater over a depth range."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/POS27/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Automatic Identification Systems Receiver",
+        "deviceCategoryCode": "AISRECEIVER",
+        "deviceCategoryName": "Automatic Identification Systems Receiver",
+        "hasDeviceData": "true",
+        "longDescription": " Land-based Automatic Identification System (AIS) receivers provide data that track marine vessels within range of the receiver. The data are used to monitor, understand and mitigate the impacts of marine shipping activities."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/379/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Altimeter",
+        "deviceCategoryCode": "ALTIMETER",
+        "deviceCategoryName": "Altimeter",
+        "hasDeviceData": "true",
+        "longDescription": " Altimeters, or altitude meters, measure the altitude of an object above a fixed level, i.e., the seafloor."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/102/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Barometric Pressure Sensor",
+        "deviceCategoryCode": "BARPRESS",
+        "deviceCategoryName": "Barometric Pressure Sensor",
+        "hasDeviceData": "true",
+        "longDescription": " Barometric pressure sensors are used to monitor weather fluctuations and conditions above the surface of the water."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": []
+        },
+        "description": "Benthic and Resistivity Sensors",
+        "deviceCategoryCode": "BARS",
+        "deviceCategoryName": "Benthic and Resistivity Sensors",
+        "hasDeviceData": "true",
+        "longDescription": " Benthic and Resistivity Sensors (BARS) collect measurements from hydrothermal vents, using sensors to measure resistivity, temperature, eH (oxidizing nature of seawater components) and hydrogen."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": []
+        },
+        "description": "Benthic Biogeochemical Experiment System",
+        "deviceCategoryCode": "BBES",
+        "deviceCategoryName": "Benthic Biogeochemical Experiment System",
+        "hasDeviceData": "true",
+        "longDescription": " Filtered seawater is pumped into the reaction system through the centrifugal pump. Reaction starts by adding tracers through the peristaltic pump & valves."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/368/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Broadband Seismometer",
+        "deviceCategoryCode": "BBS",
+        "deviceCategoryName": "Broadband Seismometer",
+        "hasDeviceData": "true",
+        "longDescription": " Broadband Seismometers measure seismic waves over a broad frequency range depending on the device (e.g. 0.00278 Hz - 250 Hz). A broadband seismometer facilitates measurement of seismic events in the widest frequency band possible."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": []
+        },
+        "description": "Benthic Crawler",
+        "deviceCategoryCode": "BENTHICCRAWLER",
+        "deviceCategoryName": "Benthic Crawler",
+        "hasDeviceData": "true",
+        "longDescription": " Benthic crawlers are subsea vehicles that crawl on the seafloor and carry out detailed investigations of processes influencing gas hydrates evolution at the seafloor."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/134/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Borehole Temperature Logger",
+        "deviceCategoryCode": "BHTL",
+        "deviceCategoryName": "Borehole Temperature Logger",
+        "hasDeviceData": "true",
+        "longDescription": " Borehole Temperature Loggers are instruments that record and store temperature data from a string of sensors. The sensors are spaced along a cable that extents hundreds of metres into a borehole drilled in the seafloor. The temperature measurements at various sub-seafloor depths are used to study the hydrology of the seafloor."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": []
+        },
+        "description": "Anti-Biofouling Device",
+        "deviceCategoryCode": "BIOFOULING",
+        "deviceCategoryName": "Anti-Biofouling Device",
+        "hasDeviceData": "true",
+        "longDescription": " Anti-bio-fouling devices mitigate growth of micro-organisms, such as plants and algae, that grow on submerged structures."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": []
+        },
+        "description": "Bioluminescence Spectrometer",
+        "deviceCategoryCode": "BIOSPECTROMETER",
+        "deviceCategoryName": "Bioluminescence Spectrometer",
+        "hasDeviceData": "true",
+        "longDescription": " A spectrometer is a device that forms a spectrum, often utilizing the phenomenon of dispersion. In optical spectroscopy, in particular, spectrometers show the intensity of light as a function of wavelength or of frequency. In addition, these devices are utilized to measure luminescence of emission spectra including information on intensity and direction from light pulses. In the case of underwater spectrometers, these instruments mainly focus on bioluminescence emissions and measuring the spectrum of absorption in water."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/156/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Sub-bottom Profiler",
+        "deviceCategoryCode": "BOTTOMPROFILER",
+        "deviceCategoryName": "Sub-bottom Profiler",
+        "hasDeviceData": "true",
+        "longDescription": " A sub-bottom profiler is an echosounder that penetrates beneath the seafloor. The backscatter data serves to obtain bathymetric data, and identify and characterize layers of seafloor and subseafloor sediment or rock. The frequency influences the range and spatial resolution."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/WPS/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Bottom Pressure Recorder",
+        "deviceCategoryCode": "BPR",
+        "deviceCategoryName": "Bottom Pressure Recorder",
+        "hasDeviceData": "true",
+        "longDescription": " Bottom Pressure Recorders (BPR) are instruments that can detect small changes in pressure on the seafloor."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/311/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "3D Camera",
+        "deviceCategoryCode": "CAMERA_3D",
+        "deviceCategoryName": "3D Camera",
+        "hasDeviceData": "true",
+        "longDescription": " Underwater 3D cameras consist of numerous cameras positioned to construct 3 dimensional or composite images of the marine environment."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/311/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Camera Lights",
+        "deviceCategoryCode": "CAMLIGHTS",
+        "deviceCategoryName": "Camera Lights",
+        "hasDeviceData": "true",
+        "longDescription": " Camera lights are used to improve visibility where cameras are deployed. Light controls and schedules can be remotely-controlled from on-shore using software. The length of time that lights are on is limited in order to minimize impact on the environment."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/311/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Camera System",
+        "deviceCategoryCode": "CAMSYSTEM",
+        "deviceCategoryName": "Camera System",
+        "hasDeviceData": "true",
+        "longDescription": " Camera systems are comprised of cameras, plus ancillary devices like pan, tilt, lights, and lasers."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/113/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Coloured Dissolved Organic Matter ",
+        "deviceCategoryCode": "CDOM",
+        "deviceCategoryName": "Coloured Dissolved Organic Matter",
+        "hasDeviceData": "true",
+        "longDescription": " Coloured Dissolved Organic Matter (CDOM), or Chromophoric, is a component of dissolved organic matter (DOM) that is measured optically. CDOM fluorometers measure the intensity and wavelength distribution of an emission spectrum after excitation by a particular spectrum of light. These parameters detect the amount of CDOM, because it absorbs short wavelengths ranging from blue to ultraviolet."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": []
+        },
+        "description": "In Situ Iron Concentration Measurement",
+        "deviceCategoryCode": "CHEMINI",
+        "deviceCategoryName": "Chemical Miniaturized Analyzer",
+        "hasDeviceData": "true",
+        "longDescription": " The In-Situ CHEmical MINIaturized (CHEMINI) sensor is a mono-parameter in situ chemical analyzer based on flow injection analysis and colorimetric detection to perform the analysis of dissolved iron and total sulphide in the seawater."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/351/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Carbon Dioxide Sensor",
+        "deviceCategoryCode": "CO2SENSOR",
+        "deviceCategoryName": "Carbon Dioxide Sensor",
+        "hasDeviceData": "true",
+        "longDescription": " Carbon Dioxide sensors monitor CO2 levels in the ocean. CO2 sensors measure the partial pressure, or the concentration of dissolved CO2 in seawater by a variety of techniques."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/388/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Cabled Observatory Reciprocal Acoustic Scintillation",
+        "deviceCategoryCode": "CORAS",
+        "deviceCategoryName": "Cabled Observatory Reciprocal Acoustic Scintillation",
+        "hasDeviceData": "true",
+        "longDescription": " The Cabled Observatory Reciprocal Acoustic Scintillation (CORAS) makes acoustic forward-scatter observations of hydrothermal plume dynamics."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/WPS/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Circulation Obviation Retrofit Kit",
+        "deviceCategoryCode": "CORK",
+        "deviceCategoryName": "Circulation Obviation Retrofit Kit",
+        "hasDeviceData": "true",
+        "longDescription": " Circulation Obviation Retrofit Kit (CORK) instruments seal the top of boreholes, to prevent circulation between the open hole and the ocean bottom water. CORKs monitor subseafloor hydrology by collecting in-situ pressure and temperature measurements from the formation deep below the seafloor."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": []
+        },
+        "description": "Cabled Observatory Vent Imaging Sonar",
+        "deviceCategoryCode": "COVIS",
+        "deviceCategoryName": "Cabled Observatory Vent Imaging Sonar",
+        "hasDeviceData": "true",
+        "longDescription": " The Cabled Observatory Vent Imaging Sonar (COVIS) is a sonar system used to quantitatively image hydrothermal vents at the mid-ocean ridge."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/113/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Fluorometer Crude Oil",
+        "deviceCategoryCode": "CRUDEOILFLUOROMETER",
+        "deviceCategoryName": "Fluorometer Crude Oil",
+        "hasDeviceData": "true",
+        "longDescription": " Crude oil fluorometers use specific UV wavelengths for excitation. A specialized band pass emission filter is used for detecting a broad range of dissolved oil compounds or emulsions in water. The carbon structure of the compound will determine its fluorescent properties. The addition of additives will also affect the fluorescence properties of oils. The difference in crude oil fluorescence is primarily due to the refinement process."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/CSEM/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Controlled Source Electromagnetic Method",
+        "deviceCategoryCode": "CSEM",
+        "deviceCategoryName": "Controlled Source Electromagnetic Method",
+        "hasDeviceData": "true",
+        "longDescription": " The Controlled Source Electromagnetic Method (CSEM) measures sub-surface resistivity structure through the measurement of the electromegnetic fields resulting from stimulation by a towed source."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/130/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Conductivity Temperature (and Depth Sensor)",
+        "deviceCategoryCode": "CTD",
+        "deviceCategoryName": "Conductivity Temperature Depth",
+        "hasDeviceData": "true",
+        "longDescription": " Conductivity Temperature Depth (CTD) is an instrument package that contains sensors for measuring the conductivity, temperature, and pressure of seawater. Salinity, sound velocity, depth and density are variables that can be derived from sensor measurements. CTDs can carry additional instruments and sensors such as oxygen sensors, turbidity sensors and fluorometers."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": []
+        },
+        "description": "Integrated CTD pH O2 Instrument",
+        "deviceCategoryCode": "CTDPHOX",
+        "deviceCategoryName": "Integrated CTD pH O2 Instrument",
+        "hasDeviceData": "true",
+        "longDescription": " The integrated CTD pH O2 Instrument allows for pH measurements to be combined with critical oceanographic and biological measurements of temperature, salinity, and oxygen."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/114/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Current Meter",
+        "deviceCategoryCode": "CURRENTMETER",
+        "deviceCategoryName": "Current Meter",
+        "hasDeviceData": "true",
+        "longDescription": " Acoustic Current Meters (ACM) measure current speed and direction, using the Doppler Effect. Aquadopp current meters have a sensor head that contains 3 acoustic transducers, a tilt sensor, a temperature sensor and a pressure sensor. The instrument transmits a short pulse of sound, and then listens to its echo to measure the change in pitch or frequency. The change in pitch can determine the velocity of the current."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/DLOG/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Datalogger",
+        "deviceCategoryCode": "DATALOGGER",
+        "deviceCategoryName": "Datalogger",
+        "hasDeviceData": "true",
+        "longDescription": " Data loggers, or recorder devices, are electronic devices that record data over time, or in relation to location, either with a built-in instrument or sensor or via external instruments and sensors, and are programmed with appropriate recording parameters."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": []
+        },
+        "description": "Profiling Winch",
+        "deviceCategoryCode": "DC90",
+        "deviceCategoryName": "Profiling Winch",
+        "hasDeviceData": "true",
+        "longDescription": " Profiling Winches are used to raise and lower a profiling instrument packages. Some winches can be remotely operated on-shore."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/132/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Temperature and Depth Logger",
+        "deviceCategoryCode": "DEPTH_TEMP",
+        "deviceCategoryName": "Temperature and Depth Logger",
+        "hasDeviceData": "true",
+        "longDescription": " Temperature and Depth Loggers are instrument packages that contain sensors for measuring the temperature, and pressure of seawater. Depth is derived from sensor measurements."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": []
+        },
+        "description": "Depth Sensor",
+        "deviceCategoryCode": "DEPTHSENSOR",
+        "deviceCategoryName": "Depth Sensor",
+        "hasDeviceData": "true",
+        "longDescription": " Depth sensors are devices that collect data on pressure and report it in depth values. These instruments are often used for work such as monitoring safe usage, ensuring appropriate deployments/sites, and proper documentation."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": []
+        },
+        "description": "Dive Computer",
+        "deviceCategoryCode": "DIVE_COMPUTER",
+        "deviceCategoryName": "Dive Computer",
+        "hasDeviceData": "true",
+        "longDescription": " Dive computers are devices used by scuba divers to measure the time and depth of a dive."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/DLOG/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Data Logging System for Radiometers",
+        "deviceCategoryCode": "DLRAD",
+        "deviceCategoryName": "Campbell Scientific Datalogger",
+        "hasDeviceData": "true",
+        "longDescription": " Campbell Scientific Dataloggers are used for data acquisition and storage on the BC Ferries SeaKeeper system. The system supports several oceanographic sensors including temperature, conductivity, oxygen, chlorophyll and turbidity sensors. Typically, a meteorological station is also mounted on the ferry platforms."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": []
+        },
+        "description": "Digital Optical Module",
+        "deviceCategoryCode": "DOM",
+        "deviceCategoryName": "Digital Optical Module",
+        "hasDeviceData": "true",
+        "longDescription": " Digital Optical Modules (DOM) have been a major part of the Strings for Absorption Length in Water (STRAW) project. The DOMs in this project detect light flashes from the Precision Optical Calibration Module (POCAM) as an emitter and and bioluminescence. The optical water properties can be deduced based on the detected light intensity and timing. This device is also used in the Pacific Ocean Neutrino Experiment (P-ONE) project. The components of the DOM in this project consist of photomultiplier tubes, scintillator muon trackers, and various other environmental sensors."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": []
+        },
+        "description": "Drifter Buoy",
+        "deviceCategoryCode": "DRIFTER",
+        "deviceCategoryName": "Drifter Buoy",
+        "hasDeviceData": "true",
+        "longDescription": " Drifter buoys float on the sea surface and are used to investigate ocean currents and other parameters like temperature and salinity."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/311/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Still Camera",
+        "deviceCategoryCode": "DSC",
+        "deviceCategoryName": "Still Camera",
+        "hasDeviceData": "true",
+        "longDescription": " Underwater still cameras are mainly used for high resolution imaging on Remotely Operated Vehicles (ROV) during maintenance expeditions."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/FFES/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Echosounder, Bioacoustic",
+        "deviceCategoryCode": "ECHOSOUNDERBIOA",
+        "deviceCategoryName": "Echosounder, Bioacoustic",
+        "hasDeviceData": "true",
+        "longDescription": " Echosounders are used to measure acoustic backscatter as a proxy for detecting zooplankton, fish, bubbles or other particles in the water-column. An echosounder has one or more transducers which emit acoustic pulses at a particular frequency. When the pulses strike animals or other objects in the water, echoes are produced, which can be detected and converted by the transducers back into electrical signals. Software is then used to determine distances, sizes, concentrations and movements of organisms and other objects in the water."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/157/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Echosounder, Hydrographic Multibeam",
+        "deviceCategoryCode": "ECHOSOUNDERHYDMB",
+        "deviceCategoryName": "Echosounder, Hydrographic Multibeam",
+        "hasDeviceData": "true",
+        "longDescription": " Multibeam bathymetric echosounders acoustically map the seafloor. Typically mounted below a ship or remote operated vehicle (ROV), they transmit a narrow fan of acoustic beams from a transducer. These beams are reflected by the seafloor and received by the instrument. The return signal angle and travel time are used to calculate the depth and position for points on the seafloor. Motion and heading sensors are used to compensate for the relative movement of the instrument."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/156/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Echosounder, Hydrographic Single Beam ",
+        "deviceCategoryCode": "ECHOSOUNDERHYDSB",
+        "deviceCategoryName": "Echosounder, Hydrographic Single Beam",
+        "hasDeviceData": "true",
+        "longDescription": " Single beam hydrographic echosounders provide precise measurements of depth to the seafloor. Typically mounted below a ship or remote operated vehicle (ROV), they transmit pulses into the water. These pulses are reflected by the seafloor and received by the instrument. The return signal and travel time are used to calculate the depth and position of the seafloor."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": []
+        },
+        "description": "Earthquake Early Warning System Aggregator",
+        "deviceCategoryCode": "EEWAGGREGATOR",
+        "deviceCategoryName": "Earthquake Early Warning System Aggregator",
+        "hasDeviceData": "true",
+        "longDescription": " Earthquake Early Warning System Aggregator represents the digital entity that combines data feeds from a GPS and accelerometer, and contains the various processing modules."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/113/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Fluorometer Turbidity",
+        "deviceCategoryCode": "FLNTU",
+        "deviceCategoryName": "Fluorometer Turbidity",
+        "hasDeviceData": "true",
+        "longDescription": " Fluorometer Turbidity instruments measure chlorophyll fluorescence and turbidity within the same volume of seawater. The instrument uses a light emitting diode (LED) to provide an excitation source. The fluoresced light is received by a detector at a particular angle from the LED source, and uses an interference filter to discriminate against scattered excitation light. Turbidity is measured at the same time, by detecting scattered light from a LED, which is positioned at the same angle as the chlorophyll fluorescence."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/113/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Fluorometer",
+        "deviceCategoryCode": "FLUOROMETER",
+        "deviceCategoryName": "Fluorometer",
+        "hasDeviceData": "true",
+        "longDescription": " Fluorometers measure the amount of stimulated electromagnetic radiation (fluorescence) produced by pulses of electromagnetic radiation emitted into the water column."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/158/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Gravimeter",
+        "deviceCategoryCode": "GRAVIMETER",
+        "deviceCategoryName": "Gravimeter",
+        "hasDeviceData": "true",
+        "longDescription": " Gravimeters (or gravity meters) measure the gravity field of the Earth with such a resolution that they can detect very small changes in the underlying or surrounding structures."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/351/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Gas Tension Device",
+        "deviceCategoryCode": "GTD",
+        "deviceCategoryName": "Gas Tension Device",
+        "hasDeviceData": "true",
+        "longDescription": " Gas Tension Device (GTD) instruments measure gas tension, or total dissolved gas pressure. The total dissolved gas pressure in seawater is the sum of the partial pressures of all dissolved gases. The GTD operates by equilibrating a small volume of air trapped behind a semi-permeable membrane that is resistant to seawater. When the air sample is isolated from hydrostatic pressure, the measured pressure is solely from the gases in the seawater. This internal pressure is measured using a very stable pressure sensor."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": []
+        },
+        "description": "Water-Oxygen Exchange Device",
+        "deviceCategoryCode": "H2OO2EXCHANGE",
+        "deviceCategoryName": "Water-Oxygen Exchange Device",
+        "hasDeviceData": "true",
+        "longDescription": " The Water-Oxygen Exchange Device affects oxygen solubility in water by using electromagnetic waves of specific frequency. The device can be used to increase or decrease oxygen concentration in water, depending on environmental needs."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/369/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Hydrophone",
+        "deviceCategoryCode": "HYDROPHONE",
+        "deviceCategoryName": "Hydrophone",
+        "hasDeviceData": "true",
+        "longDescription": " Hydrophones are devices containing transducers that convert underwater sound waves into electrical signals. They are acoustic instruments that can process data while they are being collected to produce calibrated waveform data. Hydrophones are typically used to study vocalizations of marine mammals, ship traffic and ambient noise."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": []
+        },
+        "description": "Ice Buoy",
+        "deviceCategoryCode": "ICE_BUOY",
+        "deviceCategoryName": "Ice Buoy",
+        "hasDeviceData": "true",
+        "longDescription": " Ice Mass Balance Buoys measure various parameters including ice surface and bottom position, ice drift, meteorological data, and snow-ice-ocean temperature profiles."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/ICEP/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Ice Profiler",
+        "deviceCategoryCode": "ICEPROFILER",
+        "deviceCategoryName": "Ice Profiler",
+        "hasDeviceData": "true",
+        "longDescription": " Ice Profiler instruments are upward looking single beam echosounders mounted on the ocean floor and are specialized to measure ice draft. They can estimate ice forces, determine the thickness of ice, and the detail of the underside of sea-ice."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/MMIS/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Imaging Rotary Sonar",
+        "deviceCategoryCode": "IMGROTARYSONAR",
+        "deviceCategoryName": "Imaging Rotary Sonar",
+        "hasDeviceData": "true",
+        "longDescription": " Imaging Rotary Sonars (IRS) are devices used in underwater mapping: imaging and profiling. An IRS transmits either conical or fan-shaped beam, and its range and resolution depends on the frequency and configuration of the device. Reflected signals, or echoes, are recorded and analyzed in order to develop an image of scanned area that includes information on the range between the sonar and the scanned object."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/PERMON/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Internal Device Monitor",
+        "deviceCategoryCode": "INTERNAL_DEVICE_MONITOR",
+        "deviceCategoryName": "Internal Device Monitor",
+        "hasDeviceData": "true",
+        "longDescription": " Internal device monitors record the internal conditions of a another device or sensor. They are used to ensure proper functioning of the host instrument."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": []
+        },
+        "description": "Junction Box",
+        "deviceCategoryCode": "JB",
+        "deviceCategoryName": "Junction Box",
+        "hasDeviceData": "true",
+        "longDescription": " Junction Boxes supply power and communications to deployed instruments. Junction boxes have a number of serial and ethernet ports, including 400V ethernet ports that enable connections to other junction boxes and high-voltage instruments. Junction boxes can convert high voltages to lower voltages (15V, 24V or 48V) required by many instruments."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": []
+        },
+        "description": "LiDAR",
+        "deviceCategoryCode": "LIDAR",
+        "deviceCategoryName": "LiDAR",
+        "hasDeviceData": "true",
+        "longDescription": " The LiDAR (Light Detection And Ranging) device is used to measure scattering properties and absorption length in water. It uses a pulsed laser to send pulses of light down to an object and measures the time it takes to bounce off it and return back to the detector."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/159/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Magnetometer",
+        "deviceCategoryCode": "MAGNETOMETER",
+        "deviceCategoryName": "Magnetometer",
+        "hasDeviceData": "true",
+        "longDescription": " Magnetometers measure the direction, strength or variation of a magnetic field at a particular location."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": []
+        },
+        "description": "Microbial Sensor",
+        "deviceCategoryCode": "MBIOSENSOR",
+        "deviceCategoryName": "Microbial Sensor",
+        "hasDeviceData": "true",
+        "longDescription": " Microbial sensors detect microbial activity in the seafloor sediment indirectly by measuring reduction-oxidation reactions."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/157/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Multibeam Non-rotating Sonar",
+        "deviceCategoryCode": "MBPROFILESONAR",
+        "deviceCategoryName": "Multibeam Non-rotating Sonar",
+        "hasDeviceData": "true",
+        "longDescription": " Multibeam non-rotating sonars transmit a pulse at a certain frequency along a number of narrow beams. The sonar processor looks at the return signal for each pulse and decides where along that pulse return time lays the strongest return, giving a single point in space, such as water column depth."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/157/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Multibeam Rotary Sonar",
+        "deviceCategoryCode": "MBROTARYSONAR",
+        "deviceCategoryName": "Multibeam Rotary Sonar",
+        "hasDeviceData": "true",
+        "longDescription": " Multibeam Rotary Sonars (MRS) are devices used in underwater imaging. The use of wide beam and high speed, allows the display of an image from a wide field of view in a video-like fashion. Mounted on a platform, a multibeam transducer rotates at fixed increments and intervals to survey up to 360 degrees."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/351/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Methane Sensor",
+        "deviceCategoryCode": "METHSENSOR",
+        "deviceCategoryName": "Methane Sensor",
+        "hasDeviceData": "true",
+        "longDescription": " Methane sensors measure the concentration of dissolved methane in the seawater. Gas molecules diffuse through the membrane to the detector chamber driven by the partial pressure gradient that exists between the chamber and the ambient water. The concentration difference between two solutions is referred to as methane concentration."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/102/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Meteorological Station",
+        "deviceCategoryCode": "METSTN",
+        "deviceCategoryName": "Meteorological Station",
+        "hasDeviceData": "true",
+        "longDescription": " Meteorological stations are instruments that make routine meteorological measurements on the atmosphere and are comprised of a suite of sensors. Typical examples of measurements include temperature, barometric pressure, humidity, rainfall, solar radiation, wind speed and direction. "
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": []
+        },
+        "description": "Modem",
+        "deviceCategoryCode": "MODEM",
+        "deviceCategoryName": "Modem",
+        "hasDeviceData": "true",
+        "longDescription": " Modems include remote connections such as satellite and cellular modems."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": []
+        },
+        "description": "Muon Tracker",
+        "deviceCategoryCode": "MUONTRACKER",
+        "deviceCategoryName": "Muon Tracker",
+        "hasDeviceData": "true",
+        "longDescription": "The Muon Tracker instrument is designed to measure muon rates. After the muons enter the instrument and deposit energy into the photomultiplier arrays, the scintillator tiles are hit and determine the direction of the muon."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": []
+        },
+        "description": "Moving Vessel Profiler",
+        "deviceCategoryCode": "MVP",
+        "deviceCategoryName": "Moving Vessel Profiler",
+        "hasDeviceData": "true",
+        "longDescription": " Moving Vessel Profilers (MVP) are instruments that collect data sets from deep and shallow water. The MVP system includes a winch, deployment system and a device called a free fall fish. The winch and deployment system allows the free fall fish to be released from a vessel while it is moving. Once deployed, the free fall fish is an autonomous device that carries a variety of sensors and collects data as it swims around the water column."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/301/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Navigation",
+        "deviceCategoryCode": "NAV",
+        "deviceCategoryName": "Navigation System",
+        "hasDeviceData": "true",
+        "longDescription": " Navigational instruments are used to measure and record positional information of ships, buoys, and autonomous underwater vehicles (AUVs). Typical sensors include latitude, longitude, speed, heading, pitch, roll, and depth."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/181/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Nitrate Sensor",
+        "deviceCategoryCode": "NITRATESENSOR",
+        "deviceCategoryName": "Nitrate sensor",
+        "hasDeviceData": "true",
+        "longDescription": " Nitrate sensors measure the concentration of nitrate, a major nutrient for phytoplankton."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": []
+        },
+        "description": "Node",
+        "deviceCategoryCode": "NODE",
+        "deviceCategoryName": "Node",
+        "hasDeviceData": "true",
+        "longDescription": " Nodes are underwater structures that interface between the backbone fibre-optic cable and extension cables to various platforms."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/303/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Oceanographic Radar System",
+        "deviceCategoryCode": "OCEANOGRAPHICRADAR",
+        "deviceCategoryName": "Oceanographic Radar System",
+        "hasDeviceData": "true",
+        "longDescription": " Oceanographic radars measure the ocean surface currents and waves in near real-time, by timing reflected radio waves, and contribute to an accurate prediction of severe weather conditions."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/385/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Orientation",
+        "deviceCategoryCode": "ORIENTATION",
+        "deviceCategoryName": "Orientation Instrument",
+        "hasDeviceData": "true",
+        "longDescription": " Orientation instruments are used on ships, ROVs and instrument packages to record variables like heading, pitch and roll."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/351/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Oxygen Sensor",
+        "deviceCategoryCode": "OXYSENSOR",
+        "deviceCategoryName": "Oxygen Sensor",
+        "hasDeviceData": "true",
+        "longDescription": " Oxygen sensors measure dissolved oxygen concentration in seawater."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/150/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Particle Analyzer",
+        "deviceCategoryCode": "PARTANALYZER",
+        "deviceCategoryName": "Particle Analyzer",
+        "hasDeviceData": "true",
+        "longDescription": " Particle Analyzers measure the size spectrum of particles suspended in it."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/355/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "pH Sensor",
+        "deviceCategoryCode": "PHSENSOR",
+        "deviceCategoryName": "pH Sensor",
+        "hasDeviceData": "true",
+        "longDescription": " pH sensors measure the acidity, or alkalinity, of sea water by the concentration of hydrogen ions in the water column."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/360/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Piezometer",
+        "deviceCategoryCode": "PIEZOMETER",
+        "deviceCategoryName": "Piezometer",
+        "hasDeviceData": "true",
+        "longDescription": " Piezometers measure pore fluid pressures in shallow marine sediments."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/LAB51/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Plankton Camera System",
+        "deviceCategoryCode": "PLANKTONCAMSYSTEM",
+        "deviceCategoryName": "Plankton Camera System",
+        "hasDeviceData": "true",
+        "longDescription": " Plankton Camera Systems are used to study particles and zooplankton simultaneously by quantifying them in a known volume of water."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/21/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Plankton Sampler",
+        "deviceCategoryCode": "PLANKTONSAMPLER",
+        "deviceCategoryName": "Plankton Sampler",
+        "hasDeviceData": "true",
+        "longDescription": " Plankton Samplers collect samples of plankton from the water column in a time series. Samples are analyzed upon the recovery of the instrument, to provide qualitative and quantitative information about plankton in the water column."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": []
+        },
+        "description": "Platform",
+        "deviceCategoryCode": "PLATFORM",
+        "deviceCategoryName": "Platform",
+        "hasDeviceData": "true",
+        "longDescription": " A platform is a structure or vehicle which can host sensors or other platforms. A platform may be stationary or moving, and has an associated local coordinate frame that can be referenced to an external coordinate reference frame. The geospatial position and orientation of its sensors are often derived from the platform on which is mounted."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": []
+        },
+        "description": "Precision Optical Calibration Module",
+        "deviceCategoryCode": "POCAM",
+        "deviceCategoryName": "Precision Optical Calibration Module",
+        "hasDeviceData": "true",
+        "longDescription": " Precision Optical Calibration Modules are used for the Strings for Absorption Length in Water (STRAW) project. POCAMs provide in-situ calibrated, isotropic, nanosecond light flashes in the range of 380 to 600 nm. "
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": []
+        },
+        "description": "Power Supply",
+        "deviceCategoryCode": "POWER_SUPPLY",
+        "deviceCategoryName": "Power Supply",
+        "hasDeviceData": "true",
+        "longDescription": " Power supplies provide power to associated devices."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": []
+        },
+        "description": "Precise Point Positioning - Float",
+        "deviceCategoryCode": "PPPFLT",
+        "deviceCategoryName": "Precise Point Positioning - Float",
+        "hasDeviceData": "true",
+        "longDescription": " These precise point positioning processors are modules as part of an aggregate systems for the Earthquake Early Warning (EEW) installations. Within these processors, specially designed filters are applied to Global Navigation Satellite System and accelerometer input data. The processors output supports epicentre location and magnitude estimates for the larger earthquake detection system. This category corresponds to the floating point ambiguity resolution (AR) stream."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": []
+        },
+        "description": "Precise Point Positioning - Integer",
+        "deviceCategoryCode": "PPPINT",
+        "deviceCategoryName": "Precise Point Positioning - Integer",
+        "hasDeviceData": "true",
+        "longDescription": " These precise point positioning processors are modules as part of an aggregate systems for the Earthquake Early Warning installations. These processors apply specially designed filters to Global Navigation Satellite System and accelerometer input data. Its output serves the larger earthquake detection system. This category corresponds to the integer ambiguity resolution (INT) stream."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": []
+        },
+        "description": "Precise Point Positioning - Orbits",
+        "deviceCategoryCode": "PPPORB",
+        "deviceCategoryName": "Precise Point Positioning - Orbits",
+        "hasDeviceData": "true",
+        "longDescription": " These precise point positioning processors are modules as part of an aggregate systems for the Earthquake Early Warning (EEW) installations. These processors apply specially designed filters to Global Navigation Satellite System and accelerometer input data. Its output serves the larger earthquake detection system. This category corresponds to the broadband orbits (ORB) stream."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/WPS/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Pressure Gauge",
+        "deviceCategoryCode": "PRES",
+        "deviceCategoryName": "Pressure Gauge",
+        "hasDeviceData": "true",
+        "longDescription": " Pressure gauges are used to measure seafloor pressure."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/MPIS/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Profiling Sonar",
+        "deviceCategoryCode": "PROFILESONAR",
+        "deviceCategoryName": "Profiling Sonar",
+        "hasDeviceData": "true",
+        "longDescription": " Profiling sonars are devices used in underwater profiling where quantitative measurements are required. A profiling sonar transmits a very narrow, conical beam that generates one point per ping, providing very high resolution. Reflected signals, or echoes, are recorded and analyzed in order to develop an image of scanned area that includes information on the range between the sonar and the scanned object."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/311/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Pan Tilt Lights",
+        "deviceCategoryCode": "PTL",
+        "deviceCategoryName": "Pan Tilt Lights",
+        "hasDeviceData": "true",
+        "longDescription": " Pan Tilt Lights are used for cameras and allow remotely controlled operations such as changing the camera's field of view and illuminating the subject matter."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": []
+        },
+        "description": "Pump and Valve Control System",
+        "deviceCategoryCode": "PVCS",
+        "deviceCategoryName": "Pump and Valve Control System",
+        "hasDeviceData": "true",
+        "longDescription": " The Pump and Valve Control System (PVCS) is developed by Ocean Networks Canada. It monitors the operation of a pump and a set of valves while providing feedback using various sensors."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/122/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Pyranometer",
+        "deviceCategoryCode": "PYRANOMETER",
+        "deviceCategoryName": "Pyranometer",
+        "hasDeviceData": "true",
+        "longDescription": " Meteorological radiometers measure electromagnetic radiation in the atmosphere. Pyranometers measure broadband solar irradiance on a plane surface."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/122/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Pyrgeometer",
+        "deviceCategoryCode": "PYRGEOMETER",
+        "deviceCategoryName": "Pyrgeometer",
+        "hasDeviceData": "true",
+        "longDescription": " Meteorological radiometers measure electromagnetic radiation in the atmosphere. Pyrgeometers which measure infrared (IR) radiation."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/122/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Radiometer",
+        "deviceCategoryCode": "RADIOMETER",
+        "deviceCategoryName": "Radiometer",
+        "hasDeviceData": "true",
+        "longDescription": " Radiometers collect measurements of electromagnetic radiation in the ocean environment."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/381/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Precipitation Gauge",
+        "deviceCategoryCode": "RAIN_GAUGE",
+        "deviceCategoryName": "Precipitation Gauge",
+        "hasDeviceData": "true",
+        "longDescription": " Precipitation gauges measure the rate of fall or the integrated amount of precipitation including rain, sleet, snow, or hail."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/113/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Fluorometer Refined Fuels",
+        "deviceCategoryCode": "REFINEDFUELSFLUOROMETER",
+        "deviceCategoryName": "Fluorometer Refined Fuels",
+        "hasDeviceData": "true",
+        "longDescription": " Refined fuels fluorometers use deep UV wavelengths for excitation. A broadband emission filter is used for detecting refined oils in water."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/311/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Remotely Operated Vehicle Camera",
+        "deviceCategoryCode": "ROV_CAMERA",
+        "deviceCategoryName": "Remotely Operated Vehicle Camera",
+        "hasDeviceData": "true",
+        "longDescription": " Remotely Operated Vehicle (ROV) video cameras are used for many purposes. Operators can use ROV cameras for instrument operations, navigation, and maintenance procedures. They can also monitor the composition, abundance, behaviour, and interactions of organisms, and investigate the characteristics of seafloor geology."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/33/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Sediment Trap",
+        "deviceCategoryCode": "SEDTRAP",
+        "deviceCategoryName": "Sediment Trap",
+        "hasDeviceData": "true",
+        "longDescription": " Sediment traps use a conical-shaped trap to guide settling particles into a set of sample bottles. Separate bottle samples are collected as the instrument is rotated. Sediment traps can be  remotely triggered by a user or on a set schedule. Sediment traps record operational conditions including the sample date, time, and temperature during each sampling event. Upon instrument recovery, the samples are analyzed in a lab for particle flux and composition over time."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": []
+        },
+        "description": "Server",
+        "deviceCategoryCode": "SERVER",
+        "deviceCategoryName": "Server",
+        "hasDeviceData": "true",
+        "longDescription": ""
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/185/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Sound Speed Sensor",
+        "deviceCategoryCode": "SOUND_SPEED_SENSOR",
+        "deviceCategoryName": "Sound Speed Sensor",
+        "hasDeviceData": "true",
+        "longDescription": " The sound speed in water, such as at the ocean surface or surrounding a remote operated vehicle (ROV), is measured by sensors that use time of flight technology to provide low noise, high accuracy and high resolution data. Time of Flight (TOF) describes various methods and sensors that measure the time it takes for an object, particle or wave to travel a distance through a medium. Sound speed sensors are often installed on ships flow-through systems and on ROVs."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/368/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Short Period Seismometer",
+        "deviceCategoryCode": "SPS",
+        "deviceCategoryName": "Short Period Seismometer",
+        "hasDeviceData": "true",
+        "longDescription": " The Short Period Seismometers are compact, low-power, low-noise, ground velocity sensors with a typical bandwidth of 1 to 200 Hz, and are designed to monitor local seismicity."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": []
+        },
+        "description": "Standard Module",
+        "deviceCategoryCode": "STANDARDMODULE",
+        "deviceCategoryName": "Standard Module",
+        "hasDeviceData": "true",
+        "longDescription": " The Standard Module is a common platform shared by all the STRAW-b project (STRings for Absorption Length in Water B) specialized modules. The components of the standard module provide power supply, data logging, and communication within specialized modules (eg. spectrometer, muon chamber, LiDAR). The independent standard modules in their own glass spheres that are not hosting specialized modules are used for testing the reliability of common components and recording environmental data and system health information. The standard module will continuously record information like power consumption, temperature, pressure, humidity, and directional information by the aid of acceleration and magnetic field sensors. By this, it delivers a valuable ping signal from the module positions, which can be used to check a successful deployment and the overall status of the modules."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/183/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Suspended Sediment Profiler",
+        "deviceCategoryCode": "SUSPENDED_SEDPROFILER",
+        "deviceCategoryName": "Suspended Sediment Profiler",
+        "hasDeviceData": "true",
+        "longDescription": " Suspended Sediment Profilers (SSPs) consist of multiple acoustic transducers tuned to different frequencies, and rely on a principle, that the same sediment particle will scatter differently with acoustic waves of different frequencies. SSPs are active devices, which means they transmit and receive reflected acoustic signals (i.e. echoes). SSPs are high frequency acoustic profilers, used in sediment transport studies, including measurement of suspended sediment profiles, precision altimetry, dredge plumes and turbulence."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/135/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Temperature Array",
+        "deviceCategoryCode": "TARRAY",
+        "deviceCategoryName": "Temperature Array",
+        "hasDeviceData": "true",
+        "longDescription": " Temperature arrays are instruments that have multiple temperature sensors that are connected, but spatially distributed in a region of interest, such as the flanks of hydrothermal vents or around gas hydrate mounds. Specific details like spacing and sensor specifications vary."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/102/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Air Temperature and Humidity Sensor",
+        "deviceCategoryCode": "TEMPHUMID",
+        "deviceCategoryName": "Air Temperature and Humidity Sensor",
+        "hasDeviceData": "true",
+        "longDescription": " Air temperature and humidity sensors are used to monitor weather conditions above the surface of the water. Air temperature affects wind speed and direction, relative humidity, the rate of evaporation and precipitation in the atmosphere. Air temperature is measured in numerous ways including thermistors, thermocouples and mercury thermometers. Humidity is the amount of water vapour in the air and can indicate precipitation, dew or fog. Humidity is typically measured as absolute humidity (the water content of air), relative humidity (measures the current absolute humidity relative to maximum for that temperature), or specific humidity (as a ratio of water vapour content to the total air content based on a mass)."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": []
+        },
+        "description": "Tempo-Mini Controller",
+        "deviceCategoryCode": "TEMPOMINI",
+        "deviceCategoryName": "Tempo-Mini Controller",
+        "hasDeviceData": "true",
+        "longDescription": " Tempo-Mini (an instrument package developed and designed by IFREMER) is controlled by two Barix Barionets. These are universal data collection and communication devices configured for this system."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/134/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Temperature Sensor",
+        "deviceCategoryCode": "TEMPSENSOR",
+        "deviceCategoryName": "Temperature Sensor",
+        "hasDeviceData": "true",
+        "longDescription": " Temperature sensors measure water or ground temperatures."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/307/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Tiltmeter",
+        "deviceCategoryCode": "TILTMTR",
+        "deviceCategoryName": "Tiltmeter",
+        "hasDeviceData": "true",
+        "longDescription": " A tiltmeter is a sensitive inclinometer designed to measure very small changes from the vertical level, either on the ground or in structures."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": []
+        },
+        "description": "Towed Camera System",
+        "deviceCategoryCode": "TOWEDCAMERASYSTEM",
+        "deviceCategoryName": "Towed Camera System",
+        "hasDeviceData": "true",
+        "longDescription": " Towed camera systems have many applications. The ability to capture video and still imagery makes them ideal for marine benthic monitoring, as well as other ocean surveys that require consistent transect imaging of the seafloor."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/124/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Transmissometer",
+        "deviceCategoryCode": "TRANSMISSOMETER",
+        "deviceCategoryName": "Transmissometer",
+        "hasDeviceData": "true",
+        "longDescription": " Transmissometers measure the transmission of light through seawater. Parallel rays of light in a spectral band are emitted from a source towards a light detector a set distance away. The fraction of light received is converted into a beam attenuation coefficient."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/133/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Thermosalinograph",
+        "deviceCategoryCode": "TSG",
+        "deviceCategoryName": "Thermosalinograph",
+        "hasDeviceData": "true",
+        "longDescription": " Thermosalinographs collect data from the sea surface via flow-through systems on vessels. Typically they are mounted near the front of the vessel in order to minimize contamination. Primary variables measured are temperature and conductivity, and other variables like salinity and density are derived."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/113/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Turbidity, Chlorophyll and Fluorescence",
+        "deviceCategoryCode": "TURBCHLFL",
+        "deviceCategoryName": "Turbidity, Chlorophyll and Fluorescence",
+        "hasDeviceData": "true",
+        "longDescription": " Turbidity, chlorophyll and fluorescence instruments detect light scattered by particles suspended in water, generating an output voltage proportional to turbidity or suspended solids. Scaling factors are used to convert the voltage readings to values representing chlorophyll concentration and turbidity."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/123/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Turbidity Meter",
+        "deviceCategoryCode": "TURBIDITYMETER",
+        "deviceCategoryName": "Turbidity Meter",
+        "hasDeviceData": "true",
+        "longDescription": " Turbidity meters are sensors that detect scattered light from suspended particles in water. The amount of scattered light that reaches the detector is proportional to the turbidity or particle concentration in the water."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/LAB38/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Underwater Cavity Ring-down Spectroscopy",
+        "deviceCategoryCode": "UCRDS",
+        "deviceCategoryName": "Underwater Cavity Ring-down Spectroscopy",
+        "hasDeviceData": "true",
+        "longDescription": " Underwater Cavity Ring-Down Spectroscopy (UCRDS) is a highly sensitive optical spectroscopic technique that enables detection of trace gases in water by measuring the change of the monoexponential ring-down time attributable to the additional optical loss of an absorbing gaseous species present in the sample cavity."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": []
+        },
+        "description": "Underwater Ultraviolet Raman Spectrometer",
+        "deviceCategoryCode": "UURS",
+        "deviceCategoryName": "Underwater Ultraviolet Raman Spectrometer",
+        "hasDeviceData": "true",
+        "longDescription": " The Underwater Ultraviolet Raman Spectrometer (UURS) is a sensor used to measure concentrations of dissolved chemicals directly from their ultraviolet absorption spectrum. A variety of chemicals absorb light in the UV, and each of these chemicals has a unique absorption spectrum. Concentration of these chemicals can be determined directly, with no chemical manipulation, by measuring the absorption spectrum of seawater in the UV and then deconvolving the spectra to yield the concentration of each component."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": []
+        },
+        "description": "Underwater Voltammetric System",
+        "deviceCategoryCode": "UWVOLTAMMETRICSYSTEM",
+        "deviceCategoryName": "Underwater Voltammetric System",
+        "hasDeviceData": "true",
+        "longDescription": " Filtered seawater and reagents are pumped into the voltammetric system through a hydraulic relief system. The current produced from the reaction is measured for the calculation of the concentration of each ion."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/311/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Video Camera",
+        "deviceCategoryCode": "VIDEOCAM",
+        "deviceCategoryName": "Video Camera",
+        "hasDeviceData": "true",
+        "longDescription": " Video cameras record video of characteristics of the surrounding environments and can be deployed on fixed and mobile platforms."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": []
+        },
+        "description": "Vertical Profiler System Base",
+        "deviceCategoryCode": "VPBASE",
+        "deviceCategoryName": "Vertical Profiler System Base",
+        "hasDeviceData": "true",
+        "longDescription": " A Vertical Profiler System (also known as an off-shore profiling system) is a mobile instrument platform that consists of a seafloor base unit and an instrument package that floats on a tethered cable. A winch on the base unit raises and lowers the instrument package. Cable spooled from the base is long enough for the instrument package to extend to the surface, collecting data throughout the water column. "
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": []
+        },
+        "description": "Vertical Profiler Instrument Package",
+        "deviceCategoryCode": "VPINST",
+        "deviceCategoryName": "Vertical Profiler Instrument Package",
+        "hasDeviceData": "true",
+        "longDescription": " A Vertical Profiler Instrument Packages is a mobile instrument platform that consists of a seafloor base unit and an instrument package that floats on a tethered cable. Numerous instruments can be mounted to monitor oceanic variables, including: salinity, temperature, dissolved gases and nutrients, irradiance, currents, plankton and fish concentrations, and marine mammal movements. "
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/30/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Water Sampler",
+        "deviceCategoryCode": "WATERSAMPLER",
+        "deviceCategoryName": "Water sampler",
+        "hasDeviceData": "true",
+        "longDescription": " Water samplers are devices that collect physical samples of fluid. They can be remotely triggered, either manually or automatically, with a set schedule. Upon recovery, the fluid-filled containers can be processed to determine their chemical and biological constituents."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/110/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Wave Buoy",
+        "deviceCategoryCode": "WAVE_BUOY",
+        "deviceCategoryName": "Wave Buoy",
+        "hasDeviceData": "true",
+        "longDescription": " Wave buoys provide measurements of wave conditions. Measurements include wave height, period, direction, and spread."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": []
+        },
+        "description": "Wavelength Shifting Optical Module",
+        "deviceCategoryCode": "WAVELENGTHOPTICALMODULE",
+        "deviceCategoryName": "Wavelength Shifting Optical Module",
+        "hasDeviceData": "true",
+        "longDescription": " The Wavelength Shifting Optical Module (WOM) measures ultraviolet photons within its instrumented volume. It is constructed as a cylindrical tube painted with a wavelength shifting optical color. Inside the tube, the photons get absorbed and re-emitted in an optical regime where they are readout via two photomultiplier tubes."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/123/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Water Quality Monitor",
+        "deviceCategoryCode": "WETLABS_WQM",
+        "deviceCategoryName": "Water Quality Monitor",
+        "hasDeviceData": "true",
+        "longDescription": " Water Quality Monitors (WQM) have sensors to measure temperature, salinity, depth, dissolved oxygen, chlorophyll fluorescence, turbidity and backscattering data."
+    },
+    {
+        "cvTerm": {
+            "deviceCategory": [
+                {
+                    "uri": "http://vocab.nerc.ac.uk/collection/L05/current/101/",
+                    "vocabulary": "SeaDataNet device categories"
+                }
+            ]
+        },
+        "description": "Wind Monitoring System",
+        "deviceCategoryCode": "WINDMONITOR",
+        "deviceCategoryName": "Wind Monitoring System",
+        "hasDeviceData": "true",
+        "longDescription": " Wind monitoring systems measure the speed and direction of wind."
+    }
+]
