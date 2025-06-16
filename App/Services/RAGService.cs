@@ -51,13 +51,17 @@ public class RAGService
 
         // Will probably want to clean this up and have the RAGContext object created in
         // here and have these methods update it or something.
-        var relevantData = await _chromaDbClient.GetRelevantDataAsync(userQuery);
+        var relevantData = await _chromaDbClient.GetRelevantDataAsync(userQuery, similarityThreshold: 0.5);
 
         // var reRankedData = _reRanker.ReRankAsync(oncApiData, RelevantDocuments.RelevantDocuments);
 
-        // Might not be necessary to use the PromptBilder but we could move the system prompt into here as well
-        // and maybe some extra context/items here. (userType, specialInstructions, etc.)
         var prompt = _promptBuilder.BuildPrompt(userQuery, messageHistory, oncApiData, relevantData.RelevantDocuments);
+
+        Console.WriteLine("Generated Prompt:");
+        Console.WriteLine("\tUser Query: " + prompt.UserQuery);
+        Console.WriteLine("\tMessage History: " + JsonSerializer.Serialize(prompt.MessageHistory));
+        Console.WriteLine("\tAPI Data:" + prompt.OncAPIData);
+        Console.WriteLine("\tRelevant Data: " + JsonSerializer.Serialize(prompt.RelevantDocuments));
 
         var finalResponse = await _llmProvider.GenerateFinalResponseRAG(prompt);
 
