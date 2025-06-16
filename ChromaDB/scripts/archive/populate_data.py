@@ -16,8 +16,7 @@ from pathlib import Path
 from typing import Dict, List, Any, Optional
 
 import requests
-import pandas as pd
-from sentence_transformers import SentenceTransformer
+import pandas as p
 
 # Setup logging
 logging.basicConfig(
