@@ -67,6 +67,9 @@ builder.Services.AddScoped<IMessageService, MessageService>();
 builder.Services.AddScoped<IFileRepository, FileRepository>();
 builder.Services.AddScoped<IFileService, FileService>();
 
+builder.Services.AddScoped<IMessageEdgeRepository, MessageEdgeRepository>();
+builder.Services.AddScoped<IMessageEdgeService, MessageEdgeService>();
+
 builder.Services.AddScoped<RAGService>();
 builder.Services.AddScoped<ReRanker>();
 builder.Services.AddScoped<ResponseProcessor>();
