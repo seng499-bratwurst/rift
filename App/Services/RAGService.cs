@@ -37,7 +37,8 @@ public class RAGService
         var ragContext = await _chromaDbClient.GetRelevantDataAsync(userQuery);
         string relevantData = string.Join("\n", ragContext.RelevantDocuments.Select(d => d.Content));
 
-        string reRankedData = _reRanker.ReRankAsync(ONCAPIData, relevantData);
+        var reranker = new ReRanker(); // create an instance
+        string reRankedData = await reranker.ReRankAsync(ONCAPIData, relevantData);
 
         // Build the prompt using the PromptBuilder
         string prompt = _promptBuilder.BuildPrompt(userQuery, reRankedData);
