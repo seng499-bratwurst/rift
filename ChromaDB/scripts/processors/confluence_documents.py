@@ -1,7 +1,7 @@
 import re
 import json
 from typing import List, Dict
-from base_document_processor import BaseDocumentProcessor
+from .base_document_processor import BaseDocumentProcessor
 import os
 import sys
 from pathlib import Path
@@ -43,7 +43,7 @@ class ConfluenceDocuments(BaseDocumentProcessor):
         chunks = []
         
         metadata = {
-            'type': 'confluence_wiki',
+            'type': 'confluence_json',
             'source_doc': source_file.replace('.json', '')
         }
         

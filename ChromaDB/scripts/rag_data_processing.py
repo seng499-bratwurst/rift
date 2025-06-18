@@ -3,15 +3,13 @@ import json
 from pathlib import Path
 from typing import List, Dict
 
-from research_papers import ResearchPapers
-from confluence_documents import ConfluenceDocuments
-from cambridge_bay_articles import CambridgeBayArticles
+from processors import ResearchPapers, ConfluenceDocuments, CambridgeBayArticles
 
-DATA_DIR = Path(__file__).resolve().parents[3] / "Dataset" / "Markdown"
+DATA_DIR = Path(__file__).resolve().parents[2] / "Dataset" / "Markdown"
 SUPPORTED_TYPES = {
     "cambridge_bay_papers": ("paper", ResearchPapers),
     "cambridge_bay_web_articles": ("web_article", CambridgeBayArticles),
-    "confluence_wiki": ("wiki", ConfluenceDocuments)
+    "confluence_json": ("json", ConfluenceDocuments)
 }
 
 def load_files_from_dir(directory: Path) -> List[Dict]:
@@ -78,7 +76,7 @@ if __name__ == "__main__":
 
         print(f"Processed {len(all_docs)} chunks across all data types.")
         if all_docs:
-            print("\n", all_docs[4]['text'])
-            print("\n", all_docs[2]['metadata'], "\n")
+            print("\n", all_docs[0]['text'])
+            print("\n", all_docs[0]['metadata'], "\n")
     except Exception as e:
         print(f"An error occurred during processing: {e}")
