@@ -68,6 +68,9 @@ builder.Services.AddScoped<IMessageService, MessageService>();
 builder.Services.AddScoped<IFileRepository, FileRepository>();
 builder.Services.AddScoped<IFileService, FileService>();
 
+builder.Services.AddScoped<IMessageEdgeRepository, MessageEdgeRepository>();
+builder.Services.AddScoped<IMessageEdgeService, MessageEdgeService>();
+
 builder.Services.AddScoped<RAGService>();
 builder.Services.AddScoped<ReRanker>();
 builder.Services.AddScoped<ResponseProcessor>();
@@ -138,6 +141,8 @@ using (var scope = app.Services.CreateScope())
 
     var services = scope.ServiceProvider;
     await SeedRoles.SeedRolesAndAdminAsync(services);
+    // Uncomment the line below to seed the dev admin user. For development purposes only.
+    // await SeedDevAdmin.SeedAsync(services);
 }
 
 app.UseRouting();

@@ -40,4 +40,23 @@ public class MessageService : IMessageService
     {
         return await _messageRepository.GetMessagesByConversationIdAsync(userId, conversationId);
     }
+
+    public async Task<Message?> UpdateMessageAsync(
+        int messageId,
+        string userId,
+        float xCoordinate,
+        float yCoordinate
+    )
+    {
+        var message = await _messageRepository.GetByIdAsync(userId, messageId);
+        if (message == null)
+        {
+            return null; // Message not found
+        }
+
+        message.XCoordinate = xCoordinate;
+        message.YCoordinate = yCoordinate;
+
+        return await _messageRepository.UpdateAsync(message);
+    }
 }
