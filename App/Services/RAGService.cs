@@ -1,5 +1,7 @@
 using System.Text.Json;
 using Rift.LLM;
+using Rift.App.Clients;
+using Rift.App.Models;
 
 public class RAGService
 {
@@ -32,7 +34,8 @@ public class RAGService
         // string ONCAPIJson = await _llmProvider.GenerateONCAPICall(userQuery);
         string ONCAPIData = "";
 
-        string relevantData = _chromaDbClient.GetRelevantDataAsync(userQuery);
+        var ragContext = await _chromaDbClient.GetRelevantDataAsync(userQuery);
+        string relevantData = string.Join("\n", ragContext.RelevantDocuments.Select(d => d.Content));
 
         string reRankedData = _reRanker.ReRankAsync(ONCAPIData, relevantData);
 

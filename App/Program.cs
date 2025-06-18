@@ -3,11 +3,12 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
 using NSwag;
-using Rift.LLM;
 using Microsoft.AspNetCore.Identity;
+using Rift.LLM;
 using Rift.Models;
 using Rift.Services;
 using Rift.Repositories;
+using Rift.App.Clients;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -80,15 +81,11 @@ builder.Services.AddScoped(provider =>
 });
 
 var llmProviderName = builder.Configuration["LLmSettings:Provider"];
-builder.Services.AddSingleton<OncAPI>();
-builder.Services.AddScoped<FunctionCallSwitch>();
-builder.Services.AddScoped<Properties>();
-builder.Services.AddScoped<Deployments>();
-builder.Services.AddScoped<DeviceCategories>();
-
-
-
-
+builder.Services.AddHttpClient<OncAPI>(client =>
+{
+    client.BaseAddress = new Uri($"https://data.oceannetworks.ca/api/");
+});
+builder.Services.AddScoped<OncFunctionParser>();
 
 switch (llmProviderName)
 {
