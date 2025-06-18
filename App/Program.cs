@@ -144,6 +144,8 @@ using (var scope = app.Services.CreateScope())
 
     var services = scope.ServiceProvider;
     await SeedRoles.SeedRolesAndAdminAsync(services);
+    // Uncomment the line below to seed the dev admin user. For development purposes only.
+    // await SeedDevAdmin.SeedAsync(services);
 }
 
 app.UseRouting();
