@@ -15,4 +15,11 @@ public interface IMessageService
         float yCoordinate
     );
     Task<List<Message>> GetMessagesForConversationAsync(string userId, int conversationId);
+
+    Task<Message?> UpdateMessageAsync(
+        int messageId,
+        string userId,
+        float xCoordinate,
+        float yCoordinate
+    );
 }

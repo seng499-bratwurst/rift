@@ -15,6 +15,26 @@ public class MessageRepository : IMessageRepository
         _context = context;
     }
 
+    public async Task<Message?> GetByIdAsync(string userId, int messageId)
+    {
+        var message = await _context.Messages
+            .Where(m => m.Id == messageId &&
+                        _context.Conversations.Any(c => c.Id == m.ConversationId && c.UserId == userId))
+            .FirstOrDefaultAsync();
+        if (message == null)
+        {
+            return null; // Message not found
+        }
+        return message;
+    }
+
+    public async Task<Message> UpdateAsync(Message message)
+    {
+        _context.Messages.Update(message);
+        await _context.SaveChangesAsync();
+        return message;
+    }
+
     public async Task<Message> CreateAsync(Message message)
     {
         _context.Messages.Add(message);

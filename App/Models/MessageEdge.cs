@@ -8,3 +8,10 @@ public class MessageEdge
     public string SourceHandle { get; set; } = "bottom";
     public string TargetHandle { get; set; } = "top";
 }
+
+public class PartialMessageEdge
+{
+    public required int SourceMessageId { get; set; }
+    public string SourceHandle { get; set; } = "bottom";
+    public string TargetHandle { get; set; } = "top";
+}

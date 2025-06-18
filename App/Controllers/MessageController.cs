@@ -13,22 +13,16 @@ namespace Rift.Controllers;
 public class MessageController : ControllerBase
 {
     private readonly IMessageService _messageService;
+    private readonly IMessageEdgeService _messageEdgeService;
     private readonly IConversationService _conversationService;
     private readonly ILlmProvider _llmProvider;
 
-    public MessageController(IMessageService messageService, IConversationService conversationService, ILlmProvider llmProvider)
+    public MessageController(IMessageService messageService, IConversationService conversationService, ILlmProvider llmProvider, IMessageEdgeService messageEdgeService)
     {
         _messageService = messageService;
+        _messageEdgeService = messageEdgeService;
         _llmProvider = llmProvider;
         _conversationService = conversationService;
-    }
-
-    public class CreateMessageRequest
-    {
-        public int? ConversationId { get; set; }
-        public string Content { get; set; } = string.Empty;
-        public float XCoordinate { get; set; }
-        public float YCoordinate { get; set; }
     }
 
     // Helper to get or create a temporary session UUID (24-hour)
@@ -107,9 +101,17 @@ public class MessageController : ControllerBase
             promptMessage?.Id,
             finalRes,
             "assistant",
-            request.XCoordinate,
-            request.YCoordinate
+            request.ResponseXCoordinate,
+            request.ResponseYCoordinate
         );
+
+        if (promptMessage?.Id != null && request.Sources != null && request.Sources.Length > 0)
+        {
+            await _messageEdgeService.CreateMessageEdgesFromSourcesAsync(
+                promptMessage.Id,
+                request.Sources
+            );
+        }
 
         return Ok(new ApiResponse<object>
         {
@@ -175,9 +177,17 @@ public class MessageController : ControllerBase
             promptMessage?.Id,
             finalRes,
             "assistant",
-            request.XCoordinate,
-            request.YCoordinate
+            request.ResponseXCoordinate,
+            request.ResponseYCoordinate
         );
+
+        if (promptMessage?.Id != null && request.Sources != null && request.Sources.Length > 0)
+        {
+            await _messageEdgeService.CreateMessageEdgesFromSourcesAsync(
+                promptMessage.Id,
+                request.Sources
+            );
+        }
 
         // Return the LLM response and the session UUID (for client to persist)
         Response.Headers["Temporary-Session-Id"] = sessionId;
@@ -217,6 +227,61 @@ public class MessageController : ControllerBase
             Error = null,
             Data = messages
         });
+    }
+
+    /// <summary>
+    /// PATCH endpoint to update the coordinates of a message.
+    /// </summary>
+    [HttpPatch("messages/{messageId}")]
+    [Authorize(AuthenticationSchemes = "Bearer")]
+    public async Task<IActionResult> UpdateMessageCoordinates(int messageId, [FromBody] UpdateCoordinatesRequest request)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized(new ApiResponse<object>
+            {
+                Success = false,
+                Error = "Unauthorized",
+                Data = null
+            });
+        }
+
+        var updated = await _messageService.UpdateMessageAsync(messageId, userId, request.XCoordinate, request.YCoordinate);
+
+        if (updated == null)
+        {
+            return NotFound(new ApiResponse<object>
+            {
+                Success = false,
+                Error = "Message not found or permission denied.",
+                Data = null
+            });
+        }
+
+        return Ok(new ApiResponse<object>
+        {
+            Success = true,
+            Error = null,
+            Data = new { updated.Id, updated.XCoordinate, updated.YCoordinate }
+        });
+    }
+
+    public class CreateMessageRequest
+    {
+        public int? ConversationId { get; set; }
+        public string Content { get; set; } = string.Empty;
+        public float XCoordinate { get; set; }
+        public float YCoordinate { get; set; }
+        public float ResponseXCoordinate { get; set; }
+        public float ResponseYCoordinate { get; set; }
+        public PartialMessageEdge[]? Sources { get; set; } = null;
+    }
+
+    public class UpdateCoordinatesRequest
+    {
+        public float XCoordinate { get; set; }
+        public float YCoordinate { get; set; }
     }
 
 }

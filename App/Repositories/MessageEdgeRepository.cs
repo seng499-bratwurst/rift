@@ -20,6 +20,14 @@ public class MessageEdgeRepository : IMessageEdgeRepository
         return edge;
     }
 
+    public async Task<List<MessageEdge>> AddEdgesAsync(MessageEdge[] edges)
+    {
+        _dbContext.MessageEdges.AddRange(edges);
+        await _dbContext.SaveChangesAsync();
+        return edges.ToList(); 
+    }
+
+
     public async Task<int?> RemoveEdgeAsync(int edgeId)
     {
         var edge = await _dbContext.MessageEdges.FindAsync(edgeId);
