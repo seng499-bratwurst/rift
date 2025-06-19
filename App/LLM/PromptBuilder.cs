@@ -18,6 +18,7 @@ public class PromptBuilder
     {
         var prompt = new Prompt
         {
+            // TODO: Just a rough implementation for now, I will update this once we get the MVP working
             // Should probably update this once it is all working
             PromptId = _promptIdCounter++,
             SystemPrompt = _systemPrompt,

@@ -162,6 +162,10 @@ namespace Rift.LLM
         public async Task<string> GenerateFinalResponseRAG(Prompt prompt)
         {
 
+            // I think eventually we should move this into the PromptBuilder class but 
+            // this should be okay for now. We will need to figure out the best way to
+            // feed all of this data into the LLM.
+            // ----------------------------------------------
             var fullUserPrompt = new StringBuilder();
             fullUserPrompt.Append("This is the User Query and what they are asking:\n");
             fullUserPrompt.Append(prompt.UserQuery);
@@ -177,6 +181,7 @@ namespace Rift.LLM
             {
                 fullUserPrompt.Append($"- {message.Content}\n");
             }
+            // ----------------------------------------------
 
             var payload = new
             {

@@ -24,43 +24,43 @@ namespace Rift.Controllers
             public string ConversationIdStr { get; set; } = string.Empty;
         }
 
-        [HttpPost("generate-response")]
-        public async Task<IActionResult> GenerateResponse([FromBody] GenerateResponseRequest request)
-        {
-            if (string.IsNullOrWhiteSpace(request.UserQuery))
-            {
-                return BadRequest("User query cannot be empty.");
-            }
-            // Not sure if this should be the conversation ID or session ID?
-            if (string.IsNullOrWhiteSpace(request.ConversationIdStr))
-            {
-                return BadRequest("Conversation ID cannot be empty.");
-            }
-            // Validate and convert conversationIdStr to an integer
-            if (!int.TryParse(request.ConversationIdStr, out int conversationId))
-            {
-                return BadRequest("Invalid conversation ID format.");
-            }
+    //     [HttpPost("generate-response")]
+    //     public async Task<IActionResult> GenerateResponse([FromBody] GenerateResponseRequest request)
+    //     {
+    //         if (string.IsNullOrWhiteSpace(request.UserQuery))
+    //         {
+    //             return BadRequest("User query cannot be empty.");
+    //         }
+    //         // Not sure if this should be the conversation ID or session ID?
+    //         if (string.IsNullOrWhiteSpace(request.ConversationIdStr))
+    //         {
+    //             return BadRequest("Conversation ID cannot be empty.");
+    //         }
+    //         // Validate and convert conversationIdStr to an integer
+    //         if (!int.TryParse(request.ConversationIdStr, out int conversationId))
+    //         {
+    //             return BadRequest("Invalid conversation ID format.");
+    //         }
 
-            // TEMPORARY: Use a hardcoded user ID for testing purposes
-            var userId = "1234";
+    //         // TEMPORARY: Use a hardcoded user ID for testing purposes
+    //         var userId = "1234";
 
-            // var authHeader = HttpContext.Request.Headers["Authorization"].ToString();
-            // var userId = _jwtTokenService.GetUserIdFromBearerToken(authHeader);
-            // if (string.IsNullOrEmpty(userId))
-            // {
-            //     return Unauthorized("Could not retrieve user ID from token.");
-            // }
+    //         // var authHeader = HttpContext.Request.Headers["Authorization"].ToString();
+    //         // var userId = _jwtTokenService.GetUserIdFromBearerToken(authHeader);
+    //         // if (string.IsNullOrEmpty(userId))
+    //         // {
+    //         //     return Unauthorized("Could not retrieve user ID from token.");
+    //         // }
 
-            try
-            {
-                var response = await _ragService.GenerateResponseAsync(request.UserQuery, userId, conversationId);
-                return Ok(new { response });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
-        }
+    //         try
+    //         {
+    //             var response = await _ragService.GenerateResponseAsync(request.UserQuery, userId, conversationId);
+    //             return Ok(new { response });
+    //         }
+    //         catch (Exception ex)
+    //         {
+    //             return StatusCode(500, $"Internal server error: {ex.Message}");
+    //         }
+    //     }
     }
 }
