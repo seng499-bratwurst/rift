@@ -282,7 +282,7 @@ public class MessageController : ControllerBase
 
         var messages = await _messageService.GetMessagesForConversationAsync(userId, conversationId);
 
-        return Ok(new ApiResponse<List<MessageWithEdges>>
+        return Ok(new ApiResponse<List<Message>>
         {
             Success = true,
             Error = null,
