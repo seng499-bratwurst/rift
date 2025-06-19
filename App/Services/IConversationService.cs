@@ -12,4 +12,7 @@ public interface IConversationService
 
     Task<Conversation?> DeleteConversation(string userId, int conversationId);
 
+    Task<Conversation?> GetConversationById(string userId, int conversationId);
+
+    Task<Conversation?> GetOrCreateConversationByUserId(string userId, int? conversationId);
 }

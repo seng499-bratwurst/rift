@@ -18,3 +18,8 @@ public class Message
     public Conversation? Conversation { get; set; }
     public Message? PromptMessage { get; set; }
 }
+
+public class MessageWithEdges : Message
+{
+    public ICollection<MessageEdge?> OutgoingEdges { get; set; } = new List<MessageEdge?>();
+}

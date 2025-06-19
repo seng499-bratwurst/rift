@@ -74,4 +74,17 @@ public class ConversationRepository : IConversationRepository
 
         return conversation;
     }
+
+      public async Task<Conversation?> GetConversationById(string userId, int conversationId)
+    {
+        var conversation = await _context.Conversations
+            .FirstOrDefaultAsync(c => c.Id == conversationId && c.UserId == userId);
+
+        if (conversation == null)
+        {
+            return null;
+        }
+
+        return conversation;
+    }
 }

@@ -36,4 +36,23 @@ public class ConversationService : IConversationService
     {
         return await _repository.DeleteConversation(userId, conversationId);
     }
+
+    public async Task<Conversation?> GetConversationById(string userId, int conversationId)
+    {
+        return await _repository.GetConversationById(userId, conversationId);
+    }
+
+    public async Task<Conversation?> GetOrCreateConversationByUserId(string userId, int? conversationId)
+    {
+        Conversation? conversation;
+        if (conversationId == null)
+        {
+            conversation = await CreateConversationByUserId(userId);
+        }
+        else
+        {
+            conversation = await GetConversationById(userId, conversationId.Value);
+        }
+        return conversation;
+    }
 }
