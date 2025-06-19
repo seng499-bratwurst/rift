@@ -42,12 +42,12 @@ public class MessageRepository : IMessageRepository
         return message;
     }
 
-    public async Task<List<Message>> GetMessagesByConversationIdAsync(string userId, int conversationId)
+    public async Task<List<MessageWithEdges>> GetMessagesByConversationIdAsync(string userId, int conversationId)
     {
         return await _context.Messages
             .Where(m => m.ConversationId == conversationId)
             .Where(m => m.Conversation != null && m.Conversation.UserId == userId)
-            .Select(m => new Message
+            .Select(m => new MessageWithEdges
             {
                 Id = m.Id,
                 ConversationId = m.ConversationId,
@@ -60,6 +60,10 @@ public class MessageRepository : IMessageRepository
                 CreatedAt = m.CreatedAt,
                 XCoordinate = m.XCoordinate,
                 YCoordinate = m.YCoordinate,
+                OutgoingEdges = _context.MessageEdges
+                    .Where(e => e.SourceMessageId == m.Id)
+                    .Select(e => (MessageEdge?)e)
+                    .ToList()
             })
             .OrderBy(m => m.CreatedAt)
             .ToListAsync();

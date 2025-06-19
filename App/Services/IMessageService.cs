@@ -14,7 +14,7 @@ public interface IMessageService
         float xCoordinate,
         float yCoordinate
     );
-    Task<List<Message>> GetMessagesForConversationAsync(string userId, int conversationId);
+    Task<List<MessageWithEdges>> GetMessagesForConversationAsync(string userId, int conversationId);
 
     Task<Message?> UpdateMessageAsync(
         int messageId,
