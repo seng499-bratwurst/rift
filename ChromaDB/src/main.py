@@ -10,11 +10,12 @@ from pydantic import BaseModel, Field
 import uvicorn
 import sys
 from pathlib import Path
-from scripts.rag_data_processing import process_documents_by_doc_type, validate_file_type
 
 project_root = Path(__file__).parent.parent
 scripts_dir = project_root / "scripts"
 sys.path.extend([str(project_root), str(scripts_dir)])
+
+from scripts.rag_data_processing import process_documents_by_doc_type, validate_file_type
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -42,7 +43,6 @@ chroma_client = chromadb.PersistentClient(path="./chroma_data")
 embedding_function = embedding_functions.SentenceTransformerEmbeddingFunction(
     model_name="all-mpnet-base-v2"
 )
-
 
 class DocumentMetadata(BaseModel):
     source: str
@@ -106,7 +106,7 @@ def get_or_create_collection(collection_name: str, metadata: Optional[Dict[str, 
         collection = chroma_client.get_collection(name=collection_name)
         logger.info(f"Found existing collection: {collection_name}")
         return collection
-    except ValueError:
+    except:
         logger.info(f"Collection '{collection_name}' not found. Creating a new one.")
         collection = chroma_client.create_collection(
             name=collection_name,
@@ -117,8 +117,6 @@ def get_or_create_collection(collection_name: str, metadata: Optional[Dict[str, 
         return collection
 
 # --- API Endpoints ---
-
-# --- Collection Management Endpoints ---
 @app.get("/collections")
 async def list_collections():
     """List all available collections."""
@@ -187,9 +185,9 @@ async def add_document(file: UploadFile = File(...), collection_name: str = "oce
 
 @app.post("/documents/initial")
 async def add_initial_documents():
-    """Add initial documents that exist internally within the repo."""
-    doc_types = ["confluence_json"]  # adjust as needed
-    BATCH_SIZE = 100 # Define a size for batches
+    """Add initial documents that exist internally within the repo. Run with caution - this can take several minutes."""
+    doc_types = ["cambridge_bay_papers", "cambridge_bay_web_articles", "confluence_json"]
+    BATCH_SIZE = 100
 
     try:
         for doc_type in doc_types:
@@ -198,7 +196,7 @@ async def add_initial_documents():
             for doc_chunks in documents_chunks:
                 if not doc_chunks:
                     continue
-                # Assume all chunks for a document have the same collection name in metadata
+                
                 document_metadata = doc_chunks[0]['metadata']
                 collection_name = document_metadata['name']
                 collection_metadata = {
@@ -206,7 +204,7 @@ async def add_initial_documents():
                     'name': document_metadata.get('name'),
                     'source_type': document_metadata.get('source_type')
                 }
-                collection = get_or_create_collection(collection_name)
+                collection = get_or_create_collection(collection_name, collection_metadata)
                 # Prepare data for ChromaDB
                 documents = [chunk['text'] for chunk in doc_chunks]
                 ids = [f"{collection_name}_{i}" for i, chunk in enumerate(doc_chunks)]
@@ -233,28 +231,24 @@ async def add_initial_documents():
 
 @app.post("/documents/batch")
 async def add_batch_documents(files: List[UploadFile] = File(...), collection_name: str = "oceanographic_data"):
-    """Add multiple documents to a collection in batch from uploaded files."""
-    collection = get_or_create_collection(chroma_client, collection_name, {}, embedding_function)
-    docs_to_add, ids_to_add, metadatas_to_add = [], [], []
+    """Adds multiple documents to a collection in batch from uploaded files."""
+    collection = get_or_create_collection(collection_name)
     added_files, errors = [], []
 
     for file in files:
         try:
             validate_file_type_util(file.filename, file.content_type)
             content = await file.read()
-            docs_to_add.append(content.decode("utf-8"))
-            ids_to_add.append(file.filename)
-            metadatas_to_add.append({"filename": file.filename, "source": "file_upload"})
+            # TODO: chuck content
+            collection.add(
+                documents=[content.decode("utf-8")],
+                ids=[file.filename],
+                metadatas=[{"filename": file.filename, "source": "batch_upload"}]
+            )
             added_files.append(file.filename)
         except (ValueError, Exception) as e:
+            logger.error(f"Failed to process file {file.filename} in batch: {e}")
             errors.append({"file": file.filename, "error": str(e)})
-
-    if docs_to_add:
-        try:
-            collection.add(documents=docs_to_add, ids=ids_to_add, metadatas=metadatas_to_add)
-            logger.info(f"Added batch of {len(docs_to_add)} documents to {collection_name}")
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=f"Failed to add batch to ChromaDB: {str(e)}")
 
     if errors:
         return {"status": "completed_with_errors", "added_files": added_files, "errors": errors}

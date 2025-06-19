@@ -10,7 +10,6 @@ SUPPORTED_TYPES = {
     "cambridge_bay_papers": ("paper", ResearchPapers),
     "cambridge_bay_web_articles": ("web_article", CambridgeBayArticles),
     "confluence_json": ("json", ConfluenceJson),
-    "mock_json": ("json", ConfluenceJson)
 }
 ALLOWED_TYPES = {
     "application/pdf": ".pdf", "text/plain": ".txt",
@@ -74,45 +73,33 @@ def process_documents_by_doc_type(doc_type: str) -> List[List[dict]]:
 # --- Centralized Helper Functions ---
 
 def validate_file_type(filename: str, content_type: str):
-    """Validate file type and extension. Raises ValueError if invalid."""
+    """
+    Validates the file's extension and MIME type against allowed lists.
+    Raises ValueError if the file type is not allowed.
+    """
     if content_type not in ALLOWED_TYPES:
-        raise ValueError(f"File type {content_type} not allowed. Allowed: {list(ALLOWED_TYPES.keys())}")
+        raise ValueError(f"File type '{content_type}' is not allowed.")
     if not any(filename.lower().endswith(ext) for ext in ALLOWED_EXTENSIONS):
-        raise ValueError(f"File extension not allowed. Allowed: {ALLOWED_EXTENSIONS}")
+        raise ValueError("File extension is not in the list of allowed extensions.")
 
 def prepare_collection_metadata(document_metadata: dict) -> dict:
-    """Prepare collection-level metadata from a document's metadata."""
-    return {k: v for k, v in document_metadata.items() if k not in ['item_name', 'item_code', 'section', 'chunk_index', 'length']}
+    """
+    Prepares a clean metadata dictionary for a ChromaDB collection from a chunk's metadata.
+    It removes chunk-specific keys.
+    """
+    # Keys to exclude from the top-level collection metadata.
+    excluded_keys = ['item_name', 'item_code', 'section', 'chunk_index', 'length']
+    return {k: v for k, v in document_metadata.items() if k not in excluded_keys}
 
 def prepare_documents_for_chroma(doc_chunks: list, collection_name: str) -> Tuple[List[str], List[str], List[Dict]]:
-    """Prepare lists of documents, ids, and metadatas for ChromaDB add."""
+    """
+    Prepares lists of documents, unique IDs, and metadata for a ChromaDB .add() call.
+    """
     documents, ids, metadatas = [], [], []
     for i, chunk in enumerate(doc_chunks):
         documents.append(chunk['text'])
-        base_id = chunk['metadata'].get('id', f"{collection_name}_{i}")
-        ids.append(base_id)
+        # Creates a unique ID for the chunk to prevent collisions.
+        unique_id = f"{collection_name}_{chunk['metadata'].get('source_doc', 'doc')}_{i}"
+        ids.append(unique_id)
         metadatas.append(chunk['metadata'])
     return documents, ids, metadatas
-
-def get_or_create_collection(chroma_client, collection_name: str, collection_metadata: dict, embedding_function):
-    """Get or create a ChromaDB collection."""
-    try:
-        return chroma_client.get_collection(name=collection_name)
-    except ValueError:
-        return chroma_client.create_collection(
-            name=collection_name,
-            metadata=collection_metadata,
-            embedding_function=embedding_function,
-        )
-
-if __name__ == "__main__":
-    # Testing purposes only
-    try:
-        all_docs = process_all_documents()
-
-        print(f"Processed {len(all_docs)} chunks across all data types.")
-        if all_docs:
-            print("\n", all_docs[0]['text'])
-            print("\n", all_docs[0]['metadata'], "\n")
-    except Exception as e:
-        print(f"An error occurred during testing: {e}")
