@@ -49,23 +49,6 @@ public class MessageRepository : IMessageRepository
             .Where(m => m.Conversation != null && m.Conversation.UserId == userId)
             .Include(m => m.OutgoingEdges)
             .OrderBy(m => m.CreatedAt)
-            // .Select(m => new Message
-            // {
-            //     Id = m.Id,
-            //     ConversationId = m.ConversationId,
-            //     PromptMessageId = m.PromptMessageId,
-            //     Content = m.Content,
-            //     OncApiQuery = m.OncApiQuery,
-            //     OncApiResponse = m.OncApiResponse,
-            //     IsHelpful = m.IsHelpful,
-            //     Role = m.Role,
-            //     CreatedAt = m.CreatedAt,
-            //     XCoordinate = m.XCoordinate,
-            //     YCoordinate = m.YCoordinate,
-            //     OutgoingEdges = m.OutgoingEdges
-            //         .Where(e => e != null)
-            //         .ToList()
-            // })
             .ToListAsync();
     }
 }
