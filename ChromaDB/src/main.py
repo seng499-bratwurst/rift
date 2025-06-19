@@ -1,14 +1,21 @@
 import os
 import logging
 from typing import List, Optional, Dict, Any
-from fastapi import FastAPI, HTTPException, status
+from fastapi import FastAPI, HTTPException, status, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 import chromadb
 from chromadb.config import Settings
+from chromadb.utils import embedding_functions
 from pydantic import BaseModel, Field
 import uvicorn
+import sys
+from pathlib import Path
+from scripts.rag_data_processing import process_documents_by_doc_type, validate_file_type
 
-# Configure logging
+project_root = Path(__file__).parent.parent
+scripts_dir = project_root / "scripts"
+sys.path.extend([str(project_root), str(scripts_dir)])
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -18,7 +25,6 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -27,28 +33,25 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ChromaDB Configuration optimized for oceanographic data
 CHROMA_SETTINGS = Settings(
-    persist_directory="/chroma_data",
+    persist_directory="./chroma_data",
     anonymized_telemetry=False,
     allow_reset=True
 )
+chroma_client = chromadb.PersistentClient(path="./chroma_data")
+embedding_function = embedding_functions.SentenceTransformerEmbeddingFunction(
+    model_name="all-mpnet-base-v2"
+)
 
-# Initialize ChromaDB client
-chroma_client = chromadb.Client(CHROMA_SETTINGS)
 
-# Use default embedding function for now (can be upgraded later)
-# embedding_function = None  # ChromaDB will use default
-
-# Pydantic Models
 class DocumentMetadata(BaseModel):
     source: str
-    data_type: str  # e.g., "sensor_data", "location_info", "instrument_spec"
+    data_type: str
     timestamp: Optional[str] = None
     location: Optional[str] = None
     depth: Optional[float] = None
     instrument_type: Optional[str] = None
-    tags: Optional[str] = None  # Comma-separated string of tags instead of List[str]
+    tags: Optional[str] = None
 
 class Document(BaseModel):
     id: str
@@ -69,7 +72,7 @@ class QueryRequest(BaseModel):
     text: str
     n_results: int = Field(default=5, ge=1, le=50)
     collection_name: str = "oceanographic_data"
-    where: Optional[Dict[str, Any]] = None  # Metadata filters
+    where: Optional[Dict[str, Any]] = None
     include: List[str] = Field(default=["documents", "metadatas", "distances"])
 
 class SemanticQueryRequest(BaseModel):
@@ -96,35 +99,26 @@ class UpdateDocumentRequest(BaseModel):
     text: Optional[str] = None
     metadata: Optional[Dict[str, Any]] = None
 
-# This was added - unsure what it's going to be for?
-@app.post("/add")
-def add(req: AddRequest):
-    # clean data func
-    # embed func
-    collection.add(
-        documents=[req.text],
-        ids=[req.id],
-    )
-    return {"status": "added"}
-
-# Collection Management
-@app.post("/collections", status_code=status.HTTP_201_CREATED)
-async def create_collection(collection_info: CollectionInfo):
-    """Create a new collection with specified configuration."""
+# --- Helper Functions ---
+def get_or_create_collection(collection_name: str, metadata: Optional[Dict[str, Any]] = None):
+    """Gets a collection or creates it if it doesn't exist."""
     try:
+        collection = chroma_client.get_collection(name=collection_name)
+        logger.info(f"Found existing collection: {collection_name}")
+        return collection
+    except ValueError:
+        logger.info(f"Collection '{collection_name}' not found. Creating a new one.")
         collection = chroma_client.create_collection(
-            name=collection_info.name,
-            metadata=collection_info.metadata or {
-                "description": collection_info.description or "Oceanographic data collection",
-                "created_for": "rift_rag_system"
-            }
+            name=collection_name,
+            metadata=metadata,
+            embedding_function=embedding_function,
         )
-        logger.info(f"Created collection: {collection_info.name}")
-        return {"status": "created", "name": collection_info.name}
-    except Exception as e:
-        logger.error(f"Failed to create collection {collection_info.name}: {str(e)}")
-        raise HTTPException(status_code=400, detail=f"Failed to create collection: {str(e)}")
+        logger.info(f"Created collection: {collection_name}")
+        return collection
 
+# --- API Endpoints ---
+
+# --- Collection Management Endpoints ---
 @app.get("/collections")
 async def list_collections():
     """List all available collections."""
@@ -132,11 +126,8 @@ async def list_collections():
         collections = chroma_client.list_collections()
         return {
             "collections": [
-                {
-                    "name": col.name,
-                    "id": col.id,
-                    "metadata": col.metadata
-                } for col in collections
+                {"name": col.name, "id": col.id, "metadata": col.metadata, "count": col.count()}
+                for col in collections
             ]
         }
     except Exception as e:
@@ -168,95 +159,107 @@ async def delete_collection(collection_name: str):
         return {"status": "deleted", "name": collection_name}
     except Exception as e:
         logger.error(f"Failed to delete collection {collection_name}: {str(e)}")
-        raise HTTPException(status_code=404, detail="Collection not found")
+        raise HTTPException(status_code=500, detail="Internal server error")
 
-# Document Management
 @app.post("/documents/add")
-async def add_document(request: AddRequest):
-    """Add a single document to the collection."""
+async def add_document(file: UploadFile = File(...), collection_name: str = "oceanographic_data"):
+    """Add a single document to a collection from an uploaded file."""
     try:
-        # Get or create collection
-        try:
-            collection = chroma_client.get_collection(
-                name=request.collection_name
-            )
-        except:
-            collection = chroma_client.create_collection(
-                name=request.collection_name
-            )
+        validate_file_type(file.filename, file.content_type)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    try:
+        collection = get_or_create_collection(collection_name)
+        file_content = await file.read()
+        document_text = file_content.decode("utf-8")
+        file_id = file.filename
         
-        # Clean metadata to remove None values and convert lists to strings
-        metadata = None
-        if request.metadata:
-            # Convert any list values to comma-separated strings
-            for key, value in request.metadata.items():
-                if isinstance(value, list):
-                    request.metadata[key] = ",".join(str(item) for item in value)
-            
-            # Remove None values
-            clean_metadata = {k: v for k, v in request.metadata.items() if v is not None}
-            metadata = clean_metadata if clean_metadata else None
-            
         collection.add(
-            documents=[request.text],
-            ids=[request.id],
-            metadatas=[clean_metadata] if clean_metadata else None
+            documents=[document_text],
+            ids=[file_id],
+            metadatas=[{"filename": file.filename, "source": "file_upload"}]
         )
-        
-        logger.info(f"Added document {request.id} to {request.collection_name}")
-        return {"status": "added", "id": request.id}
-        
+        logger.info(f"Added document {file_id} to {collection_name}")
+        return {"status": "added", "file": file.filename, "collection": collection_name}
     except Exception as e:
-        logger.error(f"Failed to add document {request.id}: {str(e)}")
-        raise HTTPException(status_code=400, detail=f"Failed to add document: {str(e)}")
+        logger.error(f"Failed to add document from file {file.filename}: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to add document: {str(e)}")
 
-@app.post("/documents/batch")
-async def add_batch_documents(request: BatchDocuments):
-    """Add multiple documents to the collection in batch."""
+@app.post("/documents/initial")
+async def add_initial_documents():
+    """Add initial documents that exist internally within the repo."""
+    doc_types = ["confluence_json"]  # adjust as needed
+    BATCH_SIZE = 100 # Define a size for batches
+
     try:
-        # Get or create collection
-        try:
-            collection = chroma_client.get_collection(
-                name=request.collection_name
-            )
-        except:
-            collection = chroma_client.create_collection(
-                name=request.collection_name
-            )
-        
-        documents = [doc.text for doc in request.documents]
-        ids = [doc.id for doc in request.documents]
-        
-        # Clean metadatas to remove None values and convert lists to strings
-        metadatas = []
-        for doc in request.documents:
-            if doc.metadata:
-                # Convert the model to dict
-                metadata_dict = doc.metadata.dict()
-                
-                # Convert any list values to comma-separated strings
-                for key, value in metadata_dict.items():
-                    if isinstance(value, list):
-                        metadata_dict[key] = ",".join(str(item) for item in value)
-                
-                # Remove None values
-                clean_metadata = {k: v for k, v in metadata_dict.items() if v is not None}
-                metadatas.append(clean_metadata if clean_metadata else None)
-            else:
-                metadatas.append(None)
-        
-        collection.add(
-            documents=documents,
-            ids=ids,
-            metadatas=metadatas
-        )
-        
-        logger.info(f"Added {len(documents)} documents to {request.collection_name}")
-        return {"status": "added", "count": len(documents)}
-        
+        for doc_type in doc_types:
+            # Get a list of lists: each sublist is chunks for one document
+            documents_chunks = process_documents_by_doc_type(doc_type)
+            for doc_chunks in documents_chunks:
+                if not doc_chunks:
+                    continue
+                # Assume all chunks for a document have the same collection name in metadata
+                document_metadata = doc_chunks[0]['metadata']
+                collection_name = document_metadata['name']
+                collection_metadata = {
+                    'created_at': document_metadata.get('created_at'),
+                    'name': document_metadata.get('name'),
+                    'source_type': document_metadata.get('source_type')
+                }
+                collection = get_or_create_collection(collection_name)
+                # Prepare data for ChromaDB
+                documents = [chunk['text'] for chunk in doc_chunks]
+                ids = [f"{collection_name}_{i}" for i, chunk in enumerate(doc_chunks)]
+                metadatas = [chunk['metadata'] for chunk in doc_chunks]
+
+                # Add documents in batches
+                for i in range(0, len(documents), BATCH_SIZE):
+                    batch_docs = documents[i:i + BATCH_SIZE]
+                    batch_ids = ids[i:i + BATCH_SIZE]
+                    batch_metadatas = metadatas[i:i + BATCH_SIZE]
+                    
+                    collection.add(
+                        documents=batch_docs,
+                        ids=batch_ids,
+                        metadatas=batch_metadatas
+                    )
+
+                logger.info(f"Added {len(documents)} documents to {collection_name}")
+        return {"status": "added"}
     except Exception as e:
         logger.error(f"Failed to add batch documents: {str(e)}")
         raise HTTPException(status_code=400, detail=f"Failed to add documents: {str(e)}")
+
+
+@app.post("/documents/batch")
+async def add_batch_documents(files: List[UploadFile] = File(...), collection_name: str = "oceanographic_data"):
+    """Add multiple documents to a collection in batch from uploaded files."""
+    collection = get_or_create_collection(chroma_client, collection_name, {}, embedding_function)
+    docs_to_add, ids_to_add, metadatas_to_add = [], [], []
+    added_files, errors = [], []
+
+    for file in files:
+        try:
+            validate_file_type_util(file.filename, file.content_type)
+            content = await file.read()
+            docs_to_add.append(content.decode("utf-8"))
+            ids_to_add.append(file.filename)
+            metadatas_to_add.append({"filename": file.filename, "source": "file_upload"})
+            added_files.append(file.filename)
+        except (ValueError, Exception) as e:
+            errors.append({"file": file.filename, "error": str(e)})
+
+    if docs_to_add:
+        try:
+            collection.add(documents=docs_to_add, ids=ids_to_add, metadatas=metadatas_to_add)
+            logger.info(f"Added batch of {len(docs_to_add)} documents to {collection_name}")
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Failed to add batch to ChromaDB: {str(e)}")
+
+    if errors:
+        return {"status": "completed_with_errors", "added_files": added_files, "errors": errors}
+    
+    return {"status": "added", "files": added_files, "collection": collection_name}
 
 @app.get("/documents/{document_id}")
 async def get_document(document_id: str, collection_name: str = "oceanographic_data"):
@@ -527,32 +530,6 @@ async def generate_embeddings(texts: List[str]):
     except Exception as e:
         logger.error(f"Embedding generation failed: {str(e)}")
         raise HTTPException(status_code=400, detail=f"Embedding generation failed: {str(e)}")
-
-# Initialize default collection on startup
-@app.on_event("startup")
-async def startup_event():
-    """Initialize default collection for oceanographic data."""
-    try:
-        # Try to get existing collection
-        try:
-            collection = chroma_client.get_collection(
-                name="oceanographic_data"
-            )
-            logger.info("Found existing oceanographic_data collection")
-        except:
-            # Create default collection if it doesn't exist
-            collection = chroma_client.create_collection(
-                name="oceanographic_data",
-                metadata={
-                    "description": "Default collection for Ocean Networks Canada (ONC) data",
-                    "created_for": "rift_rag_system",
-                    "data_types": ["sensor_data", "location_info", "instrument_specs", "research_data"]
-                }
-            )
-            logger.info("Created default oceanographic_data collection")
-            
-    except Exception as e:
-        logger.error(f"Failed to initialize default collection: {str(e)}")
 
 if __name__ == "__main__":
     uvicorn.run(

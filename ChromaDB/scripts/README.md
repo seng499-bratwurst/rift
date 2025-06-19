@@ -9,7 +9,7 @@ scripts/
 ├── processors/           # Document processor implementations
 │   ├── __init__.py      # Package exports
 │   ├── base_document_processor.py
-│   ├── confluence_documents.py
+│   ├── confluence_json.py
 │   ├── research_papers.py
 │   └── cambridge_bay_articles.py
 ├── rag_data_processing.py  # Main processing script
@@ -20,7 +20,7 @@ scripts/
 
 - `processors/`: Contains different document processors for various data sources
   - `base_document_processor.py`: Base class for document processing
-  - `confluence_documents.py`: Processor for Confluence documents
+  - `confluence_json.py`: Processor for JSON files of Confluence API reference wiki pages
   - `research_papers.py`: Processor for research papers
   - `cambridge_bay_articles.py`: Processor for Cambridge Bay articles
 

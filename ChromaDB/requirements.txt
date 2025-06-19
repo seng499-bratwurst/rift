@@ -109,3 +109,5 @@ websockets==15.0.1
 wrapt==1.17.2
 yarg==0.1.10
 zipp==3.23.0
+sentence-transformers==2.7.0
+python-multipart==0.0.9
