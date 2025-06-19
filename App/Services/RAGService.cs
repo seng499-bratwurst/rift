@@ -3,6 +3,7 @@ using Rift.LLM;
 using Rift.App.Clients;
 using Rift.App.Models;
 using Rift.Services;
+using Rift.Models;
 
 public class RAGService
 {
@@ -30,7 +31,7 @@ public class RAGService
         _responseProcessor = responseProcessor;
     }
 
-    public async Task<string> GenerateResponseAsync(string userQuery, string userId, int conversationId)
+    public async Task<string> GenerateResponseAsync(string userQuery, Conversation conversation)
     {
         /* 
         Rough outline of the steps to generate a response a response:
