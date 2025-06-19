@@ -57,6 +57,28 @@ public class MessageController : ControllerBase
             });
         }
 
+        if (string.IsNullOrEmpty(userId))
+        {
+            return BadRequest(new ApiResponse<object>
+            {
+                Success = false,
+                Error = "User ID is required for authenticated requests",
+                Data = null
+            });
+        }
+
+        Conversation? conversation = await _conversationService.GetOrCreateConversationByUserId(userId, request.ConversationId);
+
+        if (conversation == null)
+        {
+            return NotFound(new ApiResponse<object>
+            {
+                Success = false,
+                Error = "Conversation not found.",
+                Data = null
+            });
+        }
+
         var response = await _llmProvider.GenerateONCAPICall(request.Content);
         using var doc = JsonDocument.Parse(response);
 
@@ -76,14 +98,7 @@ public class MessageController : ControllerBase
             });
         }
 
-        // If there is no conversationId, create a new conversation
-        Conversation? conversation = null;
-        if (request.ConversationId == null)
-        {
-            conversation = await _conversationService.CreateConversationByUserId(userId);
-        }
-
-        var conversationId = request.ConversationId ?? conversation?.Id;
+        var conversationId = conversation?.Id;
 
         // Create the message with the users prompt
         var promptMessage = await _messageService.CreateMessageAsync(
@@ -96,7 +111,7 @@ public class MessageController : ControllerBase
         );
 
         // Create the message with the LLM response
-        await _messageService.CreateMessageAsync(
+        var responseMessage = await _messageService.CreateMessageAsync(
             conversationId,
             promptMessage?.Id,
             finalRes,
@@ -105,12 +120,32 @@ public class MessageController : ControllerBase
             request.ResponseYCoordinate
         );
 
+        if (responseMessage == null || promptMessage == null)
+        {
+            return BadRequest(new ApiResponse<object>
+            {
+                Success = false,
+                Error = "Failed to create messages.",
+                Data = null
+            });
+        }
+
+        MessageEdge promptToResponseEdge = await _messageEdgeService.CreateEdgeAsync(new MessageEdge
+        {
+            SourceMessageId = promptMessage.Id,
+            TargetMessageId = responseMessage.Id,
+            SourceHandle = request.SourceHandle,
+            TargetHandle = request.TargetHandle
+        });
+
+        MessageEdge[] edges = Array.Empty<MessageEdge>();
+
         if (promptMessage?.Id != null && request.Sources != null && request.Sources.Length > 0)
         {
-            await _messageEdgeService.CreateMessageEdgesFromSourcesAsync(
+            edges = (await _messageEdgeService.CreateMessageEdgesFromSourcesAsync(
                 promptMessage.Id,
                 request.Sources
-            );
+            )).ToArray();
         }
 
         return Ok(new ApiResponse<object>
@@ -120,7 +155,10 @@ public class MessageController : ControllerBase
             Data = new
             {
                 ConversationId = conversationId,
-                Response = finalRes
+                Response = finalRes,
+                PromptMessageId = promptMessage?.Id,
+                ResponseMessageId = responseMessage?.Id,
+                CreatedEdges = (new[] { promptToResponseEdge }).Concat(edges).ToArray(),
             }
         });
     }
@@ -172,7 +210,7 @@ public class MessageController : ControllerBase
         );
 
         // Store the LLM's response
-        var assistantMessage = await _messageService.CreateMessageAsync(
+        var responseMessage = await _messageService.CreateMessageAsync(
             conversationId,
             promptMessage?.Id,
             finalRes,
@@ -181,12 +219,32 @@ public class MessageController : ControllerBase
             request.ResponseYCoordinate
         );
 
+        if (responseMessage == null || promptMessage == null)
+        {
+            return BadRequest(new ApiResponse<object>
+            {
+                Success = false,
+                Error = "Failed to create messages.",
+                Data = null
+            });
+        }
+
+        MessageEdge promptToResponseEdge = await _messageEdgeService.CreateEdgeAsync(new MessageEdge
+        {
+            SourceMessageId = promptMessage.Id,
+            TargetMessageId = responseMessage.Id,
+            SourceHandle = request.SourceHandle,
+            TargetHandle = request.TargetHandle
+        });
+
+        MessageEdge[] edges = Array.Empty<MessageEdge>();
+
         if (promptMessage?.Id != null && request.Sources != null && request.Sources.Length > 0)
         {
-            await _messageEdgeService.CreateMessageEdgesFromSourcesAsync(
+            edges = (await _messageEdgeService.CreateMessageEdgesFromSourcesAsync(
                 promptMessage.Id,
                 request.Sources
-            );
+            )).ToArray();
         }
 
         // Return the LLM response and the session UUID (for client to persist)
@@ -199,6 +257,9 @@ public class MessageController : ControllerBase
             {
                 Response = finalRes,
                 SessionId = sessionId,
+                PromptMessageId = promptMessage?.Id,
+                ResponseMessageId = responseMessage?.Id,
+                CreatedEdges = (new[] { promptToResponseEdge }).Concat(edges).ToArray(),
             }
         });
     }
@@ -275,6 +336,8 @@ public class MessageController : ControllerBase
         public float YCoordinate { get; set; }
         public float ResponseXCoordinate { get; set; }
         public float ResponseYCoordinate { get; set; }
+        public string SourceHandle { get; set; } = string.Empty;
+        public string TargetHandle { get; set; } = string.Empty;
         public PartialMessageEdge[]? Sources { get; set; } = null;
     }
 
