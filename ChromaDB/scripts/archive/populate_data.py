@@ -16,7 +16,7 @@ from pathlib import Path
 from typing import Dict, List, Any, Optional
 
 import requests
-import pandas as p
+import pandas as pd
 
 # Setup logging
 logging.basicConfig(
