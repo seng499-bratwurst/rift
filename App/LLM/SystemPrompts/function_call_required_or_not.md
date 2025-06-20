@@ -81,6 +81,18 @@ If the user's request is general, or not ONC specific respond with:
   }
 }
 
+**User Prompt:**
+> List the devices at Cambridge Bay.
+
+**Expected Response:**
+{
+  "use_function": true,
+  "function": "devices",
+  "args": {
+    
+  }
+}
+
 
 ---
 
@@ -155,3 +167,21 @@ All parameters are optional and should **only be used when the user provides rel
 - `locationCode` — Return all properties available at a specific location (e.g., `BACAX`).
 - `deviceCategoryCode` — Return all properties that belong to a specific device category (e.g., `CTD`).
 - `deviceCode` — Return all properties associated with or measured by a specific device.
+
+### Tool 4: `devices`
+
+What the **devices** tool does: The API `devices` service returns all devices defined in Oceans 3.0 that meet a set of filter criteria. Devices are instruments that have one or more sensors that observe a property or phenomenon with a goal of producing an estimate of the value of a property. Devices are uniquely identified by a device code and can be deployed at multiple locations during their lifespan. The primary purpose of the devices service is to find devices that have the data you are interested in and use the deviceCode when requesting a data product using the dataProductDelivery web service.
+
+#### Parameters for the devices tool:  
+All parameters are optional and should **only be used when the user provides relevant information otherwise fill null.**:
+
+- `deviceCode` — Return a single device matching a specific device code (e.g., `BPR-Folger-59`).
+- `deviceId` — Return a single device matching a specific device ID.
+- `deviceName` — Return all devices where the device name contains a keyword.
+- `includeChildren` — Return all devices that are deployed at a specific location and sub-tree locations. Requires a valid location code. ONLY USE WHEN MENTIONED BY THE USER.
+- `dataProductCode` — Return all devices that have the ability to return a specific data product code.
+- `locationCode` — Return all devices that are deployed at a specific location (e.g., `CBY`, `BACAX`).
+- `deviceCategoryCode` — Return all devices belonging to a specific device category (e.g., `CTD`, `BPR`).
+- `propertyCode` — Return all devices that have a sensor for a specific property (e.g., `temperature`).
+- `dateFrom` — Return all devices that have a deployment beginning on or after a specific date (ISO 8601 format, e.g., `2015-09-17T00:00:00Z`).
+- `dateTo` — Return all devices that have a deployment ending on or before a specific date (ISO 8601 format, e.g., `2015-09-18T13:00:00Z`).
