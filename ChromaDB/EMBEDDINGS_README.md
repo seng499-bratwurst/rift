@@ -15,7 +15,6 @@ Collection metadata is a dictionary of key-value pairs. The following fields are
 
 **Example from code:**
 ```json
-collections": [
   {
     "name": "oceanographic_data",
     "id": "3b868bc0-f1b5-4c28-9453-573b07376102",
@@ -24,7 +23,6 @@ collections": [
       "created_for": "rift_rag_system"
     }
   }
-]
 ```
 
 ---
