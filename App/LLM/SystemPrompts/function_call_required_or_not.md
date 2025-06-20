@@ -185,3 +185,18 @@ All parameters are optional and should **only be used when the user provides rel
 - `propertyCode` — Return all devices that have a sensor for a specific property (e.g., `temperature`).
 - `dateFrom` — Return all devices that have a deployment beginning on or after a specific date (ISO 8601 format, e.g., `2015-09-17T00:00:00Z`).
 - `dateTo` — Return all devices that have a deployment ending on or before a specific date (ISO 8601 format, e.g., `2015-09-18T13:00:00Z`).
+
+### Tool 5: `dataProducts`
+
+What the **dataProducts** tool does: The API `dataProducts` service returns all data products defined in Oceans 3.0 that meet a filter criteria. Data Products are downloadable representations of ONC observational data, provided in formats that can be easily ingested by analytical or visualization software. The primary purpose of this service is to identify which Data Products and Formats (file extensions) are available for the Locations, Devices, Device Categories or Properties of interest. Use the dataProductCode and extension when requesting a data product via the dataProductDelivery web service.
+
+#### Parameters for the dataProducts tool:  
+All parameters are optional and should **only be used when the user provides relevant information otherwise fill null**:
+
+- `dataProductCode` — Return all data product extensions matching a specific data product code (e.g., `HSD`).
+- `extension` — Return all data products that have a specific file extension (e.g., `png`).
+- `dataProductName` — Return all data products where the data product name contains a keyword.
+- `propertyCode` — Return all data products available for a specific property (e.g., `temperature`).
+- `locationCode` — Return all data products available for a specific location (e.g., `CBY`, `BACAX`).
+- `deviceCategoryCode` — Return all data products available for devices belonging to a specific device category (e.g., `CTD`, `BPR`).
+- `deviceCode` — Return all data products available for a specific device (e.g., `BPR-Folger-59`).

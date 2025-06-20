@@ -1,4 +1,3 @@
-
 using System.Text;
 using System.Text.Json;
 
@@ -36,17 +35,41 @@ public class OncAPI
                 urlPath.Append("&" + string.Join("&", validParams.Select(kv => $"{kv.Key}={kv.Value}")));
             }
         }
-        // Console.WriteLine($"ONC API Path: {urlPath}");
-
-        var oncResponse = await _httpClient.GetAsync(urlPath.ToString());
-        if (!oncResponse.IsSuccessStatusCode)
-            throw new HttpRequestException($"ONC API error: {oncResponse.StatusCode}");
-
+        Console.WriteLine($"ONC API Path: {urlPath}");
+        var oncResponse = new HttpResponseMessage();
+        try{
+            oncResponse = await _httpClient.GetAsync(urlPath.ToString());
+            if (!oncResponse.IsSuccessStatusCode)
+            {
+                throw new HttpRequestException($"ONC API error: {oncResponse.StatusCode}");
+            }
+        }
+        catch(Exception ex){
+            if(oncResponse.StatusCode == System.Net.HttpStatusCode.NotFound){
+                var errorResponse = new
+                {
+                    error = "Invalid query",
+                    message = "The requested data was not found. Please check your parameters and try again.",
+                    statusCode = 404,
+                    details = "No data matches the specified criteria"
+                };
+                return JsonDocument.Parse(JsonSerializer.Serialize(errorResponse)).RootElement.Clone();
+            }
+            // Handle other exceptions
+            var generalErrorResponse = new
+            {
+                error = "API Error",
+                message = "An error occurred while fetching data from ONC API.",
+                statusCode = (int)oncResponse.StatusCode,
+                details = ex.Message
+            };
+            return JsonDocument.Parse(JsonSerializer.Serialize(generalErrorResponse)).RootElement.Clone();
+        }
 
         var oncContent = await oncResponse.Content.ReadAsStringAsync();
         var oncData = JsonDocument.Parse(oncContent).RootElement.Clone();
+        Console.WriteLine($"ONC API Response: {oncData}");
 
         return oncData;
     }
-
 }
