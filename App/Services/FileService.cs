@@ -28,15 +28,6 @@ public class FileService : IFileService
         return await _fileRepository.DeleteAsync(fileId);
     }
 
-    public async Task<byte[]> ReadFileContentAsync(IFormFile file)
-    {
-        if (file == null)
-            return [];
-        using var memoryStream = new System.IO.MemoryStream();
-        await file.CopyToAsync(memoryStream);
-        return memoryStream.ToArray();
-    }
-
     public async Task<string> ExtractTextAsync(IFormFile file)
     {
         var extension = Path.GetExtension(file.FileName).ToLowerInvariant();

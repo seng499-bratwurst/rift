@@ -47,7 +47,6 @@ public class MessageRepository : IMessageRepository
         return await _context.Messages
             .Where(m => m.ConversationId == conversationId)
             .Where(m => m.Conversation != null && m.Conversation.UserId == userId)
-            .Include(m => m.OutgoingEdges)
             .OrderBy(m => m.CreatedAt)
             .ToListAsync();
     }

@@ -21,7 +21,7 @@ public class MessageEdgeService : IMessageEdgeService
     {
         return await _edgeRepository.RemoveEdgeAsync(edgeId);
     }
-    
+
     public async Task<List<MessageEdge>> CreateMessageEdgesFromSourcesAsync(int targetMessageId, PartialMessageEdge[] sources)
     {
         var edges = new List<MessageEdge>();
@@ -37,5 +37,9 @@ public class MessageEdgeService : IMessageEdgeService
             edges.Add(edge);
         }
         return await _edgeRepository.AddEdgesAsync(edges.ToArray());
+    }
+    public async Task<List<MessageEdge>> GetEdgesForConversationAsync(string userId, int conversationId)
+    {
+        return await _edgeRepository.GetEdgesForConversationAsync(userId, conversationId);
     }
 }
