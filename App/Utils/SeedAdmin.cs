@@ -4,15 +4,6 @@ using Rift.Models;
 
 public class SeedDevAdmin
 {
-    // private readonly UserManager<User> _userManager;
-
-    // public SeedDevAdmin(
-    //     UserManager<User> userManager
-    // )
-    // {
-    //     _userManager = userManager;
-
-    // }
     public static async Task SeedAsync(IServiceProvider serviceProvider)
     {
         var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
