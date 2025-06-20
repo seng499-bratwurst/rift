@@ -36,7 +36,7 @@ public class OncAPI
                 urlPath.Append("&" + string.Join("&", validParams.Select(kv => $"{kv.Key}={kv.Value}")));
             }
         }
-        Console.WriteLine($"ONC API Path: {urlPath}");
+       
         var oncResponse = new HttpResponseMessage();
         try{
             oncResponse = await _httpClient.GetAsync(urlPath.ToString());
@@ -58,8 +58,7 @@ public class OncAPI
 
         var oncContent = await oncResponse.Content.ReadAsStringAsync();
         var oncData = JsonDocument.Parse(oncContent).RootElement.Clone();
-        Console.WriteLine($"ONC API Response: {oncData}");
-
+        
         return oncData;
     }
 }
