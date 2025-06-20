@@ -1,3 +1,4 @@
+
 using System.Text;
 using System.Text.Json;
 
@@ -45,17 +46,6 @@ public class OncAPI
             }
         }
         catch(Exception ex){
-            if(oncResponse.StatusCode == System.Net.HttpStatusCode.NotFound){
-                var errorResponse = new
-                {
-                    error = "Invalid query",
-                    message = "The requested data was not found. Please check your parameters and try again.",
-                    statusCode = 404,
-                    details = "No data matches the specified criteria"
-                };
-                return JsonDocument.Parse(JsonSerializer.Serialize(errorResponse)).RootElement.Clone();
-            }
-            // Handle other exceptions
             var generalErrorResponse = new
             {
                 error = "API Error",

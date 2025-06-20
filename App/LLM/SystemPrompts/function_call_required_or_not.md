@@ -93,6 +93,18 @@ If the user's request is general, or not ONC specific respond with:
   }
 }
 
+**User Prompt:**
+> get scalr data for device BPR-Folger-59
+
+**Expected Response:**
+{
+  "use_function": true,
+  "function": "scalardata/device",
+  "args": {
+    
+  }
+}
+
 
 ---
 
@@ -200,3 +212,24 @@ All parameters are optional and should **only be used when the user provides rel
 - `locationCode` — Return all data products available for a specific location (e.g., `CBY`, `BACAX`).
 - `deviceCategoryCode` — Return all data products available for devices belonging to a specific device category (e.g., `CTD`, `BPR`).
 - `deviceCode` — Return all data products available for a specific device (e.g., `BPR-Folger-59`).
+
+### Tool 6: `archivefile/location`
+
+What the **archivefile/location** tool does: The API `archivefile/location` service allows users to search for available files in a station and download the file. It returns a list of files available in Oceans 3.0 Archiving System for a given location code and device category code. The list of filenames can be filtered by time range.
+
+#### Parameters for the archivefile/location tool:  
+All parameters are optional and should **only be used when the user provides relevant information otherwise fill null**:
+
+- `locationCode` — Return a list of files from a specific location (e.g., `CBY`, `NCBC`). **REQUIRED** - Location code must be valid.
+- `deviceCategoryCode` — Return a list of files of a specific device category code (e.g., `BPR`, `CTD`). **REQUIRED** - Device category code must be valid.
+- `dateFrom` — Return files that have a timestamp on or after a specific date/time (ISO 8601 format, e.g., `2019-11-23T00:00:00.000Z`).
+- `dateTo` — Return files that have a timestamp before a specific date/time (ISO 8601 format, e.g., `2019-11-26T00:00:00.000Z`).
+- `dateArchivedFrom` — Return files archived on or after a specific date/time (ISO 8601 format, e.g., `2019-11-24T00:00:00.000Z`).
+- `dateArchivedTo` — Return files archived before a specific date/time (ISO 8601 format, e.g., `2019-11-27T00:00:00.000Z`).
+- `fileExtension` — Return files of a specific file extension (e.g., `txt`, `csv`).
+- `dataProductCode` — Return files of a specific data product code.
+- `returnOptions` — `archiveLocation` (filenames with archive location) or `all` (more metadata information).
+- `rowLimit` — Limits the number of file rows returned (max 100,000, default 100,000 if missing or invalid).
+- `page` — The service will return data starting from a certain page (default: 1).
+- `getLatest` — If true, returns latest files first (default: false).
+
