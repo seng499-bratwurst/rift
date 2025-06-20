@@ -1,10 +1,6 @@
-import re
 import json
 from typing import List, Dict
 from .base_document_processor import BaseDocumentProcessor
-import os
-import sys
-from pathlib import Path
 from datetime import datetime
 
 class ConfluenceJson(BaseDocumentProcessor):
@@ -34,6 +30,9 @@ class ConfluenceJson(BaseDocumentProcessor):
             except json.JSONDecodeError as e:
                 print(f"Error parsing JSON: {e}")
                 continue
+
+        for idx, chunk in enumerate(chunks):
+            chunk['metadata']['chunk_index'] = idx
                 
         return chunks
     
