@@ -1,6 +1,8 @@
 using Rift.Models;
 using Rift.Services;
 using Rift.Repositories;
+using System.Text;
+using UglyToad.PdfPig;
 
 public class FileService : IFileService
 {
@@ -26,12 +28,25 @@ public class FileService : IFileService
         return await _fileRepository.DeleteAsync(fileId);
     }
 
-    public async Task<byte[]> ReadFileContentAsync(IFormFile file)
+    public async Task<string> ExtractTextAsync(IFormFile file)
     {
-        if (file == null)
-            return [];
-        using var memoryStream = new System.IO.MemoryStream();
-        await file.CopyToAsync(memoryStream);
-        return memoryStream.ToArray();
+        var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
+        if (extension == ".txt" || extension == ".md")
+        {
+            using var sr = new StreamReader(file.OpenReadStream(), Encoding.UTF8);
+            return await sr.ReadToEndAsync();
+        }
+        else if (extension == ".pdf")
+        {
+            using var pdfStream = file.OpenReadStream();
+            using var pdf = PdfDocument.Open(pdfStream);
+            var sb = new StringBuilder();
+            foreach (var page in pdf.GetPages())
+            {
+                sb.AppendLine(page.Text);
+            }
+            return sb.ToString();
+        }
+        return string.Empty;
     }
 }

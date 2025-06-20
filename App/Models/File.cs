@@ -13,7 +13,7 @@ public class FileEntity
     public required string FileName { get; set; }
 
     [Required]
-    public required byte[] Content { get; set; }
+    public required string Content { get; set; }
 
     public long Size { get; set; }
 
