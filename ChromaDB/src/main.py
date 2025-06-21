@@ -43,7 +43,8 @@ chroma_client = chromadb.Client(CHROMA_SETTINGS)
 embedding_function = embedding_functions.SentenceTransformerEmbeddingFunction(
     model_name="all-MiniLM-L6-v2"  # Good balance of performance and speed for scientific text
 )
-# embedding_function = None  # ChromaDB will use default
+
+# Helper function to ensure all collectionsmbedding_function = None  # ChromaDB will use default
 
 # Pydantic Models
 class DocumentMetadata(BaseModel):
@@ -560,7 +561,7 @@ async def startup_event():
                 metadata={
                     "description": "Default collection for Ocean Networks Canada (ONC) data",
                     "created_for": "rift_rag_system",
-                    "data_types": ["sensor_data", "location_info", "instrument_specs", "research_data"]
+                    "data_types": "sensor_data,location_info,instrument_specs,research_data"
                 },
                 embedding_function=embedding_function
             )
