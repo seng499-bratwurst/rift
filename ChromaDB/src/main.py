@@ -389,7 +389,7 @@ async def semantic_query(request: SemanticQueryRequest):
                 # For cosine distance: similarity = 1 - distance
                 # Clamp distance to reasonable range to avoid negative similarities
                 clamped_distance = max(0.0, min(2.0, distance))
-                similarity = 1.0 - clamped_distance
+                similarity = 1.0 - (clamped_distance / 2)
 
                 # Use a more lenient threshold if the requested threshold is too high
                 effective_threshold = min(request.similarity_threshold, 0.5) if request.similarity_threshold > 0.8 else request.similarity_threshold
