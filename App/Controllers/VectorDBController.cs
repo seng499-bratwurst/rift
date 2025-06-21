@@ -53,7 +53,7 @@ public class VectorDBController : ControllerBase
         try
         {
             var success = await _chromaClient.AddDocumentAsync(request);
-            
+
             if (success)
             {
                 return Ok(new VectorDBResponse<string>
@@ -103,7 +103,7 @@ public class VectorDBController : ControllerBase
         try
         {
             var success = await _chromaClient.AddDocumentsBatchAsync(request);
-            
+
             if (success)
             {
                 return Ok(new VectorDBResponse<int>
@@ -141,7 +141,7 @@ public class VectorDBController : ControllerBase
     [ProducesResponseType(typeof(VectorDBResponse<DocumentResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(VectorDBResponse<string>), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetDocument(
-        [FromRoute] string documentId, 
+        [FromRoute] string documentId,
         [FromQuery] string collectionName = "oceanographic_data")
     {
         if (string.IsNullOrWhiteSpace(documentId))
@@ -156,7 +156,7 @@ public class VectorDBController : ControllerBase
         try
         {
             var document = await _chromaClient.GetDocumentAsync(documentId, collectionName);
-            
+
             if (document != null)
             {
                 return Ok(new VectorDBResponse<DocumentResponse>
@@ -220,7 +220,7 @@ public class VectorDBController : ControllerBase
         try
         {
             var success = await _chromaClient.UpdateDocumentAsync(documentId, request, collectionName);
-            
+
             if (success)
             {
                 return Ok(new VectorDBResponse<string>
@@ -273,7 +273,7 @@ public class VectorDBController : ControllerBase
         try
         {
             var success = await _chromaClient.DeleteDocumentAsync(documentId, collectionName);
-            
+
             if (success)
             {
                 return Ok(new VectorDBResponse<string>
@@ -327,7 +327,7 @@ public class VectorDBController : ControllerBase
         try
         {
             var success = await _chromaClient.CreateCollectionAsync(collectionInfo);
-            
+
             if (success)
             {
                 return StatusCode(StatusCodes.Status201Created, new VectorDBResponse<string>
@@ -366,7 +366,7 @@ public class VectorDBController : ControllerBase
         try
         {
             var collections = await _chromaClient.ListCollectionsAsync();
-            
+
             return Ok(new VectorDBResponse<List<CollectionResponse>>
             {
                 Status = "success",
@@ -407,7 +407,7 @@ public class VectorDBController : ControllerBase
         try
         {
             var collection = await _chromaClient.GetCollectionInfoAsync(collectionName);
-            
+
             if (collection != null)
             {
                 return Ok(new VectorDBResponse<CollectionResponse>
@@ -457,7 +457,7 @@ public class VectorDBController : ControllerBase
         try
         {
             var success = await _chromaClient.DeleteCollectionAsync(collectionName);
-            
+
             if (success)
             {
                 return Ok(new VectorDBResponse<string>
@@ -511,7 +511,7 @@ public class VectorDBController : ControllerBase
         try
         {
             var result = await _chromaClient.QueryAsync(request);
-            
+
             if (result != null)
             {
                 return Ok(new VectorDBResponse<QueryResponse>
@@ -561,7 +561,7 @@ public class VectorDBController : ControllerBase
         try
         {
             var result = await _chromaClient.SemanticQueryAsync(request);
-            
+
             if (result != null)
             {
                 return Ok(new VectorDBResponse<QueryResponse>
@@ -611,7 +611,7 @@ public class VectorDBController : ControllerBase
         try
         {
             var result = await _chromaClient.FilteredQueryAsync(request);
-            
+
             if (result != null)
             {
                 return Ok(new VectorDBResponse<QueryResponse>
@@ -652,7 +652,7 @@ public class VectorDBController : ControllerBase
     public async Task<IActionResult> FindSimilarDocuments(
         [FromRoute] string documentId,
         [FromQuery] string collectionName = "oceanographic_data",
-        [FromQuery] [Range(1, 50)] int nResults = 5)
+        [FromQuery][Range(1, 50)] int nResults = 5)
     {
         if (string.IsNullOrWhiteSpace(documentId))
         {
@@ -666,7 +666,7 @@ public class VectorDBController : ControllerBase
         try
         {
             var result = await _chromaClient.FindSimilarDocumentsAsync(documentId, collectionName, nResults);
-            
+
             if (result != null)
             {
                 return Ok(new VectorDBResponse<SimilarDocumentsResponse>
@@ -709,9 +709,9 @@ public class VectorDBController : ControllerBase
     [ProducesResponseType(typeof(VectorDBResponse<RAGContext>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(VectorDBResponse<string>), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> GetRAGContext(
-        [FromQuery] [Required] string query,
-        [FromQuery] [Range(1, 20)] int maxResults = 5,
-        [FromQuery] [Range(0.0, 1.0)] double similarityThreshold = 0.7)
+        [FromQuery][Required] string query,
+        [FromQuery][Range(1, 20)] int maxResults = 5,
+        [FromQuery][Range(0.0, 1.0)] double similarityThreshold = 0.3)
     {
         if (string.IsNullOrWhiteSpace(query))
         {
@@ -725,7 +725,7 @@ public class VectorDBController : ControllerBase
         try
         {
             var ragContext = await _chromaClient.GetRelevantDataAsync(query, maxResults, similarityThreshold);
-            
+
             return Ok(new VectorDBResponse<RAGContext>
             {
                 Status = "success",
@@ -758,12 +758,12 @@ public class VectorDBController : ControllerBase
     [ProducesResponseType(typeof(VectorDBResponse<RAGContext>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(VectorDBResponse<string>), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> GetOceanographicRAGContext(
-        [FromQuery] [Required] string query,
+        [FromQuery][Required] string query,
         [FromQuery] string? dataType = null,
         [FromQuery] string? location = null,
         [FromQuery] string? instrumentType = null,
-        [FromQuery] [Range(1, 20)] int maxResults = 5,
-        [FromQuery] [Range(0.0, 1.0)] double similarityThreshold = 0.7)
+        [FromQuery][Range(1, 20)] int maxResults = 5,
+        [FromQuery][Range(0.0, 1.0)] double similarityThreshold = 0.7)
     {
         if (string.IsNullOrWhiteSpace(query))
         {
@@ -778,7 +778,7 @@ public class VectorDBController : ControllerBase
         {
             var ragContext = await _chromaClient.GetRelevantOceanographicDataAsync(
                 query, dataType, location, instrumentType, maxResults, similarityThreshold);
-            
+
             return Ok(new VectorDBResponse<RAGContext>
             {
                 Status = "success",
@@ -813,7 +813,7 @@ public class VectorDBController : ControllerBase
         try
         {
             var health = await _chromaClient.GetHealthAsync();
-            
+
             if (health != null && health.Status == "healthy")
             {
                 return Ok(new VectorDBResponse<HealthResponse>
@@ -852,7 +852,7 @@ public class VectorDBController : ControllerBase
         try
         {
             var stats = await _chromaClient.GetStatsAsync();
-            
+
             return Ok(new VectorDBResponse<StatsResponse>
             {
                 Status = "success",
@@ -893,7 +893,7 @@ public class VectorDBController : ControllerBase
         try
         {
             var embeddings = await _chromaClient.GenerateEmbeddingsAsync(texts);
-            
+
             if (embeddings != null)
             {
                 return Ok(new VectorDBResponse<EmbeddingResponse>
