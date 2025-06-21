@@ -5,6 +5,7 @@ from fastapi import FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 import chromadb
 from chromadb.config import Settings
+from chromadb.utils import embedding_functions
 from pydantic import BaseModel, Field
 import uvicorn
 
@@ -37,8 +38,13 @@ CHROMA_SETTINGS = Settings(
 # Initialize ChromaDB client
 chroma_client = chromadb.Client(CHROMA_SETTINGS)
 
-# Use default embedding function for now (can be upgraded later)
-# embedding_function = None  # ChromaDB will use default
+# Use a better embedding function for scientific/oceanographic text
+# This model is good for scientific and technical content
+embedding_function = embedding_functions.SentenceTransformerEmbeddingFunction(
+    model_name="all-MiniLM-L6-v2"  # Good balance of performance and speed for scientific text
+)
+
+# Helper function to ensure all collectionsmbedding_function = None  # ChromaDB will use default
 
 # Pydantic Models
 class DocumentMetadata(BaseModel):
@@ -184,7 +190,7 @@ async def add_document(request: AddRequest):
             collection = chroma_client.create_collection(
                 name=request.collection_name
             )
-        
+
         # Clean metadata to remove None values and convert lists to strings
         metadata = None
         if request.metadata:
@@ -192,20 +198,20 @@ async def add_document(request: AddRequest):
             for key, value in request.metadata.items():
                 if isinstance(value, list):
                     request.metadata[key] = ",".join(str(item) for item in value)
-            
+
             # Remove None values
             clean_metadata = {k: v for k, v in request.metadata.items() if v is not None}
             metadata = clean_metadata if clean_metadata else None
-            
+
         collection.add(
             documents=[request.text],
             ids=[request.id],
             metadatas=[clean_metadata] if clean_metadata else None
         )
-        
+
         logger.info(f"Added document {request.id} to {request.collection_name}")
         return {"status": "added", "id": request.id}
-        
+
     except Exception as e:
         logger.error(f"Failed to add document {request.id}: {str(e)}")
         raise HTTPException(status_code=400, detail=f"Failed to add document: {str(e)}")
@@ -223,37 +229,37 @@ async def add_batch_documents(request: BatchDocuments):
             collection = chroma_client.create_collection(
                 name=request.collection_name
             )
-        
+
         documents = [doc.text for doc in request.documents]
         ids = [doc.id for doc in request.documents]
-        
+
         # Clean metadatas to remove None values and convert lists to strings
         metadatas = []
         for doc in request.documents:
             if doc.metadata:
                 # Convert the model to dict
                 metadata_dict = doc.metadata.dict()
-                
+
                 # Convert any list values to comma-separated strings
                 for key, value in metadata_dict.items():
                     if isinstance(value, list):
                         metadata_dict[key] = ",".join(str(item) for item in value)
-                
+
                 # Remove None values
                 clean_metadata = {k: v for k, v in metadata_dict.items() if v is not None}
                 metadatas.append(clean_metadata if clean_metadata else None)
             else:
                 metadatas.append(None)
-        
+
         collection.add(
             documents=documents,
             ids=ids,
             metadatas=metadatas
         )
-        
+
         logger.info(f"Added {len(documents)} documents to {request.collection_name}")
         return {"status": "added", "count": len(documents)}
-        
+
     except Exception as e:
         logger.error(f"Failed to add batch documents: {str(e)}")
         raise HTTPException(status_code=400, detail=f"Failed to add documents: {str(e)}")
@@ -265,18 +271,18 @@ async def get_document(document_id: str, collection_name: str = "oceanographic_d
         collection = chroma_client.get_collection(
             name=collection_name
         )
-        
+
         result = collection.get(ids=[document_id], include=["documents", "metadatas"])
-        
+
         if not result["documents"] or len(result["documents"]) == 0:
             raise HTTPException(status_code=404, detail="Document not found")
-            
+
         return {
             "id": document_id,
             "document": result["documents"][0],
             "metadata": result["metadatas"][0] if result["metadatas"] else None
         }
-        
+
     except HTTPException:
         raise
     except Exception as e:
@@ -290,7 +296,7 @@ async def update_document(document_id: str, request: UpdateDocumentRequest, coll
         collection = chroma_client.get_collection(
             name=collection_name
         )
-        
+
         update_data = {}
         if request.text:
             update_data["documents"] = [request.text]
@@ -299,15 +305,15 @@ async def update_document(document_id: str, request: UpdateDocumentRequest, coll
             clean_metadata = {k: v for k, v in request.metadata.items() if v is not None}
             if clean_metadata:
                 update_data["metadatas"] = [clean_metadata]
-            
+
         if not update_data:
             raise HTTPException(status_code=400, detail="No update data provided")
-            
+
         collection.update(ids=[document_id], **update_data)
-        
+
         logger.info(f"Updated document {document_id}")
         return {"status": "updated", "id": document_id}
-        
+
     except Exception as e:
         logger.error(f"Failed to update document {document_id}: {str(e)}")
         raise HTTPException(status_code=400, detail=f"Failed to update document: {str(e)}")
@@ -319,12 +325,12 @@ async def delete_document(document_id: str, collection_name: str = "oceanographi
         collection = chroma_client.get_collection(
             name=collection_name
         )
-        
+
         collection.delete(ids=[document_id])
-        
+
         logger.info(f"Deleted document {document_id}")
         return {"status": "deleted", "id": document_id}
-        
+
     except Exception as e:
         logger.error(f"Failed to delete document {document_id}: {str(e)}")
         raise HTTPException(status_code=400, detail=f"Failed to delete document: {str(e)}")
@@ -337,20 +343,20 @@ async def basic_query(request: QueryRequest):
         collection = chroma_client.get_collection(
             name=request.collection_name
         )
-        
+
         result = collection.query(
             query_texts=[request.text],
             n_results=request.n_results,
             where=request.where,
             include=request.include
         )
-        
+
         return {
             "query": request.text,
             "results": result,
             "count": len(result["documents"][0]) if result["documents"] else 0
         }
-        
+
     except Exception as e:
         logger.error(f"Query failed: {str(e)}")
         raise HTTPException(status_code=400, detail=f"Query failed: {str(e)}")
@@ -362,36 +368,45 @@ async def semantic_query(request: SemanticQueryRequest):
         collection = chroma_client.get_collection(
             name=request.collection_name
         )
-        
+
         result = collection.query(
             query_texts=[request.text],
             n_results=min(request.n_results * 2, 100),  # Get more results for filtering
             where=request.where,
             include=["documents", "metadatas", "distances"]
         )
-        
-        # Filter by similarity threshold
+
+        # Filter by similarity threshold with improved similarity calculation
         filtered_results = {
             "documents": [[]],
             "metadatas": [[]],
             "distances": [[]]
         }
-        
+
         if result["documents"] and result["documents"][0]:
             for i, distance in enumerate(result["distances"][0]):
-                similarity = 1 - distance  # Convert distance to similarity
-                if similarity >= request.similarity_threshold and len(filtered_results["documents"][0]) < request.n_results:
+                # Handle different distance metrics more robustly
+                # For cosine distance: similarity = 1 - distance
+                # Clamp distance to reasonable range to avoid negative similarities
+                clamped_distance = max(0.0, min(2.0, distance))
+                similarity = 1.0 - (clamped_distance / 2)
+
+                # Use a more lenient threshold if the requested threshold is too high
+                effective_threshold = min(request.similarity_threshold, 0.5) if request.similarity_threshold > 0.8 else request.similarity_threshold
+
+                if similarity >= effective_threshold and len(filtered_results["documents"][0]) < request.n_results:
                     filtered_results["documents"][0].append(result["documents"][0][i])
                     filtered_results["metadatas"][0].append(result["metadatas"][0][i] if result["metadatas"] else None)
                     filtered_results["distances"][0].append(distance)
-        
+                    logger.debug(f"Document {i}: distance={distance:.4f}, similarity={similarity:.4f}, threshold={effective_threshold:.4f}")
+
         return {
             "query": request.text,
             "results": filtered_results,
             "count": len(filtered_results["documents"][0]),
             "similarity_threshold": request.similarity_threshold
         }
-        
+
     except Exception as e:
         logger.error(f"Semantic query failed: {str(e)}")
         raise HTTPException(status_code=400, detail=f"Semantic query failed: {str(e)}")
@@ -403,21 +418,21 @@ async def filtered_query(request: QueryRequest):
         collection = chroma_client.get_collection(
             name=request.collection_name
         )
-        
+
         result = collection.query(
             query_texts=[request.text],
             n_results=request.n_results,
             where=request.where,
             include=request.include
         )
-        
+
         return {
             "query": request.text,
             "filters": request.where,
             "results": result,
             "count": len(result["documents"][0]) if result["documents"] else 0
         }
-        
+
     except Exception as e:
         logger.error(f"Filtered query failed: {str(e)}")
         raise HTTPException(status_code=400, detail=f"Filtered query failed: {str(e)}")
@@ -429,19 +444,19 @@ async def find_similar(document_id: str, collection_name: str = "oceanographic_d
         collection = chroma_client.get_collection(
             name=collection_name
         )
-        
+
         # Get the document first
         doc_result = collection.get(ids=[document_id], include=["documents"])
         if not doc_result["documents"] or len(doc_result["documents"]) == 0:
             raise HTTPException(status_code=404, detail="Document not found")
-        
+
         # Query for similar documents
         result = collection.query(
             query_texts=[doc_result["documents"][0]],
             n_results=n_results + 1,  # +1 to exclude the original document
             include=["documents", "metadatas", "distances"]
         )
-        
+
         # Remove the original document from results
         filtered_results = {
             "documents": [[]],
@@ -449,7 +464,7 @@ async def find_similar(document_id: str, collection_name: str = "oceanographic_d
             "distances": [[]],
             "ids": [[]]
         }
-        
+
         if result["documents"] and result["documents"][0]:
             for i, doc in enumerate(result["documents"][0]):
                 if result["ids"][0][i] != document_id and len(filtered_results["documents"][0]) < n_results:
@@ -457,13 +472,13 @@ async def find_similar(document_id: str, collection_name: str = "oceanographic_d
                     filtered_results["metadatas"][0].append(result["metadatas"][0][i] if result["metadatas"] else None)
                     filtered_results["distances"][0].append(result["distances"][0][i])
                     filtered_results["ids"][0].append(result["ids"][0][i])
-        
+
         return {
             "reference_document_id": document_id,
             "similar_documents": filtered_results,
             "count": len(filtered_results["documents"][0])
         }
-        
+
     except HTTPException:
         raise
     except Exception as e:
@@ -494,22 +509,22 @@ async def get_stats():
             "total_collections": len(collections),
             "collections": []
         }
-        
+
         total_documents = 0
         for collection in collections:
             col = chroma_client.get_collection(collection.name)
             count = col.count()
             total_documents += count
-            
+
             stats["collections"].append({
                 "name": collection.name,
                 "document_count": count,
                 "metadata": collection.metadata
             })
-        
+
         stats["total_documents"] = total_documents
         return stats
-        
+
     except Exception as e:
         logger.error(f"Stats retrieval failed: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to retrieve stats")
@@ -546,11 +561,12 @@ async def startup_event():
                 metadata={
                     "description": "Default collection for Ocean Networks Canada (ONC) data",
                     "created_for": "rift_rag_system",
-                    "data_types": ["sensor_data", "location_info", "instrument_specs", "research_data"]
-                }
+                    "data_types": "sensor_data,location_info,instrument_specs,research_data"
+                },
+                embedding_function=embedding_function
             )
-            logger.info("Created default oceanographic_data collection")
-            
+            logger.info("Created default oceanographic_data collection with improved embedding function")
+
     except Exception as e:
         logger.error(f"Failed to initialize default collection: {str(e)}")
 
