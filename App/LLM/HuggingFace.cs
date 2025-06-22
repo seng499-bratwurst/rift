@@ -70,6 +70,7 @@ namespace Rift.LLM
             var message = doc.RootElement.GetProperty("choices")[0].GetProperty("message");
 
             string LLMContent = message.GetProperty("content").GetString() ?? string.Empty;
+            Console.WriteLine("LLMContent: "+LLMContent);
             
 
             using JsonDocument innerDoc = JsonDocument.Parse(LLMContent);

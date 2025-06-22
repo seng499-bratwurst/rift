@@ -105,6 +105,102 @@ If the user's request is general, or not ONC specific respond with:
   }
 }
 
+**User Prompt:**
+> List archive files for device BPR-Folger-59
+
+**Expected Response:**
+{
+  "use_function": true,
+  "function": "archivefile/device",
+  "args": {
+    
+  }
+}
+
+**User Prompt:**
+> List archive files for location CBY and device category BPR
+
+**Expected Response:**
+{
+  "use_function": true,
+  "function": "archivefile/location",
+  "args": {
+    
+  }
+}
+
+**User Prompt:**
+> Download file BPR-Folger-59_20191123T000000.000Z.txt
+
+**Expected Response:**
+{
+  "use_function": true,
+  "function": "archivefile/download",
+  "args": {
+    
+  }
+}
+
+**User Prompt:**
+> Check status of data product request 12345
+
+**Expected Response:**
+{
+  "use_function": true,
+  "function": "dataProductDelivery/status",
+  "args": {
+    
+  }
+}
+
+**User Prompt:**
+> Run data product request 12345
+
+**Expected Response:**
+{
+  "use_function": true,
+  "function": "dataProductDelivery/run",
+  "args": {
+    
+  }
+}
+
+**User Prompt:**
+> Cancel data product request 12345
+
+**Expected Response:**
+{
+  "use_function": true,
+  "function": "dataProductDelivery/cancel",
+  "args": {
+    
+  }
+}
+
+**User Prompt:**
+> Restart cancelled data product request 12345
+
+**Expected Response:**
+{
+  "use_function": true,
+  "function": "dataProductDelivery/restart",
+  "args": {
+    
+  }
+}
+
+**User Prompt:**
+> Download file index 1 from data product run 67890
+
+**Expected Response:**
+{
+  "use_function": true,
+  "function": "dataProductDelivery/download",
+  "args": {
+    
+  }
+}
+
 
 ---
 
@@ -232,4 +328,73 @@ All parameters are optional and should **only be used when the user provides rel
 - `rowLimit` — Limits the number of file rows returned (max 100,000, default 100,000 if missing or invalid).
 - `page` — The service will return data starting from a certain page (default: 1).
 - `getLatest` — If true, returns latest files first (default: false).
+
+### Tool 7: `archivefile/device`
+
+What the **archivefile/device** tool does: The API `archivefile/device` service allows users to search for available files in a station and download the file. It returns a list of files available in Oceans 3.0 Archiving System for a given device code. The list of filenames can be filtered by time range.
+
+#### Parameters for the archivefile/device tool:  
+All parameters are optional and should **only be used when the user provides relevant information otherwise fill null**:
+
+- `deviceCode` — Return a list of files of a specific Device Code (e.g., `BPR-Folger-59`). **REQUIRED** - Device Code must be valid.
+- `dateFrom` — Return files that have a timestamp on or after a specific date/time (ISO 8601 format, e.g., `2019-11-23T00:00:00.000Z`).
+- `dateTo` — Return files that have a timestamp before a specific date/time (ISO 8601 format, e.g., `2019-11-26T00:00:00.000Z`).
+- `dateArchivedFrom` — Return files archived on or after a specific date/time (ISO 8601 format, e.g., `2019-11-24T00:00:00.000Z`).
+- `dateArchivedTo` — Return files archived before a specific date/time (ISO 8601 format, e.g., `2019-11-27T00:00:00.000Z`).
+- `fileExtension` — Return files of a specific file extension (e.g., `txt`, `csv`).
+- `dataProductCode` — Return files of a specific data product code.
+- `returnOptions` — `archiveLocation` (filenames with archive location) or `all` (more metadata information).
+- `rowLimit` — Limits the number of file rows returned (max 100,000, default 100,000 if missing or invalid).
+- `page` — The service will return data starting from a certain page (default: 1).
+- `getLatest` — If true, returns latest files first (default: false).
+
+
+
+### Tool 8: `dataProductDelivery/status`
+
+What the **dataProductDelivery/status** tool does: The API `dataProductDelivery/status` service returns data about the status of a data product request. You can periodically check the current status of a request using this service.
+
+#### Parameters for the dataProductDelivery/status tool:  
+All parameters are optional and should **only be used when the user provides relevant information otherwise fill null**:
+
+- `dpRequestId` — A dpRequestId returned from the request service (integer).
+- `dpRunId` — A dpRunId returned from the run service (integer).
+
+### Tool 9: `dataProductDelivery/run`
+
+What the **dataProductDelivery/run** tool does: The API `dataProductDelivery/run` service runs the data product created by a call to the request method. Pressing the run button again after the run has started will return the run's status.
+
+#### Parameters for the dataProductDelivery/run tool:  
+All parameters are optional and should **only be used when the user provides relevant information otherwise fill null**:
+
+- `dpRequestId` — A dpRequestId returned from the request service (integer). **REQUIRED** - Request ID must be valid.
+
+### Tool 10: `dataProductDelivery/cancel`
+
+What the **dataProductDelivery/cancel** tool does: The API `dataProductDelivery/cancel` service cancels currently running searches.
+
+#### Parameters for the dataProductDelivery/cancel tool:  
+All parameters are optional and should **only be used when the user provides relevant information otherwise fill null**:
+
+- `dpRequestId` — A dpRequestId returned from the request service (integer). **REQUIRED** - Request ID must be valid.
+
+### Tool 11: `dataProductDelivery/restart`
+
+What the **dataProductDelivery/restart** tool does: The API `dataProductDelivery/restart` service restarts searches cancelled by the data product cancel method.
+
+#### Parameters for the dataProductDelivery/restart tool:  
+All parameters are optional and should **only be used when the user provides relevant information otherwise fill null**:
+
+- `dpRequestId` — A dpRequestId returned from the request service (integer). **REQUIRED** - Request ID must be valid.
+
+### Tool 12: `dataProductDelivery/download`
+
+What the **dataProductDelivery/download** tool does: The API `dataProductDelivery/download` service downloads a file for the specified data product run request. The file to download is specified by index, with the first valid index being 1 and the last being the total number of files generated by the request. If the data product delivery process has not completed you can periodically check the current status.
+
+#### Parameters for the dataProductDelivery/download tool:  
+All parameters are optional and should **only be used when the user provides relevant information otherwise fill null**:
+
+- `dpRunId` — The dpRunId returned from the run service (integer). **REQUIRED** - Run ID must be valid.
+- `index` — The index of the file to be downloaded, valid values are 1 to the number of result files. If the index is greater than the number of result files a response code of 204 is returned, indicating no file at that index. If index is string meta, metadata file will be downloaded (string).
+- `deleteFile` — By default ONC deletes the requested file from our server after download. If set to false the file won't be deleted immediately after download (boolean).
 
