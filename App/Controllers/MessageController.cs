@@ -82,14 +82,6 @@ public class MessageController : ControllerBase
             });
         }
 
-        var response = await _llmProvider.GenerateONCAPICall(request.Content);
-        using var doc = JsonDocument.Parse(response);
-
-        // Clone it so we can return it after the doc is disposed
-        JsonElement json = doc.RootElement.Clone();
-
-        var finalRes = await _llmProvider.GenerateFinalResponse(request.Content, json);
-
         // If userId is null, send the response back without storing it
         if (string.IsNullOrEmpty(userId))
         {
@@ -98,13 +90,6 @@ public class MessageController : ControllerBase
                 Success = false,
                 Error = "Unauthorized",
             });
-        }
-
-        // If there is no conversationId, create a new conversation
-        Conversation? conversation = null;
-        if (request.ConversationId == null)
-        {
-            conversation = await _conversationService.CreateConversationByUserId(userId);
         }
 
         var conversationId = request.ConversationId ?? conversation!.Id;
@@ -169,7 +154,7 @@ public class MessageController : ControllerBase
             Data = new
             {
                 ConversationId = conversationId,
-                Response = finalRes,
+                Response = llmResponse,
                 PromptMessageId = promptMessage?.Id,
                 ResponseMessageId = responseMessage?.Id,
                 CreatedEdges = (new[] { promptToResponseEdge }).Concat(edges).ToArray(),

@@ -56,20 +56,6 @@ public class MessageRepository : IMessageRepository
         return await _context.Messages
             .Where(m => m.ConversationId == conversationId)
             .Where(m => m.Conversation != null && m.Conversation.SessionId == sessionId)
-            .Select(m => new Message
-            {
-                Id = m.Id,
-                ConversationId = m.ConversationId,
-                PromptMessageId = m.PromptMessageId,
-                Content = m.Content,
-                OncApiQuery = m.OncApiQuery,
-                OncApiResponse = m.OncApiResponse,
-                IsHelpful = m.IsHelpful,
-                Role = m.Role,
-                CreatedAt = m.CreatedAt,
-                XCoordinate = m.XCoordinate,
-                YCoordinate = m.YCoordinate,
-            })
             .OrderBy(m => m.CreatedAt)
             .ToListAsync();
     }
