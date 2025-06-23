@@ -237,7 +237,7 @@ Be concise, accurate, and consistent in following the format above.
 
 ### Tool 1: `deviceCategories`
 
-What the **deviceCategories** tool does: The API `deviceCategories` service returns all device categories defined in Oceans 3.0 that meet a filter criteria. A Device Category represents an instrument type classification such as CTD (Conductivity, Temperature & Depth Instrument) or BPR (Bottom Pressure Recorder). Devices from a category can record data for one or more properties (variables). The primary purpose of this service is to find device categories that have the data you want to access; the service provides the `deviceCategoryCode` you can use when requesting a data product via the dataProductDelivery web service.
+What the **deviceCategories** tool does: The API `deviceCategories` service returns all device categories defined in Oceans 3.0 that meet a filter criteria. A Device Category represents an instrument type classification such as CTD (Conductivity, Temperature & Depth Instrument) or BPR (Bottom Pressure Recorder). Devices from a category can record data for one or more properties (variables). The primary purpose of this service is to find device categories that have the data you want to access.
 
 #### Parameters for the deviceCategories tool:
 All parameters are optional and should **only be used when the user provides relevant information otherwise fill null**:
@@ -416,4 +416,53 @@ What the **rawdata/device** tool does: The API `rawdata/device` service retrieve
 - `outputFormat` (enum): Allowed values: `Array`, `Object`. Example: `Array`
 - `getLatest` (boolean): Specifies whether or not the latest raw data readings should be returned first. Default is false.
 - `skipErrors` (boolean): If set to true, skips damaged data samples and returns only valid data.
+
+
+### Tool 14: `scalardata/device`
+
+What the **scalardata/device** tool does: The API `scalardata/device` service returns scalar data in JSON format for a given device code. This tool is useful for accessing processed sensor readings from a specific device, with options for filtering, resampling, and formatting the data.
+
+**Required parameter:**
+- `deviceCode` (string): Return scalar data of a specific Device Code. **Required.** Example: `BPR-Folger-59`
+
+**All other parameters are optional and should only be used when the user provides relevant information otherwise fill null:**
+- `sensorCategoryCodes` (string): A comma separated list of sensor code names. Example: `temperature,pressure`
+- `dateFrom` (date-time): Return scalar data that has a timestamp on or after a specific date/time. Example: `2019-11-23T00:00:00.000Z`
+- `dateTo` (date-time): Return scalar data that has a timestamp before a specific date/time. Example: `2019-11-23T00:01:00.000Z`
+- `rowLimit` (integer): Limits the number of scalar data rows returned for each sensor code. Example: `80000`
+- `outputFormat` (enum): Allowed values: `Array`, `Object`. Example: `Array`
+- `returnOptions` (enum): Allowed values: `excludeScalarData`, `normalizeJson`. Example: `normalizeJson`
+- `getLatest` (boolean): Specifies whether or not the latest scalar data readings should be returned first. Default is false.
+- `qualityControl` (enum): Allowed values: `raw`, `clean`. Default is `clean`.
+- `resampleType` (enum): Allowed values: `avg`, `avgMinMax`, `minMax`. Example: `avgMinMax`
+- `resamplePeriod` (integer): The resample period in seconds. Example: `60`
+- `fillGaps` (boolean): If true, fills scalar data gaps with NaN. By default, data gaps are filled.
+- `sensorsToInclude` (enum): Allowed values: `original`, `externallyDerived`. Default is `original`.
+- `byDeployment` (boolean): If true, adds a NaN sample between each deployment. Default is false.
+
+### Tool 15: `scalardata/location`
+
+What the **scalardata/location** tool does: The API `scalardata/location` service returns scalar data in JSON format for a given location code and device category code. This tool is useful for accessing processed sensor readings from a specific location and device category, with options for filtering, resampling, and formatting the data.
+
+**Required parameters:**
+- `locationCode` (string): Return scalar data from a specific Location. **Required.** Example: `CBY`
+- `deviceCategoryCode` (string): Return scalar data belonging to a specific Device Category Code. **Required.** Example: `AISRECEIVER`
+
+**All other parameters are optional and should only be used when the user provides relevant information otherwise fill null:**
+- `propertyCode` (string): Return scalar data for a comma separated list of Properties. Example: `seawatertemperature,totalpressure`
+- `sensorCategoryCodes` (string): A comma separated list of sensor code names. Example: `temperature,pressure`
+- `dateFrom` (date-time): Return scalar data that has a timestamp on or after a specific date/time. Example: `2019-11-23T00:00:00.000Z`
+- `dateTo` (date-time): Return scalar data that has a timestamp before a specific date/time. Example: `2019-11-23T00:01:00.000Z`
+- `metadata` (enum): Allowed values: `Minimum`, `Full`. Default is `Minimum`.
+- `rowLimit` (integer): Limits the number of scalar data rows returned for each sensor code. Example: `80000`
+- `outputFormat` (enum): Allowed values: `Array`, `Object`. Example: `Array`
+- `returnOptions` (enum): Allowed values: `excludeScalarData`, `normalizeJson`. Example: `normalizeJson`
+- `getLatest` (boolean): Specifies whether or not the latest scalar data readings should be returned first. Default is false.
+- `qualityControl` (enum): Allowed values: `raw`, `clean`. Default is `clean`.
+- `resampleType` (enum): Allowed values: `avg`, `avgMinMax`, `minMax`. Example: `avgMinMax`
+- `resamplePeriod` (integer): The resample period in seconds. Example: `60`
+- `fillGaps` (boolean): If true, fills scalar data gaps with NaN. By default, data gaps are filled.
+- `sensorsToInclude` (enum): Allowed values: `original`, `externallyDerived`. Default is `original`.
+- `byDeployment` (boolean): If true, adds a NaN sample between each deployment. Default is false.
+
 
