@@ -36,7 +36,7 @@ public class MessageService : IMessageService
         return await _messageRepository.CreateAsync(message);
     }
 
-    public async Task<List<MessageWithEdges>> GetMessagesForConversationAsync(string userId, int conversationId)
+    public async Task<List<Message>> GetMessagesForConversationAsync(string userId, int conversationId)
     {
         return await _messageRepository.GetMessagesByConversationIdAsync(userId, conversationId);
     }

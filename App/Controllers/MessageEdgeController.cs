@@ -7,7 +7,7 @@ using Rift.Services;
 namespace Rift.Controllers;
 
 [ApiController]
-[Route("api/edges")]
+[Route("api")]
 public class MessageEdgeController : ControllerBase
 {
     private readonly IMessageEdgeService _messageEdgeService;
@@ -17,7 +17,7 @@ public class MessageEdgeController : ControllerBase
         _messageEdgeService = messageEdgeService;
     }
 
-    [HttpPost("")]
+    [HttpPost("edges")]
     [Authorize(AuthenticationSchemes = "Bearer")]
     public async Task<IActionResult> CreateEdge([FromBody] MessageEdge edge)
     {
@@ -41,7 +41,7 @@ public class MessageEdgeController : ControllerBase
         });
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("edges/{id}")]
     [Authorize(AuthenticationSchemes = "Bearer")]
     public async Task<IActionResult> DeleteEdge(int id)
     {
@@ -64,6 +64,32 @@ public class MessageEdgeController : ControllerBase
             {
                 DeletedId = result
             }
+        });
+    }
+
+    [HttpGet("conversations/{conversationId}/edges")]
+    [Authorize(AuthenticationSchemes = "Bearer")]
+    public async Task<IActionResult> GetMessages(int conversationId)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized(new ApiResponse<List<Message>>
+            {
+                Success = false,
+                Error = "Unauthorized",
+                Data = null
+            });
+        }
+
+        var edges = await _messageEdgeService.GetEdgesForConversationAsync(userId, conversationId);
+
+        return Ok(new ApiResponse<List<MessageEdge>>
+        {
+            Success = true,
+            Error = null,
+            Data = edges
         });
     }
 }

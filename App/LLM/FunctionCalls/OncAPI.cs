@@ -36,17 +36,29 @@ public class OncAPI
                 urlPath.Append("&" + string.Join("&", validParams.Select(kv => $"{kv.Key}={kv.Value}")));
             }
         }
-        // Console.WriteLine($"ONC API Path: {urlPath}");
-
-        var oncResponse = await _httpClient.GetAsync(urlPath.ToString());
-        if (!oncResponse.IsSuccessStatusCode)
-            throw new HttpRequestException($"ONC API error: {oncResponse.StatusCode}");
-
+       
+        var oncResponse = new HttpResponseMessage();
+        try{
+            oncResponse = await _httpClient.GetAsync(urlPath.ToString());
+            if (!oncResponse.IsSuccessStatusCode)
+            {
+                throw new HttpRequestException($"ONC API error: {oncResponse.StatusCode}");
+            }
+        }
+        catch(Exception ex){
+            var generalErrorResponse = new
+            {
+                error = "API Error",
+                message = "An error occurred while fetching data from ONC API.",
+                statusCode = (int)oncResponse.StatusCode,
+                details = ex.Message
+            };
+            return JsonDocument.Parse(JsonSerializer.Serialize(generalErrorResponse)).RootElement.Clone();
+        }
 
         var oncContent = await oncResponse.Content.ReadAsStringAsync();
         var oncData = JsonDocument.Parse(oncContent).RootElement.Clone();
-
+        
         return oncData;
     }
-
 }

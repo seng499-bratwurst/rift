@@ -28,7 +28,7 @@ public class FileController : ControllerBase
             return Forbid();
         }
 
-        var fileContents = await _fileService.ReadFileContentAsync(file);
+        var fileContents = await _fileService.ExtractTextAsync(file);
 
         var fileEntity = new FileEntity
         {

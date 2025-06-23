@@ -38,7 +38,7 @@ namespace Rift.LLM
             var response = await _oncApiClient.GetDataAsync(functionName, functionParams);
             var serializedResponse = JsonSerializer.Serialize(response, new JsonSerializerOptions { WriteIndented = true });
             
-            // Console.WriteLine($"ONC API Response: {serializedResponse}");
+       
 
             return serializedResponse;
         }

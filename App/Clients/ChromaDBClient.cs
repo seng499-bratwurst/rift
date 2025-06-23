@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
@@ -48,12 +49,12 @@ public class ChromaDBClient
                     }
                 }
             }
-            
+
             var response = await _httpClient.PostAsJsonAsync($"{_baseUrl}/documents/add", request, _jsonOptions);
-            
+
             if (response.IsSuccessStatusCode)
             {
-                _logger.LogInformation("Successfully added document {DocumentId} to collection {Collection}", 
+                _logger.LogInformation("Successfully added document {DocumentId} to collection {Collection}",
                     request.Id, request.CollectionName);
                 return true;
             }
@@ -78,12 +79,12 @@ public class ChromaDBClient
         {
             // No need for additional preprocessing since we've updated the model
             // to use string for Tags instead of List<string>
-            
+
             var response = await _httpClient.PostAsJsonAsync($"{_baseUrl}/documents/batch", request, _jsonOptions);
-            
+
             if (response.IsSuccessStatusCode)
             {
-                _logger.LogInformation("Successfully added {Count} documents to collection {Collection}", 
+                _logger.LogInformation("Successfully added {Count} documents to collection {Collection}",
                     request.Documents.Count, request.CollectionName);
                 return true;
             }
@@ -107,7 +108,7 @@ public class ChromaDBClient
         try
         {
             var response = await _httpClient.GetAsync($"{_baseUrl}/documents/{documentId}?collection_name={collectionName}");
-            
+
             if (response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();
@@ -140,7 +141,7 @@ public class ChromaDBClient
         {
             var url = $"{_baseUrl}/documents/{documentId}?collection_name={collectionName}";
             var response = await _httpClient.PutAsJsonAsync(url, request, _jsonOptions);
-            
+
             if (response.IsSuccessStatusCode)
             {
                 _logger.LogInformation("Successfully updated document {DocumentId}", documentId);
@@ -166,7 +167,7 @@ public class ChromaDBClient
         try
         {
             var response = await _httpClient.DeleteAsync($"{_baseUrl}/documents/{documentId}?collection_name={collectionName}");
-            
+
             if (response.IsSuccessStatusCode)
             {
                 _logger.LogInformation("Successfully deleted document {DocumentId}", documentId);
@@ -196,7 +197,7 @@ public class ChromaDBClient
         try
         {
             var response = await _httpClient.PostAsJsonAsync($"{_baseUrl}/collections", collectionInfo, _jsonOptions);
-            
+
             if (response.IsSuccessStatusCode)
             {
                 _logger.LogInformation("Successfully created collection {CollectionName}", collectionInfo.Name);
@@ -222,7 +223,7 @@ public class ChromaDBClient
         try
         {
             var response = await _httpClient.GetAsync($"{_baseUrl}/collections");
-            
+
             if (response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();
@@ -249,7 +250,7 @@ public class ChromaDBClient
         try
         {
             var response = await _httpClient.GetAsync($"{_baseUrl}/collections/{collectionName}");
-            
+
             if (response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();
@@ -281,7 +282,7 @@ public class ChromaDBClient
         try
         {
             var response = await _httpClient.DeleteAsync($"{_baseUrl}/collections/{collectionName}");
-            
+
             if (response.IsSuccessStatusCode)
             {
                 _logger.LogInformation("Successfully deleted collection {CollectionName}", collectionName);
@@ -311,15 +312,15 @@ public class ChromaDBClient
         try
         {
             var response = await _httpClient.PostAsJsonAsync($"{_baseUrl}/query", request, _jsonOptions);
-            
+
             if (response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();
                 var result = JsonSerializer.Deserialize<QueryResponse>(content, _jsonOptions);
-                
-                _logger.LogInformation("Query completed successfully. Found {Count} results for query: {Query}", 
+
+                _logger.LogInformation("Query completed successfully. Found {Count} results for query: {Query}",
                     result?.Count ?? 0, request.Text);
-                
+
                 return result;
             }
 
@@ -342,15 +343,15 @@ public class ChromaDBClient
         try
         {
             var response = await _httpClient.PostAsJsonAsync($"{_baseUrl}/query/semantic", request, _jsonOptions);
-            
+
             if (response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();
                 var result = JsonSerializer.Deserialize<QueryResponse>(content, _jsonOptions);
-                
-                _logger.LogInformation("Semantic query completed. Found {Count} results above threshold {Threshold} for query: {Query}", 
+
+                _logger.LogInformation("Semantic query completed. Found {Count} results above threshold {Threshold} for query: {Query}",
                     result?.Count ?? 0, request.SimilarityThreshold, request.Text);
-                
+
                 return result;
             }
 
@@ -373,15 +374,15 @@ public class ChromaDBClient
         try
         {
             var response = await _httpClient.PostAsJsonAsync($"{_baseUrl}/query/filtered", request, _jsonOptions);
-            
+
             if (response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();
                 var result = JsonSerializer.Deserialize<QueryResponse>(content, _jsonOptions);
-                
-                _logger.LogInformation("Filtered query completed. Found {Count} results for query: {Query}", 
+
+                _logger.LogInformation("Filtered query completed. Found {Count} results for query: {Query}",
                     result?.Count ?? 0, request.Text);
-                
+
                 return result;
             }
 
@@ -405,15 +406,15 @@ public class ChromaDBClient
         {
             var url = $"{_baseUrl}/similar/{documentId}?collection_name={collectionName}&n_results={nResults}";
             var response = await _httpClient.GetAsync(url);
-            
+
             if (response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();
                 var result = JsonSerializer.Deserialize<SimilarDocumentsResponse>(content, _jsonOptions);
-                
-                _logger.LogInformation("Found {Count} similar documents for document {DocumentId}", 
+
+                _logger.LogInformation("Found {Count} similar documents for document {DocumentId}",
                     result?.Count ?? 0, documentId);
-                
+
                 return result;
             }
 
@@ -443,6 +444,21 @@ public class ChromaDBClient
     /// </summary>
     public async Task<RAGContext> GetRelevantDataAsync(string query, int maxResults = 5, double similarityThreshold = 0.7)
     {
+        if (string.IsNullOrWhiteSpace(query))
+        {
+            throw new ArgumentException("Query cannot be null or empty", nameof(query));
+        }
+
+        if (maxResults <= 0)
+        {
+            throw new ArgumentException("Max results must be greater than 0", nameof(maxResults));
+        }
+
+        if (similarityThreshold < 0.0 || similarityThreshold > 1.0)
+        {
+            throw new ArgumentException("Similarity threshold must be between 0.0 and 1.0", nameof(similarityThreshold));
+        }
+
         var ragContext = new RAGContext
         {
             Query = query,
@@ -451,97 +467,188 @@ public class ChromaDBClient
 
         try
         {
+            _logger.LogDebug("Performing semantic search for query: {Query} with maxResults: {MaxResults}, threshold: {Threshold}",
+                query, maxResults, similarityThreshold);
+
             // Perform semantic search to get relevant documents
+            // Request more results than needed to allow for proper filtering by similarity threshold
             var semanticRequest = new SemanticQueryRequest
             {
                 Text = query,
-                NResults = maxResults,
-                SimilarityThreshold = similarityThreshold,
+                NResults = Math.Max(maxResults * 2, 10), // Request more to account for filtering
+                SimilarityThreshold = 0.0, // Let ChromaDB return all results, we'll filter by similarity ourselves
                 CollectionName = "oceanographic_data"
             };
 
             var queryResponse = await SemanticQueryAsync(semanticRequest);
-            
-            if (queryResponse?.Results?.Documents != null && queryResponse.Results.Documents.Count > 0)
+
+            if (queryResponse?.Results?.Documents == null || queryResponse.Results.Documents.Count == 0)
             {
-                var documents = queryResponse.Results.Documents[0];
-                var metadatas = queryResponse.Results.Metadatas.Count > 0 ? queryResponse.Results.Metadatas[0] : new List<Dictionary<string, object>?>();
-                var distances = queryResponse.Results.Distances.Count > 0 ? queryResponse.Results.Distances[0] : new List<double>();
+                _logger.LogWarning("No documents returned from semantic query for: {Query}", query);
+                return ragContext;
+            }
 
-                for (int i = 0; i < documents.Count; i++)
+            var documents = queryResponse.Results.Documents[0];
+            var metadatas = queryResponse.Results.Metadatas.Count > 0 ? queryResponse.Results.Metadatas[0] : new List<Dictionary<string, object>?>();
+            var distances = queryResponse.Results.Distances.Count > 0 ? queryResponse.Results.Distances[0] : new List<double>();
+
+            if (documents.Count == 0)
+            {
+                _logger.LogWarning("Empty document list returned for query: {Query}", query);
+                return ragContext;
+            }
+
+            _logger.LogDebug("Processing {DocumentCount} documents from ChromaDB response", documents.Count);
+
+            var candidateDocuments = new List<(RelevantDocument doc, double similarity)>();
+
+            for (int i = 0; i < documents.Count && i < distances.Count; i++)
+            {
+                var distance = distances[i];
+
+                // ChromaDB returns cosine distance where 0 = identical, 2 = completely opposite
+                // Convert to similarity score where 1 = identical, 0 = completely different
+                var similarity = Math.Max(0.0, 1.0 - (distance / 2.0));
+
+                // Only include documents that meet the similarity threshold
+                if (similarity < similarityThreshold)
                 {
-                    var relevance = distances.Count > i ? 1.0 - distances[i] : 0.0; // Convert distance to similarity
-                    var metadata = metadatas.Count > i ? metadatas[i] : null;
-
-                    var relevantDoc = new RelevantDocument
-                    {
-                        Id = $"doc_{i}",
-                        Content = documents[i],
-                        Relevance = relevance,
-                        Source = metadata?.TryGetValue("source", out var sourceObj) == true ? sourceObj?.ToString() ?? "unknown" : "unknown"
-                    };
-
-                    // Parse metadata if available
-                    if (metadata != null)
-                    {
-                        relevantDoc.Metadata = new DocumentMetadata
-                        {
-                            Source = metadata.TryGetValue("source", out var srcObj) ? srcObj?.ToString() ?? "" : "",
-                            DataType = metadata.TryGetValue("data_type", out var dtObj) ? dtObj?.ToString() ?? "" : "",
-                            Timestamp = metadata.TryGetValue("timestamp", out var tsObj) ? tsObj?.ToString() : null,
-                            Location = metadata.TryGetValue("location", out var locObj) ? locObj?.ToString() : null,
-                            InstrumentType = metadata.TryGetValue("instrument_type", out var instObj) ? instObj?.ToString() : null
-                        };
-
-                        if (metadata.TryGetValue("depth", out var depthObj) && double.TryParse(depthObj?.ToString(), out var depth))
-                        {
-                            relevantDoc.Metadata.Depth = depth;
-                        }
-
-                        if (metadata.TryGetValue("tags", out var tagsObj) && tagsObj is JsonElement tagsElement && tagsElement.ValueKind == JsonValueKind.Array)
-                        {
-                            relevantDoc.Metadata.Tags = string.Join(",", tagsElement.EnumerateArray()
-                                .Where(tag => tag.ValueKind == JsonValueKind.String)
-                                .Select(tag => tag.GetString()!));
-                        }
-                        else if (metadata.TryGetValue("tags", out var tagsStrObj) && tagsStrObj is string tagsStr)
-                        {
-                            // If tags are already a comma-separated string
-                            relevantDoc.Metadata.Tags = tagsStr;
-                        }
-                    }
-
-                    ragContext.RelevantDocuments.Add(relevantDoc);
+                    _logger.LogDebug("Skipping document {Index} with similarity {Similarity} below threshold {Threshold}",
+                        i, similarity, similarityThreshold);
+                    continue;
                 }
 
-                _logger.LogInformation("Retrieved {Count} relevant documents for RAG context", ragContext.RelevantDocuments.Count);
+                var metadata = metadatas.Count > i ? metadatas[i] : null;
+                var documentId = GetDocumentId(metadata, i);
+
+                var relevantDoc = new RelevantDocument
+                {
+                    Id = documentId,
+                    Content = documents[i] ?? string.Empty,
+                    Relevance = similarity,
+                    Source = ExtractMetadataValue(metadata, "source", "unknown")
+                };
+
+                // Parse metadata if available
+                if (metadata != null)
+                {
+                    relevantDoc.Metadata = CreateDocumentMetadata(metadata);
+                }
+
+                candidateDocuments.Add((relevantDoc, similarity));
+
+                _logger.LogDebug("Added document {Id} with similarity {Similarity} (distance: {Distance})",
+                    documentId, similarity, distance);
             }
-            else
+
+            // Sort by similarity (highest first) and take only the requested number
+            var topDocuments = candidateDocuments
+                .OrderByDescending(x => x.similarity)
+                .Take(maxResults)
+                .Select(x => x.doc)
+                .ToList();
+
+            ragContext.RelevantDocuments.AddRange(topDocuments);
+
+            var avgSimilarity = topDocuments.Count > 0 ? topDocuments.Average(d => d.Relevance) : 0.0;
+
+            _logger.LogInformation("Retrieved {Count} relevant documents for RAG context with average similarity {AvgSimilarity:F3} (threshold: {Threshold})",
+                ragContext.RelevantDocuments.Count, avgSimilarity, similarityThreshold);
+
+            if (ragContext.RelevantDocuments.Count == 0)
             {
-                _logger.LogWarning("No relevant documents found for query: {Query}", query);
+                _logger.LogWarning("No documents met the similarity threshold {Threshold} for query: {Query}",
+                    similarityThreshold, query);
             }
+        }
+        catch (HttpRequestException httpEx)
+        {
+            _logger.LogError(httpEx, "HTTP error occurred while getting relevant data for query: {Query}", query);
+            throw new InvalidOperationException("Failed to communicate with ChromaDB service", httpEx);
+        }
+        catch (JsonException jsonEx)
+        {
+            _logger.LogError(jsonEx, "JSON parsing error occurred while processing ChromaDB response for query: {Query}", query);
+            throw new InvalidOperationException("Failed to parse ChromaDB response", jsonEx);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to get relevant data for RAG context: {Query}", query);
+            _logger.LogError(ex, "Unexpected error occurred while getting relevant data for query: {Query}", query);
+            throw;
         }
 
         return ragContext;
+    }
+
+    private static string GetDocumentId(Dictionary<string, object>? metadata, int fallbackIndex)
+    {
+        if (metadata?.TryGetValue("id", out var idObj) == true && idObj?.ToString() is string id && !string.IsNullOrEmpty(id))
+        {
+            return id;
+        }
+
+        if (metadata?.TryGetValue("document_id", out var docIdObj) == true && docIdObj?.ToString() is string docId && !string.IsNullOrEmpty(docId))
+        {
+            return docId;
+        }
+
+        return $"doc_{fallbackIndex}";
+    }
+
+    private static string ExtractMetadataValue(Dictionary<string, object>? metadata, string key, string defaultValue = "")
+    {
+        return metadata?.TryGetValue(key, out var valueObj) == true ? valueObj?.ToString() ?? defaultValue : defaultValue;
+    }
+
+    private static DocumentMetadata CreateDocumentMetadata(Dictionary<string, object> metadata)
+    {
+        var docMetadata = new DocumentMetadata
+        {
+            Source = ExtractMetadataValue(metadata, "source"),
+            DataType = ExtractMetadataValue(metadata, "data_type"),
+            Timestamp = ExtractMetadataValue(metadata, "timestamp"),
+            Location = ExtractMetadataValue(metadata, "location"),
+            InstrumentType = ExtractMetadataValue(metadata, "instrument_type")
+        };
+
+        // Parse depth as double
+        if (metadata.TryGetValue("depth", out var depthObj) &&
+            double.TryParse(depthObj?.ToString(), NumberStyles.Float, CultureInfo.InvariantCulture, out var depth))
+        {
+            docMetadata.Depth = depth;
+        }
+
+        // Parse tags - handle both array and string formats
+        if (metadata.TryGetValue("tags", out var tagsObj))
+        {
+            docMetadata.Tags = tagsObj switch
+            {
+                JsonElement tagsElement when tagsElement.ValueKind == JsonValueKind.Array =>
+                    string.Join(",", tagsElement.EnumerateArray()
+                        .Where(tag => tag.ValueKind == JsonValueKind.String)
+                        .Select(tag => tag.GetString()!)
+                        .Where(tag => !string.IsNullOrEmpty(tag))),
+                string tagsStr when !string.IsNullOrEmpty(tagsStr) => tagsStr,
+                _ => string.Empty
+            };
+        }
+
+        return docMetadata;
     }
 
     /// <summary>
     /// Get relevant data with specific filters for oceanographic data
     /// </summary>
     public async Task<RAGContext> GetRelevantOceanographicDataAsync(
-        string query, 
-        string? dataType = null, 
-        string? location = null, 
+        string query,
+        string? dataType = null,
+        string? location = null,
         string? instrumentType = null,
         int maxResults = 5,
         double similarityThreshold = 0.7)
     {
         var filters = new Dictionary<string, object>();
-        
+
         if (!string.IsNullOrEmpty(dataType))
             filters["data_type"] = dataType;
         if (!string.IsNullOrEmpty(location))
@@ -559,7 +666,7 @@ public class ChromaDBClient
         };
 
         var queryResponse = await SemanticQueryAsync(semanticRequest);
-        
+
         var ragContext = new RAGContext
         {
             Query = query,
@@ -623,7 +730,7 @@ public class ChromaDBClient
         try
         {
             var response = await _httpClient.GetAsync($"{_baseUrl}/health");
-            
+
             if (response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();
@@ -647,7 +754,7 @@ public class ChromaDBClient
         try
         {
             var response = await _httpClient.GetAsync($"{_baseUrl}/stats");
-            
+
             if (response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();
@@ -673,7 +780,7 @@ public class ChromaDBClient
         try
         {
             var response = await _httpClient.PostAsJsonAsync($"{_baseUrl}/embeddings", texts, _jsonOptions);
-            
+
             if (response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();

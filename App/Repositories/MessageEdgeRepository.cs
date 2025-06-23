@@ -1,6 +1,5 @@
-using System.Threading.Tasks;
 using Rift.Models;
-using Rift.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace Rift.Repositories;
 
@@ -24,7 +23,7 @@ public class MessageEdgeRepository : IMessageEdgeRepository
     {
         _dbContext.MessageEdges.AddRange(edges);
         await _dbContext.SaveChangesAsync();
-        return edges.ToList(); 
+        return edges.ToList();
     }
 
 
@@ -38,5 +37,19 @@ public class MessageEdgeRepository : IMessageEdgeRepository
             await _dbContext.SaveChangesAsync();
         }
         return edge?.Id;
+    }
+    
+    public async Task<List<MessageEdge>> GetEdgesForConversationAsync(string userId, int conversationId)
+    {
+        var messageIds = await _dbContext.Messages
+            .Where(m => m.ConversationId == conversationId)
+            .Select(m => m.Id)
+            .ToListAsync();
+
+        var edges = await _dbContext.MessageEdges
+            .Where(e => messageIds.Contains(e.SourceMessageId) || messageIds.Contains(e.TargetMessageId))
+            .ToListAsync();
+
+        return edges;
     }
 }
