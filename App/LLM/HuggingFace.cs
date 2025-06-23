@@ -1,6 +1,7 @@
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 
 
 namespace Rift.LLM
@@ -60,6 +61,8 @@ namespace Rift.LLM
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
 
             var response = await _httpClient.SendAsync(request);
+            Console.WriteLine("response: "+response);
+            Console.WriteLine("response.IsSuccessStatusCode: "+response.IsSuccessStatusCode);
             response.EnsureSuccessStatusCode();
 
             var responseContent = await response.Content.ReadAsStringAsync();
@@ -71,9 +74,19 @@ namespace Rift.LLM
 
             string LLMContent = message.GetProperty("content").GetString() ?? string.Empty;
             Console.WriteLine("LLMContent: "+LLMContent);
-            
 
-            using JsonDocument innerDoc = JsonDocument.Parse(LLMContent);
+            
+            var match = Regex.Match(LLMContent, @"\{(?:[^{}]|(?<open>\{)|(?<-open>\}))*\}(?(open)(?!))", RegexOptions.Singleline);
+            if (!match.Success)
+            {
+                throw new Exception("No valid JSON object or array found in LLM response.");
+            }
+
+            String LLMContentFiltered = match.Value;
+            Console.WriteLine("LLMContentFiltered: "+LLMContentFiltered);
+
+
+            using JsonDocument innerDoc = JsonDocument.Parse(LLMContentFiltered);
 
             bool useFunction = innerDoc.RootElement.GetProperty("use_function").GetBoolean();
 
@@ -83,7 +96,7 @@ namespace Rift.LLM
             }
             else if (useFunction)
             {
-                var (functionName, functionParams) = _parser.ExtractFunctionAndQueries(LLMContent);
+                var (functionName, functionParams) = _parser.ExtractFunctionAndQueries(LLMContentFiltered);
                 
                 return await _parser.OncAPICall(functionName, functionParams);
             }
@@ -125,7 +138,10 @@ namespace Rift.LLM
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
 
             var response = await _httpClient.SendAsync(request);
+            Console.WriteLine("response: "+response);
+            Console.WriteLine("response.IsSuccessStatusCode: "+response.IsSuccessStatusCode);
             response.EnsureSuccessStatusCode();
+            
 
             var responseContent = await response.Content.ReadAsStringAsync();
 
