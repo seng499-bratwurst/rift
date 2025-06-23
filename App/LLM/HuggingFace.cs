@@ -61,8 +61,8 @@ namespace Rift.LLM
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
 
             var response = await _httpClient.SendAsync(request);
-            Console.WriteLine("response: "+response);
-            Console.WriteLine("response.IsSuccessStatusCode: "+response.IsSuccessStatusCode);
+            // Console.WriteLine("response: "+response);
+            // Console.WriteLine("response.IsSuccessStatusCode: "+response.IsSuccessStatusCode);
             response.EnsureSuccessStatusCode();
 
             var responseContent = await response.Content.ReadAsStringAsync();
@@ -73,7 +73,7 @@ namespace Rift.LLM
             var message = doc.RootElement.GetProperty("choices")[0].GetProperty("message");
 
             string LLMContent = message.GetProperty("content").GetString() ?? string.Empty;
-            Console.WriteLine("LLMContent: "+LLMContent);
+            // Console.WriteLine("LLMContent: "+LLMContent);
 
             
             var match = Regex.Match(LLMContent, @"\{(?:[^{}]|(?<open>\{)|(?<-open>\}))*\}(?(open)(?!))", RegexOptions.Singleline);
@@ -83,7 +83,7 @@ namespace Rift.LLM
             }
 
             String LLMContentFiltered = match.Value;
-            Console.WriteLine("LLMContentFiltered: "+LLMContentFiltered);
+            // Console.WriteLine("LLMContentFiltered: "+LLMContentFiltered);
 
 
             using JsonDocument innerDoc = JsonDocument.Parse(LLMContentFiltered);
@@ -138,8 +138,8 @@ namespace Rift.LLM
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
 
             var response = await _httpClient.SendAsync(request);
-            Console.WriteLine("response: "+response);
-            Console.WriteLine("response.IsSuccessStatusCode: "+response.IsSuccessStatusCode);
+            // Console.WriteLine("response: "+response);
+            // Console.WriteLine("response.IsSuccessStatusCode: "+response.IsSuccessStatusCode);
             response.EnsureSuccessStatusCode();
             
 
