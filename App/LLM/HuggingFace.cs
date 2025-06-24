@@ -75,35 +75,37 @@ namespace Rift.LLM
             string LLMContent = message.GetProperty("content").GetString() ?? string.Empty;
             // Console.WriteLine("LLMContent: "+LLMContent);
 
-            
+            object generalResponse = null;
             var match = Regex.Match(LLMContent, @"\{(?:[^{}]|(?<open>\{)|(?<-open>\}))*\}(?(open)(?!))", RegexOptions.Singleline);
             if (!match.Success)
             {
-                throw new Exception("No valid JSON object or array found in LLM response.");
+                generalResponse = new
+                {
+                    details = message.GetProperty("content").GetString(),
+                    message = "ONC API call not required. Answer based on the user prompt."
+                };
+            }else{
+                 String LLMContentFiltered = match.Value;
+                // Console.WriteLine("LLMContentFiltered: "+LLMContentFiltered);
+
+
+                using JsonDocument innerDoc = JsonDocument.Parse(LLMContentFiltered);
+
+                bool useFunction = innerDoc.RootElement.GetProperty("use_function").GetBoolean();
+
+                if (!useFunction)
+                {
+                    return "{}";
+                }
+                else if (useFunction)
+                {
+                    var (functionName, functionParams) = _parser.ExtractFunctionAndQueries(LLMContentFiltered);
+                    
+                    return await _parser.OncAPICall(functionName, functionParams);
+                }
             }
 
-            String LLMContentFiltered = match.Value;
-            // Console.WriteLine("LLMContentFiltered: "+LLMContentFiltered);
-
-
-            using JsonDocument innerDoc = JsonDocument.Parse(LLMContentFiltered);
-
-            bool useFunction = innerDoc.RootElement.GetProperty("use_function").GetBoolean();
-
-            if (!useFunction)
-            {
-                return "{}";
-            }
-            else if (useFunction)
-            {
-                var (functionName, functionParams) = _parser.ExtractFunctionAndQueries(LLMContentFiltered);
-                
-                return await _parser.OncAPICall(functionName, functionParams);
-            }
-
-            var resultContent = message.GetProperty("content").GetString();
-
-            return resultContent ?? "{}";
+            return JsonSerializer.Serialize(generalResponse);
         }
 
 
