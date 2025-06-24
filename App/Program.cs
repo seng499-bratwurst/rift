@@ -138,10 +138,10 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var appDb = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    // appDb.Database.Migrate(); // Temporary
+    appDb.Database.Migrate();
 
     var fileDb = scope.ServiceProvider.GetRequiredService<FileDbContext>();
-    // fileDb.Database.Migrate();  // Temporary
+    fileDb.Database.Migrate();
 
     var services = scope.ServiceProvider;
     await SeedRoles.SeedRolesAndAdminAsync(services);
