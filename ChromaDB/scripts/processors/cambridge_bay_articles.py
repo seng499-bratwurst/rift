@@ -1,6 +1,7 @@
 from .base_document_processor import BaseDocumentProcessor
 from typing import List, Dict
 import re
+from datetime import datetime
 
 
 class CambridgeBayArticles(BaseDocumentProcessor):
@@ -12,6 +13,7 @@ class CambridgeBayArticles(BaseDocumentProcessor):
 
     def create_metadata(self) -> List[Dict]:
         metadata = []
+        created_at = datetime.utcnow().isoformat() + 'Z'
         for doc in self.docs:
             source = self._extract_source(doc['content'])
             title = self._extract_title_from_url(source)
@@ -20,8 +22,9 @@ class CambridgeBayArticles(BaseDocumentProcessor):
                 'length': len(doc['content']),
                 'title': title,
                 'source': source,
-                'id': self._extract_id(doc['content']),
-                'source_doc': doc['filename'].replace('.md', '')
+                'name': self._extract_id(doc['content']),
+                'source_doc': doc['filename'].replace('.md', ''),
+                'created_at': created_at
             })
         return metadata
 

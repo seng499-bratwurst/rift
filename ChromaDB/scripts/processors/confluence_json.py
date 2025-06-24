@@ -1,12 +1,9 @@
-import re
 import json
 from typing import List, Dict
 from .base_document_processor import BaseDocumentProcessor
-import os
-import sys
-from pathlib import Path
+from datetime import datetime
 
-class ConfluenceDocuments(BaseDocumentProcessor):
+class ConfluenceJson(BaseDocumentProcessor):
     def __init__(self, docs: List[Dict]):
         super().__init__(docs)
         
@@ -33,6 +30,9 @@ class ConfluenceDocuments(BaseDocumentProcessor):
             except json.JSONDecodeError as e:
                 print(f"Error parsing JSON: {e}")
                 continue
+
+        for idx, chunk in enumerate(chunks):
+            chunk['metadata']['chunk_index'] = idx
                 
         return chunks
     
@@ -41,27 +41,28 @@ class ConfluenceDocuments(BaseDocumentProcessor):
         Process a single JSON item and create chunks with metadata.
         """
         chunks = []
-        
+        created_at = datetime.utcnow().isoformat() + 'Z'
         metadata = {
-            'type': 'confluence_json',
-            'source_doc': source_file.replace('.json', '')
+            'source_type': 'confluence_json',
+            'name': source_file.replace('.json', ''),
+            'created_at': created_at
         }
         
         if 'propertyCode' in item:
-            metadata['code'] = item['propertyCode']
-            metadata['name'] = item.get('propertyName', '')
+            metadata['item_code'] = item['propertyCode']
+            metadata['item_name'] = item.get('propertyName', '')
         elif 'deviceCode' in item:
-            metadata['code'] = item['deviceCode']
-            metadata['name'] = item.get('deviceName', '')
+            metadata['item_code'] = item['deviceCode']
+            metadata['item_name'] = item.get('deviceName', '')
         elif 'deviceCategoryCode' in item:
-            metadata['code'] = item['deviceCategoryCode']
-            metadata['name'] = item.get('deviceCategoryName', '')
+            metadata['item_code'] = item['deviceCategoryCode']
+            metadata['item_name'] = item.get('deviceCategoryName', '')
         elif 'locationCode' in item:
-            metadata['code'] = item['locationCode']
-            metadata['name'] = item.get('locationName', '')
+            metadata['item_code'] = item['locationCode']
+            metadata['item_name'] = item.get('locationName', '')
         elif 'dataProductCode' in item:
-            metadata['code'] = item['dataProductCode']
-            metadata['name'] = item.get('dataProductName', '')
+            metadata['item_code'] = item['dataProductCode']
+            metadata['item_name'] = item.get('dataProductName', '')
         
         text_parts = []
         
