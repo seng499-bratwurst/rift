@@ -71,6 +71,10 @@ builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddScoped<IMessageEdgeRepository, MessageEdgeRepository>();
 builder.Services.AddScoped<IMessageEdgeService, MessageEdgeService>();
 
+builder.Services.AddScoped<ICompanyTokenRepository, CompanyTokenRepository>();
+builder.Services.AddScoped<ICompanyTokenService, CompanyTokenService>();
+
+
 builder.Services.AddScoped<RAGService>();
 builder.Services.AddScoped<ReRanker>();
 builder.Services.AddScoped<ResponseProcessor>();
@@ -134,10 +138,10 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var appDb = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    appDb.Database.Migrate();
+    // appDb.Database.Migrate(); // Temporary
 
     var fileDb = scope.ServiceProvider.GetRequiredService<FileDbContext>();
-    fileDb.Database.Migrate();
+    // fileDb.Database.Migrate();  // Temporary
 
     var services = scope.ServiceProvider;
     await SeedRoles.SeedRolesAndAdminAsync(services);
