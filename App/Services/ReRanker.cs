@@ -2,54 +2,41 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 public class RerankRequest
 {
-    public string query { get; set; }
-    public List<string> docs { get; set; }
+    public string Query { get; set; }
+    public List<string> Docs { get; set; }
 }
 
 public class RerankResponse
 {
-    public List<string> reranked_docs { get; set; }
+    public List<string> Reranked_Docs { get; set; }
 }
 
-public class ReRanker
+public class ReRankerClient
 {
-    private readonly HttpClient _client;
+    private readonly HttpClient _httpClient;
 
-    public ReRanker()
+    public ReRankerClient(HttpClient httpClient)
     {
-        _client = new HttpClient();
+        _httpClient = httpClient;
+        _httpClient.BaseAddress = new Uri("http://reranker:6000/");
     }
 
-    public async Task<string> ReRankAsync(string oncApiData, string relevantData)
+    public async Task<RerankResponse> RerankAsync(RerankRequest request)
     {
-        // Assume relevantData is a comma-separated string of docs
-        List<string> docs = new List<string>(relevantData.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries));
+        var response = await _httpClient.PostAsJsonAsync("rerank", request);
+        response.EnsureSuccessStatusCode();
+        var json = await response.Content.ReadAsStringAsync();
+        return JsonSerializer.Deserialize<RerankResponse>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+    }
 
-        var request = new RerankRequest
-        {
-            query = oncApiData,
-            docs = docs
-        };
-
-        try
-        {
-            HttpResponseMessage response = await _client.PostAsJsonAsync("http://localhost:8080/rerank", request);
-            response.EnsureSuccessStatusCode();
-
-            var json = await response.Content.ReadAsStringAsync();
-            var result = JsonSerializer.Deserialize<RerankResponse>(json);
-
-            // Join re-ranked docs into a single string for return
-            return string.Join("\n", result.reranked_docs);
-        }
-        catch (Exception ex)
-        {
-            //improve error handling here if needed
-            return $"Error: {ex.Message}";
-        }
+    public async Task<string> TestAsync()
+    {
+        var response = await _httpClient.GetAsync("rerank");
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadAsStringAsync();
     }
 }
-
