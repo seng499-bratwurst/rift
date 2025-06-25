@@ -86,7 +86,7 @@ namespace Rift.LLM
                 };
             }else{
                  String LLMContentFiltered = match.Value;
-                // Console.WriteLine("LLMContentFiltered: "+LLMContentFiltered);
+                 Console.WriteLine("LLMContentFiltered: "+LLMContentFiltered);
 
 
                 using JsonDocument innerDoc = JsonDocument.Parse(LLMContentFiltered);
