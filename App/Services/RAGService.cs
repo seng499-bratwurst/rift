@@ -1,11 +1,9 @@
 using System.Text.Json;
 using Rift.LLM;
 using Rift.App.Clients;
-using Rift.App.Models;
-using Rift.Services;
 using Rift.Models;
 
-public class RAGService
+public class RAGService : IRAGService
 {
     private readonly ILlmProvider _llmProvider;
     private readonly ChromaDBClient _chromaDbClient;

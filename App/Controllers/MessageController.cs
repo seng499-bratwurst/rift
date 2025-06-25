@@ -3,8 +3,6 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Rift.Models;
 using Rift.Services;
-using Rift.LLM;
-using System.Text.Json;
 
 namespace Rift.Controllers;
 
@@ -16,9 +14,9 @@ public class MessageController : ControllerBase
     private readonly IMessageEdgeService _messageEdgeService;
     private readonly IConversationService _conversationService;
 
-    private readonly RAGService _ragService;
+    private readonly IRAGService _ragService;
 
-    public MessageController(IMessageService messageService, IConversationService conversationService, RAGService ragService, IMessageEdgeService messageEdgeService)
+    public MessageController(IMessageService messageService, IConversationService conversationService, IRAGService ragService, IMessageEdgeService messageEdgeService)
     {
         _messageService = messageService;
         _messageEdgeService = messageEdgeService;

@@ -76,8 +76,8 @@ builder.Services.AddScoped<ICompanyTokenRepository, CompanyTokenRepository>();
 builder.Services.AddScoped<ICompanyTokenService, CompanyTokenService>();
 
 
-builder.Services.AddScoped<RAGService>();
-// builder.Services.AddScoped<ReRanker>();
+builder.Services.AddScoped<IRAGService, RAGService>();
+builder.Services.AddScoped<ReRanker>();
 builder.Services.AddScoped<ResponseProcessor>();
 builder.Services.AddScoped(provider =>
 {

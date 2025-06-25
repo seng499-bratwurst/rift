@@ -61,7 +61,7 @@ namespace Rift.Tests.Services
                 new Message { Id = 1, Content = "A", XCoordinate = 0f, YCoordinate = 0f },
                 new Message { Id = 2, Content = "B", XCoordinate = 0f, YCoordinate = 0f }
             };
-            _messageRepositoryMock.Setup(r => r.GetMessagesByConversationIdAsync(userId, conversationId))
+            _messageRepositoryMock.Setup(r => r.GetUserConversationMessagesAsync(userId, conversationId))
                 .ReturnsAsync(messages);
 
             var result = await _service.GetMessagesForConversationAsync(userId, conversationId);

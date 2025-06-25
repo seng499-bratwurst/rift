@@ -174,7 +174,7 @@ namespace Rift.Tests.Repositories
             _dbContext.Messages.AddRange(msg1, msg2, msgOther);
             await _dbContext.SaveChangesAsync();
 
-            var result = await _repository.GetMessagesByConversationIdAsync("user5", 5);
+            var result = await _repository.GetUserConversationMessagesAsync("user5", 5);
 
             Assert.AreEqual(2, result.Count);
             Assert.AreEqual("First", result[0].Content);
@@ -200,7 +200,7 @@ namespace Rift.Tests.Repositories
             _dbContext.Messages.Add(msg);
             await _dbContext.SaveChangesAsync();
 
-            var result = await _repository.GetMessagesByConversationIdAsync("wronguser", 6);
+            var result = await _repository.GetUserConversationMessagesAsync("wronguser", 6);
 
             Assert.AreEqual(0, result.Count);
         }
