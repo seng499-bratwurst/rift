@@ -42,11 +42,20 @@ public class MessageRepository : IMessageRepository
         return message;
     }
 
-    public async Task<List<Message>> GetMessagesByConversationIdAsync(string userId, int conversationId)
+    public async Task<List<Message>> GetUserConversationMessagesAsync(string userId, int conversationId)
     {
         return await _context.Messages
             .Where(m => m.ConversationId == conversationId)
             .Where(m => m.Conversation != null && m.Conversation.UserId == userId)
+            .OrderBy(m => m.CreatedAt)
+            .ToListAsync();
+    }
+
+    public async Task<List<Message>> GetGuestConversationMessagesAsync(string sessionId, int conversationId)
+    {
+        return await _context.Messages
+            .Where(m => m.ConversationId == conversationId)
+            .Where(m => m.Conversation != null && m.Conversation.SessionId == sessionId)
             .OrderBy(m => m.CreatedAt)
             .ToListAsync();
     }

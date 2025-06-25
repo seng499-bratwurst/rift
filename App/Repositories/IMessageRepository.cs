@@ -9,5 +9,6 @@ public interface IMessageRepository
     Task<Message?> GetByIdAsync(string userId, int messageId);
     Task<Message> UpdateAsync(Message message);
     Task<Message> CreateAsync(Message message);
-    Task<List<Message>> GetMessagesByConversationIdAsync(string userId, int conversationId);
+    Task<List<Message>> GetUserConversationMessagesAsync(string userId, int conversationId);
+    Task<List<Message>> GetGuestConversationMessagesAsync(string sessionId, int conversationId);
 }

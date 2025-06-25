@@ -29,6 +29,8 @@ For contributing to the Python API you will need to complete the following steps
 * **(Optional)** Setup a Python virtual environment by running `python3 -m venv .venv` in the root directory of the project. Don't forget to activate the venv when working on the API!
 * Install the required packages by running `pip install -r requirements.txt` in the `/ChromaDB` subdirectory
 
+More information on the ChromaDB configuration can be found [Here](ChromaDB/config/chroma_config.md)
+
 
 
 ## Contributions

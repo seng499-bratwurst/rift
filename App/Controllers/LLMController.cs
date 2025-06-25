@@ -22,8 +22,7 @@ namespace Rift.Controllers
             if (!ModelState.IsValid || string.IsNullOrWhiteSpace(request.Prompt))
                 return BadRequest("Prompt cannot be empty.");
 
-            var response = await _llmProvider.GenerateONCAPICall(request.Prompt);
-            // Console.WriteLine("Small Model response: "+response);
+            var response = await _llmProvider.GatherOncAPIData(request.Prompt);
                        
             using var doc = JsonDocument.Parse(response);
 
