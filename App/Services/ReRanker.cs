@@ -1,9 +1,42 @@
-public class ReRanker
+using System.Net.Http;
+using System.Net.Http.Json;
+using System.Text.Json;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+
+public class RerankRequest
 {
-    public string ReRankAsync(string oncApiData, string relevantData)
+    public string Query { get; set; }
+    public List<string> Docs { get; set; }
+}
+
+public class RerankResponse
+{
+    public List<string> Reranked_Docs { get; set; }
+}
+
+public class ReRankerClient
+{
+    private readonly HttpClient _httpClient;
+
+    public ReRankerClient(HttpClient httpClient)
     {
-        // It could be nice to rank both the API data and relevant vector data together.
-        // We can play around with this to see what gives the best results.
-        throw new NotImplementedException("Re-ranking logic is not implemented yet.");
+        _httpClient = httpClient;
+        _httpClient.BaseAddress = new Uri("http://reranker:6000/");
+    }
+
+    public async Task<RerankResponse> RerankAsync(RerankRequest request)
+    {
+        var response = await _httpClient.PostAsJsonAsync("rerank", request);
+        response.EnsureSuccessStatusCode();
+        var json = await response.Content.ReadAsStringAsync();
+        return JsonSerializer.Deserialize<RerankResponse>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+    }
+
+    public async Task<string> TestAsync()
+    {
+        var response = await _httpClient.GetAsync("rerank");
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadAsStringAsync();
     }
 }

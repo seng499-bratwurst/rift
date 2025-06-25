@@ -56,6 +56,7 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers();
 
 builder.Services.AddHttpClient<ChromaDBClient>();
+builder.Services.AddHttpClient<ReRankerClient>();
 
 builder.Services.AddScoped<IUserService, UserService>();
 
@@ -76,7 +77,7 @@ builder.Services.AddScoped<ICompanyTokenService, CompanyTokenService>();
 
 
 builder.Services.AddScoped<RAGService>();
-builder.Services.AddScoped<ReRanker>();
+// builder.Services.AddScoped<ReRanker>();
 builder.Services.AddScoped<ResponseProcessor>();
 builder.Services.AddScoped(provider =>
 {

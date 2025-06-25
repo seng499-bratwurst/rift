@@ -9,20 +9,20 @@ public class RAGService
     private readonly ILlmProvider _llmProvider;
     private readonly ChromaDBClient _chromaDbClient;
     private readonly PromptBuilder _promptBuilder;
-    private readonly ReRanker _reRanker;
+    private readonly ReRankerClient _reRankerClient;
     private readonly ResponseProcessor _responseProcessor;
 
     public RAGService(
         ILlmProvider llmProvider,
         ChromaDBClient chromaDbClient,
         PromptBuilder promptBuilder,
-        ReRanker reRanker,
+        ReRankerClient reRankerClient,
         ResponseProcessor responseProcessor)
     {
         _llmProvider = llmProvider;
         _chromaDbClient = chromaDbClient;
         _promptBuilder = promptBuilder;
-        _reRanker = reRanker;
+        _reRankerClient = reRankerClient;
         _responseProcessor = responseProcessor;
     }
 
@@ -37,7 +37,15 @@ public class RAGService
         var ragContext = await _chromaDbClient.GetRelevantDataAsync(userQuery);
         string relevantData = string.Join("\n", ragContext.RelevantDocuments.Select(d => d.Content));
 
-        string reRankedData = _reRanker.ReRankAsync(ONCAPIData, relevantData);
+        var relevantDocs = ragContext.RelevantDocuments.Select(d => d.Content).ToList();
+
+        var rerankRequest = new RerankRequest
+        {
+            Query = userQuery,
+            Docs = relevantDocs
+        };
+        var rerankResponse = await _reRankerClient.RerankAsync(rerankRequest);
+        string reRankedData = string.Join("\n", rerankResponse.Reranked_Docs);
 
         // Build the prompt using the PromptBuilder
         string prompt = _promptBuilder.BuildPrompt(userQuery, reRankedData);
