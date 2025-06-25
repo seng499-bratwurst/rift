@@ -37,10 +37,48 @@ namespace Rift.LLM
 
             var response = await _oncApiClient.GetDataAsync(functionName, functionParams);
             var serializedResponse = JsonSerializer.Serialize(response, new JsonSerializerOptions { WriteIndented = true });
-            
-       
 
+            if (functionName == "rawdata/device"){
+                return ProcessSerializedResponse(serializedResponse);
+            }
+            
             return serializedResponse;
+        }
+        private string ProcessSerializedResponse(string serializedResponse)
+        {
+            using var doc = JsonDocument.Parse(serializedResponse);
+            var root = doc.RootElement;
+
+            var rootDict = new Dictionary<string, object>();
+
+            // Copying everything except 'data'
+            foreach (var prop in root.EnumerateObject())
+            {
+                if (prop.Name != "data")
+                {
+                    rootDict[prop.Name] = prop.Value.Clone();
+                }
+            }
+
+            // getting rid of the lineTypes property
+            if (root.TryGetProperty("data", out var dataElement))
+            {
+                var dataDict = new Dictionary<string, object>();
+                foreach (var dataProp in dataElement.EnumerateObject())
+                {
+                    if (dataProp.Name != "lineTypes")
+                    {
+                        dataDict[dataProp.Name] = dataProp.Value.Clone();
+                    }
+                }
+                rootDict["data"] = dataDict;
+            }
+
+            // converting back to JSON
+            var options = new JsonSerializerOptions { WriteIndented = true };
+            string result = JsonSerializer.Serialize(rootDict, options);
+            // Console.WriteLine("result without LineTypes: "+result);
+            return result;
         }
     }
 }

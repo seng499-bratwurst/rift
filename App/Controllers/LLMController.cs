@@ -23,6 +23,7 @@ namespace Rift.Controllers
                 return BadRequest("Prompt cannot be empty.");
 
             var response = await _llmProvider.GenerateONCAPICall(request.Prompt);
+            // Console.WriteLine("Small Model response: "+response);
                        
             using var doc = JsonDocument.Parse(response);
 
