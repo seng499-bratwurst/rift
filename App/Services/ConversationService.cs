@@ -1,7 +1,6 @@
 namespace Rift.Services;
 
 using Rift.Models;
-using Rift.Repositories;
 
 public class ConversationService : IConversationService
 {
