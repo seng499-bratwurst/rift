@@ -76,7 +76,7 @@ namespace Rift.LLM
             string LLMContent = message.GetProperty("content").GetString() ?? string.Empty;
             // Console.WriteLine("LLMContent: "+LLMContent);
 
-            object generalResponse = null;
+            object? generalResponse = null;
             var match = Regex.Match(LLMContent, @"\{(?:[^{}]|(?<open>\{)|(?<-open>\}))*\}(?(open)(?!))", RegexOptions.Singleline);
             if (!match.Success)
             {

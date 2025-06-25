@@ -2,13 +2,13 @@ using System.Text.Json;
 
 public class RerankRequest
 {
-    public string Query { get; set; }
-    public List<string> Docs { get; set; }
+    public string? Query { get; set; }
+    public List<string>? Docs { get; set; }
 }
 
 public class RerankResponse
 {
-    public List<string> Reranked_Docs { get; set; }
+    public List<string>? Reranked_Docs { get; set; }
 }
 
 public class ReRankerClient
@@ -21,7 +21,7 @@ public class ReRankerClient
         _httpClient.BaseAddress = new Uri("http://reranker:6000/");
     }
 
-    public async Task<RerankResponse> RerankAsync(RerankRequest request)
+    public async Task<RerankResponse?> RerankAsync(RerankRequest request)
     {
         var response = await _httpClient.PostAsJsonAsync("rerank", request);
         response.EnsureSuccessStatusCode();
