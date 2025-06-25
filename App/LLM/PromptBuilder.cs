@@ -1,4 +1,5 @@
 
+using System.Text;
 using Rift.App.Models;
 using Rift.Models;
 
@@ -14,14 +15,18 @@ public class PromptBuilder
         _systemPrompt = systemPrompt;
     }
 
-    public Prompt BuildPrompt(string userQuery, List<Message> messageHistory, string oncApiData, List<RelevantDocument> relevantDocuments)
+    public Prompt BuildPrompt(string userQuery, List<Message> messageHistory, string oncApiData, List<string> relevantDocuments)
     {
+        var fullSystemPrompt = new StringBuilder(_systemPrompt);
+        fullSystemPrompt.AppendLine("\nOnly respond to the user query!");
+        fullSystemPrompt.AppendLine("\nDo not include the ONC API data, relevant documents, or message history in your response. Instead, use them to inform your response to the user query.");
+        fullSystemPrompt.AppendLine("\nThe user is not aware of the ONC API data, relevant documents, or message history, so do not mention them in your response.");
         var prompt = new Prompt
         {
             // TODO: Just a rough implementation for now, I will update this once we get the MVP working
             // Should probably update this once it is all working
             PromptId = _promptIdCounter++,
-            SystemPrompt = _systemPrompt,
+            SystemPrompt = fullSystemPrompt.ToString(),
             UserQuery = userQuery,
             MessageHistory = messageHistory,
             OncAPIData = oncApiData,

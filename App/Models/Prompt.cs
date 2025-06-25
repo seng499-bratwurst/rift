@@ -9,5 +9,5 @@ public class Prompt
     public string UserQuery { get; set; } = string.Empty;
     public List<Message> MessageHistory { get; set; } = [];
     public string OncAPIData { get; set; } = string.Empty;
-    public List<RelevantDocument> RelevantDocuments { get; set; } = [];
+    public List<string> RelevantDocuments { get; set; } = [];
 }

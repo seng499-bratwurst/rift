@@ -87,7 +87,7 @@ namespace Rift.LLM
                 };
             }else{
                  String LLMContentFiltered = match.Value;
-                 Console.WriteLine("LLMContentFiltered: "+LLMContentFiltered);
+                 Console.WriteLine("LLMContentFiltered: "+ LLMContentFiltered);
 
 
                 using JsonDocument innerDoc = JsonDocument.Parse(LLMContentFiltered);
@@ -167,16 +167,16 @@ namespace Rift.LLM
             // feed all of this data into the LLM.
             // ----------------------------------------------
             var fullUserPrompt = new StringBuilder();
-            fullUserPrompt.Append("This is the User Query and what they are asking:\n");
+            fullUserPrompt.Append("This is the User Query:\n");
             fullUserPrompt.Append(prompt.UserQuery);
-            fullUserPrompt.Append("\n\nHere is the ONC API response in JSON format:\n");
+            fullUserPrompt.Append("\n\nHere is the ONC API response:\n");
             fullUserPrompt.Append(prompt.OncAPIData);
-            fullUserPrompt.Append("\n\nHere is the relevant documents from the vector database:\n");
+            fullUserPrompt.Append("\n\nHere are relevant documents :\n");
             foreach (var relevantDoc in prompt.RelevantDocuments)
             {
-                fullUserPrompt.Append($"- {relevantDoc.Content}\n");
+                fullUserPrompt.Append($"- {relevantDoc}\n");
             }
-            fullUserPrompt.Append("\n\nHere is the message history for added context:\n");
+            fullUserPrompt.Append("\n\nHere is the message history:\n");
             foreach (var message in prompt.MessageHistory)
             {
                 fullUserPrompt.Append($"- {message.Content}\n");

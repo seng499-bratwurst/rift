@@ -33,8 +33,6 @@ public class MessageController : ControllerBase
         }
         var newSessionId = Guid.NewGuid().ToString();
         Response.Headers["Temporary-Session-Id"] = newSessionId;
-        // Temperary log to make the testing easier
-        Console.WriteLine($"Created new session ID: {newSessionId}");
 
         return newSessionId;
     }
