@@ -13,6 +13,12 @@ Once installed, to run the api and database:
 * Run `docker compose up --build` in the shell of your choice
 * Once running, view the current endpoints [Here](http://localhost:5000/swagger/index.html)
 
+**(Optional)**
+* If you would like to populate the VectorDB with the document dataset, open the ChromaDB endpoints [here](http://localhost:8000/docs#/default/add_initial_documents_documents_initial_post)
+* You can run the `POST /documents/initial` endpoint to add all of the dataset to the VectorDB
+* If you want to add a few test documents, the `POST /documents/add` endpoint can be used.
+* To clear the VectorDB run `docker volume rm rift_chroma_data`
+
 
 ## Migrations
 
