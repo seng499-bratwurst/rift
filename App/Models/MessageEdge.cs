@@ -12,6 +12,8 @@ public class MessageEdge
     // JsonIgnore to prevent circular reference issues during serialization between Message and MessageEdge
     [JsonIgnore]
     public Message? SourceMessage { get; set; }
+    [JsonIgnore]
+    public Message? TargetMessage { get; set; }
 }
 
 public class PartialMessageEdge

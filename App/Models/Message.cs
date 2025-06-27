@@ -17,7 +17,8 @@ public class Message
     // Navigation properties
     public Conversation? Conversation { get; set; }
     public Message? PromptMessage { get; set; }
-    public ICollection<MessageEdge?> OutgoingEdges { get; set; } = [];
+    public ICollection<MessageEdge> OutgoingEdges { get; set; } = new List<MessageEdge>();
+    public ICollection<MessageEdge> IncomingEdges { get; set; } = new List<MessageEdge>();
 
 }
 

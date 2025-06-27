@@ -22,4 +22,6 @@ public interface IMessageService
         float xCoordinate,
         float yCoordinate
     );
+
+    Task<Message?> DeleteMessageAsync(string userId, int messageId);
 }

@@ -50,4 +50,16 @@ public class MessageRepository : IMessageRepository
             .OrderBy(m => m.CreatedAt)
             .ToListAsync();
     }
+    public async Task<Message?> DeleteAsync(string userId, int messageId)
+    {
+        var message = await GetByIdAsync(userId, messageId);
+        if (message == null)
+        {
+            return null; // Message not found
+        }
+
+        _context.Messages.Remove(message);
+        await _context.SaveChangesAsync();
+        return message;
+    }
 }

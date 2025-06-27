@@ -59,4 +59,9 @@ public class MessageService : IMessageService
 
         return await _messageRepository.UpdateAsync(message);
     }
+
+    public async Task<Message?> DeleteMessageAsync(string userId, int messageId)
+    {
+        return await _messageRepository.DeleteAsync(userId, messageId);
+    }
 }
