@@ -351,7 +351,7 @@ python ChromaDB/scripts/populate_data.py --action json --file data.json
 # Test queries
 python ChromaDB/scripts/populate_data.py --action test --query "temperature sensors"
 ```
-
+.venv/Scripts/Activate
 ### Health Monitoring
 ```bash
 # Check health

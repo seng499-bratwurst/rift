@@ -56,6 +56,7 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers();
 
 builder.Services.AddHttpClient<ChromaDBClient>();
+builder.Services.AddHttpClient<ReRankerClient>();
 
 builder.Services.AddScoped<IUserService, UserService>();
 
@@ -71,12 +72,18 @@ builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddScoped<IMessageEdgeRepository, MessageEdgeRepository>();
 builder.Services.AddScoped<IMessageEdgeService, MessageEdgeService>();
 
-builder.Services.AddScoped<RAGService>();
-builder.Services.AddScoped<ReRanker>();
+builder.Services.AddScoped<ICompanyTokenRepository, CompanyTokenRepository>();
+builder.Services.AddScoped<ICompanyTokenService, CompanyTokenService>();
+
+
+builder.Services.AddScoped<IRAGService, RAGService>();
+builder.Services.AddScoped<ReRankerClient>();
 builder.Services.AddScoped<ResponseProcessor>();
 builder.Services.AddScoped(provider =>
 {
-    var systemPrompt = "Placeholder";
+    var systemPrompt =
+        "You are a helpful ocean network canada assistant that interprets " +
+        "the data given and answers the user prompt with accuracy.";
     return new PromptBuilder(systemPrompt);
 });
 

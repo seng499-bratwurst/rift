@@ -1,53 +1,69 @@
 using System.Text.Json;
 using Rift.LLM;
 using Rift.App.Clients;
-using Rift.App.Models;
+using Rift.Models;
 
-public class RAGService
+public class RAGService : IRAGService
 {
-
     private readonly ILlmProvider _llmProvider;
     private readonly ChromaDBClient _chromaDbClient;
     private readonly PromptBuilder _promptBuilder;
-    private readonly ReRanker _reRanker;
+    private readonly ReRankerClient _reRankerClient;
     private readonly ResponseProcessor _responseProcessor;
 
     public RAGService(
         ILlmProvider llmProvider,
         ChromaDBClient chromaDbClient,
         PromptBuilder promptBuilder,
-        ReRanker reRanker,
+        ReRankerClient reRankerClient,
         ResponseProcessor responseProcessor)
     {
         _llmProvider = llmProvider;
         _chromaDbClient = chromaDbClient;
         _promptBuilder = promptBuilder;
-        _reRanker = reRanker;
+        _reRankerClient = reRankerClient;
         _responseProcessor = responseProcessor;
     }
 
-    public async Task<string> GenerateResponseAsync(string userQuery)
+    public async Task<string> GenerateResponseAsync(string userQuery, List<Message>? messageHistory)
     {
-        /// This is a rough outline of how the RAG service might work and is a starting point to
-        /// work from. Please modify and update each of these methods as we build up the pipeline.
+        /* 
+        Rough outline of the steps to generate a response a response:
+            1. Gather ONC API Data using small LLM
+            2. Get relevant data from vector database
+            3. Re-rank data
+            4. Build prompt using PromptBuilder
+            5. Generate final response using larger LLM
+            6. Process response using ResponseProcessor
+            7. Return the final response to the user
+        */
 
-        // string ONCAPIJson = await _llmProvider.GenerateONCAPICall(userQuery);
-        string ONCAPIData = "";
+        messageHistory ??= new List<Message>();
 
-        var ragContext = await _chromaDbClient.GetRelevantDataAsync(userQuery);
-        string relevantData = string.Join("\n", ragContext.RelevantDocuments.Select(d => d.Content));
+        var oncApiData = await _llmProvider.GatherOncAPIData(userQuery);
 
-        string reRankedData = _reRanker.ReRankAsync(ONCAPIData, relevantData);
+        // Might want to update this to return a list of Relevant Documents instead.
+        var relevantData = await _chromaDbClient.GetRelevantDataAsync(userQuery, similarityThreshold: 0.5);
 
-        // Build the prompt using the PromptBuilder
-        string prompt = _promptBuilder.BuildPrompt(userQuery, reRankedData);
+        // var rerankRequest = new RerankRequest
+        // {
+        //     Query = userQuery,
+        //     Docs = relevantData.RelevantDocuments.Select(doc => doc.Content).ToList()
+        // };
+        // var rerankedResponse = await _reRankerClient.RerankAsync(rerankRequest);
 
-        // Generate a response using the LLM provider
-        string responseFromLLM = await _llmProvider.GenerateFinalResponse(prompt, new JsonElement());
+        var prompt = _promptBuilder.BuildPrompt(userQuery, messageHistory, oncApiData, relevantData.RelevantDocuments.Select(doc => doc.Content).ToList());
 
-        string cleanedResponse = _responseProcessor.ProcessResponse(responseFromLLM);
+        // Console.WriteLine("Generated Prompt:");
+        // Console.WriteLine("\tUser Query: " + prompt.UserQuery);
+        // Console.WriteLine("\tMessage History: " + JsonSerializer.Serialize(prompt.MessageHistory));
+        // Console.WriteLine("\tAPI Data:" + prompt.OncAPIData);
+        // Console.WriteLine("\tRelevant Data: " + JsonSerializer.Serialize(prompt.RelevantDocuments));
 
-        // Return the generated response
+        var finalResponse = await _llmProvider.GenerateFinalResponseRAG(prompt);
+
+        var cleanedResponse = _responseProcessor.ProcessResponse(finalResponse);
+
         return cleanedResponse;
     }
 }

@@ -41,3 +41,8 @@ class BaseDocumentProcessor:
     def _extract_id(text: str) -> str:
         match = re.search(r'^# ID:\s*(.+)', text, re.MULTILINE)
         return match.group(1).strip() if match else 'Unknown'
+
+    @staticmethod
+    def _to_pascal_case(text: str):
+        parts = text.split()
+        return ''.join(word.capitalize() for word in parts) if parts else ''

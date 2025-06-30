@@ -12,5 +12,7 @@ public class ApplicationDbContext : IdentityDbContext<User>
     public DbSet<Conversation> Conversations { get; set; }
     public DbSet<Message> Messages { get; set; }
     public DbSet<MessageEdge> MessageEdges { get; set; }
+
+    public DbSet<CompanyAPITokens> CompanyAPITokens { get; set; }
     
 }

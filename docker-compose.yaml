@@ -29,6 +29,14 @@ services:
     volumes:
       - chroma_data:/chroma_data
 
+  reranker:
+    build:
+      context: ./App/Microservices
+      dockerfile: Dockerfile
+    ports:
+      - "6000:6000"
+    restart: on-failure
+
   postgres:
     image: postgres:latest
     environment:

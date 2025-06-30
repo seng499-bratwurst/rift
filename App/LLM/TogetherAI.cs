@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using System.IO;
+using Rift.App.Models;
 
 namespace Rift.LLM
 {
@@ -36,7 +37,7 @@ namespace Rift.LLM
         // }
 
         // Sends a chat completion request to Hugging Face endpoint
-        public async Task<string> GenerateONCAPICall(string prompt)
+        public async Task<string> GatherOncAPIData(string prompt)
         {
             // Equivalent cURL:
             // curl https://router.huggingface.co/together/v1/chat/completions \
@@ -104,7 +105,7 @@ namespace Rift.LLM
             var systemPrompt =
                     "You are a helpful oncean network canada assistant that interprets the data given and answers the user prompt with accuracy.";
 
-             string fullPrompt = $"{prompt}\n\nHere is the ONC API response:\n{jsonInput}";
+            string fullPrompt = $"{prompt}\n\nHere is the ONC API response:\n{jsonInput}";
             var payload = new
             {
                 model = _modelBig,
@@ -142,6 +143,12 @@ namespace Rift.LLM
 
             return result ?? "No response from Hugging Face model.";
             // return result ?? "{}";
+        }
+
+        public async Task<string> GenerateFinalResponseRAG(Prompt prompt)
+        {
+            await Task.Delay(100); // Simulate async operation
+            throw new NotImplementedException("RAG functionality is not implemented in TogetherAI.");
         }
 
     }

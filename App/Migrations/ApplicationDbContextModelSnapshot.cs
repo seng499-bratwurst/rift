@@ -153,6 +153,22 @@ namespace Rift.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Rift.Models.CompanyAPITokens", b =>
+                {
+                    b.Property<string>("CompanyName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ONCApiToken")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("Usage")
+                        .HasColumnType("integer");
+
+                    b.HasKey("CompanyName");
+
+                    b.ToTable("AspCompanyAPITokens");
+                });
+
             modelBuilder.Entity("Rift.Models.Conversation", b =>
                 {
                     b.Property<int>("Id")

@@ -1,82 +1,71 @@
 import os
-import json
 from pathlib import Path
-from typing import List, Dict
+from typing import List, Dict, Tuple
+from venv import logger
 
-from processors import ResearchPapers, ConfluenceDocuments, CambridgeBayArticles
+from processors import ResearchPapers, ConfluenceJson, CambridgeBayArticles
 
 DATA_DIR = Path(__file__).resolve().parents[2] / "Dataset" / "Markdown"
 SUPPORTED_TYPES = {
-    "cambridge_bay_papers": ("paper", ResearchPapers),
-    "cambridge_bay_web_articles": ("web_article", CambridgeBayArticles),
-    "confluence_json": ("json", ConfluenceDocuments)
+    "cambridge_bay_papers": ResearchPapers,
+    "cambridge_bay_web_articles": CambridgeBayArticles,
+    "confluence_json": ConfluenceJson
 }
+ALLOWED_TYPES = {
+    "application/pdf": ".pdf", "text/plain": ".txt",
+    "application/json": ".json", "text/markdown": ".md"
+}
+ALLOWED_EXTENSIONS = set(ALLOWED_TYPES.values())
 
-def load_files_from_dir(directory: Path) -> List[Dict]:
+
+def process_documents_by_doc_type(doc_type: str) -> List[List[dict]]:
     """
-    Load all files from a given directory.
-    Returns a list of dictionaries containing file contents and filenames.
+    Process documents into chunks within a specific document type directory name.
+    Returns a list where each element is a list of chunks for one file.
+    The length of the returned list equals the number of files in the directory.
     """
-    if not directory.exists():
-        raise FileNotFoundError(f"Directory not found: {directory}")
+    if doc_type not in SUPPORTED_TYPES:
+        raise ValueError(f"Unsupported doc_type: {doc_type}. Supported types: {list(SUPPORTED_TYPES.keys())}")
+
+    handler_cls = SUPPORTED_TYPES[doc_type]
     
-    documents = []
-    for file_path in sorted(directory.glob("*")):
-        try:
-            with open(file_path, "r", encoding="utf-8") as file:
-                documents.append({
-                    'content': file.read(),
-                    'filename': file_path.name
-                })
-        except Exception as e:
-            print(f"Error reading file {file_path}: {e}")
-    return documents
-
-def process_data_by_type(type_dir: str, source_type: str, handler_cls) -> List[Dict]:
-    """
-    Process all data of one type using the appropriate handler.
-    Returns a list of dicts with 'text' and 'metadata'.
-    """
-    full_path = Path(os.path.join(DATA_DIR, type_dir))
-    raw_docs = load_files_from_dir(full_path)
-    processor = handler_cls(raw_docs)
-    chunks_with_meta = processor.chunk_with_metadata()
-
-    processed_chunks = []
-    for chunk_data in chunks_with_meta:
-        chunk_meta = chunk_data['metadata'].copy()
-        chunk_meta['source_type'] = source_type
-
-        processed_chunks.append({
-            'text': chunk_data['text'],
-            'metadata': chunk_meta
-        })
-
-    return processed_chunks
-
-def process_all_documents() -> List[Dict]:
-    """
-    Process all documents across supported types.
-    Returns a list of all chunks with associated metadata.
-    """
-    all_chunks = []
-    for type_dir, (source_type, handler_cls) in SUPPORTED_TYPES.items():
-        print(f"Processing {type_dir}...")
-        try:
-            chunks = process_data_by_type(type_dir, source_type, handler_cls)
-            all_chunks.extend(chunks)
-        except Exception as e:
-            print(f"Error processing {type_dir}: {e}")
-    return all_chunks
-
-if __name__ == "__main__":
-    # Testing purposes only
     try:
-        all_docs = process_all_documents()
-
-        print(f"Processed {len(all_docs)} chunks across all data types.")
-        if all_docs:
-            print("\n", all_docs[0]['text'])
-            print("\n", all_docs[0]['metadata'], "\n")
+        # Get the directory path for this doc_type
+        full_path = Path(os.path.join(DATA_DIR, doc_type))
+        if not full_path.exists():
+            print(f"Directory not found: {full_path}")
+            return []
+        
+        # Get all files in the directory
+        files = sorted(full_path.glob("*"))
+        print(f"Found {len(files)} files in {doc_type}")
+        
+        # Process each file individually
+        all_document_chunks = []
+        for file_path in files:
+            try:
+                # Load single file
+                with open(file_path, "r", encoding="utf-8") as file:
+                    raw_docs = [{'content': file.read(), 'filename': file_path.name}]
+                
+                # Process this single file
+                processor = handler_cls(raw_docs)
+                chunks_for_file = processor.chunk_with_metadata()
+                
+                # Group chunks by document (in case one file has multiple documents)
+                doc_groups = {}
+                for chunk in chunks_for_file:
+                    doc_id = chunk['metadata'].get('source_type', file_path.stem)
+                    doc_groups.setdefault(doc_id, []).append(chunk)
+                
+                # Add each document group as a separate element
+                all_document_chunks.extend(doc_groups.values())
+                
+            except Exception as e:
+                print(f"Error processing file {file_path}: {e}")
+                continue
+        
+        print(f"Processed {len(all_document_chunks)} documents from {len(files)} files")
+        return all_document_chunks
     except Exception as e:
         print(f"An error occurred during processing: {e}")
