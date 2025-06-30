@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using System.Text.RegularExpressions;
 
 namespace Rift.LLM
 {
@@ -71,9 +72,9 @@ namespace Rift.LLM
 
             var response = await _httpClient.SendAsync(request);
 
-            // log the response for debugging
-            Console.WriteLine($"Response Status Code: {response.StatusCode}");
-            Console.WriteLine($"Response Headers: {response.Headers}");
+            
+            // Console.WriteLine($"Response Status Code: {response.StatusCode}");
+            // Console.WriteLine($"Response Headers: {response.Headers}");
             if (!response.IsSuccessStatusCode)
             {
                 var errorContent = await response.Content.ReadAsStringAsync();
@@ -94,26 +95,43 @@ namespace Rift.LLM
                 .GetProperty("content")
                 .GetString();
 
-            if (string.IsNullOrWhiteSpace(content))
-                return "{}";
+            // Console.WriteLine($"Content: {content}");
 
-            // using var innerDoc = JsonDocument.Parse(content);
-            using var innerDoc = JsonDocument.Parse(content);
-            bool useFunction = innerDoc.RootElement.GetProperty("use_function").GetBoolean();
-            // bool useFunction = innerDoc.RootElement.GetProperty("use_function").GetBoolean();
+    
+            var match = Regex.Match(content, @"\{(?:[^{}]|(?<open>\{)|(?<-open>\}))*\}(?(open)(?!))", RegexOptions.Singleline);
 
-            if (!useFunction)
+            object generalResponse = null;
+
+            if (!match.Success)
             {
-                return "{}";
-            }
-            else if (useFunction)
+                generalResponse = new {
+                    response = content,
+                    message = "ONC API call not required. Answer based on the user prompt."
+                };
+            }else
             {
-                var (functionName, functionParams) = _parser.ExtractFunctionAndQueries(content);
-                return await _parser.OncAPICall(functionName, functionParams);
-            }
-            // var resultContent = content.GetProperty("content").GetString();
+                String LLMContentFiltered = match.Value;
+                // Console.WriteLine($"Filtered Content: {LLMContentFiltered}");
 
-            return "{}";
+                using var innerDoc = JsonDocument.Parse(LLMContentFiltered);
+                bool useFunction = innerDoc.RootElement.GetProperty("use_function").GetBoolean();
+
+                if (!useFunction)
+                {
+                    generalResponse = new {
+                        message = "ONC API call not required. Answer based on the user prompt."
+                    };
+
+                    return JsonSerializer.Serialize(generalResponse);
+                }
+                else if (useFunction)
+                {
+                    var (functionName, functionParams) = _parser.ExtractFunctionAndQueries(LLMContentFiltered);
+                    return await _parser.OncAPICall(functionName, functionParams);
+                }
+            }
+            
+            return JsonSerializer.Serialize(generalResponse);
         }
 
         /// <summary>
