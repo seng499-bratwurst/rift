@@ -46,9 +46,10 @@ namespace Rift.LLM
         public async Task<string> GenerateONCAPICall(string prompt)
         {
             // System prompt file should be present as in other providers
-            string systemPrompt = System.IO.File.ReadAllText(
-                System.IO.Path.Combine(AppContext.BaseDirectory, "LLM/SystemPrompts", "function_call_required_or_not.md")
-            );
+            // string systemPrompt = System.IO.File.ReadAllText(
+            //     System.IO.Path.Combine(AppContext.BaseDirectory, "LLM/SystemPrompts", "function_call_required_or_not.md")
+            // );
+            string systemPrompt = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "LLM/SystemPrompts", "function_call_required_or_not.md"));
 
             var payload = new
             {
@@ -96,18 +97,23 @@ namespace Rift.LLM
             if (string.IsNullOrWhiteSpace(content))
                 return "{}";
 
+            // using var innerDoc = JsonDocument.Parse(content);
             using var innerDoc = JsonDocument.Parse(content);
-            bool useFunction = innerDoc.RootElement.TryGetProperty("use_function", out var useFuncProp) && useFuncProp.GetBoolean();
+            bool useFunction = innerDoc.RootElement.GetProperty("use_function").GetBoolean();
+            // bool useFunction = innerDoc.RootElement.GetProperty("use_function").GetBoolean();
 
             if (!useFunction)
             {
                 return "{}";
             }
-            else
+            else if (useFunction)
             {
                 var (functionName, functionParams) = _parser.ExtractFunctionAndQueries(content);
                 return await _parser.OncAPICall(functionName, functionParams);
             }
+            // var resultContent = content.GetProperty("content").GetString();
+
+            return "{}";
         }
 
         /// <summary>
