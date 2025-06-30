@@ -6,6 +6,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using System.Text.RegularExpressions;
+using Rift.App.Models;
 
 namespace Rift.LLM
 {
@@ -44,7 +45,7 @@ namespace Rift.LLM
         /// <summary>
         /// Sends a prompt to the Gemma 3n model to generate an ONC API call.
         /// </summary>
-        public async Task<string> GenerateONCAPICall(string prompt)
+        public async Task<string> GatherOncAPIData(string prompt)
         {
             // System prompt file should be present as in other providers
             // string systemPrompt = System.IO.File.ReadAllText(
@@ -176,5 +177,65 @@ namespace Rift.LLM
 
             return result ?? "No response from Gemma 3n model.";
         }
+
+        public async Task<string> GenerateFinalResponseRAG(Prompt prompt)
+        {
+
+            // I think eventually we should move this into the PromptBuilder class but 
+            // this should be okay for now. We will need to figure out the best way to
+            // feed all of this data into the LLM.
+            // ----------------------------------------------
+            var fullUserPrompt = new StringBuilder();
+            fullUserPrompt.Append("This is the User Query:\n");
+            fullUserPrompt.Append(prompt.UserQuery);
+            fullUserPrompt.Append("\n\nHere is the ONC API response:\n");
+            fullUserPrompt.Append(prompt.OncAPIData);
+            fullUserPrompt.Append("\n\nHere are relevant documents :\n");
+            foreach (var relevantDoc in prompt.RelevantDocuments)
+            {
+                fullUserPrompt.Append($"- {relevantDoc}\n");
+            }
+            fullUserPrompt.Append("\n\nHere is the message history:\n");
+            foreach (var message in prompt.MessageHistory)
+            {
+                fullUserPrompt.Append($"- {message.Content}\n");
+            }
+            // ----------------------------------------------
+
+            var payload = new
+            {
+                model = _modelName,
+                messages = new[]
+                {
+                    new { role = "system", content = prompt.SystemPrompt },
+                    new { role = "user", content = fullUserPrompt.ToString() }
+                },
+                stream = false
+            };
+
+            var json = JsonSerializer.Serialize(payload);
+
+            var request = new HttpRequestMessage(HttpMethod.Post, _endpoint)
+            {
+                Content = new StringContent(json, Encoding.UTF8, "application/json")
+            };
+
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
+
+            var response = await _httpClient.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+
+            var responseContent = await response.Content.ReadAsStringAsync();
+
+            using var doc = JsonDocument.Parse(responseContent);
+            var result = doc.RootElement
+                            .GetProperty("choices")[0]
+                            .GetProperty("message")
+                            .GetProperty("content")
+                            .GetString();
+
+            return result ?? "No response from Hugging Face model.";
+        }
+
     }
 }
