@@ -26,11 +26,12 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - chroma_data:/chroma_data
+      - chroma_data:/src/chroma_data
+      - ./Dataset:/src/Dataset
 
   reranker:
     build:
-      context: ./App/Microservices
+      context: ./ReRanker
       dockerfile: Dockerfile
     ports:
       - "6000:6000"

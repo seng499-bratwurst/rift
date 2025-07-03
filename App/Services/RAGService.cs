@@ -45,14 +45,19 @@ public class RAGService : IRAGService
         // Might want to update this to return a list of Relevant Documents instead.
         var relevantData = await _chromaDbClient.GetRelevantDataAsync(userQuery, similarityThreshold: 0.5);
 
-        // var rerankRequest = new RerankRequest
-        // {
-        //     Query = userQuery,
-        //     Docs = relevantData.RelevantDocuments.Select(doc => doc.Content).ToList()
-        // };
-        // var rerankedResponse = await _reRankerClient.RerankAsync(rerankRequest);
+        var rerankRequest = new RerankRequest
+        {
+            Query = userQuery,
+            Docs = relevantData.RelevantDocuments.Select(doc => doc.Content).ToList()
+        };
+        var rerankedResponse = await _reRankerClient.RerankAsync(rerankRequest);
 
-        var prompt = _promptBuilder.BuildPrompt(userQuery, messageHistory, oncApiData, relevantData.RelevantDocuments.Select(doc => doc.Content).ToList());
+        var prompt = _promptBuilder.BuildPrompt(
+            userQuery,
+            messageHistory,
+            oncApiData,
+            rerankedResponse?.Reranked_Docs ?? new List<string>()
+        );
 
         // Console.WriteLine("Generated Prompt:");
         // Console.WriteLine("\tUser Query: " + prompt.UserQuery);
