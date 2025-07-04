@@ -329,7 +329,7 @@ public class MessageController : ControllerBase
 
         if (string.IsNullOrEmpty(userId))
         {
-            return Unauthorized(new ApiResponse<IEnumerable<Conversation>>
+            return Unauthorized(new ApiResponse<Message>
             {
                 Success = false,
                 Error = "Unauthorized",
