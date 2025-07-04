@@ -13,6 +13,12 @@ Once installed, to run the api and database:
 * Run `docker compose up --build` in the shell of your choice
 * Once running, view the current endpoints [Here](http://localhost:5000/swagger/index.html)
 
+**(Optional)**
+* If you would like to populate the VectorDB with the document dataset, open the ChromaDB endpoints [here](http://localhost:8000/docs#/default/add_initial_documents_documents_initial_post)
+* You can run the `POST /documents/initial` endpoint to add all of the dataset to the VectorDB
+* If you want to add a few test documents, the `POST /documents/add` endpoint can be used.
+* To clear the VectorDB run `docker volume rm rift_chroma_data`
+
 
 ## Migrations
 
@@ -28,6 +34,8 @@ For contributing to the Python API you will need to complete the following steps
 
 * **(Optional)** Setup a Python virtual environment by running `python3 -m venv .venv` in the root directory of the project. Don't forget to activate the venv when working on the API!
 * Install the required packages by running `pip install -r requirements.txt` in the `/ChromaDB` subdirectory
+
+More information on the ChromaDB configuration can be found [Here](ChromaDB/config/chroma_config.md)
 
 
 

@@ -102,6 +102,7 @@ class UpdateDocumentRequest(BaseModel):
     text: Optional[str] = None
     metadata: Optional[Dict[str, Any]] = None
 
+# Collection Management
 def get_or_create_collection(collection_name: str):
     """Gets a collection or creates it if it doesn't exist."""
     try:

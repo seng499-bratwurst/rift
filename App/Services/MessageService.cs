@@ -1,7 +1,5 @@
 using Rift.Models;
 using Rift.Repositories;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Rift.Services;
 
@@ -38,7 +36,12 @@ public class MessageService : IMessageService
 
     public async Task<List<Message>> GetMessagesForConversationAsync(string userId, int conversationId)
     {
-        return await _messageRepository.GetMessagesByConversationIdAsync(userId, conversationId);
+        return await _messageRepository.GetUserConversationMessagesAsync(userId, conversationId);
+    }
+
+    public async Task<List<Message>> GetGuestMessagesForConversationAsync(string sessionId, int conversationId)
+    {
+        return await _messageRepository.GetGuestConversationMessagesAsync(sessionId, conversationId);
     }
 
     public async Task<Message?> UpdateMessageAsync(

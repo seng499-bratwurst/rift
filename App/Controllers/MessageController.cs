@@ -3,8 +3,6 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Rift.Models;
 using Rift.Services;
-using Rift.LLM;
-using System.Text.Json;
 
 namespace Rift.Controllers;
 
@@ -15,13 +13,14 @@ public class MessageController : ControllerBase
     private readonly IMessageService _messageService;
     private readonly IMessageEdgeService _messageEdgeService;
     private readonly IConversationService _conversationService;
-    private readonly ILlmProvider _llmProvider;
 
-    public MessageController(IMessageService messageService, IConversationService conversationService, ILlmProvider llmProvider, IMessageEdgeService messageEdgeService)
+    private readonly IRAGService _ragService;
+
+    public MessageController(IMessageService messageService, IConversationService conversationService, IRAGService ragService, IMessageEdgeService messageEdgeService)
     {
         _messageService = messageService;
         _messageEdgeService = messageEdgeService;
-        _llmProvider = llmProvider;
+        _ragService = ragService;
         _conversationService = conversationService;
     }
 
@@ -79,26 +78,22 @@ public class MessageController : ControllerBase
             });
         }
 
-        var response = await _llmProvider.GenerateONCAPICall(request.Content);
-        using var doc = JsonDocument.Parse(response);
-
-        // Clone it so we can return it after the doc is disposed
-        JsonElement json = doc.RootElement.Clone();
-
-        var finalRes = await _llmProvider.GenerateFinalResponse(request.Content, json);
-
         // If userId is null, send the response back without storing it
         if (string.IsNullOrEmpty(userId))
         {
-            return Ok(new ApiResponse<string>
+            return Unauthorized(new ApiResponse<string>
             {
-                Success = true,
-                Error = null,
-                Data = finalRes
+                Success = false,
+                Error = "Unauthorized",
             });
         }
 
-        var conversationId = conversation?.Id;
+        var conversationId = request.ConversationId ?? conversation!.Id;
+
+        var messageHistory = await _messageService.GetMessagesForConversationAsync(userId, conversationId);
+
+        var llmResponse = await _ragService.GenerateResponseAsync(request.Content, messageHistory);
+
 
         // Create the message with the users prompt
         var promptMessage = await _messageService.CreateMessageAsync(
@@ -114,7 +109,7 @@ public class MessageController : ControllerBase
         var responseMessage = await _messageService.CreateMessageAsync(
             conversationId,
             promptMessage?.Id,
-            finalRes,
+            llmResponse,
             "assistant",
             request.ResponseXCoordinate,
             request.ResponseYCoordinate
@@ -155,7 +150,7 @@ public class MessageController : ControllerBase
             Data = new
             {
                 ConversationId = conversationId,
-                Response = finalRes,
+                Response = llmResponse,
                 PromptMessageId = promptMessage?.Id,
                 ResponseMessageId = responseMessage?.Id,
                 CreatedEdges = (new[] { promptToResponseEdge }).Concat(edges).ToArray(),
@@ -182,13 +177,7 @@ public class MessageController : ControllerBase
             });
         }
 
-        var response = await _llmProvider.GenerateONCAPICall(request.Content);
-        using var doc = JsonDocument.Parse(response);
 
-        // Clone it so we can return it after the doc is disposed
-        JsonElement json = doc.RootElement.Clone();
-
-        var finalRes = await _llmProvider.GenerateFinalResponse(request.Content, json);
         // If there is no conversationId, create a new conversation for the session
         Conversation? conversation = await _conversationService.GetConversationsForSessionAsync(sessionId);
 
@@ -197,7 +186,11 @@ public class MessageController : ControllerBase
             conversation = await _conversationService.CreateConversationBySessionId(sessionId);
         }
 
-        var conversationId = conversation?.Id;
+        var conversationId = conversation!.Id;
+
+        var messageHistory = await _messageService.GetGuestMessagesForConversationAsync(sessionId, conversationId);
+
+        var llmResponse = await _ragService.GenerateResponseAsync(request.Content, messageHistory);
 
         // Store the user's message
         var promptMessage = await _messageService.CreateMessageAsync(
@@ -213,7 +206,7 @@ public class MessageController : ControllerBase
         var responseMessage = await _messageService.CreateMessageAsync(
             conversationId,
             promptMessage?.Id,
-            finalRes,
+            llmResponse,
             "assistant",
             request.ResponseXCoordinate,
             request.ResponseYCoordinate
@@ -255,7 +248,7 @@ public class MessageController : ControllerBase
             Error = null,
             Data = new
             {
-                Response = finalRes,
+                Response = llmResponse,
                 SessionId = sessionId,
                 PromptMessageId = promptMessage?.Id,
                 ResponseMessageId = responseMessage?.Id,

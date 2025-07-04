@@ -19,7 +19,7 @@ namespace Rift.Tests
         private Mock<IMessageService> _messageServiceMock;
         private Mock<IMessageEdgeService> _messageEdgeServiceMock;
         private Mock<IConversationService> _conversationServiceMock;
-        private Mock<ILlmProvider> _llmProviderMock;
+        private Mock<IRAGService> _ragServiceMock;
 
         [TestInitialize]
         public void Setup()
@@ -27,7 +27,7 @@ namespace Rift.Tests
             _messageServiceMock = new Mock<IMessageService>();
             _messageEdgeServiceMock = new Mock<IMessageEdgeService>();
             _conversationServiceMock = new Mock<IConversationService>();
-            _llmProviderMock = new Mock<ILlmProvider>();
+            _ragServiceMock = new Mock<IRAGService>();
         }
 
         private MessageController CreateControllerWithUser(string userId)
@@ -39,7 +39,7 @@ namespace Rift.Tests
             var controller = new MessageController(
                 _messageServiceMock.Object,
                 _conversationServiceMock.Object,
-                _llmProviderMock.Object,
+                _ragServiceMock.Object,
                 _messageEdgeServiceMock.Object
             );
             controller.ControllerContext = new ControllerContext
@@ -54,7 +54,7 @@ namespace Rift.Tests
             var controller = new MessageController(
                 _messageServiceMock.Object,
                 _conversationServiceMock.Object,
-                _llmProviderMock.Object,
+                _ragServiceMock.Object,
                 _messageEdgeServiceMock.Object
             );
             controller.ControllerContext = new ControllerContext
@@ -124,8 +124,7 @@ namespace Rift.Tests
             _conversationServiceMock.Setup(s => s.GetOrCreateConversationByUserId(userId, null))
                 .ReturnsAsync(conversation);
 
-            _llmProviderMock.Setup(l => l.GenerateONCAPICall("Hello")).ReturnsAsync("{\"response\":\"Hi!\"}");
-            _llmProviderMock.Setup(l => l.GenerateFinalResponse("Hello", It.IsAny<JsonElement>())).ReturnsAsync("Hi!");
+            _ragServiceMock.Setup(l => l.GenerateResponseAsync("Hello", null)).ReturnsAsync("Hi!");
 
             _messageServiceMock.Setup(m => m.CreateMessageAsync(conversation.Id, null, "Hello", "user", 0, 0))
                 .ReturnsAsync(promptMessage);
