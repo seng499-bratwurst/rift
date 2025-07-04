@@ -344,7 +344,7 @@ public class MessageController : ControllerBase
             return NotFound(new ApiResponse<Message>
             {
                 Success = false,
-                Error = "Conversation not found",
+                Error = "Message not found",
                 Data = null
             });
         }
