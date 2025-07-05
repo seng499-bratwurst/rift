@@ -321,6 +321,41 @@ public class MessageController : ControllerBase
         });
     }
 
+    [HttpDelete("messages/{messageId}")]
+    [Authorize(AuthenticationSchemes = "Bearer")]
+    public async Task<IActionResult> DeleteMessage(int messageId)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized(new ApiResponse<Message>
+            {
+                Success = false,
+                Error = "Unauthorized",
+                Data = null
+            });
+        }
+
+        var message = await _messageService.DeleteMessageAsync(userId, messageId);
+
+        if (message == null)
+        {
+            return NotFound(new ApiResponse<Message>
+            {
+                Success = false,
+                Error = "Message not found",
+                Data = null
+            });
+        }
+
+        return Ok(new ApiResponse<Message>
+        {
+            Success = true,
+            Error = null,
+            Data = message
+        });
+    }
     public class CreateMessageRequest
     {
         public int? ConversationId { get; set; }
