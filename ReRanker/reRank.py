@@ -20,6 +20,9 @@ async def rerank(request: RerankRequest):
     query = request.query
     docs = request.docs
 
+    if not docs:
+        return {"reranked_docs": []}
+
     pairs = [f"{query} [SEP] {doc}" for doc in docs]
     inputs = tokenizer(pairs, return_tensors='pt', padding=True, truncation=True)
     with torch.no_grad():
