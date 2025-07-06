@@ -144,7 +144,6 @@ public class AuthController : ControllerBase
 
     private void SetJwtCookie(string jwt)
     {
-        Console.WriteLine($"ENV {_isProduction}");
         Response.Cookies.Append("jwt", jwt, new CookieOptions
         {
             HttpOnly = true,
