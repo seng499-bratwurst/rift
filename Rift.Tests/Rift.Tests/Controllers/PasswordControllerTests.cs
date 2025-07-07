@@ -1,13 +1,8 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
-using System.Collections.Generic;
 using System.Security.Claims;
-using System.Threading.Tasks;
 using Rift.Models;
-using Rift.Controllers;
-using System.Linq;
 
 namespace Rift.Tests
 {

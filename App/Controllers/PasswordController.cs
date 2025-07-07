@@ -18,7 +18,7 @@ public class PasswordController : ControllerBase
         _userManager = userManager;
     }
 
-    [HttpPatch("")]
+    [HttpPatch]
     [Authorize]
     public async Task<IActionResult> PasswordReset([FromBody] PasswordResetModel model)
     {
