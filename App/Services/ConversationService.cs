@@ -1,5 +1,6 @@
 namespace Rift.Services;
 
+using Microsoft.VisualBasic;
 using Rift.Models;
 
 public class ConversationService : IConversationService
@@ -53,5 +54,10 @@ public class ConversationService : IConversationService
             conversation = await GetConversationById(userId, conversationId.Value);
         }
         return conversation;
+    }
+
+    public async Task<Conversation?> UpdateLastInteractionTime(int conversationId)
+    {
+        return await _repository.UpdateLastInteractionTime(conversationId);
     }
 }
