@@ -1,9 +1,5 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Rift.Models;
-using Rift.Repositories;
 using Rift.Services;
 
 namespace Rift.Tests.Services
