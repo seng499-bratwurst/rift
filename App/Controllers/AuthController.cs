@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Rift.Models;
 using Rift.Services;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 [ApiController]
 [Route("api")]
@@ -11,15 +12,21 @@ public class AuthController : ControllerBase
     private readonly UserManager<User> _userManager;
     private readonly SignInManager<User> _signInManager;
     private readonly JwtTokenService _jwtTokenService;
+    private readonly IWebHostEnvironment _env;
+    private bool _isProduction => _env.IsProduction();
+
 
     public AuthController(
         UserManager<User> userManager,
         SignInManager<User> signInManager,
-        IConfiguration configuration)
+        IConfiguration configuration,
+        IWebHostEnvironment env
+    )
     {
         _userManager = userManager;
         _signInManager = signInManager;
         _jwtTokenService = new JwtTokenService(configuration);
+        _env = env;
     }
 
     [HttpPost("register")]
@@ -47,7 +54,21 @@ public class AuthController : ControllerBase
             await _userManager.AddToRoleAsync(user, "User");
             var roles = await _userManager.GetRolesAsync(user);
             var jwt = _jwtTokenService.GenerateJwtToken(user, roles);
-            return Ok(new { jwt });
+
+            SetJwtCookie(jwt);
+
+            return Ok(new
+            {
+                jwt,
+                roles,
+                user = new
+                {
+                    user.Id,
+                    user.Name,
+                    user.Email,
+                    user.ONCApiToken
+                }
+            });
         }
 
         return BadRequest(result.Errors);
@@ -68,10 +89,68 @@ public class AuthController : ControllerBase
         {
             var roles = await _userManager.GetRolesAsync(user);
             var jwt = _jwtTokenService.GenerateJwtToken(user, roles);
-            return Ok(new { jwt });
+
+            SetJwtCookie(jwt);
+
+            return Ok(new
+            {
+                jwt,
+                roles,
+                user = new
+                {
+                    user.Id,
+                    user.Name,
+                    user.Email,
+                    user.ONCApiToken
+                }
+            });
         }
 
         return Unauthorized("Invalid username or password.");
+    }
+
+    [HttpGet("me")]
+    [Authorize]
+    public async Task<IActionResult> Me()
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized();
+        }
+
+        var user = await _userManager.FindByIdAsync(userId);
+
+        if (user == null)
+        {
+            return Unauthorized();
+        }
+
+        var roles = await _userManager.GetRolesAsync(user);
+
+        return Ok(new
+        {
+            roles,
+            user = new
+            {
+                user.Id,
+                user.Name,
+                user.Email,
+                user.ONCApiToken
+            }
+        });
+    }
+
+    private void SetJwtCookie(string jwt)
+    {
+        Response.Cookies.Append("jwt", jwt, new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = _isProduction,
+            SameSite = _isProduction ? SameSiteMode.Strict : SameSiteMode.Lax,
+            Expires = DateTimeOffset.UtcNow.AddHours(1),
+        });
     }
 
     public class RegisterModel

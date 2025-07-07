@@ -8,6 +8,8 @@ using Rift.Services;
 using Rift.Controllers;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 
 namespace Rift.Tests
 {
@@ -17,6 +19,7 @@ namespace Rift.Tests
         private Mock<UserManager<User>> _userManagerMock;
         private Mock<SignInManager<User>> _signInManagerMock;
         private Mock<IConfiguration> _configurationMock;
+        private Mock<IWebHostEnvironment> _webHostEnvironmentMock;
 
         [TestInitialize]
         public void Setup()
@@ -44,6 +47,8 @@ namespace Rift.Tests
                 .Returns((string key) => configuration[key]);
             _configurationMock.Setup(x => x.GetSection(It.IsAny<string>()))
                 .Returns((string key) => configuration.GetSection(key));
+
+            _webHostEnvironmentMock = new Mock<IWebHostEnvironment>();
         }
 
         [TestMethod]
@@ -53,7 +58,7 @@ namespace Rift.Tests
             _userManagerMock.Setup(x => x.FindByEmailAsync(It.IsAny<string>()))
                 .ReturnsAsync(existingUser);
 
-            var controller = new AuthController(_userManagerMock.Object, _signInManagerMock.Object, _configurationMock.Object);
+            var controller = new AuthController(_userManagerMock.Object, _signInManagerMock.Object, _configurationMock.Object, _webHostEnvironmentMock.Object);
 
             var model = new AuthController.RegisterModel
             {
@@ -79,7 +84,12 @@ namespace Rift.Tests
             _userManagerMock.Setup(x => x.GetRolesAsync(It.IsAny<User>()))
                 .ReturnsAsync(new List<string> { "User" });
 
-            var controller = new AuthController(_userManagerMock.Object, _signInManagerMock.Object, _configurationMock.Object);
+            var controller = new AuthController(_userManagerMock.Object, _signInManagerMock.Object, _configurationMock.Object, _webHostEnvironmentMock.Object);
+
+            controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = new DefaultHttpContext()
+            };
 
             var model = new AuthController.RegisterModel
             {
@@ -101,7 +111,7 @@ namespace Rift.Tests
             _userManagerMock.Setup(x => x.CreateAsync(It.IsAny<User>(), It.IsAny<string>()))
                 .ReturnsAsync(IdentityResult.Failed(new IdentityError { Description = "Error" }));
 
-            var controller = new AuthController(_userManagerMock.Object, _signInManagerMock.Object, _configurationMock.Object);
+            var controller = new AuthController(_userManagerMock.Object, _signInManagerMock.Object, _configurationMock.Object, _webHostEnvironmentMock.Object);
 
             var model = new AuthController.RegisterModel
             {
@@ -121,7 +131,7 @@ namespace Rift.Tests
             _userManagerMock.Setup(x => x.FindByEmailAsync(It.IsAny<string>()))
                 .ReturnsAsync((User)null);
 
-            var controller = new AuthController(_userManagerMock.Object, _signInManagerMock.Object, _configurationMock.Object);
+            var controller = new AuthController(_userManagerMock.Object, _signInManagerMock.Object, _configurationMock.Object, _webHostEnvironmentMock.Object);
 
             var model = new AuthController.LoginModel
             {
@@ -143,7 +153,7 @@ namespace Rift.Tests
             _signInManagerMock.Setup(x => x.CheckPasswordSignInAsync(user, It.IsAny<string>(), false))
                 .ReturnsAsync(Microsoft.AspNetCore.Identity.SignInResult.Failed);
 
-            var controller = new AuthController(_userManagerMock.Object, _signInManagerMock.Object, _configurationMock.Object);
+            var controller = new AuthController(_userManagerMock.Object, _signInManagerMock.Object, _configurationMock.Object, _webHostEnvironmentMock.Object);
 
             var model = new AuthController.LoginModel
             {
@@ -167,7 +177,12 @@ namespace Rift.Tests
             _userManagerMock.Setup(x => x.GetRolesAsync(user))
                 .ReturnsAsync(new List<string> { "User" });
 
-            var controller = new AuthController(_userManagerMock.Object, _signInManagerMock.Object, _configurationMock.Object);
+            var controller = new AuthController(_userManagerMock.Object, _signInManagerMock.Object, _configurationMock.Object, _webHostEnvironmentMock.Object);
+
+            controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = new DefaultHttpContext()
+            };
 
             var model = new AuthController.LoginModel
             {

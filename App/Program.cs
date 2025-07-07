@@ -45,9 +45,10 @@ builder.Services.AddIdentity<User, IdentityRole>()
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAllOrigins", policy =>
+    options.AddPolicy("CorsPolicy", policy =>
     {
-        policy.AllowAnyOrigin()
+        policy.WithOrigins(builder.Configuration["Jwt:Audience"] ?? "http://localhost:3000")
+              .AllowCredentials()
               .AllowAnyMethod()
               .AllowAnyHeader();
     });
@@ -129,6 +130,19 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(
             Encoding.UTF8.GetBytes(jwtKey))
     };
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            // If the Authorization header is missing, try to get token from cookie
+            var token = context.Request.Cookies["jwt"];
+            if (!string.IsNullOrEmpty(token))
+            {
+                context.Token = token;
+            }
+            return Task.CompletedTask;
+        }
+    };
 });
 
 // Add Authorization
@@ -155,7 +169,7 @@ using (var scope = app.Services.CreateScope())
 app.UseRouting();
 
 app.UseAuthentication();
-app.UseCors("AllowAllOrigins");
+app.UseCors("CorsPolicy");
 app.UseAuthorization();
 
 app.UseEndpoints(endpoints =>
