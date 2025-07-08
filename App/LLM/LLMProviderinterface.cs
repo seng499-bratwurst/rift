@@ -8,6 +8,6 @@ namespace Rift.LLM
     {
         Task<string> GatherOncAPIData(string prompt);
         Task<string> GenerateFinalResponse(string prompt, JsonElement onc_api_response);
-        Task<string> GenerateFinalResponseRAG(Prompt prompt);
+        IAsyncEnumerable<string> GenerateFinalResponseRAG(Prompt prompt);
     }
 }

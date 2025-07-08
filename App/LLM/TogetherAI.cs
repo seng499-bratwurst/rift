@@ -145,10 +145,11 @@ namespace Rift.LLM
             // return result ?? "{}";
         }
 
-        public async Task<string> GenerateFinalResponseRAG(Prompt prompt)
+        public async IAsyncEnumerable<string> GenerateFinalResponseRAG(Prompt prompt)
         {
             await Task.Delay(100); // Simulate async operation
-            throw new NotImplementedException("RAG functionality is not implemented in TogetherAI.");
+            // throw new NotImplementedException("RAG functionality is not implemented in TogetherAI.");
+            yield return "RAG functionality is not implemented in TogetherAI.";
         }
 
     }

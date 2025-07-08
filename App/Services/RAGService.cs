@@ -25,7 +25,7 @@ public class RAGService : IRAGService
         _responseProcessor = responseProcessor;
     }
 
-    public async Task<string> GenerateResponseAsync(string userQuery, List<Message>? messageHistory)
+    public async IAsyncEnumerable<string> GenerateResponseAsync(string userQuery, List<Message>? messageHistory)
     {
         /* 
         Rough outline of the steps to generate a response a response:
@@ -37,11 +37,10 @@ public class RAGService : IRAGService
             6. Process response using ResponseProcessor
             7. Return the final response to the user
         */
-
+    
         messageHistory ??= new List<Message>();
-
+        var startTime = DateTime.UtcNow;
         var oncApiData = await _llmProvider.GatherOncAPIData(userQuery);
-
         // Might want to update this to return a list of Relevant Documents instead.
         var relevantData = await _chromaDbClient.GetRelevantDataAsync(userQuery, similarityThreshold: 0.5);
 
@@ -58,17 +57,12 @@ public class RAGService : IRAGService
             oncApiData,
             rerankedResponse?.Reranked_Docs ?? new List<string>()
         );
-
-        // Console.WriteLine("Generated Prompt:");
-        // Console.WriteLine("\tUser Query: " + prompt.UserQuery);
-        // Console.WriteLine("\tMessage History: " + JsonSerializer.Serialize(prompt.MessageHistory));
-        // Console.WriteLine("\tAPI Data:" + prompt.OncAPIData);
-        // Console.WriteLine("\tRelevant Data: " + JsonSerializer.Serialize(prompt.RelevantDocuments));
-
-        var finalResponse = await _llmProvider.GenerateFinalResponseRAG(prompt);
-
-        var cleanedResponse = _responseProcessor.ProcessResponse(finalResponse);
-
-        return cleanedResponse;
+    
+        var responseBuilder = new System.Text.StringBuilder();
+        await foreach (var chunk in _llmProvider.GenerateFinalResponseRAG(prompt))
+        {
+            yield return chunk;
+        }
+        yield return responseBuilder.ToString();
     }
 }

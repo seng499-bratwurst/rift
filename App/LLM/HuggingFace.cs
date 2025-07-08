@@ -85,9 +85,11 @@ namespace Rift.LLM
                     details = message.GetProperty("content").GetString(),
                     message = "ONC API call not required. Answer based on the user prompt."
                 };
-            }else{
-                 String LLMContentFiltered = match.Value;
-                 Console.WriteLine("LLMContentFiltered: "+ LLMContentFiltered);
+            }
+            else
+            {
+                String LLMContentFiltered = match.Value;
+                Console.WriteLine("LLMContentFiltered: " + LLMContentFiltered);
 
 
                 using JsonDocument innerDoc = JsonDocument.Parse(LLMContentFiltered);
@@ -101,7 +103,7 @@ namespace Rift.LLM
                 else if (useFunction)
                 {
                     var (functionName, functionParams) = _parser.ExtractFunctionAndQueries(LLMContentFiltered);
-                    
+
                     return await _parser.OncAPICall(functionName, functionParams);
                 }
             }
@@ -144,7 +146,7 @@ namespace Rift.LLM
             // Console.WriteLine("response: "+response);
             // Console.WriteLine("response.IsSuccessStatusCode: "+response.IsSuccessStatusCode);
             response.EnsureSuccessStatusCode();
-            
+
 
             var responseContent = await response.Content.ReadAsStringAsync();
 
@@ -157,9 +159,9 @@ namespace Rift.LLM
 
             return result ?? "No response from Hugging Face model.";
         }
-        
 
-        public async Task<string> GenerateFinalResponseRAG(Prompt prompt)
+
+        public async IAsyncEnumerable<string> GenerateFinalResponseRAG(Prompt prompt)
         {
 
             // I think eventually we should move this into the PromptBuilder class but 
@@ -191,7 +193,7 @@ namespace Rift.LLM
                     new { role = "system", content = prompt.SystemPrompt },
                     new { role = "user", content = fullUserPrompt.ToString() }
                 },
-                stream = false
+                stream = true
             };
 
             var json = JsonSerializer.Serialize(payload);
@@ -203,19 +205,45 @@ namespace Rift.LLM
 
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
 
-            var response = await _httpClient.SendAsync(request);
+            var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
             response.EnsureSuccessStatusCode();
 
-            var responseContent = await response.Content.ReadAsStringAsync();
+            using var stream = await response.Content.ReadAsStreamAsync();
+            using var reader = new StreamReader(stream);
 
-            using var doc = JsonDocument.Parse(responseContent);
-            var result = doc.RootElement
-                            .GetProperty("choices")[0]
-                            .GetProperty("message")
-                            .GetProperty("content")
-                            .GetString();
+            while (!reader.EndOfStream)
+            {
+                var line = await reader.ReadLineAsync();
+                if (string.IsNullOrWhiteSpace(line))
+                    continue;
 
-            return result ?? "No response from Hugging Face model.";
+                if (line.StartsWith("data: "))
+                    line = line.Substring("data: ".Length);
+
+                if (line == "[DONE]")
+                    break;
+
+                // Each line is a JSON object
+                string? content = null;
+                try
+                {
+                    using var doc = JsonDocument.Parse(line);
+                    content = doc.RootElement
+                        .GetProperty("choices")[0]
+                        .GetProperty("delta")
+                        .GetProperty("content")
+                        .GetString();
+                }
+                catch
+                {
+                    // Ignore malformed lines
+                }
+
+                if (!string.IsNullOrEmpty(content))
+                {
+                    yield return content;
+                }
+            }
         }
     }
 }

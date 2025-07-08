@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Rift.Models;
 using Rift.Services;
+using System.Text;
 
 namespace Rift.Controllers;
 
@@ -89,11 +90,21 @@ public class MessageController : ControllerBase
         }
 
         var conversationId = request.ConversationId ?? conversation!.Id;
-
         var messageHistory = await _messageService.GetMessagesForConversationAsync(userId, conversationId);
+        Response.ContentType = "text/event-stream";
+        var sb = new StringBuilder();
 
-        var llmResponse = await _ragService.GenerateResponseAsync(request.Content, messageHistory);
+        // Stream the response as it is generated
+        await foreach (var chunk in _ragService.GenerateResponseAsync(request.Content, messageHistory))
+        {
+            var data = $"data: {chunk}\n\n";
+            await Response.Body.WriteAsync(Encoding.UTF8.GetBytes(data));
+            await Response.Body.FlushAsync();
+            sb.Append(chunk);
+        }
 
+        // After streaming, save the assistant message in DB
+        var finalResponse = sb.ToString();
 
         // Create the message with the users prompt
         var promptMessage = await _messageService.CreateMessageAsync(
@@ -109,7 +120,7 @@ public class MessageController : ControllerBase
         var responseMessage = await _messageService.CreateMessageAsync(
             conversationId,
             promptMessage?.Id,
-            llmResponse,
+            finalResponse,
             "assistant",
             request.ResponseXCoordinate,
             request.ResponseYCoordinate
@@ -150,7 +161,7 @@ public class MessageController : ControllerBase
             Data = new
             {
                 ConversationId = conversationId,
-                Response = llmResponse,
+                Response = finalResponse,
                 PromptMessageId = promptMessage?.Id,
                 ResponseMessageId = responseMessage?.Id,
                 CreatedEdges = (new[] { promptToResponseEdge }).Concat(edges).ToArray(),
@@ -190,7 +201,20 @@ public class MessageController : ControllerBase
 
         var messageHistory = await _messageService.GetGuestMessagesForConversationAsync(sessionId, conversationId);
 
-        var llmResponse = await _ragService.GenerateResponseAsync(request.Content, messageHistory);
+        Response.ContentType = "text/event-stream";
+        var sb = new StringBuilder();
+
+        // Stream the response as it is generated
+        await foreach (var chunk in _ragService.GenerateResponseAsync(request.Content, messageHistory))
+        {
+            var data = $"data: {chunk}\n\n";
+            await Response.Body.WriteAsync(Encoding.UTF8.GetBytes(data));
+            await Response.Body.FlushAsync();
+            sb.Append(chunk);
+        }
+
+        // After streaming, save the assistant message in DB
+        var finalResponse = sb.ToString();
 
         // Store the user's message
         var promptMessage = await _messageService.CreateMessageAsync(
@@ -206,7 +230,7 @@ public class MessageController : ControllerBase
         var responseMessage = await _messageService.CreateMessageAsync(
             conversationId,
             promptMessage?.Id,
-            llmResponse,
+            finalResponse,
             "assistant",
             request.ResponseXCoordinate,
             request.ResponseYCoordinate
@@ -248,7 +272,7 @@ public class MessageController : ControllerBase
             Error = null,
             Data = new
             {
-                Response = llmResponse,
+                Response = finalResponse,
                 SessionId = sessionId,
                 PromptMessageId = promptMessage?.Id,
                 ResponseMessageId = responseMessage?.Id,
