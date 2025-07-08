@@ -11,6 +11,9 @@ import uvicorn
 import sys
 from pathlib import Path
 from datetime import datetime
+from fastapi import UploadFile, File, Form
+from rag_data_processing import SUPPORTED_TYPES
+from enum import Enum
 
 project_root = Path(__file__).parent.parent
 scripts_dir = project_root / "scripts"
@@ -101,6 +104,12 @@ class CollectionInfo(BaseModel):
 class UpdateDocumentRequest(BaseModel):
     text: Optional[str] = None
     metadata: Optional[Dict[str, Any]] = None
+
+# Enum for supported doc types (for OpenAPI dropdown)
+class DocTypeEnum(str, Enum):
+    cambridge_bay_papers = "cambridge_bay_papers"
+    cambridge_bay_web_articles = "cambridge_bay_web_articles"
+    confluence_json = "confluence_json"
 
 # Collection Management
 def get_or_create_collection(collection_name: str):
@@ -204,7 +213,7 @@ async def add_document(request: AddRequest):
 @app.post("/documents/initial")
 async def add_initial_documents():
     """Add the initial documents that exist internally within the repo. Run with caution - this can take several minutes."""
-    doc_types = ["cambridge_bay_papers", "cambridge_bay_web_articles", "confluence_json"]
+    doc_types = ["cambridge_bay_papers", "cambridge_bay_web_articles", "confluence_json"] # TODO: Change this to SUPPORTED_TYPES
     batch_size = 100
     
     try:
@@ -262,45 +271,77 @@ async def add_initial_documents():
         logger.error(f"Failed to add initial documents: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"An error occurred during initial document processing: {e}")
 
+@app.get("/supported_doc_types")
+def get_supported_doc_types():
+    """Return the supported doc types for use in frontends."""
+    return {"doc_types": list(SUPPORTED_TYPES.keys())}
+
 @app.post("/documents/batch")
-async def add_batch_documents(request: BatchDocuments):
-    """Add multiple documents to the collection in batch."""
+async def add_batch_documents(
+    files: List[UploadFile] = File(...),
+    doc_types: List[DocTypeEnum] = Form(...),
+    collection_name: str = Form("oceanographic_data")
+):
+    """Add multiple documents to the collection in batch via file upload and doc type selection."""
+    if len(files) != len(doc_types):
+        raise HTTPException(status_code=400, detail="Number of files and doc_types must match.")
+    batch_size = 100
     try:
-        collection = get_or_create_collection(collection_name="oceanographic_data")
-
-        documents = [doc.text for doc in request.documents]
-        ids = [doc.id for doc in request.documents]
-
-        # Clean metadatas to remove None values and convert lists to strings
-        metadatas = []
-        for doc in request.documents:
-            if doc.metadata:
-                # Convert the model to dict
-                metadata_dict = doc.metadata.dict()
-
-                # Convert any list values to comma-separated strings
-                for key, value in metadata_dict.items():
-                    if isinstance(value, list):
-                        metadata_dict[key] = ",".join(str(item) for item in value)
-
-                # Remove None values
-                clean_metadata = {k: v for k, v in metadata_dict.items() if v is not None}
-                metadatas.append(clean_metadata if clean_metadata else None)
-            else:
-                metadatas.append(None)
-
-        collection.add(
-            documents=documents,
-            ids=ids,
-            metadatas=metadatas
-        )
-
-        logger.info(f"Added {len(documents)} documents to {request.collection_name}")
-        return {"status": "added", "count": len(documents)}
-
+        collection = get_or_create_collection(collection_name=collection_name)
+        all_documents = []
+        all_ids = []
+        all_metadatas = []
+        name_counters = {}
+        status_map = {}  # id -> 'added' or 'replaced'
+        for file, doc_type in zip(files, doc_types):
+            if doc_type not in SUPPORTED_TYPES:
+                raise HTTPException(status_code=400, detail=f"Unsupported doc_type: {doc_type}")
+            content = (await file.read()).decode("utf-8")
+            filename = file.filename
+            raw_docs = [{'content': content, 'filename': filename}]
+            processor_cls = SUPPORTED_TYPES[doc_type]
+            processor = processor_cls(raw_docs)
+            chunks = processor.chunk_with_metadata()
+            for chunk in chunks:
+                name = chunk['metadata'].get('name', filename)
+                idx = name_counters.get(name, 0)
+                chunk_id = f"{name}_{idx}"
+                name_counters[name] = idx + 1
+                # Check if this ID already exists
+                try:
+                    existing = collection.get(ids=[chunk_id], include=["ids"])
+                    exists = existing and existing.get("ids") and existing["ids"][0]
+                except Exception:
+                    exists = False
+                all_documents.append(chunk['text'])
+                all_metadatas.append(chunk['metadata'])
+                all_ids.append(chunk_id)
+                status_map[chunk_id] = "replaced" if exists else "added"
+        if not all_documents:
+            return {"status": "no documents found"}
+        # Add or update in batches
+        for i in range(0, len(all_documents), batch_size):
+            batch_docs = all_documents[i:i + batch_size]
+            batch_ids = all_ids[i:i + batch_size]
+            batch_metadatas = all_metadatas[i:i + batch_size]
+            # For each, update if exists, else add
+            for doc, cid, meta in zip(batch_docs, batch_ids, batch_metadatas):
+                if status_map[cid] == "replaced":
+                    collection.update(ids=[cid], documents=[doc], metadatas=[meta])
+                else:
+                    collection.add(documents=[doc], ids=[cid], metadatas=[meta])
+        return {
+            "status": "completed",
+            "results": [
+                {"id": cid, "status": status_map[cid]} for cid in all_ids
+            ],
+            "files": [f.filename for f in files],
+            "doc_types": [str(dt) for dt in doc_types]
+        }
     except Exception as e:
-        logger.error(f"Failed to add batch documents: {str(e)}")
-        raise HTTPException(status_code=400, detail=f"Failed to add documents: {str(e)}")
+        logger.error(f"Failed to add batch documents: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Failed to add batch documents: {e}")
+
 
 @app.get("/documents/{document_id}")
 async def get_document(document_id: str, collection_name: str = "oceanographic_data"):
