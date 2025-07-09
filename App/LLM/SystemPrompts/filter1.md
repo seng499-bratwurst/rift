@@ -165,7 +165,7 @@ Properties which can be used to get the real time data based on location
 
 - **location CBYSS.M2**
     - "description": "Pressure: air, absolute barometric","hasDeviceData": "true","hasPropertyData": "true","propertyCode": "absolutebarometricpressure","propertyName": "Absolute Barometric Pressure","uom": "hPa"
-        - deviceCategoryCode: METSTN  
+        - deviceCategoryCode: METSTN 
             - deviceCode: LUFFTWS501-07209121009031, LUFFTWS501-07209121009031
 
     - "description": "Humidity: absolute","hasDeviceData": "true","hasPropertyData": "true","propertyCode": "absolutehumidity","propertyName": "Absolute Humidity","uom": "g/m^3"
