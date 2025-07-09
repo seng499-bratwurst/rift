@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
@@ -102,6 +102,9 @@ switch (llmProviderName)
         break;
     case "HuggingFace":
         builder.Services.AddScoped<ILlmProvider, HuggingFace>();
+        break;
+    case "GoogleGemma":
+        builder.Services.AddScoped<ILlmProvider, GoogleGemma>();
         break;
     default:
         throw new Exception($"Unsupported LLM provider: {llmProviderName}");

@@ -25,19 +25,6 @@ public class MessageController : ControllerBase
         _conversationService = conversationService;
     }
 
-    // Helper to get or create a temporary session UUID (24-hour)
-    private string GetOrCreateSessionId()
-    {
-        if (Request.Headers.TryGetValue("Temporary-Session-Id", out var sessionId) && Guid.TryParse(sessionId, out _))
-        {
-            return sessionId!;
-        }
-        var newSessionId = Guid.NewGuid().ToString();
-        Response.Headers["Temporary-Session-Id"] = newSessionId;
-
-        return newSessionId;
-    }
-
     /// <summary>
     /// Endpoint for authenticated and anonymous users (existing behavior).
     /// </summary>
@@ -136,6 +123,8 @@ public class MessageController : ControllerBase
             });
         }
 
+        await _conversationService.UpdateLastInteractionTime(conversationId);
+
         MessageEdge promptToResponseEdge = await _messageEdgeService.CreateEdgeAsync(new MessageEdge
         {
             SourceMessageId = promptMessage.Id,
@@ -176,8 +165,6 @@ public class MessageController : ControllerBase
     [AllowAnonymous]
     public async Task<IActionResult> CreateGuestMessage([FromBody] CreateMessageRequest request)
     {
-        var sessionId = GetOrCreateSessionId();
-
         if (string.IsNullOrWhiteSpace(request.Content))
         {
             return BadRequest(new ApiResponse<Message>
@@ -188,6 +175,17 @@ public class MessageController : ControllerBase
             });
         }
 
+        if (string.IsNullOrEmpty(request?.SessionId))
+        {
+            return BadRequest(new ApiResponse<object>
+            {
+                Success = false,
+                Error = "Session ID is required for guest requests",
+                Data = null
+            });
+        }
+
+        var sessionId = request.SessionId;
 
         // If there is no conversationId, create a new conversation for the session
         Conversation? conversation = await _conversationService.GetConversationsForSessionAsync(sessionId);
@@ -246,6 +244,8 @@ public class MessageController : ControllerBase
             });
         }
 
+        await _conversationService.UpdateLastInteractionTime(conversationId);
+
         MessageEdge promptToResponseEdge = await _messageEdgeService.CreateEdgeAsync(new MessageEdge
         {
             SourceMessageId = promptMessage.Id,
@@ -254,7 +254,7 @@ public class MessageController : ControllerBase
             TargetHandle = request.TargetHandle
         });
 
-        MessageEdge[] edges = Array.Empty<MessageEdge>();
+        MessageEdge[] edges = [];
 
         if (promptMessage?.Id != null && request.Sources != null && request.Sources.Length > 0)
         {
@@ -264,8 +264,6 @@ public class MessageController : ControllerBase
             )).ToArray();
         }
 
-        // Return the LLM response and the session UUID (for client to persist)
-        Response.Headers["Temporary-Session-Id"] = sessionId;
         return Ok(new ApiResponse<object>
         {
             Success = true,
@@ -390,6 +388,7 @@ public class MessageController : ControllerBase
         public float ResponseYCoordinate { get; set; }
         public string SourceHandle { get; set; } = string.Empty;
         public string TargetHandle { get; set; } = string.Empty;
+        public string? SessionId { get; set; } = null;
         public PartialMessageEdge[]? Sources { get; set; } = null;
     }
 

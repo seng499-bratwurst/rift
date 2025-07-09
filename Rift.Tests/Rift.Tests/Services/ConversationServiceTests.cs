@@ -1,9 +1,5 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Rift.Models;
-using Rift.Repositories;
 using Rift.Services;
 
 namespace Rift.Tests.Services
@@ -150,6 +146,31 @@ namespace Rift.Tests.Services
 
             Assert.IsNotNull(result);
             Assert.AreEqual(conversationId, result.Id);
+        }
+
+        [TestMethod]
+        public async Task UpdateLastInteractionTime_ReturnsConversation_WhenFound()
+        {
+            int conversationId = 17;
+            var updatedConversation = new Conversation { Id = conversationId, LastInteraction = DateTime.UtcNow };
+            _repositoryMock.Setup(r => r.UpdateLastInteractionTime(conversationId)).ReturnsAsync(updatedConversation);
+
+            var result = await _service.UpdateLastInteractionTime(conversationId);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(conversationId, result.Id);
+            Assert.AreEqual(updatedConversation.LastInteraction, result.LastInteraction);
+        }
+
+        [TestMethod]
+        public async Task UpdateLastInteractionTime_ReturnsNull_WhenNotFound()
+        {
+            int conversationId = 404;
+            _repositoryMock.Setup(r => r.UpdateLastInteractionTime(conversationId)).ReturnsAsync((Conversation?)null);
+
+            var result = await _service.UpdateLastInteractionTime(conversationId);
+
+            Assert.IsNull(result);
         }
     }
 }
