@@ -15,4 +15,5 @@ public interface IConversationService
     Task<Conversation?> GetConversationById(string userId, int conversationId);
 
     Task<Conversation?> GetOrCreateConversationByUserId(string userId, int? conversationId);
+    Task<Conversation?> UpdateLastInteractionTime(int conversationId);
 }
