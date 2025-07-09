@@ -124,7 +124,9 @@ namespace Rift.Tests
             _conversationServiceMock.Setup(s => s.GetOrCreateConversationByUserId(userId, null))
                 .ReturnsAsync(conversation);
 
-            _ragServiceMock.Setup(l => l.GenerateResponseAsync("Hello", null)).ReturnsAsync("Hi!");
+            _ragServiceMock
+                .Setup(l => l.GenerateResponseAsync("Hello", null))
+                .Returns(GetAsyncEnumerable("Hi!"));
 
             _messageServiceMock.Setup(m => m.CreateMessageAsync(conversation.Id, null, "Hello", "user", 0, 0))
                 .ReturnsAsync(promptMessage);
@@ -183,6 +185,15 @@ namespace Rift.Tests
             var apiResponse = okResult.Value as ApiResponse<List<Message>>;
             Assert.IsTrue(apiResponse.Success);
             Assert.AreEqual(2, apiResponse.Data.Count);
+        }
+
+        private static async IAsyncEnumerable<string> GetAsyncEnumerable(params string[] items)
+        {
+            foreach (var item in items)
+            {
+                yield return item;
+                await Task.Yield(); // ensures the method is truly async
+            }
         }
     }
 }
