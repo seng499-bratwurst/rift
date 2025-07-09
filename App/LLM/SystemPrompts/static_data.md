@@ -89,7 +89,7 @@
     - "description": "Turbidity: nephelometric turbidity units","hasDeviceData": "true","hasPropertyData": "true","propertyCode": "turbidityntu","propertyName": "Turbidity NTU","uom": "NTU"
  
 - **"locationName": "Shore Station", "locationCode": "CBYSS"**
- - "description": "Pressure: air, absolute barometric","hasDeviceData": "true","hasPropertyData": "true","propertyCode": "absolutebarometricpressure","propertyName": "Absolute Barometric Pressure","uom": "hPa"
+    - "description": "Pressure: air, absolute barometric","hasDeviceData": "true","hasPropertyData": "true","propertyCode": "absolutebarometricpressure","propertyName": "Absolute Barometric Pressure","uom": "hPa"
     - "description": "Humidity: absolute","hasDeviceData": "false","hasPropertyData": "true","propertyCode": "absolutehumidity","propertyName": "Absolute Humidity","uom": "g/m^3"
     - "description": "Density: air","hasDeviceData": "false","hasPropertyData": "true","propertyCode": "airdensity","propertyName": "Air Density","uom": "kg/m3"
     - "description": "Temperature: air","hasDeviceData": "false","hasPropertyData": "true","propertyCode": "airtemperature","propertyName": "Air Temperature","uom": "C"
