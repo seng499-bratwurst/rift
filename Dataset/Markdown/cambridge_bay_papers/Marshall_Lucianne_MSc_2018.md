@@ -1,4 +1,4 @@
-# Source: Marshall, L. M. (2018). Progression of marine phytoplankton blooms and environmental dynamics from sea ice coverage to open waters in the coastal Arctic: Comparing experimental data with continuous cabled observations (Master’s thesis, University of Victoria). University of Victoria Libraries.
+# Source: https://dspace.library.uvic.ca/server/api/core/bitstreams/9e632d07-559d-4a80-bc28-38fd637cbdac/content
 # ID: ProgressionOfMarinePhytoplankton
 Progression of Marine Phytoplankton Blooms and Environmental Dynamics from Sea-
 Ice Coverage to Open Waters in the coastal Arctic: Comparing experimental data with 
