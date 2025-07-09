@@ -46,7 +46,7 @@ Properties which can be used to get the real time data based on location
         
 
     - "description": "pH","hasDeviceData": "true","hasPropertyData": "true","propertyCode": "ph","propertyName": "pH","uom": "pH"
-        - deviceCategoryCode: PHSENSOR  (works)
+        - deviceCategoryCode: PHSENSOR
             - deviceCode: PHSENSOR246, PHSENSOR452, SUNSAMIpHP0073
 
     - "description": "Pressure","hasDeviceData": "true","hasPropertyData": "true","propertyCode": "pressure","propertyName": "Pressure","uom": "decibar"
