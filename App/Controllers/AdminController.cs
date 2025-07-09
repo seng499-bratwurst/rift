@@ -1,10 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Rift.Models;
+using Rift.Services;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Rift.Controllers;
 
@@ -13,11 +12,11 @@ namespace Rift.Controllers;
 [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
 public class AdminController : ControllerBase
 {
-    private readonly UserManager<User> _userManager;
+    private readonly IAdminService _adminService;
 
-    public AdminController(UserManager<User> userManager)
+    public AdminController(IAdminService adminService)
     {
-        _userManager = userManager;
+        _adminService = adminService;
     }
 
     /// <summary>
@@ -26,18 +25,17 @@ public class AdminController : ControllerBase
     [HttpGet("user-list")]
     public async Task<IActionResult> GetUsersWithRoles()
     {
-        var users = _userManager.Users.ToList();
+        var usersWithRoles = await _adminService.GetUsersWithRolesAsync();
         var userList = new List<UserWithRolesDto>();
 
-        foreach (var user in users)
+        foreach (var (user, roles) in usersWithRoles)
         {
-            var roles = await _userManager.GetRolesAsync(user);
             userList.Add(new UserWithRolesDto
             {
                 Id = user.Id,
                 Name = user.Name,
                 Email = user.Email,
-                Roles = roles.ToList()
+                Roles = new List<string>(roles)
             });
         }
 
@@ -55,49 +53,46 @@ public class AdminController : ControllerBase
     [HttpPatch("users/{userId}/role")]
     public async Task<IActionResult> ChangeUserRole(string userId, [FromBody] ChangeRoleRequest request)
     {
-        var user = await _userManager.FindByIdAsync(userId);
-        if (user == null)
+        var result = await _adminService.ChangeUserRoleAsync(userId, request.NewRole);
+
+        switch (result)
         {
-            return NotFound(new ApiResponse<object>
-            {
-                Success = false,
-                Error = "User not found.",
-                Data = null
-            });
+            case RoleChangeResult.UserNotFound:
+                return NotFound(new ApiResponse<object>
+                {
+                    Success = false,
+                    Error = "User not found.",
+                    Data = null
+                });
+            case RoleChangeResult.RemoveRolesFailed:
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Error = "Failed to remove existing roles.",
+                    Data = null
+                });
+            case RoleChangeResult.AddRoleFailed:
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Error = "Failed to add new role.",
+                    Data = null
+                });
+            case RoleChangeResult.Success:
+                return Ok(new ApiResponse<string>
+                {
+                    Success = true,
+                    Error = null,
+                    Data = $"User role changed to {request.NewRole}."
+                });
+            default:
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Error = "Unknown error.",
+                    Data = null
+                });
         }
-
-        var currentRoles = await _userManager.GetRolesAsync(user);
-
-        // Remove all roles first
-        var removeResult = await _userManager.RemoveFromRolesAsync(user, currentRoles);
-        if (!removeResult.Succeeded)
-        {
-            return BadRequest(new ApiResponse<object>
-            {
-                Success = false,
-                Error = "Failed to remove existing roles.",
-                Data = null
-            });
-        }
-
-        // Add the new role
-        var addResult = await _userManager.AddToRoleAsync(user, request.NewRole);
-        if (!addResult.Succeeded)
-        {
-            return BadRequest(new ApiResponse<object>
-            {
-                Success = false,
-                Error = "Failed to add new role.",
-                Data = null
-            });
-        }
-
-        return Ok(new ApiResponse<string>
-        {
-            Success = true,
-            Error = null,
-            Data = $"User role changed to {request.NewRole}."
-        });
     }
 
     public class ChangeRoleRequest
@@ -111,5 +106,13 @@ public class AdminController : ControllerBase
         public string Name { get; set; }
         public string Email { get; set; }
         public List<string> Roles { get; set; }
+    }
+
+    public enum RoleChangeResult
+    {
+        Success,
+        UserNotFound,
+        RemoveRolesFailed,
+        AddRoleFailed
     }
 }

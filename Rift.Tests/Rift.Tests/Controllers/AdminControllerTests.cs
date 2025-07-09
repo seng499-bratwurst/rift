@@ -1,68 +1,40 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Rift.Controllers;
 using Rift.Models;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Http;
+using Rift.Services;
 
 namespace Rift.Tests.Controllers
 {
     [TestClass]
     public class AdminControllerTests
     {
-        private Mock<UserManager<User>> _userManagerMock;
+        private Mock<IAdminService> _adminServiceMock = null!;
+        private AdminController _controller = null!;
 
         [TestInitialize]
         public void Setup()
         {
-            var store = new Mock<IUserStore<User>>();
-            _userManagerMock = new Mock<UserManager<User>>(
-                store.Object, null, null, null, null, null, null, null, null
-            );
-        }
-
-        private AdminController CreateControllerWithAdmin()
-        {
-            var adminClaims = new ClaimsPrincipal(new ClaimsIdentity(new[]
-            {
-                new Claim(ClaimTypes.NameIdentifier, "admin1"),
-                new Claim(ClaimTypes.Role, "Admin")
-            }, "mock"));
-            var controller = new AdminController(_userManagerMock.Object)
-            {
-                ControllerContext = new ControllerContext
-                {
-                    HttpContext = new DefaultHttpContext { User = adminClaims }
-                }
-            };
-            return controller;
+            _adminServiceMock = new Mock<IAdminService>();
+            _controller = new AdminController(_adminServiceMock.Object);
         }
 
         [TestMethod]
         public async Task GetUsersWithRoles_ReturnsUserList()
         {
             // Arrange
-            var users = new List<User>
+            var usersWithRoles = new List<(User user, IList<string> roles)>
             {
-                new User { Id = "1", Name = "Alice", Email = "alice@email.com" },
-                new User { Id = "2", Name = "Bob", Email = "bob@email.com" }
-            }.AsQueryable();
-
-            _userManagerMock.Setup(x => x.Users).Returns(users);
-            _userManagerMock.Setup(x => x.GetRolesAsync(It.Is<User>(u => u.Id == "1")))
-                .ReturnsAsync(new List<string> { "User" });
-            _userManagerMock.Setup(x => x.GetRolesAsync(It.Is<User>(u => u.Id == "2")))
-                .ReturnsAsync(new List<string> { "Admin" });
-
-            var controller = CreateControllerWithAdmin();
+                (new User { Id = "1", Name = "Alice", Email = "alice@email.com" }, new List<string> { "User" }),
+                (new User { Id = "2", Name = "Bob", Email = "bob@email.com" }, new List<string> { "Admin" })
+            };
+            _adminServiceMock.Setup(s => s.GetUsersWithRolesAsync()).ReturnsAsync(usersWithRoles);
 
             // Act
-            var result = await controller.GetUsersWithRoles();
+            var result = await _controller.GetUsersWithRoles();
 
             // Assert
             var okResult = result as OkObjectResult;
@@ -80,22 +52,12 @@ namespace Rift.Tests.Controllers
         [TestMethod]
         public async Task ChangeUserRole_ReturnsOk_WhenSuccessful()
         {
-            // Arrange
-            var user = new User { Id = "1", Name = "Alice", Email = "alice@email.com" };
-            _userManagerMock.Setup(x => x.FindByIdAsync("1")).ReturnsAsync(user);
-            _userManagerMock.Setup(x => x.GetRolesAsync(user)).ReturnsAsync(new List<string> { "User" });
-            _userManagerMock.Setup(x => x.RemoveFromRolesAsync(user, It.IsAny<IEnumerable<string>>()))
-                .ReturnsAsync(IdentityResult.Success);
-            _userManagerMock.Setup(x => x.AddToRoleAsync(user, "Admin"))
-                .ReturnsAsync(IdentityResult.Success);
+            _adminServiceMock.Setup(s => s.ChangeUserRoleAsync("1", "Admin"))
+                .ReturnsAsync(AdminController.RoleChangeResult.Success);
 
-            var controller = CreateControllerWithAdmin();
             var request = new AdminController.ChangeRoleRequest { NewRole = "Admin" };
+            var result = await _controller.ChangeUserRole("1", request);
 
-            // Act
-            var result = await controller.ChangeUserRole("1", request);
-
-            // Assert
             var okResult = result as OkObjectResult;
             Assert.IsNotNull(okResult);
             var data = okResult.Value as ApiResponse<string>;
@@ -107,12 +69,11 @@ namespace Rift.Tests.Controllers
         [TestMethod]
         public async Task ChangeUserRole_ReturnsNotFound_WhenUserNotFound()
         {
-            _userManagerMock.Setup(x => x.FindByIdAsync("99")).ReturnsAsync((User)null);
+            _adminServiceMock.Setup(s => s.ChangeUserRoleAsync("99", "Admin"))
+                .ReturnsAsync(AdminController.RoleChangeResult.UserNotFound);
 
-            var controller = CreateControllerWithAdmin();
             var request = new AdminController.ChangeRoleRequest { NewRole = "Admin" };
-
-            var result = await controller.ChangeUserRole("99", request);
+            var result = await _controller.ChangeUserRole("99", request);
 
             var notFound = result as NotFoundObjectResult;
             Assert.IsNotNull(notFound);
@@ -125,16 +86,11 @@ namespace Rift.Tests.Controllers
         [TestMethod]
         public async Task ChangeUserRole_ReturnsBadRequest_WhenRemoveRolesFails()
         {
-            var user = new User { Id = "1", Name = "Alice", Email = "alice@email.com" };
-            _userManagerMock.Setup(x => x.FindByIdAsync("1")).ReturnsAsync(user);
-            _userManagerMock.Setup(x => x.GetRolesAsync(user)).ReturnsAsync(new List<string> { "User" });
-            _userManagerMock.Setup(x => x.RemoveFromRolesAsync(user, It.IsAny<IEnumerable<string>>()))
-                .ReturnsAsync(IdentityResult.Failed(new IdentityError { Description = "fail" }));
+            _adminServiceMock.Setup(s => s.ChangeUserRoleAsync("1", "Admin"))
+                .ReturnsAsync(AdminController.RoleChangeResult.RemoveRolesFailed);
 
-            var controller = CreateControllerWithAdmin();
             var request = new AdminController.ChangeRoleRequest { NewRole = "Admin" };
-
-            var result = await controller.ChangeUserRole("1", request);
+            var result = await _controller.ChangeUserRole("1", request);
 
             var badRequest = result as BadRequestObjectResult;
             Assert.IsNotNull(badRequest);
@@ -147,18 +103,11 @@ namespace Rift.Tests.Controllers
         [TestMethod]
         public async Task ChangeUserRole_ReturnsBadRequest_WhenAddRoleFails()
         {
-            var user = new User { Id = "1", Name = "Alice", Email = "alice@email.com" };
-            _userManagerMock.Setup(x => x.FindByIdAsync("1")).ReturnsAsync(user);
-            _userManagerMock.Setup(x => x.GetRolesAsync(user)).ReturnsAsync(new List<string> { "User" });
-            _userManagerMock.Setup(x => x.RemoveFromRolesAsync(user, It.IsAny<IEnumerable<string>>()))
-                .ReturnsAsync(IdentityResult.Success);
-            _userManagerMock.Setup(x => x.AddToRoleAsync(user, "Admin"))
-                .ReturnsAsync(IdentityResult.Failed(new IdentityError { Description = "fail" }));
+            _adminServiceMock.Setup(s => s.ChangeUserRoleAsync("1", "Admin"))
+                .ReturnsAsync(AdminController.RoleChangeResult.AddRoleFailed);
 
-            var controller = CreateControllerWithAdmin();
             var request = new AdminController.ChangeRoleRequest { NewRole = "Admin" };
-
-            var result = await controller.ChangeUserRole("1", request);
+            var result = await _controller.ChangeUserRole("1", request);
 
             var badRequest = result as BadRequestObjectResult;
             Assert.IsNotNull(badRequest);
@@ -166,6 +115,23 @@ namespace Rift.Tests.Controllers
             Assert.IsNotNull(data);
             Assert.IsFalse(data.Success);
             Assert.AreEqual("Failed to add new role.", data.Error);
+        }
+
+        [TestMethod]
+        public async Task ChangeUserRole_ReturnsBadRequest_WhenUnknownError()
+        {
+            _adminServiceMock.Setup(s => s.ChangeUserRoleAsync("1", "Admin"))
+                .ReturnsAsync((AdminController.RoleChangeResult)999);
+
+            var request = new AdminController.ChangeRoleRequest { NewRole = "Admin" };
+            var result = await _controller.ChangeUserRole("1", request);
+
+            var badRequest = result as BadRequestObjectResult;
+            Assert.IsNotNull(badRequest);
+            var data = badRequest.Value as ApiResponse<object>;
+            Assert.IsNotNull(data);
+            Assert.IsFalse(data.Success);
+            Assert.AreEqual("Unknown error.", data.Error);
         }
     }
 }
