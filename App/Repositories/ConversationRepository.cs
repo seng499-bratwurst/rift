@@ -12,12 +12,6 @@ public class ConversationRepository : IConversationRepository
         _context = context;
     }
 
-    public async Task<Conversation?> GetConversationByIdAsync(int conversationId)
-    {
-        return await _context.Conversations
-            .FirstOrDefaultAsync(c => c.Id == conversationId);
-    }
-
     public async Task<List<Conversation>> GetConversationsByUserIdAsync(string userId)
     {
         return await _context.Conversations
