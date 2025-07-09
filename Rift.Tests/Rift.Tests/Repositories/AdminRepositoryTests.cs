@@ -53,7 +53,7 @@ namespace Rift.Tests.Repositories
         }
 
         [TestMethod]
-        public async Task ChangeUserRoleAsync_ReturnsTrue_WhenSuccessful()
+        public async Task ChangeUserRoleAsync_ReturnsSuccess_WhenSuccessful()
         {
             // Arrange
             var user = new User { Id = "1", Name = "Alice" };
@@ -68,21 +68,21 @@ namespace Rift.Tests.Repositories
             var result = await _repository.ChangeUserRoleAsync("1", "Admin");
 
             // Assert
-            Assert.IsTrue(result);
+            Assert.AreEqual(RoleChangeResult.Success, result);
         }
 
         [TestMethod]
-        public async Task ChangeUserRoleAsync_ReturnsFalse_WhenUserNotFound()
+        public async Task ChangeUserRoleAsync_ReturnsUserNotFound_WhenUserDoesNotExist()
         {
             _userManagerMock.Setup(x => x.FindByIdAsync("99")).ReturnsAsync((User)null);
 
             var result = await _repository.ChangeUserRoleAsync("99", "Admin");
 
-            Assert.IsFalse(result);
+            Assert.AreEqual(RoleChangeResult.UserNotFound, result);
         }
 
         [TestMethod]
-        public async Task ChangeUserRoleAsync_ReturnsFalse_WhenRemoveRolesFails()
+        public async Task ChangeUserRoleAsync_ReturnsRemoveRolesFailed_WhenRemoveRolesFails()
         {
             var user = new User { Id = "1", Name = "Alice" };
             _userManagerMock.Setup(x => x.FindByIdAsync("1")).ReturnsAsync(user);
@@ -92,11 +92,11 @@ namespace Rift.Tests.Repositories
 
             var result = await _repository.ChangeUserRoleAsync("1", "Admin");
 
-            Assert.IsFalse(result);
+            Assert.AreEqual(RoleChangeResult.RemoveRolesFailed, result);
         }
 
         [TestMethod]
-        public async Task ChangeUserRoleAsync_ReturnsFalse_WhenAddRoleFails()
+        public async Task ChangeUserRoleAsync_ReturnsAddRoleFailed_WhenAddRoleFails()
         {
             var user = new User { Id = "1", Name = "Alice" };
             _userManagerMock.Setup(x => x.FindByIdAsync("1")).ReturnsAsync(user);
@@ -108,7 +108,7 @@ namespace Rift.Tests.Repositories
 
             var result = await _repository.ChangeUserRoleAsync("1", "Admin");
 
-            Assert.IsFalse(result);
+            Assert.AreEqual(RoleChangeResult.AddRoleFailed, result);
         }
     }
 }

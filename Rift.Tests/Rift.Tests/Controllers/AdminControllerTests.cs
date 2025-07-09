@@ -53,7 +53,7 @@ namespace Rift.Tests.Controllers
         public async Task ChangeUserRole_ReturnsOk_WhenSuccessful()
         {
             _adminServiceMock.Setup(s => s.ChangeUserRoleAsync("1", "Admin"))
-                .ReturnsAsync(AdminController.RoleChangeResult.Success);
+                .ReturnsAsync(RoleChangeResult.Success);
 
             var request = new AdminController.ChangeRoleRequest { NewRole = "Admin" };
             var result = await _controller.ChangeUserRole("1", request);
@@ -70,7 +70,7 @@ namespace Rift.Tests.Controllers
         public async Task ChangeUserRole_ReturnsNotFound_WhenUserNotFound()
         {
             _adminServiceMock.Setup(s => s.ChangeUserRoleAsync("99", "Admin"))
-                .ReturnsAsync(AdminController.RoleChangeResult.UserNotFound);
+                .ReturnsAsync(RoleChangeResult.UserNotFound);
 
             var request = new AdminController.ChangeRoleRequest { NewRole = "Admin" };
             var result = await _controller.ChangeUserRole("99", request);
@@ -87,7 +87,7 @@ namespace Rift.Tests.Controllers
         public async Task ChangeUserRole_ReturnsBadRequest_WhenRemoveRolesFails()
         {
             _adminServiceMock.Setup(s => s.ChangeUserRoleAsync("1", "Admin"))
-                .ReturnsAsync(AdminController.RoleChangeResult.RemoveRolesFailed);
+                .ReturnsAsync(RoleChangeResult.RemoveRolesFailed);
 
             var request = new AdminController.ChangeRoleRequest { NewRole = "Admin" };
             var result = await _controller.ChangeUserRole("1", request);
@@ -104,7 +104,7 @@ namespace Rift.Tests.Controllers
         public async Task ChangeUserRole_ReturnsBadRequest_WhenAddRoleFails()
         {
             _adminServiceMock.Setup(s => s.ChangeUserRoleAsync("1", "Admin"))
-                .ReturnsAsync(AdminController.RoleChangeResult.AddRoleFailed);
+                .ReturnsAsync(RoleChangeResult.AddRoleFailed);
 
             var request = new AdminController.ChangeRoleRequest { NewRole = "Admin" };
             var result = await _controller.ChangeUserRole("1", request);
@@ -121,7 +121,7 @@ namespace Rift.Tests.Controllers
         public async Task ChangeUserRole_ReturnsBadRequest_WhenUnknownError()
         {
             _adminServiceMock.Setup(s => s.ChangeUserRoleAsync("1", "Admin"))
-                .ReturnsAsync((AdminController.RoleChangeResult)999);
+                .ReturnsAsync((RoleChangeResult)999);
 
             var request = new AdminController.ChangeRoleRequest { NewRole = "Admin" };
             var result = await _controller.ChangeUserRole("1", request);

@@ -29,18 +29,21 @@ public class AdminRepository : IAdminRepository
         return result;
     }
 
-    public async Task<bool> ChangeUserRoleAsync(string userId, string newRole)
+    public async Task<RoleChangeResult> ChangeUserRoleAsync(string userId, string newRole)
     {
         var user = await _userManager.FindByIdAsync(userId);
         if (user == null)
-            return false;
+            return RoleChangeResult.UserNotFound;
 
         var currentRoles = await _userManager.GetRolesAsync(user);
         var removeResult = await _userManager.RemoveFromRolesAsync(user, currentRoles);
         if (!removeResult.Succeeded)
-            return false;
+            return RoleChangeResult.RemoveRolesFailed;
 
         var addResult = await _userManager.AddToRoleAsync(user, newRole);
-        return addResult.Succeeded;
+        if (!addResult.Succeeded)
+            return RoleChangeResult.AddRoleFailed;
+
+        return RoleChangeResult.Success;
     }
 }

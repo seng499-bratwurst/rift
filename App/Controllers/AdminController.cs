@@ -107,12 +107,4 @@ public class AdminController : ControllerBase
         public string Email { get; set; }
         public List<string> Roles { get; set; }
     }
-
-    public enum RoleChangeResult
-    {
-        Success,
-        UserNotFound,
-        RemoveRolesFailed,
-        AddRoleFailed
-    }
 }

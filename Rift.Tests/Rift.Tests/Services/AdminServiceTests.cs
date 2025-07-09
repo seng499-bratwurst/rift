@@ -5,7 +5,6 @@ using Moq;
 using Rift.Models;
 using Rift.Repositories;
 using Rift.Services;
-using Rift.Controllers;
 
 namespace Rift.Tests.Services
 {
@@ -46,25 +45,48 @@ namespace Rift.Tests.Services
         }
 
         [TestMethod]
-        public async Task ChangeUserRoleAsync_ReturnsSuccess_WhenRepositoryReturnsTrue()
+        public async Task ChangeUserRoleAsync_ForwardsSuccess()
         {
-            _adminRepositoryMock.Setup(r => r.ChangeUserRoleAsync("1", "Admin")).ReturnsAsync(true);
+            _adminRepositoryMock.Setup(r => r.ChangeUserRoleAsync("1", "Admin"))
+                .ReturnsAsync(RoleChangeResult.Success);
 
             var result = await _service.ChangeUserRoleAsync("1", "Admin");
 
-            Assert.AreEqual(AdminController.RoleChangeResult.Success, result);
+            Assert.AreEqual(RoleChangeResult.Success, result);
             _adminRepositoryMock.Verify(r => r.ChangeUserRoleAsync("1", "Admin"), Times.Once);
         }
 
         [TestMethod]
-        public async Task ChangeUserRoleAsync_ReturnsAddRoleFailed_WhenRepositoryReturnsFalse()
+        public async Task ChangeUserRoleAsync_ForwardsUserNotFound()
         {
-            _adminRepositoryMock.Setup(r => r.ChangeUserRoleAsync("1", "Admin")).ReturnsAsync(false);
+            _adminRepositoryMock.Setup(r => r.ChangeUserRoleAsync("1", "Admin"))
+                .ReturnsAsync(RoleChangeResult.UserNotFound);
 
             var result = await _service.ChangeUserRoleAsync("1", "Admin");
 
-            Assert.AreEqual(AdminController.RoleChangeResult.AddRoleFailed, result);
-            _adminRepositoryMock.Verify(r => r.ChangeUserRoleAsync("1", "Admin"), Times.Once);
+            Assert.AreEqual(RoleChangeResult.UserNotFound, result);
+        }
+
+        [TestMethod]
+        public async Task ChangeUserRoleAsync_ForwardsRemoveRolesFailed()
+        {
+            _adminRepositoryMock.Setup(r => r.ChangeUserRoleAsync("1", "Admin"))
+                .ReturnsAsync(RoleChangeResult.RemoveRolesFailed);
+
+            var result = await _service.ChangeUserRoleAsync("1", "Admin");
+
+            Assert.AreEqual(RoleChangeResult.RemoveRolesFailed, result);
+        }
+
+        [TestMethod]
+        public async Task ChangeUserRoleAsync_ForwardsAddRoleFailed()
+        {
+            _adminRepositoryMock.Setup(r => r.ChangeUserRoleAsync("1", "Admin"))
+                .ReturnsAsync(RoleChangeResult.AddRoleFailed);
+
+            var result = await _service.ChangeUserRoleAsync("1", "Admin");
+
+            Assert.AreEqual(RoleChangeResult.AddRoleFailed, result);
         }
     }
 }
