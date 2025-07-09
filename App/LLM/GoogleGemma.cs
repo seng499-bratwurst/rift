@@ -47,19 +47,58 @@ namespace Rift.LLM
         /// </summary>
         public async Task<string> GatherOncAPIData(string prompt)
         {
-            // System prompt file should be present as in other providers
-            // string systemPrompt = System.IO.File.ReadAllText(
-            //     System.IO.Path.Combine(AppContext.BaseDirectory, "LLM/SystemPrompts", "function_call_required_or_not.md")
-            // );
-            // string systemPrompt = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "LLM/SystemPrompts", "function_call_required_or_not.md"));
-            string systemPromptScalar = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "LLM/SystemPrompts", "filter4.md"));
+             string systemPrompt = "";
 
+             // All property codes from the Cambridge Bay observatory
+            string[] propertyCodes = {
+                "absolutebarometricpressure",
+                "absolutehumidity", 
+                "airdensity",
+                "airtemperature",
+                "dewpoint",
+                "magneticheading",
+                "mixingratio",
+                "relativebarometricpressure",
+                "relativehumidity",
+                "solarradiation",
+                "specificenthalpy",
+                "wetbulbtemperature",
+                "windchilltemperature",
+                "winddirection",
+                "windspeed",
+                "conductivity",
+                "density",
+                "oxygen",
+                "pressure",
+                "salinity",
+                "seawatertemperature",
+                "soundspeed",
+                "turbidityntu",
+                "chlorophyll",
+                "icedraft",
+                "parphotonbased",
+                "ph",
+                "sigmatheta"
+            };
+
+            string pattern = @"\b(" + string.Join("|", propertyCodes) + @")\b";
+            Regex regex = new Regex(pattern, RegexOptions.IgnoreCase);
+
+            bool hasPropertyCode = regex.IsMatch(prompt);
+
+            if (hasPropertyCode){
+                // Console.WriteLine("using filter4.md");
+                systemPrompt = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "LLM/SystemPrompts", "filter4.md"));
+            }else{
+                // Console.WriteLine("using function_call_required_or_not.md");
+                systemPrompt = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "LLM/SystemPrompts", "function_call_required_or_not.md"));
+            }
             var payload = new
             {
                 model = _modelName,
                 messages = new[]
                 {
-                    new { role = "user", content = systemPromptScalar },
+                    new { role = "user", content = systemPrompt },
                     new { role = "user", content = prompt }
                 }
             };
@@ -76,11 +115,11 @@ namespace Rift.LLM
 
             
             // Console.WriteLine($"Response Status Code: {response.StatusCode}");
-            Console.WriteLine($"Response Headers: {response.Headers}");
+            // Console.WriteLine($"Response Headers: {response.Headers}");
             if (!response.IsSuccessStatusCode)
             {
                 var errorContent = await response.Content.ReadAsStringAsync();
-                Console.WriteLine($"Error Response: {errorContent}");
+                // Console.WriteLine($"Error Response: {errorContent}");
                 throw new HttpRequestException($"Request failed with status code {response.StatusCode}: {errorContent}");
             }
 
@@ -113,7 +152,7 @@ namespace Rift.LLM
             }else
             {
                 String LLMContentFiltered = match.Value;
-                Console.WriteLine($"Filtered Content: {LLMContentFiltered}");
+                // Console.WriteLine($"Filtered Content: {LLMContentFiltered}");
 
                 using var innerDoc = JsonDocument.Parse(LLMContentFiltered);
                 bool useFunction = innerDoc.RootElement.GetProperty("use_function").GetBoolean();
