@@ -34,6 +34,23 @@ namespace Rift.Controllers
             return Ok(finalResponse);
         }
 
+        [HttpPost("scalarData")]
+        public async Task<IActionResult> ScalarData([FromBody] PromptRequest request)
+        {
+        if (!ModelState.IsValid || string.IsNullOrWhiteSpace(request.Prompt))
+                return BadRequest("Prompt cannot be empty.");
 
+            var response = await _llmProvider.GatherOncAPIData(request.Prompt);
+            Console.WriteLine($"Response: {response}");
+                       
+            using var doc = JsonDocument.Parse(response);
+
+            // Clone it so we can return it after the doc is disposed
+            JsonElement json = doc.RootElement.Clone();
+
+            var finalResponse = await _llmProvider.GenerateFinalResponse(request.Prompt, json);
+
+            return Ok(finalResponse);
+            }
     }
 }
