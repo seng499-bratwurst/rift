@@ -1,0 +1,1 @@
+to get the scalar data we need to have both hasPropertyData and hasDeviceData
