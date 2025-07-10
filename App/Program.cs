@@ -9,6 +9,8 @@ using Rift.Models;
 using Rift.Services;
 using Rift.Repositories;
 using Rift.App.Clients;
+using Microsoft.AspNetCore.RateLimiting;
+using System.Threading.RateLimiting;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -75,6 +77,8 @@ builder.Services.AddScoped<IMessageEdgeService, MessageEdgeService>();
 
 builder.Services.AddScoped<ICompanyTokenRepository, CompanyTokenRepository>();
 builder.Services.AddScoped<ICompanyTokenService, CompanyTokenService>();
+builder.Services.AddScoped<ICompanyRateLimitingService, CompanyRateLimitingService>();
+
 
 
 builder.Services.AddScoped<IRAGService, RAGService>();
@@ -148,6 +152,53 @@ builder.Services.AddAuthentication(options =>
 // Add Authorization
 builder.Services.AddAuthorization();
 
+builder.Services.AddRateLimiter(options =>
+{
+    options.AddPolicy("PerOncApiToken", context =>
+    {
+        var httpContext = context as HttpContext;
+
+        string? token = httpContext?.User?.Claims.FirstOrDefault(c => c.Type == "ONCApiToken")?.Value;
+
+        if (string.IsNullOrEmpty(token))
+        {
+            // If the token is not found in claims, check headers or query parameters
+            token = httpContext?.Request.Headers["ONCApiToken"].FirstOrDefault()
+                ?? httpContext?.Request.Query["ONCApiToken"].FirstOrDefault();
+        }
+
+        var key = token ?? "unknown"; // Fallback to "unknown" if no token is provided
+
+        Console.WriteLine($"Rate limiting key (ONCApiToken): {key}");
+
+        return RateLimitPartition.GetTokenBucketLimiter(key, _ => new TokenBucketRateLimiterOptions
+        {
+            TokenLimit = 2,
+            QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+            QueueLimit = 0,
+            ReplenishmentPeriod = TimeSpan.FromMinutes(1),
+            TokensPerPeriod = 2,
+            AutoReplenishment = true,
+        });
+
+
+        // var token = context.User?.FindFirst("ONCApiToken")?.Value
+        //     ?? context.Request.Headers["ONCApiToken"].ToString()
+        //     ?? context.Request.Query["ONCApiToken"].ToString()
+        //     ?? "unknown";
+
+        // return RateLimitPartition.GetTokenBucketLimiter(token, _ => new TokenBucketRateLimiterOptions
+        // {
+        //     TokenLimit = 10,
+        //     TokensPerPeriod = 10,
+        //     ReplenishmentPeriod = TimeSpan.FromMinutes(1),
+        //     QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+        //     QueueLimit = 0,
+        //     AutoReplenishment = true,
+        // });
+    });
+});
+
 
 var app = builder.Build();
 
@@ -167,6 +218,8 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.UseRouting();
+
+app.UseRateLimiter();
 
 app.UseAuthentication();
 app.UseCors("CorsPolicy");

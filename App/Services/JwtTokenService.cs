@@ -21,7 +21,8 @@ public class JwtTokenService
         {
             new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
             new(JwtRegisteredClaimNames.UniqueName, user.UserName ?? string.Empty),
-            new(JwtRegisteredClaimNames.Email, user.Email ?? string.Empty)
+            new(JwtRegisteredClaimNames.Email, user.Email ?? string.Empty),
+            new("ONCApiToken", user.ONCApiToken ?? string.Empty)
         };
 
         foreach (var role in roles)
