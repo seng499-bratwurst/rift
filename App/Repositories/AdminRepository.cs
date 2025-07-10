@@ -20,11 +20,14 @@ public class AdminRepository : IAdminRepository
         var users = _userManager.Users.ToList();
         var result = new List<(User, IList<string>)>();
 
-        foreach (var user in users)
+        var tasks = users.Select(async user => 
         {
             var roles = await _userManager.GetRolesAsync(user);
-            result.Add((user, roles));
-        }
+            return (user, roles);
+        }).ToList();
+        
+        var results = await Task.WhenAll(tasks);
+        result.AddRange(results);
 
         return result;
     }

@@ -53,6 +53,17 @@ public class AdminController : ControllerBase
     [HttpPatch("users/{userId}/role")]
     public async Task<IActionResult> ChangeUserRole(string userId, [FromBody] ChangeRoleRequest request)
     {
+
+        if (request == null || !ModelState.IsValid)
+        {
+            return BadRequest(new ApiResponse<object>
+            {
+                Success = false,
+                Error = "Invalid request data.",
+                Data = null
+            });
+        }
+
         var result = await _adminService.ChangeUserRoleAsync(userId, request.NewRole);
 
         switch (result)
