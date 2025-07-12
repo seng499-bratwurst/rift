@@ -98,7 +98,7 @@ namespace Rift.LLM
                 model = _modelName,
                 messages = new[]
                 {
-                    new { role = "user", content = systemPrompt },
+                    new { role = "system", content = systemPrompt },
                     new { role = "user", content = prompt }
                 }
             };
@@ -139,9 +139,9 @@ namespace Rift.LLM
             Console.WriteLine($"Content: {content}");
 
     
-            var match = Regex.Match(content, @"\{(?:[^{}]|(?<open>\{)|(?<-open>\}))*\}(?(open)(?!))", RegexOptions.Singleline);
+            var match = Regex.Match(content!, @"\{(?:[^{}]|(?<open>\{)|(?<-open>\}))*\}(?(open)(?!))", RegexOptions.Singleline);
 
-            object generalResponse = null;
+            object? generalResponse = null;
 
             if (!match.Success)
             {
@@ -178,6 +178,9 @@ namespace Rift.LLM
         /// <summary>
         /// Sends a prompt and ONC API response to the Gemma 3n model to generate a final user-facing answer.
         /// </summary>
+        /// !!! DEPRECATED !!!
+        /// The message pipeline from the frontend uses the GenerateFinalResponseRAG method instead.
+        /// Just keeping this so Ishan is happy :)
         public async Task<string> GenerateFinalResponse(string prompt, JsonElement onc_api_response)
         {
             string jsonInput = JsonSerializer.Serialize(onc_api_response, new JsonSerializerOptions { WriteIndented = true });
@@ -190,7 +193,7 @@ namespace Rift.LLM
                 model = _modelName,
                 messages = new[]
                 {
-                    new { role = "user", content = systemPrompt },
+                    new { role = "system", content = systemPrompt },
                     new { role = "user", content = fullPrompt }
                 }
             };
@@ -218,6 +221,9 @@ namespace Rift.LLM
             return result ?? "No response from Gemma 3n model.";
         }
 
+        /// <summary>
+        /// Sends a prompt, chat history, relevant documents, and ONC API response to the Gemma 3n model to generate a final user-facing answer.
+        /// </summary>
         public async Task<string> GenerateFinalResponseRAG(Prompt prompt)
         {
 
@@ -225,36 +231,33 @@ namespace Rift.LLM
             // this should be okay for now. We will need to figure out the best way to
             // feed all of this data into the LLM.
             // ----------------------------------------------
-            var fullUserPrompt = new StringBuilder();
-            fullUserPrompt.Append("This is the User Query:\n");
-            fullUserPrompt.Append(prompt.UserQuery);
-            fullUserPrompt.Append("\n\nHere is the ONC API response:\n");
-            fullUserPrompt.Append(prompt.OncAPIData);
-            fullUserPrompt.Append("\n\nHere are relevant documents :\n");
-            foreach (var relevantDoc in prompt.RelevantDocuments)
-            {
-                fullUserPrompt.Append($"- {relevantDoc}\n");
-            }
-            fullUserPrompt.Append("\n\nHere is the message history:\n");
-            foreach (var message in prompt.MessageHistory)
-            {
-                fullUserPrompt.Append($"- {message.Content}\n");
-            }
+            // var fullUserPrompt = new StringBuilder();
+            // fullUserPrompt.Append("This is the User Query:\n");
+            // fullUserPrompt.Append(prompt.UserQuery);
+            // fullUserPrompt.Append("\n\nHere is the ONC API response:\n");
+            // fullUserPrompt.Append(prompt.OncAPIData);
+            // fullUserPrompt.Append("\n\nHere are relevant documents :\n");
+            // foreach (var relevantDoc in prompt.RelevantDocuments)
+            // {
+            //     fullUserPrompt.Append($"- {relevantDoc}\n");
+            // }
+            // fullUserPrompt.Append("\n\nHere is the message history:\n");
+            // foreach (var message in prompt.MessageHistory)
+            // {
+            //     fullUserPrompt.Append($"- {message.Content}\n");
+            // }
             // ----------------------------------------------
 
             var payload = new
             {
                 model = _modelName,
-                messages = new[]
-                {
-                    new { role = "system", content = prompt.SystemPrompt },
-                    new { role = "user", content = fullUserPrompt.ToString() }
-                },
+                messages = prompt.Messages,
                 stream = false
             };
 
             var json = JsonSerializer.Serialize(payload);
 
+            // Console.WriteLine($"Final Response request Payload: {json}");
             var request = new HttpRequestMessage(HttpMethod.Post, _endpoint)
             {
                 Content = new StringContent(json, Encoding.UTF8, "application/json")
@@ -263,6 +266,14 @@ namespace Rift.LLM
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
 
             var response = await _httpClient.SendAsync(request);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"Error Response: {errorContent}");
+                throw new HttpRequestException($"Request failed with status code {response.StatusCode}: {errorContent}");
+            }
+
             response.EnsureSuccessStatusCode();
 
             var responseContent = await response.Content.ReadAsStringAsync();
@@ -274,7 +285,7 @@ namespace Rift.LLM
                             .GetProperty("content")
                             .GetString();
 
-            return result ?? "No response from Hugging Face model.";
+            return result ?? "No response from Gemma model.";
         }
 
     }

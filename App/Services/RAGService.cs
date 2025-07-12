@@ -42,28 +42,29 @@ public class RAGService : IRAGService
 
         var oncApiData = await _llmProvider.GatherOncAPIData(userQuery);
 
-        // Might want to update this to return a list of Relevant Documents instead.
-        var relevantData = await _chromaDbClient.GetRelevantDataAsync(userQuery, similarityThreshold: 0.5);
+        var relevantDocuments = (await _chromaDbClient.GetRelevantDataAsync(userQuery, similarityThreshold: 0.5)).RelevantDocuments;
 
-        var rerankRequest = new RerankRequest
-        {
-            Query = userQuery,
-            Docs = relevantData.RelevantDocuments.Select(doc => doc.Content).ToList()
-        };
-        var rerankedResponse = await _reRankerClient.RerankAsync(rerankRequest);
+
+        // TODO: Add reranker back once new prompts are working
+        // var rerankRequest = new RerankRequest
+        // {
+        //     Query = userQuery,
+        //     Docs = relevantData.RelevantDocuments.Select(doc => doc.Content).ToList()
+        // };
+        // var rerankedResponse = await _reRankerClient.RerankAsync(rerankRequest);
 
         var prompt = _promptBuilder.BuildPrompt(
             userQuery,
             messageHistory,
             oncApiData,
-            rerankedResponse?.Reranked_Docs ?? new List<string>()
+            relevantDocuments
         );
 
         // Console.WriteLine("Generated Prompt:");
         // Console.WriteLine("\tUser Query: " + prompt.UserQuery);
-        // Console.WriteLine("\tMessage History: " + JsonSerializer.Serialize(prompt.MessageHistory));
+        // Console.WriteLine("\tMessages: " + JsonSerializer.Serialize(prompt.Messages));
         // Console.WriteLine("\tAPI Data:" + prompt.OncAPIData);
-        // Console.WriteLine("\tRelevant Data: " + JsonSerializer.Serialize(prompt.RelevantDocuments));
+        // Console.WriteLine("\tRelevant Data: " + JsonSerializer.Serialize(prompt.RelevantDocumentChunks));
 
         var finalResponse = await _llmProvider.GenerateFinalResponseRAG(prompt);
 
