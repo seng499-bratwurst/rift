@@ -27,17 +27,6 @@ public class RAGService : IRAGService
 
     public async Task<string> GenerateResponseAsync(string userQuery, List<Message>? messageHistory)
     {
-        /* 
-        Rough outline of the steps to generate a response a response:
-            1. Gather ONC API Data using small LLM
-            2. Get relevant data from vector database
-            3. Re-rank data
-            4. Build prompt using PromptBuilder
-            5. Generate final response using larger LLM
-            6. Process response using ResponseProcessor
-            7. Return the final response to the user
-        */
-
         messageHistory ??= new List<Message>();
 
         var oncApiData = await _llmProvider.GatherOncAPIData(userQuery);

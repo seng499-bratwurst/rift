@@ -42,7 +42,9 @@ Here is an example message array:
 ]
 ```
 
-The Chat History, ONC API Reponse, and Retrieved Document Chunks can also be empty. In any of these fields are empty, answer the User Query to the best of your knowledge with the provided resourses.
+- The Chat History, ONC API Reponse, and Retrieved Document Chunks can also be empty. In any of these fields are empty, answer the User Query to the best of your knowledge with the provided resourses.
+
+- **DO NOT INCLUDE ANY TAGS IN THE RESPONSE!**
 
 ---
 

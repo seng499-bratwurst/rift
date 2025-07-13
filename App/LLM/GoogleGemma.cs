@@ -18,7 +18,8 @@ namespace Rift.LLM
         private readonly HttpClient _httpClient;
         private readonly string _apiKey;
         private readonly string _endpoint;
-        private readonly string _modelName;
+        private readonly string _oncModelName;
+        private readonly string _finalModelName;
         private readonly OncFunctionParser _parser;
 
         /// <summary>
@@ -38,7 +39,8 @@ namespace Rift.LLM
             // }
             _apiKey = config["LLMSettings:GoogleGemma:ApiKey"] ?? throw new ArgumentNullException("GoogleGemma ApiKey missing in config");
             _endpoint = config["LLMSettings:GoogleGemma:Endpoint"] ?? throw new ArgumentNullException("GoogleGemma Endpoint missing in config");
-            _modelName = config["LLMSettings:GoogleGemma:ModelName"] ?? "gemma-3n-e4b-it";
+            _oncModelName = config["LLMSettings:GoogleGemma:ONCModelName"] ?? "gemma-3n-e4b-it";
+            _finalModelName = config["LLMSettings:GoogleGemma:FinalModelName"] ?? "gemini-2.5-flash";
             _parser = parser;
         }
 
@@ -95,7 +97,7 @@ namespace Rift.LLM
             }
             var payload = new
             {
-                model = _modelName,
+                model = _oncModelName,
                 messages = new[]
                 {
                     new { role = "system", content = systemPrompt },
@@ -112,15 +114,12 @@ namespace Rift.LLM
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
 
             var response = await _httpClient.SendAsync(request);
-
-            
-            // Console.WriteLine($"Response Status Code: {response.StatusCode}");
-            // Console.WriteLine($"Response Headers: {response.Headers}");
+    
             if (!response.IsSuccessStatusCode)
             {
                 var errorContent = await response.Content.ReadAsStringAsync();
-                // Console.WriteLine($"Error Response: {errorContent}");
-                throw new HttpRequestException($"Request failed with status code {response.StatusCode}: {errorContent}");
+                throw new HttpRequestException("Failed to Generate ONC data using small LLM:\n" +
+                $"Status Code:{response.StatusCode}\nError: {errorContent}\n");
             }
 
             response.EnsureSuccessStatusCode();
@@ -190,7 +189,7 @@ namespace Rift.LLM
 
             var payload = new
             {
-                model = _modelName,
+                model = _finalModelName,
                 messages = new[]
                 {
                     new { role = "system", content = systemPrompt },
@@ -227,37 +226,16 @@ namespace Rift.LLM
         public async Task<string> GenerateFinalResponseRAG(Prompt prompt)
         {
 
-            // I think eventually we should move this into the PromptBuilder class but 
-            // this should be okay for now. We will need to figure out the best way to
-            // feed all of this data into the LLM.
-            // ----------------------------------------------
-            // var fullUserPrompt = new StringBuilder();
-            // fullUserPrompt.Append("This is the User Query:\n");
-            // fullUserPrompt.Append(prompt.UserQuery);
-            // fullUserPrompt.Append("\n\nHere is the ONC API response:\n");
-            // fullUserPrompt.Append(prompt.OncAPIData);
-            // fullUserPrompt.Append("\n\nHere are relevant documents :\n");
-            // foreach (var relevantDoc in prompt.RelevantDocuments)
-            // {
-            //     fullUserPrompt.Append($"- {relevantDoc}\n");
-            // }
-            // fullUserPrompt.Append("\n\nHere is the message history:\n");
-            // foreach (var message in prompt.MessageHistory)
-            // {
-            //     fullUserPrompt.Append($"- {message.Content}\n");
-            // }
-            // ----------------------------------------------
-
             var payload = new
             {
-                model = _modelName,
+                model = _finalModelName,
                 messages = prompt.Messages,
-                stream = false
+                stream = false,
+                temperature = 0.5 // Answers seem a bit more reliable with lower temperature
             };
 
             var json = JsonSerializer.Serialize(payload);
 
-            // Console.WriteLine($"Final Response request Payload: {json}");
             var request = new HttpRequestMessage(HttpMethod.Post, _endpoint)
             {
                 Content = new StringContent(json, Encoding.UTF8, "application/json")
@@ -271,7 +249,8 @@ namespace Rift.LLM
             {
                 var errorContent = await response.Content.ReadAsStringAsync();
                 Console.WriteLine($"Error Response: {errorContent}");
-                throw new HttpRequestException($"Request failed with status code {response.StatusCode}: {errorContent}");
+                throw new HttpRequestException("Failed to Generate response from Large LLM:\n" +
+                $"Status Code:{response.StatusCode}\nError: {errorContent}\n");
             }
 
             response.EnsureSuccessStatusCode();

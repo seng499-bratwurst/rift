@@ -86,8 +86,8 @@ namespace Rift.LLM
                     message = "ONC API call not required. Answer based on the user prompt."
                 };
             }else{
-                 String LLMContentFiltered = match.Value;
-                 Console.WriteLine("LLMContentFiltered: "+ LLMContentFiltered);
+                var LLMContentFiltered = match.Value;
+                // Console.WriteLine("LLMContentFiltered: "+ LLMContentFiltered);
 
 
                 using JsonDocument innerDoc = JsonDocument.Parse(LLMContentFiltered);
