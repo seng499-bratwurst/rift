@@ -45,9 +45,8 @@ namespace Rift.LLM
         /// </summary>
         public async Task<string> GatherOncAPIData(string prompt)
         {
-             string systemPrompt = "";
-
-             // All property codes from the Cambridge Bay observatory
+            string systemPrompt;
+            // All property codes from the Cambridge Bay observatory
             string[] propertyCodes = {
                 "absolutebarometricpressure",
                 "absolutehumidity", 
@@ -96,7 +95,7 @@ namespace Rift.LLM
                 model = _oncModelName,
                 messages = new[]
                 {
-                    new { role = "system", content = systemPrompt },
+                    new { role = "user", content = systemPrompt },
                     new { role = "user", content = prompt }
                 }
             };
