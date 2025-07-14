@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
@@ -82,9 +82,7 @@ builder.Services.AddScoped<ReRankerClient>();
 builder.Services.AddScoped<ResponseProcessor>();
 builder.Services.AddScoped(provider =>
 {
-    var systemPrompt =
-        "You are a helpful ocean network canada assistant that interprets " +
-        "the data given and answers the user prompt with accuracy.";
+    var systemPrompt = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "LLM/SystemPrompts", "sys_prompt_large_llm.md"));
     return new PromptBuilder(systemPrompt);
 });
 

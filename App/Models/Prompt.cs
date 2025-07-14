@@ -2,12 +2,24 @@ using Rift.Models;
 
 namespace Rift.App.Models;
 
+public class PromptMessage
+{
+    public string role { get; set; } = string.Empty;
+    public string content { get; set; } = string.Empty;
+
+}
+
+public class DocumentChunk
+{
+    public string Title { get; set; } = string.Empty;
+    public string Content { get; set; } = string.Empty;
+}
+
 public class Prompt
 {
-    public int PromptId { get; set; }
     public string SystemPrompt { get; set; } = string.Empty;
     public string UserQuery { get; set; } = string.Empty;
-    public List<Message> MessageHistory { get; set; } = [];
+    public List<PromptMessage> Messages { get; set; } = [];
     public string OncAPIData { get; set; } = string.Empty;
-    public List<string> RelevantDocuments { get; set; } = [];
+    public List<DocumentChunk> RelevantDocumentChunks { get; set; } = [];
 }
