@@ -13,6 +13,11 @@ Once installed, to run the api and database:
 * Run `docker compose up --build` in the shell of your choice
 * Once running, view the current endpoints [Here](http://localhost:5000/swagger/index.html)
 
+* For the LLM's to work correctly you must generate an API token to use from [Google Gemma](https://aistudio.google.com/apikey)
+* Copy the generated API token and add the line below to your `.env` file.
+* `GOOGLE_API_KEY=<your-api-token>`
+* **Note:** You will have to re-run `docker compose up --build` for the environment variables to take effect.
+
 **(Optional)**
 * If you would like to populate the VectorDB with the document dataset, open the ChromaDB endpoints [here](http://localhost:8000/docs#/default/add_initial_documents_documents_initial_post)
 * You can run the `POST /documents/initial` endpoint to add all of the dataset to the VectorDB
