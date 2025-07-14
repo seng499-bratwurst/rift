@@ -21,6 +21,10 @@ namespace Rift.Tests
         private Mock<IConversationService> _conversationServiceMock;
         private Mock<IRAGService> _ragServiceMock;
 
+        private Mock<ICompanyRateLimitingService> _rateLimitingServiceMock;
+
+
+
         [TestInitialize]
         public void Setup()
         {
@@ -28,19 +32,22 @@ namespace Rift.Tests
             _messageEdgeServiceMock = new Mock<IMessageEdgeService>();
             _conversationServiceMock = new Mock<IConversationService>();
             _ragServiceMock = new Mock<IRAGService>();
+            _rateLimitingServiceMock = new Mock<ICompanyRateLimitingService>();
         }
 
         private MessageController CreateControllerWithUser(string userId)
         {
             var user = new ClaimsPrincipal(new ClaimsIdentity(new[]
             {
-                new Claim(ClaimTypes.NameIdentifier, userId)
+                new Claim(ClaimTypes.NameIdentifier, userId),
+                new Claim("ONCApiToken", "token")
             }, "mock"));
             var controller = new MessageController(
                 _messageServiceMock.Object,
                 _conversationServiceMock.Object,
                 _ragServiceMock.Object,
                 _messageEdgeServiceMock.Object
+                // _rateLimitingServiceMock.Object  // Inject the rate limiting service mock
             );
             controller.ControllerContext = new ControllerContext
             {
@@ -56,6 +63,7 @@ namespace Rift.Tests
                 _conversationServiceMock.Object,
                 _ragServiceMock.Object,
                 _messageEdgeServiceMock.Object
+                // _rateLimitingServiceMock.Object  // Inject the rate limiting service mock
             );
             controller.ControllerContext = new ControllerContext
             {
@@ -97,8 +105,10 @@ namespace Rift.Tests
         [TestMethod]
         public async Task CreateMessage_ReturnsNotFound_WhenConversationNull()
         {
-            _conversationServiceMock.Setup(s => s.GetOrCreateConversationByUserId("user1", null))
-                .ReturnsAsync((Conversation)null);
+            _conversationServiceMock
+                .Setup(x => x.GetOrCreateConversationByUserId(It.IsAny<string>(), It.IsAny<int?>()))
+                .ReturnsAsync(new Conversation { Id = 1 });
+
 
             var controller = CreateControllerWithUser("user1");
             var request = new MessageController.CreateMessageRequest { Content = "Hello" };
@@ -136,9 +146,15 @@ namespace Rift.Tests
             _messageEdgeServiceMock.Setup(e => e.CreateMessageEdgesFromSourcesAsync(It.IsAny<int>(), It.IsAny<PartialMessageEdge[]>()))
                 .ReturnsAsync(new List<MessageEdge>());
 
+            _rateLimitingServiceMock
+                .Setup(x => x.IsAllowedAsync(It.IsAny<string>()))
+                .ReturnsAsync(true);
+
+
             var controller = CreateControllerWithUser(userId);
             var request = new MessageController.CreateMessageRequest { Content = "Hello" };
 
+            Console.WriteLine("\n\n\nToken incremented 155\n\n\n");
             var result = await controller.CreateMessage(request);
 
             var okResult = result as OkObjectResult;
