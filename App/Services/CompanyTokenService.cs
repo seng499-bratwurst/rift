@@ -33,4 +33,15 @@ public class CompanyTokenService : ICompanyTokenService
         return await _companyTokenRepository.AddAsync(entity);
     }
 
+
+    public async Task<CompanyAPITokens?> DeleteTokenAsync(string token)
+    {
+        var existing = await _companyTokenRepository.GetByTokenAsync(token);
+        if (existing == null)
+        {
+            return null; // Token not found
+        }
+
+        return await _companyTokenRepository.DeleteAsync(existing);
+    }
 }

@@ -25,6 +25,13 @@ public class CompanyTokenRepository : ICompanyTokenRepository
         return token;
     }
 
+    public async Task<CompanyAPITokens?> DeleteAsync(CompanyAPITokens token)
+    {
+        _context.CompanyAPITokens.Remove(token);
+        await _context.SaveChangesAsync();
+        return token;
+    }
+
     public async Task<CompanyAPITokens?> GetByTokenAsync(string token)
     {
         return await _context.CompanyAPITokens
