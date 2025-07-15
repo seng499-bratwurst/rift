@@ -7,7 +7,6 @@ namespace Rift.LLM;
 
 public class PromptBuilder
 {
-    private static int _promptIdCounter = 0;
     private readonly string _systemPrompt;
 
     public PromptBuilder(string systemPrompt)
@@ -15,22 +14,60 @@ public class PromptBuilder
         _systemPrompt = systemPrompt;
     }
 
-    public Prompt BuildPrompt(string userQuery, List<Message> messageHistory, string oncApiData, List<string> relevantDocuments)
+    public Prompt BuildPrompt(string userQuery, List<Message> messageHistory, string oncApiData, List<RelevantDocument> relevantDocuments)
     {
-        var fullSystemPrompt = new StringBuilder(_systemPrompt);
-        fullSystemPrompt.AppendLine("\nOnly respond to the user query!");
-        fullSystemPrompt.AppendLine("\nDo not include the ONC API data, relevant documents, or message history in your response. Instead, use them to inform your response to the user query.");
-        fullSystemPrompt.AppendLine("\nThe user is not aware of the ONC API data, relevant documents, or message history, so do not mention them in your response.");
+        var messages = new List<PromptMessage>
+        {
+            new PromptMessage
+            {
+                role = "system",
+                content = _systemPrompt
+            }
+        };
+
+        var formattedMessageHistory = messageHistory.Select(m => new PromptMessage
+        {
+            role = m.Role,
+            content = m.Content ?? string.Empty
+        }).ToList();
+
+        messages.AddRange(formattedMessageHistory);
+
+        messages.Add(new PromptMessage
+        {
+            role = "user",
+            content = userQuery
+        });
+
+        var contextContent = new StringBuilder();
+        contextContent.Append("[API Data] \n\n" + oncApiData + "\n\n");
+        
+        contextContent.Append("[Relevant Document Chunks] \n\n");
+        var documentChunks = relevantDocuments.Select(doc => new DocumentChunk
+        {
+            Title = doc.Source,
+            Content = doc.Content
+        }).ToList() ?? new List<DocumentChunk>();
+
+        foreach (var doc in documentChunks)
+        {
+
+            contextContent.Append($"\t[Document {doc.Title}]\n {doc.Content}\n");
+        }
+
+        messages.Add(new PromptMessage
+        {
+            role = "system",
+            content = contextContent.ToString()
+        });
+
         var prompt = new Prompt
         {
-            // TODO: Just a rough implementation for now, I will update this once we get the MVP working
-            // Should probably update this once it is all working
-            PromptId = _promptIdCounter++,
-            SystemPrompt = fullSystemPrompt.ToString(),
+            SystemPrompt = _systemPrompt.ToString(),
             UserQuery = userQuery,
-            MessageHistory = messageHistory,
-            OncAPIData = oncApiData,
-            RelevantDocuments = relevantDocuments
+            Messages = messages,
+            OncAPIData= oncApiData,
+            RelevantDocumentChunks = documentChunks
         };
 
         return prompt;
