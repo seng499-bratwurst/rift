@@ -232,9 +232,109 @@ namespace Rift.LLM
                     };
                     return JsonSerializer.Serialize(generalResponse);
                 }
-
             };
-            // var payload = new
+        }
+
+        /// <summary>
+        /// Sends a prompt and ONC API response to the Gemma 3n model to generate a final user-facing answer.
+        /// </summary>
+        /// !!! DEPRECATED  !!!
+        /// The message pipeline from the frontend uses the GenerateFinalResponseRAG method instead.
+        /// Just keeping this so Ishan is happy :)
+        public async Task<string> GenerateFinalResponse(string prompt, JsonElement onc_api_response)
+        {
+            string jsonInput = JsonSerializer.Serialize(onc_api_response, new JsonSerializerOptions { WriteIndented = true });
+            var systemPrompt = "You are a helpful Ocean Networks Canada assistant that interprets the data given and answers the user prompt with accuracy.";
+
+            string fullPrompt = $"{prompt}\n\nHere is the ONC API response:\n{jsonInput}";
+
+            var payload = new
+            {
+                model = _finalModelName,
+                messages = new[]
+                {
+                    new { role = "system", content = systemPrompt },
+                    new { role = "user", content = fullPrompt }
+                }
+            };
+
+            var json = JsonSerializer.Serialize(payload);
+
+            var request = new HttpRequestMessage(HttpMethod.Post, _endpoint)
+            {
+                Content = new StringContent(json, Encoding.UTF8, "application/json")
+            };
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
+
+            var response = await _httpClient.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+
+            var responseContent = await response.Content.ReadAsStringAsync();
+
+            using var doc = JsonDocument.Parse(responseContent);
+            var result = doc.RootElement
+                .GetProperty("choices")[0]
+                .GetProperty("message")
+                .GetProperty("content")
+                .GetString();
+
+            return result ?? "No response from Gemma 3n model.";
+        }
+
+        /// <summary>
+        /// Sends a prompt, chat history, relevant documents, and ONC API response to the Gemma 3n model to generate a final user-facing answer.
+        /// </summary>
+        public async Task<string> GenerateFinalResponseRAG(Prompt prompt)
+        {
+
+            var payload = new
+            {
+                model = _finalModelName,
+                messages = prompt.Messages,
+                stream = false,
+                temperature = 0.5 // Answers seem a bit more reliable with lower temperature
+            };
+
+            var json = JsonSerializer.Serialize(payload);
+
+            var request = new HttpRequestMessage(HttpMethod.Post, _endpoint)
+            {
+                Content = new StringContent(json, Encoding.UTF8, "application/json")
+            };
+
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
+
+            var response = await _httpClient.SendAsync(request);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"Error Response: {errorContent}");
+                throw new HttpRequestException("Failed to Generate response from Large LLM:\n" +
+                $"Status Code:{response.StatusCode}\nError: {errorContent}\n");
+            }
+
+            response.EnsureSuccessStatusCode();
+
+            var responseContent = await response.Content.ReadAsStringAsync();
+
+            using var doc = JsonDocument.Parse(responseContent);
+            var result = doc.RootElement
+                            .GetProperty("choices")[0]
+                            .GetProperty("message")
+                            .GetProperty("content")
+                            .GetString();
+
+            return result ?? "No response from Gemma model.";
+        }
+
+    }
+}
+
+
+
+// THIS IS OLD CODE FROM THE GatherOncAPIData method WILL BE DELETING IT LATER
+// var payload = new
             // {
             //     model = _oncModelName,
             //     messages = new[]
@@ -397,100 +497,3 @@ namespace Rift.LLM
             // }
             
             // return JsonSerializer.Serialize(generalResponse);
-        }
-
-        /// <summary>
-        /// Sends a prompt and ONC API response to the Gemma 3n model to generate a final user-facing answer.
-        /// </summary>
-        /// !!! DEPRECATED !!!
-        /// The message pipeline from the frontend uses the GenerateFinalResponseRAG method instead.
-        /// Just keeping this so Ishan is happy :)
-        public async Task<string> GenerateFinalResponse(string prompt, JsonElement onc_api_response)
-        {
-            string jsonInput = JsonSerializer.Serialize(onc_api_response, new JsonSerializerOptions { WriteIndented = true });
-            var systemPrompt = "You are a helpful Ocean Networks Canada assistant that interprets the data given and answers the user prompt with accuracy.";
-
-            string fullPrompt = $"{prompt}\n\nHere is the ONC API response:\n{jsonInput}";
-
-            var payload = new
-            {
-                model = _finalModelName,
-                messages = new[]
-                {
-                    new { role = "system", content = systemPrompt },
-                    new { role = "user", content = fullPrompt }
-                }
-            };
-
-            var json = JsonSerializer.Serialize(payload);
-
-            var request = new HttpRequestMessage(HttpMethod.Post, _endpoint)
-            {
-                Content = new StringContent(json, Encoding.UTF8, "application/json")
-            };
-            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
-
-            var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
-
-            var responseContent = await response.Content.ReadAsStringAsync();
-
-            using var doc = JsonDocument.Parse(responseContent);
-            var result = doc.RootElement
-                .GetProperty("choices")[0]
-                .GetProperty("message")
-                .GetProperty("content")
-                .GetString();
-
-            return result ?? "No response from Gemma 3n model.";
-        }
-
-        /// <summary>
-        /// Sends a prompt, chat history, relevant documents, and ONC API response to the Gemma 3n model to generate a final user-facing answer.
-        /// </summary>
-        public async Task<string> GenerateFinalResponseRAG(Prompt prompt)
-        {
-
-            var payload = new
-            {
-                model = _finalModelName,
-                messages = prompt.Messages,
-                stream = false,
-                temperature = 0.5 // Answers seem a bit more reliable with lower temperature
-            };
-
-            var json = JsonSerializer.Serialize(payload);
-
-            var request = new HttpRequestMessage(HttpMethod.Post, _endpoint)
-            {
-                Content = new StringContent(json, Encoding.UTF8, "application/json")
-            };
-
-            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
-
-            var response = await _httpClient.SendAsync(request);
-
-            if (!response.IsSuccessStatusCode)
-            {
-                var errorContent = await response.Content.ReadAsStringAsync();
-                Console.WriteLine($"Error Response: {errorContent}");
-                throw new HttpRequestException("Failed to Generate response from Large LLM:\n" +
-                $"Status Code:{response.StatusCode}\nError: {errorContent}\n");
-            }
-
-            response.EnsureSuccessStatusCode();
-
-            var responseContent = await response.Content.ReadAsStringAsync();
-
-            using var doc = JsonDocument.Parse(responseContent);
-            var result = doc.RootElement
-                            .GetProperty("choices")[0]
-                            .GetProperty("message")
-                            .GetProperty("content")
-                            .GetString();
-
-            return result ?? "No response from Gemma model.";
-        }
-
-    }
-}
