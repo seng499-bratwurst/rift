@@ -175,6 +175,9 @@ namespace Rift.LLM
                 string? content;
                 string? functionCallName;
                 string? functionCallParams;
+                // var id = message.GetProperty("id").GetString() ?? throw new Exception("ID is null");
+                // var function = message.GetProperty("function");
+                // var type = message.GetProperty("type").GetString() ?? throw new Exception("Type is null");
                 
 
                 if (message.TryGetProperty("tool_calls", out var toolCalls) && toolCalls.GetArrayLength() > 0){
@@ -189,15 +192,30 @@ namespace Rift.LLM
                     {
                         throw new Exception("Function Call Params is null");
                     }
+                    messages.Add(new {
+                        role = "assistant",
+                        tool_calls = new[]
+                        {
+                            new {
+                            function = new {
+                                arguments = functionCallParams,
+                                name = functionCallName,
+                            },
+                            id = functionCallName,
+                            type = "function"
+                            }
+                        }
+                    });
+
                     // Console.WriteLine($"Function Call Params: {functionCallParams}");
                     var (functionName, functionParams) = _parser.ExtractFunctionAndQueries(functionCallName, functionCallParams);
                     Console.WriteLine($"Function Name: {functionName}");
                     Console.WriteLine($"Function Params: {functionParams}");
                     var result = await _parser.OncAPICall(functionName, functionParams);
                     messages.Add(new {
-                        tool_call_id = $"**{functionCallName}**",
+                        tool_call_id = functionCallName,
                         role = "tool",
-                        name = $"**{functionCallName}**",
+                        name = functionCallName,
                         content = result,
                     });
                  Console.WriteLine($"Messages: {messages}");
