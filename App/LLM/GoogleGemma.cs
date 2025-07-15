@@ -175,9 +175,6 @@ namespace Rift.LLM
                 string? content;
                 string? functionCallName;
                 string? functionCallParams;
-                // var id = message.GetProperty("id").GetString() ?? throw new Exception("ID is null");
-                // var function = message.GetProperty("function");
-                // var type = message.GetProperty("type").GetString() ?? throw new Exception("Type is null");
                 
 
                 if (message.TryGetProperty("tool_calls", out var toolCalls) && toolCalls.GetArrayLength() > 0){
