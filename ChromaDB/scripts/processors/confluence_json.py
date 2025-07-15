@@ -48,21 +48,30 @@ class ConfluenceJson(BaseDocumentProcessor):
             'created_at': created_at
         }
         
-        if 'propertyCode' in item:
+        if metadata['name'] == "properties":
             metadata['item_code'] = item['propertyCode']
             metadata['item_name'] = item.get('propertyName', '')
-        elif 'deviceCode' in item:
+            metadata['source'] = "https://wiki.oceannetworks.ca/spaces/O2A/pages/48697051/Available+Properties"
+        elif metadata['name'] == "devices":
             metadata['item_code'] = item['deviceCode']
             metadata['item_name'] = item.get('deviceName', '')
-        elif 'deviceCategoryCode' in item:
+            metadata['source'] = "https://wiki.oceannetworks.ca/spaces/O2A/pages/48697045/Available+Devices"
+        elif metadata['name'] == "deviceCategories":
             metadata['item_code'] = item['deviceCategoryCode']
             metadata['item_name'] = item.get('deviceCategoryName', '')
-        elif 'locationCode' in item:
+            metadata['source'] = "https://wiki.oceannetworks.ca/spaces/O2A/pages/48697037/Available+Device+Categories"
+        elif metadata['name'] == "deployments":
+            metadata['item_code'] = item['deviceCode']
+            metadata['item_name'] = ''
+            metadata['source'] = "https://wiki.oceannetworks.ca/spaces/O2A/pages/49449087/Available+Deployments"
+        elif metadata['name'] == "locations":
             metadata['item_code'] = item['locationCode']
             metadata['item_name'] = item.get('locationName', '')
-        elif 'dataProductCode' in item:
+            metadata['source'] = "https://wiki.oceannetworks.ca/spaces/O2A/pages/49447553/Available+Locations"
+        elif metadata['name'] == "dataProducts":
             metadata['item_code'] = item['dataProductCode']
             metadata['item_name'] = item.get('dataProductName', '')
+            metadata['source'] = "https://wiki.oceannetworks.ca/spaces/O2A/pages/48697035/Available+Data+Products"
         
         text_parts = []
         
