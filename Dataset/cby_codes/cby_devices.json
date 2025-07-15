@@ -1,0 +1,402 @@
+[
+    {
+        "deviceCode": "COASTGUARDAIS003160185",
+        "name": "Coastguard AIS MMSI 003160185",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=24048"
+    },
+    {
+        "deviceCode": "CANONPOWERSHOTG168406B001AA",
+        "name": "Canon PowerShot G16 Digital Camera 8406B001AA",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=23459"
+    },
+    {
+        "deviceCode": "GARMINGPSMAP62ST211006242",
+        "name": "Garmin GPSMAP 62st (S/N 211006242)",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=23608"
+    },
+    {
+        "deviceCode": "GOPROCAMERACHDHX302H38B09133F05D8",
+        "name": "GoPro Camera CHDHX-302 H38B09133F05D8",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=23266"
+    },
+    {
+        "deviceCode": "SUUNTOZOOP32800551",
+        "name": "Suunto Zoop Dive Computer (S/N 32800551)",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=22875"
+    },
+    {
+        "deviceCode": "ONCMJB010",
+        "name": "ONC Mini Junction Box 010",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=31999"
+    },
+    {
+        "deviceCode": "ONCMJB009",
+        "name": "ONC Mini Junction Box 009",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=31920"
+    },
+    {
+        "deviceCode": "ONCMJB033",
+        "name": "ONC Mini Junction Box 033",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=77112"
+    },
+    {
+        "deviceCode": "ASLSWIP53019",
+        "name": "ASL Shallow Water Ice Profiler 53019",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=23369"
+    },
+    {
+        "deviceCode": "ASLSWIP53029",
+        "name": "ASL Shallow Water Ice Profiler 53029",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=524"
+    },
+    {
+        "deviceCode": "ASLSWIP53038",
+        "name": "ASL Shallow Water Ice Profiler 53038",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=24049"
+    },
+    {
+        "deviceCode": "AXISCAMACCC8ED935D1",
+        "name": "Axis P1375 Camera SN ACCC8ED935D1",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=45940"
+    },
+    {
+        "deviceCode": "AXISQ6035HD1089",
+        "name": "Axis Q6035 HD Webcam 1089",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=23255"
+    },
+    {
+        "deviceCode": "BIOLIGHTSENSOR50115",
+        "name": "Biospherical PAR Irradiance QSP-2350 50115",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=20117"
+    },
+    {
+        "deviceCode": "BIOLIGHTSENSOR70434",
+        "name": "Biospherical PAR Irradiance QSP-2350L 70434",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=23059"
+    },
+    {
+        "deviceCode": "ICLISTENHF1251",
+        "name": "Ocean Sonics icListen HF Hydrophone 1251",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=23157"
+    },
+    {
+        "deviceCode": "ICLISTENHF1252",
+        "name": "Ocean Sonics icListen HF Hydrophone 1252",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=23155"
+    },
+    {
+        "deviceCode": "ICLISTENHF1266",
+        "name": "Ocean Sonics icListen HF Hydrophone 1266",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=23235"
+    },
+    {
+        "deviceCode": "ICLISTENHF1288",
+        "name": "Ocean Sonics icListen HF Hydrophone 1288",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=23330"
+    },
+    {
+        "deviceCode": "ICLISTENHF1561",
+        "name": "Ocean Sonics icListen HF Hydrophone 1561",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=24347"
+    },
+    {
+        "deviceCode": "ICLISTENHF1951",
+        "name": "Ocean Sonics icListen HF Hydrophone 1951",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=47240"
+    },
+    {
+        "deviceCode": "ISUSX0116",
+        "name": "Satlantic Nitrate Sensor ISUS-X V2 (SN 0116)",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=28"
+    },
+    {
+        "deviceCode": "MCLANEPHYTOPLANKTONSAMPLER1293501",
+        "name": "McLane Phytoplankton Sampler (SN 12935-01)",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=14090"
+    },
+    {
+        "deviceCode": "OCEANCAMOPT06FHDE9300861",
+        "name": "Ocean Presence Technologies OPT-06FHDE 9300861",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=13204"
+    },
+    {
+        "deviceCode": "OCEANCAMOPT06HDE9300860",
+        "name": "Ocean Presence Technologies OPT-06HDE 9300860",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=13202"
+    },
+    {
+        "deviceCode": "ONCLIGHTS05AND06",
+        "name": "Ocean Networks Canada Lights (SN05 SN06)",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=77812"
+    },
+    {
+        "deviceCode": "PHSENSOR246",
+        "name": "Satlantic SeaFET Ocean pH Sensor (SN 246)",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=23913"
+    },
+    {
+        "deviceCode": "PHSENSOR452",
+        "name": "Satlantic SeaFET Ocean pH Sensor (SN 452)",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=24172"
+    },
+    {
+        "deviceCode": "RDIADCP1200WH9111",
+        "name": "RDI Workhorse Monitor ADCP 1200 kHz (9111)",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=20001"
+    },
+    {
+        "deviceCode": "ROSLIGHTS21251SN21267",
+        "name": "ROS Lights (SN 21251 21267)",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=23363"
+    },
+    {
+        "deviceCode": "SBE63630108",
+        "name": "Sea-Bird SBE 63 Dissolved Oxygen Sensor 630108",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=23045"
+    },
+    {
+        "deviceCode": "SBE63630225",
+        "name": "Sea-Bird SBE 63 Dissolved Oxygen Sensor 630225",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=23044"
+    },
+    {
+        "deviceCode": "SBE63630834",
+        "name": "Sea-Bird SBE 63 Dissolved Oxygen Sensor 630834",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=23356"
+    },
+    {
+        "deviceCode": "SBE63631008",
+        "name": "Sea-Bird SBE 63 Dissolved Oxygen Sensor 631008",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=23493"
+    },
+    {
+        "deviceCode": "SBE63631500",
+        "name": "Sea-Bird SBE 63 Dissolved Oxygen Sensor 631500",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=24003"
+    },
+    {
+        "deviceCode": "SBECTD19p7036",
+        "name": "Sea-Bird SeaCAT SBE19plus V2 7036",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=23028"
+    },
+    {
+        "deviceCode": "SBECTD19p7128",
+        "name": "Sea-Bird SeaCAT SBE19plus V2 7128",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=23830"
+    },
+    {
+        "deviceCode": "SBECTD19p7518",
+        "name": "Sea-Bird SeaCAT SBE19plus V2 7518",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=23355"
+    },
+    {
+        "deviceCode": "SBECTD19p7589",
+        "name": "Sea-Bird SeaCAT SBE19plus V2 7589",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=23491"
+    },
+    {
+        "deviceCode": "SBECTD19p7769",
+        "name": "Sea-Bird SeaCAT SBE19plus V2 7769",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=24000"
+    },
+    {
+        "deviceCode": "SUNSAMIpHP0073",
+        "name": "Sunburst SAMI pH P0073",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=17000"
+    },
+    {
+        "deviceCode": "VEMCOVR2C450094",
+        "name": "Vemco VR2C-69kHz Single-Channel Acoustic Receiver 450094",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=23189"
+    },
+    {
+        "deviceCode": "VEMCOVR2C450150",
+        "name": "Vemco VR2C-69kHz Single-Channel Acoustic Receiver 450150",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=23455"
+    },
+    {
+        "deviceCode": "VEMCOVR2W112529",
+        "name": "Vemco VR2W Single-Channel Acoustic Receiver 112529",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=26059"
+    },
+    {
+        "deviceCode": "WETLABSECOFLRT6106",
+        "name": "WET Labs ECO FLRT 6106",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=46360"
+    },
+    {
+        "deviceCode": "WETLABSECOPARS440",
+        "name": "WET Labs ECO-PARS (S/N 440)",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=23382"
+    },
+    {
+        "deviceCode": "WETLABSECOPARS459",
+        "name": "WET Labs ECO-PARS (S/N 459)",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=23488"
+    },
+    {
+        "deviceCode": "WETLABSFLNTU2586",
+        "name": "WET Labs ECO FLNTUS 2586",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=23062"
+    },
+    {
+        "deviceCode": "WETLABSFLNTUS3441",
+        "name": "WET Labs ECO FLNTUS 3441",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=23357"
+    },
+    {
+        "deviceCode": "WETLABSFLNTUS3923",
+        "name": "WET Labs ECO FLNTUS 3923",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=23490"
+    },
+    {
+        "deviceCode": "WETLABSWQM196",
+        "name": "WET Labs Water Quality Monitor 196",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=9001"
+    },
+    {
+        "deviceCode": "WETLABSWQM233",
+        "name": "WET Labs Water Quality Monitor 233",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=13200"
+    },
+    {
+        "deviceCode": "WLNTUS319",
+        "name": "WET Labs ECO-NTUS 319",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=1302"
+    },
+    {
+        "deviceCode": "XWING-HDWebcam1088",
+        "name": "Axis Q6304 HD Webcam 1088",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=23022"
+    },
+    {
+        "deviceCode": "PROCO2-35-250-75",
+        "name": "Pro-Oceanus CO2-Pro CV (SN 35-250-75)",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=23492"
+    },
+    {
+        "deviceCode": "PROCO2-36-314-75",
+        "name": "Pro-Oceanus CO2-Pro CV (SN 36-314-75)",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=23816"
+    },
+    {
+        "deviceCode": "AANDERAA4797PCO2OPTODE33",
+        "name": "Aanderaa Optode 4797 pCO2 (S/N 33)",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=22670"
+    },
+    {
+        "deviceCode": "AandOpt4531A171",
+        "name": "Aanderaa Optode 4531A (S/N 171)",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=23567"
+    },
+    {
+        "deviceCode": "AMLMETRECX50147",
+        "name": "AML CTD Metrec X 50147",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=23501"
+    },
+    {
+        "deviceCode": "ROSLIGHTS66026",
+        "name": "ROS Lights (SN 66026)",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=23532"
+    },
+    {
+        "deviceCode": "ROSLIGHTS66028",
+        "name": "ROS Lights (SN 66028)",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=23539"
+    },
+    {
+        "deviceCode": "ROSLIGHTS66029",
+        "name": "ROS Lights (SN 66029)",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=23540"
+    },
+    {
+        "deviceCode": "HONEYWELLHMR3300ORIENTATION31963",
+        "name": "Honeywell HMR3300 Orientation (SN 31963)",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=23538"
+    },
+    {
+        "deviceCode": "OMEGAIBTHX15120257",
+        "name": "Omega Environment iBTHX-D Monitor (SN 15120257)",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=22430"
+    },
+    {
+        "deviceCode": "iORELAYTADFC1007725",
+        "name": "MOXA ioLogik E1242 TADFC1007725",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=22431"
+    },
+    {
+        "deviceCode": "iORELAYTABLC1067517",
+        "name": "MOXA ioLogik E1214 TABLC1067517",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=23537"
+    },
+    {
+        "deviceCode": "iORELAYTABLC1067345",
+        "name": "MOXA ioLogik E1214 TABLC1067345",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=23536"
+    },
+    {
+        "deviceCode": "iORELAYTADFC1007805",
+        "name": "MOXA ioLogik E1242 TADFC1007805",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=23552"
+    },
+    {
+        "deviceCode": "iORELAYTABLC1067321",
+        "name": "MOXA ioLogik E1214 TABLC1067321",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=23535"
+    },
+    {
+        "deviceCode": "SRSLSIMBA1516027",
+        "name": "SRSL Ice Mass Balance Buoy 1516027",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=22050"
+    },
+    {
+        "deviceCode": "SRSLSIMBACAN0201",
+        "name": "SRSL Ice Mass Balance Buoy CAN 02 01",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=26959"
+    },
+    {
+        "deviceCode": "AXISCAM00408CC1C89C",
+        "name": "Axis P1346 Camera SN 00408CC1C89C",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=526"
+    },
+    {
+        "deviceCode": "DIGITALYACHTAISNET1315-0006-01",
+        "name": "Digital Yacht AISnet Receiver 1315-0006-01",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=23192"
+    },
+    {
+        "deviceCode": "VAISALAPTB210J3120006",
+        "name": "Vaisala PTB210 Barometer J3120006",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=23193"
+    },
+    {
+        "deviceCode": "DAVIS6162CA111110P024",
+        "name": "Davis Vantage Pro2 Plus 6162C A111110P024",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=13201"
+    },
+    {
+        "deviceCode": "LUFFTWS501-07209121009031",
+        "name": "Lufft WS501 (S/N 072.0912.1009.031) Weather Station",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=23184"
+    },
+    {
+        "deviceCode": "OMEGAIBTHX15110684",
+        "name": "Omega Environment iBTHX-D Monitor (SN 15110684)",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=23551"
+    },
+    {
+        "deviceCode": "TDKLAMBDA15D5095AA",
+        "name": "TDK Lambda 300VDC Power Supply 15D5095AA",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=23618"
+    },
+    {
+        "deviceCode": "iORELAYTABHC1037724",
+        "name": "MOXA ioLogik E1214 TABHC1037724",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=23616"
+    },
+    {
+        "deviceCode": "iORELAYTADFC1007695",
+        "name": "MOXA ioLogik E1242 TADFC1007695",
+        "description": "https://data.oceannetworks.ca/DeviceListing?DeviceId=23617"
+    }
+]

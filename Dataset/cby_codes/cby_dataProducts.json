@@ -1,0 +1,287 @@
+[
+    {
+        "dataProductCode": "LF",
+        "name": "Log File",
+        "description": "https://wiki.oceannetworks.ca/display/DP/4"
+    },
+    {
+        "dataProductCode": "MP4V",
+        "name": "MP4 Video",
+        "description": "https://wiki.oceannetworks.ca/display/DP/23"
+    },
+    {
+        "dataProductCode": "MSQAQCR",
+        "name": "Manual Scalar QAQC Results",
+        "description": "https://wiki.oceannetworks.ca/display/DP/106"
+    },
+    {
+        "dataProductCode": "ND",
+        "name": "Navigation Data",
+        "description": "https://wiki.oceannetworks.ca/display/DP/77"
+    },
+    {
+        "dataProductCode": "TSSD",
+        "name": "Time Series Scalar Data",
+        "description": "https://wiki.oceannetworks.ca/display/DP/1"
+    },
+    {
+        "dataProductCode": "TSSD",
+        "name": "Time Series Scalar Data",
+        "description": "https://wiki.oceannetworks.ca/display/DP/1"
+    },
+    {
+        "dataProductCode": "TSSD",
+        "name": "Time Series Scalar Data",
+        "description": "https://wiki.oceannetworks.ca/display/DP/1"
+    },
+    {
+        "dataProductCode": "TSSD",
+        "name": "Time Series Scalar Data",
+        "description": "https://wiki.oceannetworks.ca/display/DP/1"
+    },
+    {
+        "dataProductCode": "TSSP",
+        "name": "Time Series Scalar Plot",
+        "description": "https://wiki.oceannetworks.ca/display/DP/2"
+    },
+    {
+        "dataProductCode": "TSSP",
+        "name": "Time Series Scalar Plot",
+        "description": "https://wiki.oceannetworks.ca/display/DP/2"
+    },
+    {
+        "dataProductCode": "AD",
+        "name": "Audio Data",
+        "description": "https://wiki.oceannetworks.ca/display/DP/7"
+    },
+    {
+        "dataProductCode": "AD",
+        "name": "Audio Data",
+        "description": "https://wiki.oceannetworks.ca/display/DP/7"
+    },
+    {
+        "dataProductCode": "AD",
+        "name": "Audio Data",
+        "description": "https://wiki.oceannetworks.ca/display/DP/7"
+    },
+    {
+        "dataProductCode": "AF",
+        "name": "Annotation File",
+        "description": "https://wiki.oceannetworks.ca/display/DP/89"
+    },
+    {
+        "dataProductCode": "ASFV",
+        "name": "ASF Video",
+        "description": "https://wiki.oceannetworks.ca/display/DP/39"
+    },
+    {
+        "dataProductCode": "CSPPD",
+        "name": "Cast Scalar Profile Plot and Data",
+        "description": "https://wiki.oceannetworks.ca/display/DP/56"
+    },
+    {
+        "dataProductCode": "CSPPD",
+        "name": "Cast Scalar Profile Plot and Data",
+        "description": "https://wiki.oceannetworks.ca/display/DP/56"
+    },
+    {
+        "dataProductCode": "CSPPD",
+        "name": "Cast Scalar Profile Plot and Data",
+        "description": "https://wiki.oceannetworks.ca/display/DP/56"
+    },
+    {
+        "dataProductCode": "CSPPD",
+        "name": "Cast Scalar Profile Plot and Data",
+        "description": "https://wiki.oceannetworks.ca/display/DP/56"
+    },
+    {
+        "dataProductCode": "HACC",
+        "name": "Hydrophone Acceleration Data",
+        "description": "https://wiki.oceannetworks.ca/display/DP/128"
+    },
+    {
+        "dataProductCode": "HSD",
+        "name": "Hydrophone Spectral Data",
+        "description": "https://wiki.oceannetworks.ca/display/DP/45"
+    },
+    {
+        "dataProductCode": "HSD",
+        "name": "Hydrophone Spectral Data",
+        "description": "https://wiki.oceannetworks.ca/display/DP/45"
+    },
+    {
+        "dataProductCode": "HSD",
+        "name": "Hydrophone Spectral Data",
+        "description": "https://wiki.oceannetworks.ca/display/DP/45"
+    },
+    {
+        "dataProductCode": "HSD",
+        "name": "Hydrophone Spectral Data",
+        "description": "https://wiki.oceannetworks.ca/display/DP/45"
+    },
+    {
+        "dataProductCode": "HSPD",
+        "name": "Hydrophone Spectral Probability Density",
+        "description": "https://wiki.oceannetworks.ca/display/DP/51"
+    },
+    {
+        "dataProductCode": "HSPD",
+        "name": "Hydrophone Spectral Probability Density",
+        "description": "https://wiki.oceannetworks.ca/display/DP/51"
+    },
+    {
+        "dataProductCode": "HSPD",
+        "name": "Hydrophone Spectral Probability Density",
+        "description": "https://wiki.oceannetworks.ca/display/DP/51"
+    },
+    {
+        "dataProductCode": "JPGF",
+        "name": "JPG File",
+        "description": "https://wiki.oceannetworks.ca/display/DP/54"
+    },
+    {
+        "dataProductCode": "LF",
+        "name": "Log File",
+        "description": "https://wiki.oceannetworks.ca/display/DP/4"
+    },
+    {
+        "dataProductCode": "RADCPTS",
+        "name": "RDI ADCP Time Series",
+        "description": "https://wiki.oceannetworks.ca/display/DP/5"
+    },
+    {
+        "dataProductCode": "RADCPTS",
+        "name": "RDI ADCP Time Series",
+        "description": "https://wiki.oceannetworks.ca/display/DP/5"
+    },
+    {
+        "dataProductCode": "RADCPTS",
+        "name": "RDI ADCP Time Series",
+        "description": "https://wiki.oceannetworks.ca/display/DP/5"
+    },
+    {
+        "dataProductCode": "RDCUP",
+        "name": "RDI Daily Current Plot",
+        "description": "https://wiki.oceannetworks.ca/display/DP/9"
+    },
+    {
+        "dataProductCode": "RDCUP",
+        "name": "RDI Daily Current Plot",
+        "description": "https://wiki.oceannetworks.ca/display/DP/9"
+    },
+    {
+        "dataProductCode": "RDIP",
+        "name": "RDI Daily Intensity Plot",
+        "description": "https://wiki.oceannetworks.ca/display/DP/10"
+    },
+    {
+        "dataProductCode": "RDIP",
+        "name": "RDI Daily Intensity Plot",
+        "description": "https://wiki.oceannetworks.ca/display/DP/10"
+    },
+    {
+        "dataProductCode": "SBCTDRF",
+        "name": "Sea-Bird CTD Raw Files",
+        "description": "https://wiki.oceannetworks.ca/display/DP/78"
+    },
+    {
+        "dataProductCode": "SHV",
+        "name": "Spectrogram For Hydrophone Viewer",
+        "description": "https://wiki.oceannetworks.ca/display/DP/146"
+    },
+    {
+        "dataProductCode": "SISUSTS",
+        "name": "Satlantic ISUS Time Series",
+        "description": "https://wiki.oceannetworks.ca/display/DP/20"
+    },
+    {
+        "dataProductCode": "TSSCP",
+        "name": "Time Series Staircase Plot",
+        "description": "https://wiki.oceannetworks.ca/display/DP/21"
+    },
+    {
+        "dataProductCode": "TSSCP",
+        "name": "Time Series Staircase Plot",
+        "description": "https://wiki.oceannetworks.ca/display/DP/21"
+    },
+    {
+        "dataProductCode": "TSSD",
+        "name": "Time Series Scalar Data",
+        "description": "https://wiki.oceannetworks.ca/display/DP/1"
+    },
+    {
+        "dataProductCode": "TSSPPGD",
+        "name": "Time Series Scalar Profile Plot and Gridded Data",
+        "description": "https://wiki.oceannetworks.ca/display/DP/61"
+    },
+    {
+        "dataProductCode": "TSSPPGD",
+        "name": "Time Series Scalar Profile Plot and Gridded Data",
+        "description": "https://wiki.oceannetworks.ca/display/DP/61"
+    },
+    {
+        "dataProductCode": "TSSPPGD",
+        "name": "Time Series Scalar Profile Plot and Gridded Data",
+        "description": "https://wiki.oceannetworks.ca/display/DP/61"
+    },
+    {
+        "dataProductCode": "TSSPPGD",
+        "name": "Time Series Scalar Profile Plot and Gridded Data",
+        "description": "https://wiki.oceannetworks.ca/display/DP/61"
+    },
+    {
+        "dataProductCode": "VQAQCR",
+        "name": "Video QAQC Results",
+        "description": "https://wiki.oceannetworks.ca/display/DP/84"
+    },
+    {
+        "dataProductCode": "VQAQCTSB",
+        "name": "Video QAQC Training Set Black",
+        "description": "https://wiki.oceannetworks.ca/display/DP/122"
+    },
+    {
+        "dataProductCode": "VQAQCTSF",
+        "name": "Video QAQC Training Set Focus",
+        "description": "https://wiki.oceannetworks.ca/display/DP/121"
+    },
+    {
+        "dataProductCode": "VQAQCTSSD",
+        "name": "Video QAQC Training Set Shift Detect",
+        "description": "https://wiki.oceannetworks.ca/display/DP/83"
+    },
+    {
+        "dataProductCode": "VRF",
+        "name": "Vemco Raw Files",
+        "description": "https://wiki.oceannetworks.ca/display/DP/153"
+    },
+    {
+        "dataProductCode": "VRF",
+        "name": "Vemco Raw Files",
+        "description": "https://wiki.oceannetworks.ca/display/DP/153"
+    },
+    {
+        "dataProductCode": "IBPP",
+        "name": "Ice Buoy Profile Plots",
+        "description": "https://wiki.oceannetworks.ca/display/DP/110"
+    },
+    {
+        "dataProductCode": "IBPP",
+        "name": "Ice Buoy Profile Plots",
+        "description": "https://wiki.oceannetworks.ca/display/DP/110"
+    },
+    {
+        "dataProductCode": "IBTSPP",
+        "name": "Ice Buoy Time Series Profile Plots",
+        "description": "https://wiki.oceannetworks.ca/display/DP/109"
+    },
+    {
+        "dataProductCode": "IBTSPP",
+        "name": "Ice Buoy Time Series Profile Plots",
+        "description": "https://wiki.oceannetworks.ca/display/DP/109"
+    },
+    {
+        "dataProductCode": "SRSLMF",
+        "name": "SRSL Manufacturer Format",
+        "description": "https://wiki.oceannetworks.ca/display/DP/108"
+    }
+]
