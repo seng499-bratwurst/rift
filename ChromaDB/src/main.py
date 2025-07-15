@@ -278,13 +278,11 @@ def get_supported_doc_types():
 
 @app.post("/documents/batch")
 async def add_batch_documents(
-    files: List[UploadFile] = File(...),
-    doc_types: List[DocTypeEnum] = Form(...),
+    file: UploadFile = File(...),
+    doc_type: DocTypeEnum = Form(...),
     collection_name: str = Form("oceanographic_data")
 ):
-    """Add multiple documents to the collection in batch via file upload and doc type selection."""
-    if len(files) != len(doc_types):
-        raise HTTPException(status_code=400, detail="Number of files and doc_types must match.")
+    """Add a single document to the collection via file upload and doc type selection (Enum). Only adds new documents; returns error if any document ID already exists."""
     batch_size = 100
     try:
         collection = get_or_create_collection(collection_name=collection_name)
@@ -292,55 +290,54 @@ async def add_batch_documents(
         all_ids = []
         all_metadatas = []
         name_counters = {}
-        status_map = {}  # id -> 'added' or 'replaced'
-        for file, doc_type in zip(files, doc_types):
-            if doc_type not in SUPPORTED_TYPES:
-                raise HTTPException(status_code=400, detail=f"Unsupported doc_type: {doc_type}")
-            content = (await file.read()).decode("utf-8")
-            filename = file.filename
-            raw_docs = [{'content': content, 'filename': filename}]
-            processor_cls = SUPPORTED_TYPES[doc_type]
-            processor = processor_cls(raw_docs)
-            chunks = processor.chunk_with_metadata()
-            for chunk in chunks:
-                name = chunk['metadata'].get('name', filename)
-                idx = name_counters.get(name, 0)
-                chunk_id = f"{name}_{idx}"
-                name_counters[name] = idx + 1
-                # Check if this ID already exists
-                try:
-                    existing = collection.get(ids=[chunk_id], include=["ids"])
-                    exists = existing and existing.get("ids") and existing["ids"][0]
-                except Exception:
-                    exists = False
+        duplicate_ids = []
+        content = (await file.read()).decode("utf-8")
+        filename = file.filename
+        raw_docs = [{'content': content, 'filename': filename}]
+        if doc_type not in SUPPORTED_TYPES:
+            raise HTTPException(status_code=400, detail=f"Unsupported doc_type: {doc_type}")
+        processor_cls = SUPPORTED_TYPES[doc_type]
+        processor = processor_cls(raw_docs)
+        chunks = processor.chunk_with_metadata()
+        for chunk in chunks:
+            name = chunk['metadata'].get('name', filename)
+            idx = name_counters.get(name, 0)
+            chunk_id = f"{name}_{idx}"
+            name_counters[name] = idx + 1
+            # Check if this ID already exists
+            try:
+                existing = collection.get(ids=[chunk_id], include=["ids"])
+                ids_list = existing.get("ids", [])
+                exists = ids_list and ids_list[0] is not None
+            except Exception:
+                exists = False
+            if exists:
+                raise HTTPException(status_code=400, detail=f"Document ID already exists: {chunk_id}")
+            else:
                 all_documents.append(chunk['text'])
                 all_metadatas.append(chunk['metadata'])
                 all_ids.append(chunk_id)
-                status_map[chunk_id] = "replaced" if exists else "added"
+        if duplicate_ids:
+            return {"status": "error", "detail": f"The following document IDs already exist and were not added: {duplicate_ids}", "duplicate_ids": duplicate_ids}, 400
         if not all_documents:
             return {"status": "no documents found"}
-        # Add or update in batches
+        # Add in batches (should only be one batch, but keep for consistency)
         for i in range(0, len(all_documents), batch_size):
             batch_docs = all_documents[i:i + batch_size]
             batch_ids = all_ids[i:i + batch_size]
             batch_metadatas = all_metadatas[i:i + batch_size]
-            # For each, update if exists, else add
-            for doc, cid, meta in zip(batch_docs, batch_ids, batch_metadatas):
-                if status_map[cid] == "replaced":
-                    collection.update(ids=[cid], documents=[doc], metadatas=[meta])
-                else:
-                    collection.add(documents=[doc], ids=[cid], metadatas=[meta])
+            collection.add(documents=batch_docs, ids=batch_ids, metadatas=batch_metadatas)
         return {
             "status": "completed",
             "results": [
-                {"id": cid, "status": status_map[cid]} for cid in all_ids
+                {"id": cid, "status": "added"} for cid in all_ids
             ],
-            "files": [f.filename for f in files],
-            "doc_types": [str(dt) for dt in doc_types]
+            "file": file.filename,
+            "doc_type": str(doc_type)
         }
     except Exception as e:
-        logger.error(f"Failed to add batch documents: {e}", exc_info=True)
-        raise HTTPException(status_code=500, detail=f"Failed to add batch documents: {e}")
+        logger.error(f"Failed to add document: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Failed to add document: {e}")
 
 
 @app.get("/documents/{document_id}")
