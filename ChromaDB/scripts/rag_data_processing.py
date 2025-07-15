@@ -4,7 +4,7 @@ from typing import List
 
 from processors import ResearchPapers, ConfluenceJson, CambridgeBayArticles
 
-DATA_DIR = Path(__file__).resolve().parents[1] / "Dataset" / "Markdown"
+DATA_DIR = Path(__file__).resolve().parents[2] / "Dataset" / "Markdown"
 SUPPORTED_TYPES = {
     "cambridge_bay_papers": ResearchPapers,
     "cambridge_bay_web_articles": CambridgeBayArticles,
