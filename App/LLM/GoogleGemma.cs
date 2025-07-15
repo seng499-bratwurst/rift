@@ -84,7 +84,8 @@ namespace Rift.LLM
 
             // bool hasPropertyCode = regex.IsMatch(prompt);
 
-            systemPrompt = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "LLM/SystemPrompts", "filter4.md"));
+            // systemPrompt = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "LLM/SystemPrompts", "filter4.md"));
+            systemPrompt = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "LLM/SystemPrompts", "filter5.md"));
 
             // if (hasPropertyCode){
             //     // Console.WriteLine("using filter4.md");
@@ -108,43 +109,113 @@ namespace Rift.LLM
                 {
                     model = _oncModelName,
                     messages = messages,
-                    tools = new[]
+                    tools = new object[]
                     {
                         new {
-                        type = "function",
-                        function = new {
-                            name = "scalardata_location",
-                            description = "Returns scalar sensor data for a given location and device category, filtered by property and options like latest data and row limits.",
-                            parameters = new {
-                    type = "object",
-                    properties = new {
-                        locationCode = new {
-                            type = "string",
-                            description = "Return scalar data from a specific location."
+                            type = "function",
+                            function = new {
+                                name = "scalardata_location",
+                                description = "Returns scalar sensor data for a given location and device category, filtered by property and options like latest data and row limits.",
+                                parameters = new {
+                                    type = "object",
+                                    properties = new {
+                                        locationCode = new {
+                                            type = "string",
+                                            description = "Return scalar data from a specific location."
+                                        },
+                                        deviceCategoryCode = new {
+                                            type = "string",
+                                            description = "Return scalar data belonging to a specific device category code."
+                                        },
+                                        propertyCode = new {
+                                            type = "string",
+                                            description = "Comma-separated list of property codes to fetch data for."
+                                        },
+                                        getLatest = new {
+                                            type = "boolean",
+                                            description = "Return the latest readings first. Default is true."
+                                        },
+                                        rowLimit = new {
+                                            type = "integer",
+                                            description = "Number of scalar data rows to return per sensor code. Default is 10."
+                                        }
+                                    },
+                                    required = new string[] { "locationCode", "deviceCategoryCode", "propertyCode", "getLatest", "rowLimit" }
+                                }
+                            }
                         },
-                        deviceCategoryCode = new {
-                            type = "string",
-                            description = "Return scalar data belonging to a specific device category code."
+                        new {
+                            type = "function",
+                            function = new {
+                                name = "locations_tree",
+                                description = "Returns all sub-locations (child nodes) of Cambridge Bay. Useful for discovering locations with available data that can be used to query scalar properties.",
+                                parameters = new {
+                                    type = "object",
+                                    properties = new {
+                                        locationCode = new {
+                                            type = "string",
+                                            description = "Exact location code to get sub-locations from. Default for Cambridge Bay is CBY."
+                                        },
+                                        propertyCode = new {
+                                            type = "string",
+                                            description = "Property code of interest (e.g., seawatertemperature)."
+                                        },
+                                        dataProductCode = new {
+                                            type = "string",
+                                            description = "Filter by supported data product code."
+                                        },
+                                        dateFrom = new {
+                                            type = "string",
+                                            description = "Deployment start date (ISO 8601)."
+                                        },
+                                        dateTo = new {
+                                            type = "string",
+                                            description = "Deployment end date (ISO 8601)."
+                                        }
+                                    },
+                                    required = new string[] { "locationCode", "propertyCode", "dateFrom", "dateTo" }
+                                }
+                            }
                         },
-                        propertyCode = new {
-                            type = "string",
-                            description = "Comma-separated list of property codes to fetch data for."
-                        },
-                        getLatest = new {
-                            type = "boolean",
-                            description = "Return the latest readings first. Default is true."
-                        },
-                        rowLimit = new {
-                            type = "integer",
-                            description = "Number of scalar data rows to return per sensor code. Default is 10."
-                        }
-                    },
-                    required = new[] { "locationCode", "deviceCategoryCode", "propertyCode", "getLatest", "rowLimit" }
+                        new {
+                            type = "function",
+                            function = new {
+                                name = "deployments",
+                                description = "Returns all deployments of devices at specified locations within a time window, useful for checking when and where data is available.",
+                                parameters = new {
+                                    type = "object",
+                                    properties = new {
+                                        locationCode = new {
+                                            type = "string",
+                                            description = "Filter by exact location code (e.g., BACAX)."
+                                        },
+                                        deviceCategoryCode = new {
+                                            type = "string",
+                                            description = "Filter by device category (e.g., CTD)."
+                                        },
+                                        deviceCode = new {
+                                            type = "string",
+                                            description = "Filter by specific device code."
+                                        },
+                                        propertyCode = new {
+                                            type = "string",
+                                            description = "Filter by property measured (e.g., conductivity)."
+                                        },
+                                        dateFrom = new {
+                                            type = "string",
+                                            description = "Deployment start date (ISO 8601)."
+                                        },
+                                        dateTo = new {
+                                            type = "string",
+                                            description = "Deployment end date (ISO 8601)."
+                                        }
+                                    },
+                                    required = new string[] { "locationCode", "propertyCode", "dateFrom", "dateTo" }
+                                }
                             }
                         }
-                    }
-                },
-                tool_choice = "auto"
+                    }, 
+                    tool_choice = "auto"
                 };
 
                 var json = JsonSerializer.Serialize(payload);
@@ -215,7 +286,7 @@ namespace Rift.LLM
                         name = functionCallName,
                         content = result,
                     });
-                 Console.WriteLine($"Messages: {messages}");
+                 Console.WriteLine($"MESSAGES: {messages}");
                     continue;
                     
                 }else if (message.TryGetProperty("content", out var contentElement))

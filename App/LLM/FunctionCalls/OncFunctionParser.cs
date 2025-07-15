@@ -22,13 +22,16 @@ namespace Rift.LLM
             if (functionCallName == "scalardata_location"){
                 functionName = "scalardata/location";
                 Console.WriteLine($"Function Name: {functionName}");
+            }else if (functionCallName == "locations_tree"){
+                functionName = "locations/tree";
+                Console.WriteLine($"Function Name: {functionName}");
             }else{
                 functionName = functionCallName;
-                Console.WriteLine($"Function Name: {functionName}");
+                // Console.WriteLine($"Function Name: {functionName}");
             }
 
             using JsonDocument innerDoc = JsonDocument.Parse(functionCallParams);
-            Console.WriteLine($"Inner Doc: {innerDoc.RootElement}");
+            // Console.WriteLine($"Inner Doc: {innerDoc.RootElement}");
             var root = innerDoc.RootElement;
 
             // string functionName = root.GetProperty("function").GetString() ?? string.Empty;
@@ -46,10 +49,10 @@ namespace Rift.LLM
 
         public async Task<string> OncAPICall(string functionName, Dictionary<string, string?> functionParams)
         {
-            Console.WriteLine($"Function Name ONC API Call function: {functionName}");
-            Console.WriteLine($"Function Params ONC API Call function: {functionParams}");
+            // Console.WriteLine($"Function Name ONC API Call function: {functionName}");
+            // Console.WriteLine($"Function Params ONC API Call function: {functionParams}");
             var response = await _oncApiClient.GetDataAsync(functionName, functionParams);
-            Console.WriteLine($"ONC API Response: {response}");
+            // Console.WriteLine($"ONC API Response: {response}");
             var serializedResponse = JsonSerializer.Serialize(response, new JsonSerializerOptions { WriteIndented = true });
 
             if (functionName == "rawdata/device"){
