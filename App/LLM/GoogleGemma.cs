@@ -95,18 +95,22 @@ namespace Rift.LLM
             //     // systemPrompt = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "LLM/SystemPrompts", "function_call_required_or_not.md"));
             // }
 
+            var messages = new List<object>{
+                new { role = "system", content = systemPrompt },
+                new { role = "user", content = prompt }
+            };
 
-            var payload = new
-            {
-                model = _oncModelName,
-                messages = new[]
+
+            
+            while (true){
+                object? generalResponse = null;
+                var payload = new
                 {
-                    new { role = "system", content = systemPrompt },
-                    new { role = "user", content = prompt }
-                },
-                tools = new[]
-                {
-                    new {
+                    model = _oncModelName,
+                    messages = messages,
+                    tools = new[]
+                    {
+                        new {
                         type = "function",
                         function = new {
                             name = "scalardata_location",
@@ -141,73 +145,191 @@ namespace Rift.LLM
                     }
                 },
                 tool_choice = "auto"
-            };
+                };
 
-            var json = JsonSerializer.Serialize(payload);
+                var json = JsonSerializer.Serialize(payload);
 
-            var request = new HttpRequestMessage(HttpMethod.Post, _endpoint)
-            {
-                Content = new StringContent(json, Encoding.UTF8, "application/json")
-            };
-            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
-
-            var response = await _httpClient.SendAsync(request);
-            Console.WriteLine($"Response: {response}");
-    
-            if (!response.IsSuccessStatusCode)
-            {
-                var errorContent = await response.Content.ReadAsStringAsync();
-                throw new HttpRequestException("Failed to Generate ONC data using small LLM:\n" +
-                $"Status Code:{response.StatusCode}\nError: {errorContent}\n");
-            }
-
-            response.EnsureSuccessStatusCode();
-
-            var responseContent = await response.Content.ReadAsStringAsync();
-            Console.WriteLine($"Response Content: {responseContent}");
-
-            using var doc = JsonDocument.Parse(responseContent);
-            var message = doc.RootElement.GetProperty("choices")[0].GetProperty("message");
-            string? content;
-            string? functionCallName;
-            string? functionCallParams;
-             object? generalResponse = null;
-
-            if (message.TryGetProperty("tool_calls", out var toolCalls) && toolCalls.GetArrayLength() > 0){
-                functionCallName = toolCalls[0].GetProperty("function").GetProperty("name").GetString();
-                if (functionCallName == null)
+                var request = new HttpRequestMessage(HttpMethod.Post, _endpoint)
                 {
-                    throw new Exception("Function Call Name is null");
-                }
-                // Console.WriteLine($"Function Call Name: {functionCallName}");
-                functionCallParams = toolCalls[0].GetProperty("function").GetProperty("arguments").GetString();
-                if (functionCallParams == null)
+                    Content = new StringContent(json, Encoding.UTF8, "application/json")
+                };
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
+
+                var response = await _httpClient.SendAsync(request);
+                Console.WriteLine($"Response: {response}");
+        
+                if (!response.IsSuccessStatusCode)
                 {
-                    throw new Exception("Function Call Params is null");
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    throw new HttpRequestException("Failed to Generate ONC data using small LLM:\n" +
+                    $"Status Code:{response.StatusCode}\nError: {errorContent}\n");
                 }
-                // Console.WriteLine($"Function Call Params: {functionCallParams}");
-                var (functionName, functionParams) = _parser.ExtractFunctionAndQueries(functionCallName, functionCallParams);
-                Console.WriteLine($"Function Name: {functionName}");
-                Console.WriteLine($"Function Params: {functionParams}");
-                return await _parser.OncAPICall(functionName, functionParams);
+
+                response.EnsureSuccessStatusCode();
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"Response Content: {responseContent}");
+
+                using var doc = JsonDocument.Parse(responseContent);
+                var message = doc.RootElement.GetProperty("choices")[0].GetProperty("message");
+                string? content;
+                string? functionCallName;
+                string? functionCallParams;
                 
-            }else{
-                content = message.GetProperty("content").GetString();
 
-                if (content == null)
+                if (message.TryGetProperty("tool_calls", out var toolCalls) && toolCalls.GetArrayLength() > 0){
+                    functionCallName = toolCalls[0].GetProperty("function").GetProperty("name").GetString();
+                    if (functionCallName == null)
+                    {
+                        throw new Exception("Function Call Name is null");
+                    }
+                    // Console.WriteLine($"Function Call Name: {functionCallName}");
+                    functionCallParams = toolCalls[0].GetProperty("function").GetProperty("arguments").GetString();
+                    if (functionCallParams == null)
+                    {
+                        throw new Exception("Function Call Params is null");
+                    }
+                    // Console.WriteLine($"Function Call Params: {functionCallParams}");
+                    var (functionName, functionParams) = _parser.ExtractFunctionAndQueries(functionCallName, functionCallParams);
+                    Console.WriteLine($"Function Name: {functionName}");
+                    Console.WriteLine($"Function Params: {functionParams}");
+                    var result = await _parser.OncAPICall(functionName, functionParams);
+                    messages.Add(new {
+                        tool_call_id = $"**{functionCallName}**",
+                        role = "tool",
+                        name = $"**{functionCallName}**",
+                        content = result,
+                    });
+                 Console.WriteLine($"Messages: {messages}");
+                    continue;
+                    
+                }else if (message.TryGetProperty("content", out var contentElement))
                 {
-                    throw new Exception("Content is null");
+                    content = contentElement.GetString();
+                    if (content == null)
+                    {
+                        throw new Exception("Content is null");
+                    }
+                    Console.WriteLine($"Content: {content}");
+                    generalResponse = new {
+                        response = content,
+                        message = "ONC API call not required. Answer based on the user prompt."
+                    };
+                    return JsonSerializer.Serialize(generalResponse);
                 }
-                Console.WriteLine($"Content: {content}");
 
-                // object? generalResponse = null;
+            };
+            // var payload = new
+            // {
+            //     model = _oncModelName,
+            //     messages = new[]
+            //     {
+            //         new { role = "system", content = systemPrompt },
+            //         new { role = "user", content = prompt }
+            //     },
+            //     tools = new[]
+            //     {
+            //         new {
+            //             type = "function",
+            //             function = new {
+            //                 name = "scalardata_location",
+            //                 description = "Returns scalar sensor data for a given location and device category, filtered by property and options like latest data and row limits.",
+            //                 parameters = new {
+            //         type = "object",
+            //         properties = new {
+            //             locationCode = new {
+            //                 type = "string",
+            //                 description = "Return scalar data from a specific location."
+            //             },
+            //             deviceCategoryCode = new {
+            //                 type = "string",
+            //                 description = "Return scalar data belonging to a specific device category code."
+            //             },
+            //             propertyCode = new {
+            //                 type = "string",
+            //                 description = "Comma-separated list of property codes to fetch data for."
+            //             },
+            //             getLatest = new {
+            //                 type = "boolean",
+            //                 description = "Return the latest readings first. Default is true."
+            //             },
+            //             rowLimit = new {
+            //                 type = "integer",
+            //                 description = "Number of scalar data rows to return per sensor code. Default is 10."
+            //             }
+            //         },
+            //         required = new[] { "locationCode", "deviceCategoryCode", "propertyCode", "getLatest", "rowLimit" }
+            //                 }
+            //             }
+            //         }
+            //     },
+            //     tool_choice = "auto"
+            // };
 
-                // generalResponse = new {
-                //     response = content,
-                //     message = "ONC API call not required. Answer based on the user prompt."
-                // };
+            // var json = JsonSerializer.Serialize(payload);
 
-            }
+            // var request = new HttpRequestMessage(HttpMethod.Post, _endpoint)
+            // {
+            //     Content = new StringContent(json, Encoding.UTF8, "application/json")
+            // };
+            // request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
+
+            // var response = await _httpClient.SendAsync(request);
+            // Console.WriteLine($"Response: {response}");
+    
+            // if (!response.IsSuccessStatusCode)
+            // {
+            //     var errorContent = await response.Content.ReadAsStringAsync();
+            //     throw new HttpRequestException("Failed to Generate ONC data using small LLM:\n" +
+            //     $"Status Code:{response.StatusCode}\nError: {errorContent}\n");
+            // }
+
+            // response.EnsureSuccessStatusCode();
+
+            // var responseContent = await response.Content.ReadAsStringAsync();
+            // Console.WriteLine($"Response Content: {responseContent}");
+
+            // using var doc = JsonDocument.Parse(responseContent);
+            // var message = doc.RootElement.GetProperty("choices")[0].GetProperty("message");
+            // string? content;
+            // string? functionCallName;
+            // string? functionCallParams;
+            //  object? generalResponse = null;
+
+            // if (message.TryGetProperty("tool_calls", out var toolCalls) && toolCalls.GetArrayLength() > 0){
+            //     functionCallName = toolCalls[0].GetProperty("function").GetProperty("name").GetString();
+            //     if (functionCallName == null)
+            //     {
+            //         throw new Exception("Function Call Name is null");
+            //     }
+            //     // Console.WriteLine($"Function Call Name: {functionCallName}");
+            //     functionCallParams = toolCalls[0].GetProperty("function").GetProperty("arguments").GetString();
+            //     if (functionCallParams == null)
+            //     {
+            //         throw new Exception("Function Call Params is null");
+            //     }
+            //     // Console.WriteLine($"Function Call Params: {functionCallParams}");
+            //     var (functionName, functionParams) = _parser.ExtractFunctionAndQueries(functionCallName, functionCallParams);
+            //     Console.WriteLine($"Function Name: {functionName}");
+            //     Console.WriteLine($"Function Params: {functionParams}");
+            //     return await _parser.OncAPICall(functionName, functionParams);
+                
+            // }else{
+            //     content = message.GetProperty("content").GetString();
+
+            //     if (content == null)
+            //     {
+            //         throw new Exception("Content is null");
+            //     }
+            //     Console.WriteLine($"Content: {content}");
+
+
+            //     // generalResponse = new {
+            //     //     response = content,
+            //     //     message = "ONC API call not required. Answer based on the user prompt."
+            //     // };
+
+            // }
 
             
 
@@ -259,7 +381,7 @@ namespace Rift.LLM
             //     // }
             // }
             
-            return JsonSerializer.Serialize(generalResponse);
+            // return JsonSerializer.Serialize(generalResponse);
         }
 
         /// <summary>
