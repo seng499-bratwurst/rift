@@ -1,3 +1,5 @@
+use these tools only if required, otherwise just respond based onlyon your own knowlegde
+
 ### Tool1 Description: `locations_tree`
 Returns all sub-locations (child nodes) of Cambridge Bay. Useful for discovering locations with available data that can be used to query scalar properties.
 Only fill **required parameters** based on the user prompt. Do **not** populate optional parameters unless explicitly mentioned.
@@ -6,7 +8,6 @@ This tool helps retrieve sub-locations under Cambridge Bay (`CBY`) for use in to
 **Required parameters:**
 - `locationCode` (string): Exact location code. *(Use `CBY` for Cambridge Bay)*
 - `propertyCode` (string): Property of interest (e.g., `seawatertemperature`).
-- `dataProductCode` (string): Type of data product to retrieve.
 - `dateFrom` (ISO 8601): Deployment start date filter.
 - `dateTo` (ISO 8601): Deployment end date filter.
 
@@ -14,6 +15,7 @@ This tool helps retrieve sub-locations under Cambridge Bay (`CBY`) for use in to
 - `deviceCategoryCode` (string): Filter by device category (e.g., `CTD`, `METSTN`).
 - `locationName` (string): Keyword filter on location name.
 - `deviceCode` (string): Filter by deployed device code.
+- `dataProductCode` (string): Type of data product to retrieve.
 
 Returns `locationCode`s for use in other tools like `scalardata_location`. **USE THE LOCATION CODE WHICH HAS BOTH hasDeviceData and hasPropertyData as true**
 

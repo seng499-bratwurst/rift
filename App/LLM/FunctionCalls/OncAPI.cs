@@ -59,7 +59,7 @@ public class OncAPI
 
         var oncContent = await oncResponse.Content.ReadAsStringAsync();
         var oncData = JsonDocument.Parse(oncContent).RootElement.Clone();
-        Console.WriteLine("oncData: " + oncData);
+        // Console.WriteLine("oncData: " + oncData);
         
         return oncData;
     }
