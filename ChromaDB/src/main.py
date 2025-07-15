@@ -47,19 +47,10 @@ embedding_function = embedding_functions.SentenceTransformerEmbeddingFunction(
     model_name="all-MiniLM-L6-v2"  # Good balance of performance and speed for scientific text
 )
 
-class DocumentMetadata(BaseModel):
-    source: str
-    data_type: str  # e.g., "sensor_data", "location_info", "instrument_spec"
-    timestamp: Optional[str] = None
-    location: Optional[str] = None
-    depth: Optional[float] = None
-    instrument_type: Optional[str] = None
-    tags: Optional[str] = None  # Comma-separated string of tags instead of List[str]
-
 class Document(BaseModel):
     id: str
     text: str
-    metadata: Optional[DocumentMetadata] = None
+    metadata: Optional[Dict[str, Any]] = None
 
 class BatchDocuments(BaseModel):
     documents: List[Document]
@@ -445,7 +436,8 @@ async def semantic_query(request: SemanticQueryRequest):
         filtered_results = {
             "documents": [[]],
             "metadatas": [[]],
-            "distances": [[]]
+            "distances": [[]],
+            "ids": [[]]
         }
 
         if result["documents"] and result["documents"][0]:
@@ -463,6 +455,7 @@ async def semantic_query(request: SemanticQueryRequest):
                     filtered_results["documents"][0].append(result["documents"][0][i])
                     filtered_results["metadatas"][0].append(result["metadatas"][0][i] if result["metadatas"] else None)
                     filtered_results["distances"][0].append(distance)
+                    filtered_results["ids"][0].append(result["ids"][0][i] if "ids" in result and result["ids"] else None)
                     logger.debug(f"Document {i}: distance={distance:.4f}, similarity={similarity:.4f}, threshold={effective_threshold:.4f}")
 
         return {

@@ -3,31 +3,6 @@ using System.Text.Json.Serialization;
 
 namespace Rift.App.Models;
 
-// Document metadata for oceanographic data
-public class DocumentMetadata
-{
-    [JsonPropertyName("source")]
-    public string Source { get; set; } = string.Empty;
-
-    [JsonPropertyName("data_type")]
-    public string DataType { get; set; } = string.Empty; // e.g., "sensor_data", "location_info", "instrument_spec"
-
-    [JsonPropertyName("timestamp")]
-    public string? Timestamp { get; set; }
-
-    [JsonPropertyName("location")]
-    public string? Location { get; set; }
-
-    [JsonPropertyName("depth")]
-    public double? Depth { get; set; }
-
-    [JsonPropertyName("instrument_type")]
-    public string? InstrumentType { get; set; }
-
-    [JsonPropertyName("tags")]
-    public string? Tags { get; set; }
-}
-
 // Single document model
 public class Document
 {
@@ -38,7 +13,7 @@ public class Document
     public string Text { get; set; } = string.Empty;
 
     [JsonPropertyName("metadata")]
-    public DocumentMetadata? Metadata { get; set; }
+    public Dictionary<string, object>? Metadata { get; set; }
 }
 
 // Request models
@@ -306,71 +281,6 @@ public class RelevantDocument
     public string Id { get; set; } = string.Empty;
     public string Content { get; set; } = string.Empty;
     public double Relevance { get; set; }
-    public DocumentMetadata? Metadata { get; set; }
+    public Dictionary<string, object>? Metadata { get; set; }
     public string Source { get; set; } = string.Empty;
-}
-
-// Filtering helpers for oceanographic data
-public static class VectorDBFilters
-{
-    public static Dictionary<string, object> ByDataType(string dataType)
-    {
-        return new Dictionary<string, object>
-        {
-            ["data_type"] = dataType
-        };
-    }
-
-    public static Dictionary<string, object> ByLocation(string location)
-    {
-        return new Dictionary<string, object>
-        {
-            ["location"] = location
-        };
-    }
-
-    public static Dictionary<string, object> ByInstrumentType(string instrumentType)
-    {
-        return new Dictionary<string, object>
-        {
-            ["instrument_type"] = instrumentType
-        };
-    }
-
-    public static Dictionary<string, object> ByDepthRange(double minDepth, double maxDepth)
-    {
-        return new Dictionary<string, object>
-        {
-            ["depth"] = new Dictionary<string, object>
-            {
-                ["$gte"] = minDepth,
-                ["$lte"] = maxDepth
-            }
-        };
-    }
-
-    public static Dictionary<string, object> ByDateRange(DateTime startDate, DateTime endDate)
-    {
-        return new Dictionary<string, object>
-        {
-            ["timestamp"] = new Dictionary<string, object>
-            {
-                ["$gte"] = startDate.ToString("yyyy-MM-ddTHH:mm:ssZ"),
-                ["$lte"] = endDate.ToString("yyyy-MM-ddTHH:mm:ssZ")
-            }
-        };
-    }
-
-    public static Dictionary<string, object> CombineFilters(params Dictionary<string, object>[] filters)
-    {
-        var combined = new Dictionary<string, object>();
-        foreach (var filter in filters)
-        {
-            foreach (var kvp in filter)
-            {
-                combined[kvp.Key] = kvp.Value;
-            }
-        }
-        return combined;
-    }
 }
