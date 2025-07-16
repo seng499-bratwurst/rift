@@ -34,7 +34,7 @@ namespace Rift.Tests.Services
 
             Assert.IsNotNull(result);
             Assert.AreEqual(1, result.Id);
-            Assert.AreEqual("test.txt", result.FileName);
+            Assert.AreEqual("test.md", result.FileName); // Filename should be normalized from .txt to .md
         }
 
         [TestMethod]
@@ -111,6 +111,54 @@ namespace Rift.Tests.Services
             var result = await _service.ExtractTextAsync(fileMock.Object);
 
             Assert.AreEqual(string.Empty, result);
+        }
+
+        [TestMethod]
+        public async Task UploadFileAsync_NormalizesFileExtension_TxtToMd()
+        {
+            var file = new FileEntity { Id = 1, FileName = "document.txt", Content = "content", UploadedBy = "user" };
+            _fileRepositoryMock.Setup(r => r.AddAsync(It.IsAny<FileEntity>())).ReturnsAsync(file);
+
+            var result = await _service.UploadFileAsync(file);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual("document.md", result.FileName);
+        }
+
+        [TestMethod]
+        public async Task UploadFileAsync_PreservesFileExtension_WhenAlreadyMd()
+        {
+            var file = new FileEntity { Id = 1, FileName = "document.md", Content = "content", UploadedBy = "user" };
+            _fileRepositoryMock.Setup(r => r.AddAsync(It.IsAny<FileEntity>())).ReturnsAsync(file);
+
+            var result = await _service.UploadFileAsync(file);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual("document.md", result.FileName);
+        }
+
+        [TestMethod]
+        public async Task UploadFileAsync_PreservesFileExtension_WhenNotTxt()
+        {
+            var file = new FileEntity { Id = 1, FileName = "document.pdf", Content = "content", UploadedBy = "user" };
+            _fileRepositoryMock.Setup(r => r.AddAsync(It.IsAny<FileEntity>())).ReturnsAsync(file);
+
+            var result = await _service.UploadFileAsync(file);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual("document.pdf", result.FileName);
+        }
+
+        [TestMethod]
+        public async Task UploadFileAsync_NormalizesFileExtension_CaseInsensitive()
+        {
+            var file = new FileEntity { Id = 1, FileName = "document.TXT", Content = "content", UploadedBy = "user" };
+            _fileRepositoryMock.Setup(r => r.AddAsync(It.IsAny<FileEntity>())).ReturnsAsync(file);
+
+            var result = await _service.UploadFileAsync(file);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual("document.md", result.FileName);
         }
 
         // Note: PDF extraction test is possible but would require a real PDF byte array and PdfPig dependency.
