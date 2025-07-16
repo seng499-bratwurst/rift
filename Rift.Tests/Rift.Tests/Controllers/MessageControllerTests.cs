@@ -21,7 +21,6 @@ namespace Rift.Tests
         private Mock<IConversationService> _conversationServiceMock;
         private Mock<IRAGService> _ragServiceMock;
 
-        private Mock<ICompanyRateLimitingService> _rateLimitingServiceMock;
 
 
 
@@ -32,7 +31,6 @@ namespace Rift.Tests
             _messageEdgeServiceMock = new Mock<IMessageEdgeService>();
             _conversationServiceMock = new Mock<IConversationService>();
             _ragServiceMock = new Mock<IRAGService>();
-            _rateLimitingServiceMock = new Mock<ICompanyRateLimitingService>();
         }
 
         private MessageController CreateControllerWithUser(string userId)
@@ -145,11 +143,6 @@ namespace Rift.Tests
                 .ReturnsAsync(edge);
             _messageEdgeServiceMock.Setup(e => e.CreateMessageEdgesFromSourcesAsync(It.IsAny<int>(), It.IsAny<PartialMessageEdge[]>()))
                 .ReturnsAsync(new List<MessageEdge>());
-
-            _rateLimitingServiceMock
-                .Setup(x => x.IsAllowedAsync(It.IsAny<string>()))
-                .ReturnsAsync(true);
-
 
             var controller = CreateControllerWithUser(userId);
             var request = new MessageController.CreateMessageRequest { Content = "Hello" };
