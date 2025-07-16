@@ -42,8 +42,8 @@ namespace Rift.Tests.Services
         {
             var files = new List<FileEntityDto>
             {
-                new FileEntityDto { Id = 1, FileName = "a.txt", UploadedBy = "user" },
-                new FileEntityDto { Id = 2, FileName = "b.txt", UploadedBy = "user" }
+                new FileEntityDto { Id = 1, FileName = "a.txt", UploadedBy = "user", SourceType = "cambridge_bay_papers", SourceLink = "http://example.com/" },
+                new FileEntityDto { Id = 2, FileName = "b.txt", UploadedBy = "user", SourceType = "cambridge_bay_papers", SourceLink = "http://example.com/"  }
             };
             _fileRepositoryMock.Setup(r => r.GetAllAsync()).ReturnsAsync(files);
 
