@@ -86,9 +86,7 @@ builder.Services.AddScoped<ReRankerClient>();
 builder.Services.AddScoped<ResponseProcessor>();
 builder.Services.AddScoped(provider =>
 {
-    var systemPrompt =
-        "You are a helpful ocean network canada assistant that interprets " +
-        "the data given and answers the user prompt with accuracy.";
+    var systemPrompt = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "LLM/SystemPrompts", "sys_prompt_large_llm.md"));
     return new PromptBuilder(systemPrompt);
 });
 
@@ -106,6 +104,9 @@ switch (llmProviderName)
         break;
     case "HuggingFace":
         builder.Services.AddScoped<ILlmProvider, HuggingFace>();
+        break;
+    case "GoogleGemma":
+        builder.Services.AddScoped<ILlmProvider, GoogleGemma>();
         break;
     default:
         throw new Exception($"Unsupported LLM provider: {llmProviderName}");

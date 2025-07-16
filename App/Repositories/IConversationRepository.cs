@@ -11,4 +11,5 @@ public interface IConversationRepository
     Task<Conversation?> DeleteConversation(string userId, int conversationId);
 
     Task<Conversation?> GetConversationById(string userId, int conversationId);
+    Task<Conversation?> UpdateLastInteractionTime(int conversationId);
 }

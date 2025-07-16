@@ -59,8 +59,7 @@ public class ConversationRepository : IConversationRepository
 
     public async Task<Conversation?> DeleteConversation(string userId, int conversationId)
     {
-        var conversation = await _context.Conversations
-            .FirstOrDefaultAsync(c => c.Id == conversationId && c.UserId == userId);
+        var conversation = await GetConversationById(userId, conversationId);
 
         if (conversation == null)
         {
@@ -75,7 +74,7 @@ public class ConversationRepository : IConversationRepository
         return conversation;
     }
 
-      public async Task<Conversation?> GetConversationById(string userId, int conversationId)
+    public async Task<Conversation?> GetConversationById(string userId, int conversationId)
     {
         var conversation = await _context.Conversations
             .FirstOrDefaultAsync(c => c.Id == conversationId && c.UserId == userId);
@@ -84,6 +83,22 @@ public class ConversationRepository : IConversationRepository
         {
             return null;
         }
+
+        return conversation;
+    }
+
+    public async Task<Conversation?> UpdateLastInteractionTime(int conversationId)
+    {
+        var conversation = await _context.Conversations
+          .FirstOrDefaultAsync(c => c.Id == conversationId);
+
+        if (conversation == null)
+        {
+            return null;
+        }
+
+        conversation.LastInteraction = DateTime.UtcNow;
+        await _context.SaveChangesAsync();
 
         return conversation;
     }

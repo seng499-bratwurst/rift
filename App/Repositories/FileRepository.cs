@@ -28,6 +28,8 @@ namespace Rift.Repositories
                 FileName = file.FileName,
                 CreatedAt = file.CreatedAt,
                 UploadedBy = file.UploadedBy,
+                SourceLink = file.SourceLink,
+                SourceType = file.SourceType
             })
             .ToListAsync();
         }

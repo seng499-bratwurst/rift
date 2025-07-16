@@ -33,7 +33,5 @@ namespace Rift.Controllers
 
             return Ok(finalResponse);
         }
-
-
     }
 }

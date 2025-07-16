@@ -27,43 +27,33 @@ public class RAGService : IRAGService
 
     public async Task<string> GenerateResponseAsync(string userQuery, List<Message>? messageHistory)
     {
-        /* 
-        Rough outline of the steps to generate a response a response:
-            1. Gather ONC API Data using small LLM
-            2. Get relevant data from vector database
-            3. Re-rank data
-            4. Build prompt using PromptBuilder
-            5. Generate final response using larger LLM
-            6. Process response using ResponseProcessor
-            7. Return the final response to the user
-        */
-
         messageHistory ??= new List<Message>();
 
         var oncApiData = await _llmProvider.GatherOncAPIData(userQuery);
 
-        // Might want to update this to return a list of Relevant Documents instead.
-        var relevantData = await _chromaDbClient.GetRelevantDataAsync(userQuery, similarityThreshold: 0.5);
+        var relevantDocuments = (await _chromaDbClient.GetRelevantDataAsync(userQuery, similarityThreshold: 0.5)).RelevantDocuments;
 
-        var rerankRequest = new RerankRequest
-        {
-            Query = userQuery,
-            Docs = relevantData.RelevantDocuments.Select(doc => doc.Content).ToList()
-        };
-        var rerankedResponse = await _reRankerClient.RerankAsync(rerankRequest);
+
+        // TODO: Add reranker back once new prompts are working
+        // var rerankRequest = new RerankRequest
+        // {
+        //     Query = userQuery,
+        //     Docs = relevantData.RelevantDocuments.Select(doc => doc.Content).ToList()
+        // };
+        // var rerankedResponse = await _reRankerClient.RerankAsync(rerankRequest);
 
         var prompt = _promptBuilder.BuildPrompt(
             userQuery,
             messageHistory,
             oncApiData,
-            rerankedResponse?.Reranked_Docs ?? new List<string>()
+            relevantDocuments
         );
 
         // Console.WriteLine("Generated Prompt:");
         // Console.WriteLine("\tUser Query: " + prompt.UserQuery);
-        // Console.WriteLine("\tMessage History: " + JsonSerializer.Serialize(prompt.MessageHistory));
+        // Console.WriteLine("\tMessages: " + JsonSerializer.Serialize(prompt.Messages));
         // Console.WriteLine("\tAPI Data:" + prompt.OncAPIData);
-        // Console.WriteLine("\tRelevant Data: " + JsonSerializer.Serialize(prompt.RelevantDocuments));
+        // Console.WriteLine("\tRelevant Data: " + JsonSerializer.Serialize(prompt.RelevantDocumentChunks));
 
         var finalResponse = await _llmProvider.GenerateFinalResponseRAG(prompt);
 

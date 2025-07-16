@@ -86,8 +86,8 @@ namespace Rift.LLM
                     message = "ONC API call not required. Answer based on the user prompt."
                 };
             }else{
-                 String LLMContentFiltered = match.Value;
-                 Console.WriteLine("LLMContentFiltered: "+ LLMContentFiltered);
+                var LLMContentFiltered = match.Value;
+                // Console.WriteLine("LLMContentFiltered: "+ LLMContentFiltered);
 
 
                 using JsonDocument innerDoc = JsonDocument.Parse(LLMContentFiltered);
@@ -166,21 +166,21 @@ namespace Rift.LLM
             // this should be okay for now. We will need to figure out the best way to
             // feed all of this data into the LLM.
             // ----------------------------------------------
-            var fullUserPrompt = new StringBuilder();
-            fullUserPrompt.Append("This is the User Query:\n");
-            fullUserPrompt.Append(prompt.UserQuery);
-            fullUserPrompt.Append("\n\nHere is the ONC API response:\n");
-            fullUserPrompt.Append(prompt.OncAPIData);
-            fullUserPrompt.Append("\n\nHere are relevant documents :\n");
-            foreach (var relevantDoc in prompt.RelevantDocuments)
-            {
-                fullUserPrompt.Append($"- {relevantDoc}\n");
-            }
-            fullUserPrompt.Append("\n\nHere is the message history:\n");
-            foreach (var message in prompt.MessageHistory)
-            {
-                fullUserPrompt.Append($"- {message.Content}\n");
-            }
+            // var fullUserPrompt = new StringBuilder();
+            // fullUserPrompt.Append("This is the User Query:\n");
+            // fullUserPrompt.Append(prompt.UserQuery);
+            // fullUserPrompt.Append("\n\nHere is the ONC API response:\n");
+            // fullUserPrompt.Append(prompt.OncAPIData);
+            // fullUserPrompt.Append("\n\nHere are relevant documents :\n");
+            // foreach (var relevantDoc in prompt.RelevantDocuments)
+            // {
+            //     fullUserPrompt.Append($"- {relevantDoc}\n");
+            // }
+            // fullUserPrompt.Append("\n\nHere is the message history:\n");
+            // foreach (var message in prompt.MessageHistory)
+            // {
+            //     fullUserPrompt.Append($"- {message.Content}\n");
+            // }
             // ----------------------------------------------
 
             var payload = new
@@ -189,7 +189,7 @@ namespace Rift.LLM
                 messages = new[]
                 {
                     new { role = "system", content = prompt.SystemPrompt },
-                    new { role = "user", content = fullUserPrompt.ToString() }
+                    new { role = "user", content = prompt.UserQuery },
                 },
                 stream = false
             };

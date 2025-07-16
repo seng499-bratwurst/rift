@@ -1,4 +1,3 @@
----
 x-generator: NSwag v14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))
 openapi: 3.0.0
 info:
@@ -6,19 +5,19 @@ info:
   description: The backend API for the ONC chatbot
   version: v1
 servers:
-- url: http://localhost:5000
+  - url: 'http://localhost:5000'
 paths:
-  "/api/register":
+  /api/register:
     post:
       tags:
-      - Auth
+        - Auth
       operationId: Auth_Register
       requestBody:
         x-name: model
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/RegisterModel"
+              $ref: '#/components/schemas/RegisterModel'
         required: true
         x-position: 1
       responses:
@@ -29,17 +28,17 @@ paths:
               schema:
                 type: string
                 format: binary
-  "/api/login":
+  /api/login:
     post:
       tags:
-      - Auth
+        - Auth
       operationId: Auth_Login
       requestBody:
         x-name: model
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/LoginModel"
+              $ref: '#/components/schemas/LoginModel'
         required: true
         x-position: 1
       responses:
@@ -50,10 +49,23 @@ paths:
               schema:
                 type: string
                 format: binary
-  "/api/conversations":
+  /api/me:
     get:
       tags:
-      - Conversation
+        - Auth
+      operationId: Auth_Me
+      responses:
+        '200':
+          description: ''
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+  /api/conversations:
+    get:
+      tags:
+        - Conversation
       operationId: Conversation_GetConversations
       responses:
         '200':
@@ -63,18 +75,39 @@ paths:
               schema:
                 type: string
                 format: binary
-  "/api/conversations/{conversationId}":
+  '/api/conversations/{conversationId}':
     delete:
       tags:
-      - Conversation
+        - Conversation
       operationId: Conversation_DeleteConversation
       parameters:
-      - name: conversationId
-        in: path
+        - name: conversationId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+          x-position: 1
+      responses:
+        '200':
+          description: ''
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+  /api/password:
+    patch:
+      tags:
+        - Password
+      operationId: Password_PasswordReset
+      requestBody:
+        x-name: model
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordResetModel'
         required: true
-        schema:
-          type: integer
-          format: int32
         x-position: 1
       responses:
         '200':
@@ -84,17 +117,30 @@ paths:
               schema:
                 type: string
                 format: binary
-  "/api/users":
+  /api/sessional-keys:
+    get:
+      tags:
+        - SessionalKey
+      operationId: SessionalKey_GetSessionalKeyForGuest
+      responses:
+        '200':
+          description: ''
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+  /api/users:
     patch:
       tags:
-      - User
+        - User
       operationId: User_UpdateUser
       requestBody:
         x-name: userUpdate
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/UserUpdate"
+              $ref: '#/components/schemas/UserUpdate'
         required: true
         x-position: 1
       responses:
@@ -105,10 +151,31 @@ paths:
               schema:
                 type: string
                 format: binary
-  "/api/files":
+  /api/company-token:
     post:
       tags:
-      - File
+        - CompanyToken
+      operationId: CompanyToken_SetCompanyToken
+      requestBody:
+        x-name: request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCompanyTokenRequest'
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: ''
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+  /api/files:
+    post:
+      tags:
+        - File
       operationId: File_UploadFile
       requestBody:
         content:
@@ -144,7 +211,7 @@ paths:
                 format: binary
     get:
       tags:
-      - File
+        - File
       operationId: File_GetAllFiles
       responses:
         '200':
@@ -154,20 +221,20 @@ paths:
               schema:
                 type: array
                 items:
-                  "$ref": "#/components/schemas/FileEntityDto"
-  "/api/files/{id}":
+                  $ref: '#/components/schemas/FileEntityDto'
+  '/api/files/{id}':
     delete:
       tags:
-      - File
+        - File
       operationId: File_DeleteFile
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int32
-        x-position: 1
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+          x-position: 1
       responses:
         '200':
           description: ''
@@ -176,17 +243,17 @@ paths:
               schema:
                 type: string
                 format: binary
-  "/api/LLM/ask":
+  /api/LLM/ask:
     post:
       tags:
-      - LLM
+        - LLM
       operationId: LLM_Ask
       requestBody:
         x-name: request
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/PromptRequest"
+              $ref: '#/components/schemas/PromptRequest'
         required: true
         x-position: 1
       responses:
@@ -197,17 +264,17 @@ paths:
               schema:
                 type: string
                 format: binary
-  "/api/messages":
+  /api/messages:
     post:
       tags:
-      - Message
+        - Message
       operationId: Message_CreateMessage
       requestBody:
         x-name: request
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/CreateMessageRequest"
+              $ref: '#/components/schemas/CreateMessageRequest'
         required: true
         x-position: 1
       responses:
@@ -218,17 +285,17 @@ paths:
               schema:
                 type: string
                 format: binary
-  "/api/messages/guest":
+  /api/messages/guest:
     post:
       tags:
-      - Message
+        - Message
       operationId: Message_CreateGuestMessage
       requestBody:
         x-name: request
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/CreateMessageRequest"
+              $ref: '#/components/schemas/CreateMessageRequest'
         required: true
         x-position: 1
       responses:
@@ -239,19 +306,19 @@ paths:
               schema:
                 type: string
                 format: binary
-  "/api/conversations/{conversationId}/messages":
+  '/api/conversations/{conversationId}/messages':
     get:
       tags:
-      - Message
+        - Message
       operationId: Message_GetMessages
       parameters:
-      - name: conversationId
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int32
-        x-position: 1
+        - name: conversationId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+          x-position: 1
       responses:
         '200':
           description: ''
@@ -260,17 +327,66 @@ paths:
               schema:
                 type: string
                 format: binary
-  "/api/RAG/generate-response":
-    post:
+  '/api/messages/{messageId}':
+    patch:
       tags:
-      - RAG
-      operationId: RAG_GenerateResponse
+        - Message
+      operationId: Message_UpdateMessageCoordinates
+      parameters:
+        - name: messageId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+          x-position: 1
       requestBody:
-        x-name: userQuery
+        x-name: request
         content:
           application/json:
             schema:
-              type: string
+              $ref: '#/components/schemas/UpdateCoordinatesRequest'
+        required: true
+        x-position: 2
+      responses:
+        '200':
+          description: ''
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+    delete:
+      tags:
+        - Message
+      operationId: Message_DeleteMessage
+      parameters:
+        - name: messageId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+          x-position: 1
+      responses:
+        '200':
+          description: ''
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+  /api/edges:
+    post:
+      tags:
+        - MessageEdge
+      operationId: MessageEdge_CreateEdge
+      requestBody:
+        x-name: edge
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MessageEdge'
         required: true
         x-position: 1
       responses:
@@ -281,17 +397,95 @@ paths:
               schema:
                 type: string
                 format: binary
-  "/api/VectorDB/documents":
+  '/api/edges/{id}':
+    delete:
+      tags:
+        - MessageEdge
+      operationId: MessageEdge_DeleteEdge
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+          x-position: 1
+      responses:
+        '200':
+          description: ''
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+  '/api/conversations/{conversationId}/edges':
+    get:
+      tags:
+        - MessageEdge
+      operationId: MessageEdge_GetMessages
+      parameters:
+        - name: conversationId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+          x-position: 1
+      responses:
+        '200':
+          description: ''
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+  /api/ReRanker/rerank:
     post:
       tags:
-      - VectorDB
+        - ReRanker
+      operationId: ReRanker_Rerank
+      requestBody:
+        x-name: request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RerankRequestDto'
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RerankResponse'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: string
+    get:
+      tags:
+        - ReRanker
+      operationId: ReRanker_Test
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+  /api/VectorDB/documents:
+    post:
+      tags:
+        - VectorDB
       operationId: VectorDB_AddDocument
       requestBody:
         x-name: request
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/AddRequest"
+              $ref: '#/components/schemas/AddRequest'
         required: true
         x-position: 1
       responses:
@@ -300,24 +494,24 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/VectorDBResponseOfString"
+                $ref: '#/components/schemas/VectorDBResponseOfString'
         '400':
           description: ''
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/VectorDBResponseOfString"
-  "/api/VectorDB/documents/batch":
+                $ref: '#/components/schemas/VectorDBResponseOfString'
+  /api/VectorDB/documents/batch:
     post:
       tags:
-      - VectorDB
+        - VectorDB
       operationId: VectorDB_AddDocumentsBatch
       requestBody:
         x-name: request
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/BatchDocumentsRequest"
+              $ref: '#/components/schemas/BatchDocumentsRequest'
         required: true
         x-position: 1
       responses:
@@ -326,67 +520,67 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/VectorDBResponseOfInteger"
+                $ref: '#/components/schemas/VectorDBResponseOfInteger'
         '400':
           description: ''
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/VectorDBResponseOfString"
-  "/api/VectorDB/documents/{documentId}":
+                $ref: '#/components/schemas/VectorDBResponseOfString'
+  '/api/VectorDB/documents/{documentId}':
     get:
       tags:
-      - VectorDB
+        - VectorDB
       operationId: VectorDB_GetDocument
       parameters:
-      - name: documentId
-        in: path
-        required: true
-        schema:
-          type: string
-        x-position: 1
-      - name: collectionName
-        in: query
-        schema:
-          type: string
-          default: oceanographic_data
-        x-position: 2
+        - name: documentId
+          in: path
+          required: true
+          schema:
+            type: string
+          x-position: 1
+        - name: collectionName
+          in: query
+          schema:
+            type: string
+            default: oceanographic_data
+          x-position: 2
       responses:
         '200':
           description: ''
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/VectorDBResponseOfDocumentResponse"
+                $ref: '#/components/schemas/VectorDBResponseOfDocumentResponse'
         '404':
           description: ''
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/VectorDBResponseOfString"
+                $ref: '#/components/schemas/VectorDBResponseOfString'
     put:
       tags:
-      - VectorDB
+        - VectorDB
       operationId: VectorDB_UpdateDocument
       parameters:
-      - name: documentId
-        in: path
-        required: true
-        schema:
-          type: string
-        x-position: 1
-      - name: collectionName
-        in: query
-        schema:
-          type: string
-          default: oceanographic_data
-        x-position: 3
+        - name: documentId
+          in: path
+          required: true
+          schema:
+            type: string
+          x-position: 1
+        - name: collectionName
+          in: query
+          schema:
+            type: string
+            default: oceanographic_data
+          x-position: 3
       requestBody:
         x-name: request
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/UpdateDocumentRequest"
+              $ref: '#/components/schemas/UpdateDocumentRequest'
         required: true
         x-position: 2
       responses:
@@ -395,54 +589,54 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/VectorDBResponseOfString"
+                $ref: '#/components/schemas/VectorDBResponseOfString'
         '400':
           description: ''
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/VectorDBResponseOfString"
+                $ref: '#/components/schemas/VectorDBResponseOfString'
     delete:
       tags:
-      - VectorDB
+        - VectorDB
       operationId: VectorDB_DeleteDocument
       parameters:
-      - name: documentId
-        in: path
-        required: true
-        schema:
-          type: string
-        x-position: 1
-      - name: collectionName
-        in: query
-        schema:
-          type: string
-          default: oceanographic_data
-        x-position: 2
+        - name: documentId
+          in: path
+          required: true
+          schema:
+            type: string
+          x-position: 1
+        - name: collectionName
+          in: query
+          schema:
+            type: string
+            default: oceanographic_data
+          x-position: 2
       responses:
         '200':
           description: ''
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/VectorDBResponseOfString"
+                $ref: '#/components/schemas/VectorDBResponseOfString'
         '400':
           description: ''
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/VectorDBResponseOfString"
-  "/api/VectorDB/collections":
+                $ref: '#/components/schemas/VectorDBResponseOfString'
+  /api/VectorDB/collections:
     post:
       tags:
-      - VectorDB
+        - VectorDB
       operationId: VectorDB_CreateCollection
       requestBody:
         x-name: collectionInfo
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/CollectionInfo"
+              $ref: '#/components/schemas/CollectionInfo'
         required: true
         x-position: 1
       responses:
@@ -451,16 +645,16 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/VectorDBResponseOfString"
+                $ref: '#/components/schemas/VectorDBResponseOfString'
         '400':
           description: ''
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/VectorDBResponseOfString"
+                $ref: '#/components/schemas/VectorDBResponseOfString'
     get:
       tags:
-      - VectorDB
+        - VectorDB
       operationId: VectorDB_ListCollections
       responses:
         '200':
@@ -468,67 +662,67 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/VectorDBResponseOfListOfCollectionResponse"
-  "/api/VectorDB/collections/{collectionName}":
+                $ref: '#/components/schemas/VectorDBResponseOfListOfCollectionResponse'
+  '/api/VectorDB/collections/{collectionName}':
     get:
       tags:
-      - VectorDB
+        - VectorDB
       operationId: VectorDB_GetCollectionInfo
       parameters:
-      - name: collectionName
-        in: path
-        required: true
-        schema:
-          type: string
-        x-position: 1
+        - name: collectionName
+          in: path
+          required: true
+          schema:
+            type: string
+          x-position: 1
       responses:
         '200':
           description: ''
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/VectorDBResponseOfCollectionResponse"
+                $ref: '#/components/schemas/VectorDBResponseOfCollectionResponse'
         '404':
           description: ''
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/VectorDBResponseOfString"
+                $ref: '#/components/schemas/VectorDBResponseOfString'
     delete:
       tags:
-      - VectorDB
+        - VectorDB
       operationId: VectorDB_DeleteCollection
       parameters:
-      - name: collectionName
-        in: path
-        required: true
-        schema:
-          type: string
-        x-position: 1
+        - name: collectionName
+          in: path
+          required: true
+          schema:
+            type: string
+          x-position: 1
       responses:
         '200':
           description: ''
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/VectorDBResponseOfString"
+                $ref: '#/components/schemas/VectorDBResponseOfString'
         '404':
           description: ''
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/VectorDBResponseOfString"
-  "/api/VectorDB/query":
+                $ref: '#/components/schemas/VectorDBResponseOfString'
+  /api/VectorDB/query:
     post:
       tags:
-      - VectorDB
+        - VectorDB
       operationId: VectorDB_Query
       requestBody:
         x-name: request
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/QueryRequest"
+              $ref: '#/components/schemas/QueryRequest'
         required: true
         x-position: 1
       responses:
@@ -537,24 +731,24 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/VectorDBResponseOfQueryResponse"
+                $ref: '#/components/schemas/VectorDBResponseOfQueryResponse'
         '400':
           description: ''
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/VectorDBResponseOfString"
-  "/api/VectorDB/query/semantic":
+                $ref: '#/components/schemas/VectorDBResponseOfString'
+  /api/VectorDB/query/semantic:
     post:
       tags:
-      - VectorDB
+        - VectorDB
       operationId: VectorDB_SemanticQuery
       requestBody:
         x-name: request
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/SemanticQueryRequest"
+              $ref: '#/components/schemas/SemanticQueryRequest'
         required: true
         x-position: 1
       responses:
@@ -563,24 +757,24 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/VectorDBResponseOfQueryResponse"
+                $ref: '#/components/schemas/VectorDBResponseOfQueryResponse'
         '400':
           description: ''
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/VectorDBResponseOfString"
-  "/api/VectorDB/query/filtered":
+                $ref: '#/components/schemas/VectorDBResponseOfString'
+  /api/VectorDB/query/filtered:
     post:
       tags:
-      - VectorDB
+        - VectorDB
       operationId: VectorDB_FilteredQuery
       requestBody:
         x-name: request
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/QueryRequest"
+              $ref: '#/components/schemas/QueryRequest'
         required: true
         x-position: 1
       responses:
@@ -589,159 +783,159 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/VectorDBResponseOfQueryResponse"
+                $ref: '#/components/schemas/VectorDBResponseOfQueryResponse'
         '400':
           description: ''
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/VectorDBResponseOfString"
-  "/api/VectorDB/documents/{documentId}/similar":
+                $ref: '#/components/schemas/VectorDBResponseOfString'
+  '/api/VectorDB/documents/{documentId}/similar':
     get:
       tags:
-      - VectorDB
+        - VectorDB
       operationId: VectorDB_FindSimilarDocuments
       parameters:
-      - name: documentId
-        in: path
-        required: true
-        schema:
-          type: string
-        x-position: 1
-      - name: collectionName
-        in: query
-        schema:
-          type: string
-          default: oceanographic_data
-        x-position: 2
-      - name: nResults
-        in: query
-        schema:
-          type: integer
-          format: int32
-          default: 5
-          maximum: 50.0
-          minimum: 1.0
-        x-position: 3
+        - name: documentId
+          in: path
+          required: true
+          schema:
+            type: string
+          x-position: 1
+        - name: collectionName
+          in: query
+          schema:
+            type: string
+            default: oceanographic_data
+          x-position: 2
+        - name: nResults
+          in: query
+          schema:
+            type: integer
+            format: int32
+            default: 5
+            maximum: 50
+            minimum: 1
+          x-position: 3
       responses:
         '200':
           description: ''
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/VectorDBResponseOfSimilarDocumentsResponse"
+                $ref: '#/components/schemas/VectorDBResponseOfSimilarDocumentsResponse'
         '404':
           description: ''
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/VectorDBResponseOfString"
-  "/api/VectorDB/rag/context":
+                $ref: '#/components/schemas/VectorDBResponseOfString'
+  /api/VectorDB/rag/context:
     get:
       tags:
-      - VectorDB
+        - VectorDB
       operationId: VectorDB_GetRAGContext
       parameters:
-      - name: query
-        in: query
-        schema:
-          type: string
-        x-position: 1
-      - name: maxResults
-        in: query
-        schema:
-          type: integer
-          format: int32
-          default: 5
-          maximum: 20.0
-          minimum: 1.0
-        x-position: 2
-      - name: similarityThreshold
-        in: query
-        schema:
-          type: number
-          format: double
-          default: 0.7
-          maximum: 1.0
-          minimum: 0.0
-        x-position: 3
+        - name: query
+          in: query
+          schema:
+            type: string
+          x-position: 1
+        - name: maxResults
+          in: query
+          schema:
+            type: integer
+            format: int32
+            default: 5
+            maximum: 20
+            minimum: 1
+          x-position: 2
+        - name: similarityThreshold
+          in: query
+          schema:
+            type: number
+            format: double
+            default: 0.3
+            maximum: 1
+            minimum: 0
+          x-position: 3
       responses:
         '200':
           description: ''
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/VectorDBResponseOfRAGContext"
+                $ref: '#/components/schemas/VectorDBResponseOfRAGContext'
         '400':
           description: ''
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/VectorDBResponseOfString"
-  "/api/VectorDB/rag/oceanographic":
+                $ref: '#/components/schemas/VectorDBResponseOfString'
+  /api/VectorDB/rag/oceanographic:
     get:
       tags:
-      - VectorDB
+        - VectorDB
       operationId: VectorDB_GetOceanographicRAGContext
       parameters:
-      - name: query
-        in: query
-        schema:
-          type: string
-        x-position: 1
-      - name: dataType
-        in: query
-        schema:
-          type: string
-          nullable: true
-        x-position: 2
-      - name: location
-        in: query
-        schema:
-          type: string
-          nullable: true
-        x-position: 3
-      - name: instrumentType
-        in: query
-        schema:
-          type: string
-          nullable: true
-        x-position: 4
-      - name: maxResults
-        in: query
-        schema:
-          type: integer
-          format: int32
-          default: 5
-          maximum: 20.0
-          minimum: 1.0
-        x-position: 5
-      - name: similarityThreshold
-        in: query
-        schema:
-          type: number
-          format: double
-          default: 0.7
-          maximum: 1.0
-          minimum: 0.0
-        x-position: 6
+        - name: query
+          in: query
+          schema:
+            type: string
+          x-position: 1
+        - name: dataType
+          in: query
+          schema:
+            type: string
+            nullable: true
+          x-position: 2
+        - name: location
+          in: query
+          schema:
+            type: string
+            nullable: true
+          x-position: 3
+        - name: instrumentType
+          in: query
+          schema:
+            type: string
+            nullable: true
+          x-position: 4
+        - name: maxResults
+          in: query
+          schema:
+            type: integer
+            format: int32
+            default: 5
+            maximum: 20
+            minimum: 1
+          x-position: 5
+        - name: similarityThreshold
+          in: query
+          schema:
+            type: number
+            format: double
+            default: 0.7
+            maximum: 1
+            minimum: 0
+          x-position: 6
       responses:
         '200':
           description: ''
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/VectorDBResponseOfRAGContext"
+                $ref: '#/components/schemas/VectorDBResponseOfRAGContext'
         '400':
           description: ''
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/VectorDBResponseOfString"
-  "/api/VectorDB/health":
+                $ref: '#/components/schemas/VectorDBResponseOfString'
+  /api/VectorDB/health:
     get:
       tags:
-      - VectorDB
+        - VectorDB
       operationId: VectorDB_GetHealth
       responses:
         '200':
@@ -749,17 +943,17 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/VectorDBResponseOfHealthResponse"
+                $ref: '#/components/schemas/VectorDBResponseOfHealthResponse'
         '503':
           description: ''
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/VectorDBResponseOfString"
-  "/api/VectorDB/stats":
+                $ref: '#/components/schemas/VectorDBResponseOfString'
+  /api/VectorDB/stats:
     get:
       tags:
-      - VectorDB
+        - VectorDB
       operationId: VectorDB_GetStats
       responses:
         '200':
@@ -767,11 +961,11 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/VectorDBResponseOfStatsResponse"
-  "/api/VectorDB/embeddings":
+                $ref: '#/components/schemas/VectorDBResponseOfStatsResponse'
+  /api/VectorDB/embeddings:
     post:
       tags:
-      - VectorDB
+        - VectorDB
       operationId: VectorDB_GenerateEmbeddings
       requestBody:
         x-name: texts
@@ -789,24 +983,24 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/VectorDBResponseOfEmbeddingResponse"
+                $ref: '#/components/schemas/VectorDBResponseOfEmbeddingResponse'
         '400':
           description: ''
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/VectorDBResponseOfString"
-  "/api/VectorDB/add/legacy":
+                $ref: '#/components/schemas/VectorDBResponseOfString'
+  /api/VectorDB/add:
     post:
       tags:
-      - VectorDB
+        - VectorDB
       operationId: VectorDB_AddLegacy
       requestBody:
         x-name: request
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/AddRequest"
+              $ref: '#/components/schemas/AddRequest'
         required: true
         x-position: 1
       responses:
@@ -823,17 +1017,17 @@ paths:
               schema:
                 type: string
       deprecated: true
-  "/api/VectorDB/query/legacy":
+  /api/VectorDB/query/legacy:
     post:
       tags:
-      - VectorDB
+        - VectorDB
       operationId: VectorDB_QueryLegacy
       requestBody:
         x-name: request
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/QueryRequest"
+              $ref: '#/components/schemas/QueryRequest'
         required: true
         x-position: 1
       responses:
@@ -866,6 +1060,16 @@ components:
           type: string
         password:
           type: string
+    PasswordResetModel:
+      type: object
+      additionalProperties: false
+      properties:
+        oldPassword:
+          type: string
+        newPassword:
+          type: string
+        newPasswordConfirmed:
+          type: string
     UserUpdate:
       type: object
       additionalProperties: false
@@ -879,12 +1083,24 @@ components:
         oncApiToken:
           type: string
           nullable: true
+    CreateCompanyTokenRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        companyName:
+          type: string
+        oncApiToken:
+          type: string
+          nullable: true
+        usage:
+          type: integer
+          format: int32
     FileEntityDto:
       type: object
       additionalProperties: false
       required:
-      - fileName
-      - uploadedBy
+        - fileName
+        - uploadedBy
       properties:
         id:
           type: integer
@@ -921,6 +1137,85 @@ components:
         yCoordinate:
           type: number
           format: float
+        responseXCoordinate:
+          type: number
+          format: float
+        responseYCoordinate:
+          type: number
+          format: float
+        sourceHandle:
+          type: string
+        targetHandle:
+          type: string
+        sessionId:
+          type: string
+          nullable: true
+        sources:
+          type: array
+          nullable: true
+          items:
+            $ref: '#/components/schemas/PartialMessageEdge'
+    PartialMessageEdge:
+      type: object
+      additionalProperties: false
+      properties:
+        sourceMessageId:
+          type: integer
+          format: int32
+        sourceHandle:
+          type: string
+        targetHandle:
+          type: string
+    UpdateCoordinatesRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        xCoordinate:
+          type: number
+          format: float
+        yCoordinate:
+          type: number
+          format: float
+    MessageEdge:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int32
+        sourceMessageId:
+          type: integer
+          format: int32
+        targetMessageId:
+          type: integer
+          format: int32
+        sourceHandle:
+          type: string
+        targetHandle:
+          type: string
+    RerankResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        reranked_Docs:
+          type: array
+          nullable: true
+          items:
+            type: string
+    RerankRequestDto:
+      type: object
+      additionalProperties: false
+      required:
+        - query
+        - docs
+      properties:
+        query:
+          type: string
+          minLength: 1
+        docs:
+          type: array
+          items:
+            type: string
     VectorDBResponseOfString:
       type: object
       additionalProperties: false
@@ -940,8 +1235,8 @@ components:
       type: object
       additionalProperties: false
       required:
-      - id
-      - text
+        - id
+        - text
       properties:
         id:
           type: string
@@ -974,12 +1269,12 @@ components:
       type: object
       additionalProperties: false
       required:
-      - documents
+        - documents
       properties:
         documents:
           type: array
           items:
-            "$ref": "#/components/schemas/Document"
+            $ref: '#/components/schemas/Document'
         collection_name:
           type: string
     Document:
@@ -993,7 +1288,7 @@ components:
         metadata:
           nullable: true
           oneOf:
-          - "$ref": "#/components/schemas/DocumentMetadata"
+            - $ref: '#/components/schemas/DocumentMetadata'
     DocumentMetadata:
       type: object
       additionalProperties: false
@@ -1027,7 +1322,7 @@ components:
         data:
           nullable: true
           oneOf:
-          - "$ref": "#/components/schemas/DocumentResponse"
+            - $ref: '#/components/schemas/DocumentResponse'
         message:
           type: string
           nullable: true
@@ -1061,7 +1356,7 @@ components:
       type: object
       additionalProperties: false
       required:
-      - name
+        - name
       properties:
         name:
           type: string
@@ -1083,7 +1378,7 @@ components:
           type: array
           nullable: true
           items:
-            "$ref": "#/components/schemas/CollectionResponse"
+            $ref: '#/components/schemas/CollectionResponse'
         message:
           type: string
           nullable: true
@@ -1115,7 +1410,7 @@ components:
         data:
           nullable: true
           oneOf:
-          - "$ref": "#/components/schemas/CollectionResponse"
+            - $ref: '#/components/schemas/CollectionResponse'
         message:
           type: string
           nullable: true
@@ -1131,7 +1426,7 @@ components:
         data:
           nullable: true
           oneOf:
-          - "$ref": "#/components/schemas/QueryResponse"
+            - $ref: '#/components/schemas/QueryResponse'
         message:
           type: string
           nullable: true
@@ -1145,7 +1440,7 @@ components:
         query:
           type: string
         results:
-          "$ref": "#/components/schemas/QueryResult"
+          $ref: '#/components/schemas/QueryResult'
         count:
           type: integer
           format: int32
@@ -1193,7 +1488,7 @@ components:
       type: object
       additionalProperties: false
       required:
-      - text
+        - text
       properties:
         text:
           type: string
@@ -1201,8 +1496,8 @@ components:
         n_results:
           type: integer
           format: int32
-          maximum: 50.0
-          minimum: 1.0
+          maximum: 50
+          minimum: 1
         collection_name:
           type: string
         where:
@@ -1217,7 +1512,7 @@ components:
       type: object
       additionalProperties: false
       required:
-      - text
+        - text
       properties:
         text:
           type: string
@@ -1225,15 +1520,15 @@ components:
         n_results:
           type: integer
           format: int32
-          maximum: 50.0
-          minimum: 1.0
+          maximum: 50
+          minimum: 1
         collection_name:
           type: string
         similarity_threshold:
           type: number
           format: double
-          maximum: 1.0
-          minimum: 0.0
+          maximum: 1
+          minimum: 0
         where:
           type: object
           nullable: true
@@ -1247,7 +1542,7 @@ components:
         data:
           nullable: true
           oneOf:
-          - "$ref": "#/components/schemas/SimilarDocumentsResponse"
+            - $ref: '#/components/schemas/SimilarDocumentsResponse'
         message:
           type: string
           nullable: true
@@ -1261,7 +1556,7 @@ components:
         reference_document_id:
           type: string
         similar_documents:
-          "$ref": "#/components/schemas/QueryResult"
+          $ref: '#/components/schemas/QueryResult'
         count:
           type: integer
           format: int32
@@ -1274,7 +1569,7 @@ components:
         data:
           nullable: true
           oneOf:
-          - "$ref": "#/components/schemas/RAGContext"
+            - $ref: '#/components/schemas/RAGContext'
         message:
           type: string
           nullable: true
@@ -1290,7 +1585,7 @@ components:
         relevantDocuments:
           type: array
           items:
-            "$ref": "#/components/schemas/RelevantDocument"
+            $ref: '#/components/schemas/RelevantDocument'
         apiData:
           type: object
           nullable: true
@@ -1312,7 +1607,7 @@ components:
         metadata:
           nullable: true
           oneOf:
-          - "$ref": "#/components/schemas/DocumentMetadata"
+            - $ref: '#/components/schemas/DocumentMetadata'
         source:
           type: string
     VectorDBResponseOfHealthResponse:
@@ -1324,7 +1619,7 @@ components:
         data:
           nullable: true
           oneOf:
-          - "$ref": "#/components/schemas/HealthResponse"
+            - $ref: '#/components/schemas/HealthResponse'
         message:
           type: string
           nullable: true
@@ -1351,7 +1646,7 @@ components:
         data:
           nullable: true
           oneOf:
-          - "$ref": "#/components/schemas/StatsResponse"
+            - $ref: '#/components/schemas/StatsResponse'
         message:
           type: string
           nullable: true
@@ -1371,7 +1666,7 @@ components:
         collections:
           type: array
           items:
-            "$ref": "#/components/schemas/CollectionStatsInfo"
+            $ref: '#/components/schemas/CollectionStatsInfo'
     CollectionStatsInfo:
       type: object
       additionalProperties: false
@@ -1394,7 +1689,7 @@ components:
         data:
           nullable: true
           oneOf:
-          - "$ref": "#/components/schemas/EmbeddingResponse"
+            - $ref: '#/components/schemas/EmbeddingResponse'
         message:
           type: string
           nullable: true

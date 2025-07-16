@@ -8,6 +8,7 @@ namespace Rift.Controllers;
 
 [ApiController]
 [Route("api/files")]
+[Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
 public class FileController : ControllerBase
 {
     private readonly IFileService _fileService;
@@ -18,8 +19,7 @@ public class FileController : ControllerBase
     }
 
     [HttpPost("")]
-    [Authorize(AuthenticationSchemes = "Bearer")]
-    public async Task<IActionResult> UploadFile([FromForm] IFormFile file)
+    public async Task<IActionResult> UploadFile([FromForm] UploadFileRequest request)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -27,6 +27,20 @@ public class FileController : ControllerBase
         {
             return Forbid();
         }
+
+        if (request == null || request.File == null || request.File.Length == 0 ||
+            string.IsNullOrWhiteSpace(request.SourceLink) ||
+            string.IsNullOrWhiteSpace(request.SourceType))
+        {
+            return BadRequest(new ApiResponse<object>
+            {
+                Success = false,
+                Error = "Invalid file upload request.",
+                Data = null
+            });
+        }
+
+        var file = request.File;
 
         var fileContents = await _fileService.ExtractTextAsync(file);
 
@@ -36,7 +50,9 @@ public class FileController : ControllerBase
             Content = fileContents,
             Size = file.Length,
             CreatedAt = DateTime.UtcNow,
-            UploadedBy = userId
+            UploadedBy = userId,
+            SourceLink = request.SourceLink,
+            SourceType = request.SourceType
         };
 
         var result = await _fileService.UploadFileAsync(fileEntity);
@@ -49,7 +65,6 @@ public class FileController : ControllerBase
     }
 
     [HttpGet("")]
-    [Authorize(AuthenticationSchemes = "Bearer")]
     public async Task<ActionResult<IEnumerable<FileEntityDto>>> GetAllFiles()
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -70,7 +85,6 @@ public class FileController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    [Authorize(AuthenticationSchemes = "Bearer")]
     public async Task<IActionResult> DeleteFile(int id)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -104,5 +118,12 @@ public class FileController : ControllerBase
                 DeletedId = deleted
             }
         });
+    }
+
+    public class UploadFileRequest
+    {
+        public required IFormFile File { get; set; }
+        public required string SourceLink { get; set; }
+        public required string SourceType { get; set; }
     }
 }
