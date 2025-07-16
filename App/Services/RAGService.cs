@@ -37,6 +37,7 @@ public class RAGService : IRAGService
             .Select(doc => doc.Id.Split('_')[0])
             .Distinct()
             .ToList();
+        // Console.WriteLine($"Relevant Document Titles: {string.Join(", ", relevantDocTitles)}");
         // TODO: Add reranker back once new prompts are working
         // var rerankRequest = new RerankRequest
         // {
