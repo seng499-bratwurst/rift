@@ -1,4 +1,4 @@
-# Source: P. J. Duke, B. G. T. Else, S. F. Jones, S. Marriot, M. M. M. Ahmed, V. Nandan, B. Butterworth, S. F. Gonski, R. Dewey, A. Sastri, L. A. Miller, K. G. Simpson, H. Thomas; Seasonal marine carbon system processes in an Arctic coastal landfast sea ice environment observed with an innovative underwater sensor platform. Elementa: Science of the Anthropocene 21 January 2021; 9 (1): 00103. doi: https://doi.org/10.1525/elementa.2021.00103
+# Source: https://doi.org/10.1525/elementa.2021.00103
 # ID: SeasonalMarineCarbonSystem
 
 RESEARCH ARTICLE

@@ -1,0 +1,922 @@
+[
+    {
+        "deviceCode": "COASTGUARDAIS003160185",
+        "name": "AISRECEIVER deployment at CBY",
+        "description": "Canadian Coast Guard. 2017. Cambridge Bay Automatic Identification Systems Receiver Deployed 2016-10-01. Ocean Networks Canada Society. https://doi.org/10.34943/34084d48-39c6-42b7-9272-64ea30e81cb5."
+    },
+    {
+        "deviceCode": "CANONPOWERSHOTG168406B001AA",
+        "name": "ROV_CAMERA deployment at CBYDS",
+        "description": "No citation available."
+    },
+    {
+        "deviceCode": "GARMINGPSMAP62ST211006242",
+        "name": "NAV deployment at CBYDS",
+        "description": "Ocean Networks Canada Society. 2015. Cambridge Bay Navigation System Deployed 2015-08-14. Ocean Networks Canada Society. https://doi.org/10.34943/ba87c4a0-ded8-48df-98a0-469cca8e9673."
+    },
+    {
+        "deviceCode": "GOPROCAMERACHDHX302H38B09133F05D8",
+        "name": "ROV_CAMERA deployment at CBYDS",
+        "description": "No citation available."
+    },
+    {
+        "deviceCode": "SUUNTOZOOP32800551",
+        "name": "DIVE_COMPUTER deployment at CBYDS",
+        "description": "Ocean Networks Canada Society. 2015. Cambridge Bay Dive Computer Deployed 2015-08-14. Ocean Networks Canada Society. https://doi.org/10.34943/d87c1a86-fc06-496e-b7f2-69d1321f47b3."
+    },
+    {
+        "deviceCode": "ONCMJB010",
+        "name": "JB deployment at CBYIJ.J1",
+        "description": "Ocean Networks Canada Society. 2019. Cambridge Bay Junction Box Deployed 2019-07-31. Ocean Networks Canada Society. https://doi.org/10.34943/717bf0dd-4be8-480b-8266-a2d14f80b4bc."
+    },
+    {
+        "deviceCode": "ONCMJB009",
+        "name": "JB deployment at CBYIJ.J2",
+        "description": "Ocean Networks Canada Society. 2019. Cambridge Bay Junction Box Deployed 2019-07-31. Ocean Networks Canada Society. https://doi.org/10.34943/eeda7330-40c7-4fd8-b5ae-702ce63a0071."
+    },
+    {
+        "deviceCode": "ONCMJB033",
+        "name": "JB deployment at CBYIJ.J2",
+        "description": "Ocean Networks Canada Society. 2022. Cambridge Bay Junction Box Deployed 2022-09-11. Ocean Networks Canada Society. https://doi.org/10.34943/fab37782-5edc-44da-a729-f7408c909bce."
+    },
+    {
+        "deviceCode": "ONCMJB033",
+        "name": "JB deployment at CBYIJ.J2",
+        "description": "Ocean Networks Canada Society. 2023. Cambridge Bay Junction Box Deployed 2023-08-01. Ocean Networks Canada Society. https://doi.org/10.34943/a84ede76-d5c5-49f7-9b14-010c9a05345e."
+    },
+    {
+        "deviceCode": "ASLSWIP53019",
+        "name": "ICEPROFILER deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2014. Cambridge Bay Ice Profiler Deployed 2014-09-26. Ocean Networks Canada Society. https://doi.org/10.34943/aaebfbff-78c6-4b57-9381-8fba058cf27f."
+    },
+    {
+        "deviceCode": "ASLSWIP53029",
+        "name": "ICEPROFILER deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2012. Cambridge Bay Ice Profiler Deployed 2012-10-02. Ocean Networks Canada Society. https://doi.org/10.34943/a8bfc078-dbbb-4b74-b8b3-de8b6053b4a2."
+    },
+    {
+        "deviceCode": "ASLSWIP53029",
+        "name": "ICEPROFILER deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2013. Cambridge Bay Ice Profiler Deployed 2013-09-03. Ocean Networks Canada Society. https://doi.org/10.34943/b92417a4-be51-4d0f-b11f-9d5761cb8a76."
+    },
+    {
+        "deviceCode": "ASLSWIP53029",
+        "name": "ICEPROFILER deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2015. Cambridge Bay Ice Profiler Deployed 2015-08-27. Ocean Networks Canada Society. https://doi.org/10.34943/75b42784-ad26-4a14-8fee-be914cdd2dff."
+    },
+    {
+        "deviceCode": "ASLSWIP53029",
+        "name": "ICEPROFILER deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2016. Cambridge Bay Ice Profiler Deployed 2016-08-25. Ocean Networks Canada Society. https://doi.org/10.34943/671d1836-6879-48e8-9941-4b16f10b3020."
+    },
+    {
+        "deviceCode": "ASLSWIP53029",
+        "name": "ICEPROFILER deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2019. Cambridge Bay Ice Profiler Deployed 2019-07-31. Ocean Networks Canada Society. https://doi.org/10.34943/8659272e-7ccb-4574-8c35-f56b6551d239."
+    },
+    {
+        "deviceCode": "ASLSWIP53038",
+        "name": "ICEPROFILER deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2017. Cambridge Bay Ice Profiler Deployed 2017-09-14. Ocean Networks Canada Society. https://doi.org/10.34943/9ae91b6e-a795-4571-a3ac-e4dedab83c59."
+    },
+    {
+        "deviceCode": "ASLSWIP53038",
+        "name": "ICEPROFILER deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2018. Cambridge Bay Ice Profiler Deployed 2018-07-26. Ocean Networks Canada Society. https://doi.org/10.34943/5f5cb349-d2fd-4841-8eba-a6c40250c565."
+    },
+    {
+        "deviceCode": "ASLSWIP53038",
+        "name": "ICEPROFILER deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2022. Cambridge Bay Ice Profiler Deployed 2022-09-12. Ocean Networks Canada Society. https://doi.org/10.34943/775fb80a-b29d-4968-a5c6-d185dc402e65."
+    },
+    {
+        "deviceCode": "ASLSWIP53038",
+        "name": "ICEPROFILER deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2022. Cambridge Bay Ice Profiler Deployed 2022-09-12. Ocean Networks Canada Society. https://doi.org/10.34943/c52f58f3-a237-498c-89f5-d68e78b55bc5."
+    },
+    {
+        "deviceCode": "ASLSWIP53038",
+        "name": "ICEPROFILER deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2023. Cambridge Bay Ice Profiler Deployed 2023-08-01. Ocean Networks Canada Society. https://doi.org/10.34943/4ae40735-c87e-4ee0-91f4-fdf50c2fe3a4."
+    },
+    {
+        "deviceCode": "ASLSWIP53038",
+        "name": "ICEPROFILER deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2024. Cambridge Bay Ice Profiler Deployed 2024-08-29. Ocean Networks Canada Society. https://doi.org/10.34943/2c78dbf2-62a5-453c-94ef-b2ac08c790fe."
+    },
+    {
+        "deviceCode": "AXISCAMACCC8ED935D1",
+        "name": "VIDEOCAM deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2022. Cambridge Bay Video Camera Deployed 2022-09-12. Ocean Networks Canada Society. https://doi.org/10.34943/b8c28ef8-f473-49c2-bcfd-68fd13b09292."
+    },
+    {
+        "deviceCode": "AXISCAMACCC8ED935D1",
+        "name": "VIDEOCAM deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2023. Cambridge Bay Video Camera Deployed 2023-08-01. Ocean Networks Canada Society. https://doi.org/10.34943/72a02242-b629-45ee-80a5-6e633885d7d6."
+    },
+    {
+        "deviceCode": "AXISCAMACCC8ED935D1",
+        "name": "VIDEOCAM deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2024. Cambridge Bay Video Camera Deployed 2024-08-29. Ocean Networks Canada Society. https://doi.org/10.34943/6d582899-1afb-43de-9ff8-8e1effbd0532."
+    },
+    {
+        "deviceCode": "AXISQ6035HD1089",
+        "name": "VIDEOCAM deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2017. Cambridge Bay Video Camera Deployed 2017-09-14. Ocean Networks Canada Society. https://doi.org/10.34943/85eaf74d-f264-46ea-a8f4-366fc24e78ac."
+    },
+    {
+        "deviceCode": "AXISQ6035HD1089",
+        "name": "VIDEOCAM deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2018. Cambridge Bay Video Camera Deployed 2018-07-26. Ocean Networks Canada Society. https://doi.org/10.34943/7ffebf83-0e44-4695-813a-ce3662f541f6."
+    },
+    {
+        "deviceCode": "AXISQ6035HD1089",
+        "name": "VIDEOCAM deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2019. Cambridge Bay Video Camera Deployed 2019-07-31. Ocean Networks Canada Society. https://doi.org/10.34943/b7d6131a-70f8-4adb-ae83-8add99427de5."
+    },
+    {
+        "deviceCode": "BIOLIGHTSENSOR50115",
+        "name": "RADIOMETER deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2019. Cambridge Bay Radiometer Deployed 2019-07-31. Ocean Networks Canada Society. https://doi.org/10.34943/cb6e8a56-ade7-4b2a-8ed3-a9f3d37d347a."
+    },
+    {
+        "deviceCode": "BIOLIGHTSENSOR50115",
+        "name": "RADIOMETER deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2024. Cambridge Bay Radiometer Deployed 2024-08-29. Ocean Networks Canada Society. https://doi.org/10.34943/3c374d6d-a870-48e1-9889-93344357bb05."
+    },
+    {
+        "deviceCode": "BIOLIGHTSENSOR70434",
+        "name": "RADIOMETER deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2014. Cambridge Bay Radiometer Deployed 2014-09-26. Ocean Networks Canada Society. https://doi.org/10.34943/7a1cd2bc-f7b7-4829-a8e4-9e614cf432ea."
+    },
+    {
+        "deviceCode": "BIOLIGHTSENSOR70434",
+        "name": "RADIOMETER deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2018. Cambridge Bay Radiometer Deployed 2018-07-26. Ocean Networks Canada Society. https://doi.org/10.34943/a224662d-2e83-4a8a-9387-4af969c75fa9."
+    },
+    {
+        "deviceCode": "ICLISTENHF1251",
+        "name": "HYDROPHONE deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2019. Cambridge Bay Hydrophone Deployed 2019-08-01. Ocean Networks Canada Society. https://doi.org/10.34943/c866e384-2bc3-49d2-ac60-e590f355d77a."
+    },
+    {
+        "deviceCode": "ICLISTENHF1252",
+        "name": "HYDROPHONE deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2013. Cambridge Bay Hydrophone Deployed 2013-09-03. Ocean Networks Canada Society. https://doi.org/10.34943/a718f799-da82-4522-86db-54ef385982a2."
+    },
+    {
+        "deviceCode": "ICLISTENHF1252",
+        "name": "HYDROPHONE deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2015. Cambridge Bay Hydrophone Deployed 2015-08-27. Ocean Networks Canada Society. https://doi.org/10.34943/f7913686-6c05-49fc-96f5-3628878b7413."
+    },
+    {
+        "deviceCode": "ICLISTENHF1252",
+        "name": "HYDROPHONE deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2016. Cambridge Bay Hydrophone Deployed 2016-08-25. Ocean Networks Canada Society. https://doi.org/10.34943/31b7f277-32f8-4d80-97ca-0278422aea24."
+    },
+    {
+        "deviceCode": "ICLISTENHF1266",
+        "name": "HYDROPHONE deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2017. Cambridge Bay Hydrophone Deployed 2017-09-14. Ocean Networks Canada Society. https://doi.org/10.34943/b195c0a6-8249-4665-8a15-30992ac39bbc."
+    },
+    {
+        "deviceCode": "ICLISTENHF1266",
+        "name": "HYDROPHONE deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2018. Cambridge Bay Hydrophone Deployed 2018-07-26. Ocean Networks Canada Society. https://doi.org/10.34943/76b96820-c9fa-44a3-9d34-d7c08f887a18."
+    },
+    {
+        "deviceCode": "ICLISTENHF1288",
+        "name": "HYDROPHONE deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2014. Cambridge Bay Hydrophone Deployed 2014-09-26. Ocean Networks Canada Society. https://doi.org/10.34943/cedce586-98c7-4548-afb6-beace76fd486."
+    },
+    {
+        "deviceCode": "ICLISTENHF1561",
+        "name": "HYDROPHONE deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2022. Cambridge Bay Hydrophone Deployed 2021-09-15. Ocean Networks Canada Society. https://doi.org/10.34943/b8535f9f-fe6a-4c97-8bca-b6abddfbcbe1."
+    },
+    {
+        "deviceCode": "ICLISTENHF1561",
+        "name": "HYDROPHONE deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2023. Cambridge Bay Hydrophone Deployed 2022-09-12. Ocean Networks Canada Society. https://doi.org/10.34943/d8c4bbc8-f9ab-4591-bc9c-996281aaba58."
+    },
+    {
+        "deviceCode": "ICLISTENHF1951",
+        "name": "HYDROPHONE deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2023. Cambridge Bay Hydrophone Deployed 2023-08-03. Ocean Networks Canada Society. https://doi.org/10.34943/cfa875d8-8f0a-470e-aedd-bda1924d28e2."
+    },
+    {
+        "deviceCode": "ICLISTENHF1951",
+        "name": "HYDROPHONE deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2024. Cambridge Bay Hydrophone Deployed 2024-08-29. Ocean Networks Canada Society. https://doi.org/10.34943/59a7863e-3c15-4d62-93fa-4f9717e04582."
+    },
+    {
+        "deviceCode": "ISUSX0116",
+        "name": "NITRATESENSOR deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2015. Cambridge Bay Nitrate sensor Deployed 2015-08-27. Ocean Networks Canada Society. https://doi.org/10.34943/527e78c7-14ca-4bb6-a09d-fc20b41227c0."
+    },
+    {
+        "deviceCode": "MCLANEPHYTOPLANKTONSAMPLER1293501",
+        "name": "PLANKTONSAMPLER deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2019. Cambridge Bay Plankton Sampler Deployed 2019-08-01. Ocean Networks Canada Society. https://doi.org/10.34943/16ad5c39-12a7-42b4-acac-b2c7519b38de."
+    },
+    {
+        "deviceCode": "OCEANCAMOPT06FHDE9300861",
+        "name": "VIDEOCAM deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2014. Cambridge Bay Video Camera Deployed 2014-09-26. Ocean Networks Canada Society. https://doi.org/10.34943/637f732c-718a-44b3-ad8a-2d29c54692d8."
+    },
+    {
+        "deviceCode": "OCEANCAMOPT06HDE9300860",
+        "name": "VIDEOCAM deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2012. Cambridge Bay Video Camera Deployed 2012-10-02. Ocean Networks Canada Society. https://doi.org/10.34943/ed1e9aa6-3cc5-4f41-af48-81a6d16b56f3."
+    },
+    {
+        "deviceCode": "OCEANCAMOPT06HDE9300860",
+        "name": "VIDEOCAM deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2013. Cambridge Bay Video Camera Deployed 2013-09-03. Ocean Networks Canada Society. https://doi.org/10.34943/40e6076f-4859-46f2-9a3a-1a90fb8d38af."
+    },
+    {
+        "deviceCode": "ONCLIGHTS05AND06",
+        "name": "CAMLIGHTS deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2022. Cambridge Bay Camera Lights Deployed 2022-09-12. Ocean Networks Canada Society. https://doi.org/10.34943/9485a293-5139-4c46-a0a4-d5a032eba111."
+    },
+    {
+        "deviceCode": "ONCLIGHTS05AND06",
+        "name": "CAMLIGHTS deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2022. Cambridge Bay Camera Lights Deployed 2022-09-12. Ocean Networks Canada Society. https://doi.org/10.34943/6f008b69-1f47-4459-a59d-a51042c91aaa."
+    },
+    {
+        "deviceCode": "ONCLIGHTS05AND06",
+        "name": "CAMLIGHTS deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2023. Cambridge Bay Camera Lights Deployed 2023-08-01. Ocean Networks Canada Society. https://doi.org/10.34943/7e3eea9a-2803-4b27-a71b-643999e3cb3f."
+    },
+    {
+        "deviceCode": "PHSENSOR246",
+        "name": "PHSENSOR deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2016. Cambridge Bay pH Sensor Deployed 2016-08-25. Ocean Networks Canada Society. https://doi.org/10.34943/6a3416e3-e9c7-4e59-b8d1-0aa2fcdda96d."
+    },
+    {
+        "deviceCode": "PHSENSOR246",
+        "name": "PHSENSOR deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2018. Cambridge Bay pH Sensor Deployed 2018-07-26. Ocean Networks Canada Society. https://doi.org/10.34943/3c3c8a4f-7d3a-4acc-b3c0-4d28c43ec39e."
+    },
+    {
+        "deviceCode": "PHSENSOR452",
+        "name": "PHSENSOR deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2017. Cambridge Bay pH Sensor Deployed 2017-09-14. Ocean Networks Canada Society. https://doi.org/10.34943/282babf3-7943-422b-897a-bec90afc9d6c."
+    },
+    {
+        "deviceCode": "RDIADCP1200WH9111",
+        "name": "ADCP1200KHZ deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2016. Cambridge Bay Acoustic Doppler Current Profiler 1200 kHz Deployed 2016-08-25. Ocean Networks Canada Society. https://doi.org/10.34943/29555375-3acd-4630-a118-cb0b57d6dcc6."
+    },
+    {
+        "deviceCode": "RDIADCP1200WH9111",
+        "name": "ADCP1200KHZ deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2017. Cambridge Bay Acoustic Doppler Current Profiler 1200 kHz Deployed 2017-09-14. Ocean Networks Canada Society. https://doi.org/10.34943/1d65cde6-070a-4bc5-97ab-08cb3a3e12cd."
+    },
+    {
+        "deviceCode": "ROSLIGHTS21251SN21267",
+        "name": "CAMLIGHTS deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2015. Cambridge Bay Camera Lights Deployed 2014-09-26. Ocean Networks Canada Society. https://doi.org/10.34943/186dcac7-cdfa-4c45-9f18-9d9f4b30af41."
+    },
+    {
+        "deviceCode": "SBE63630108",
+        "name": "OXYSENSOR deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2018. Cambridge Bay Oxygen Sensor Deployed 2018-07-26. Ocean Networks Canada Society. https://doi.org/10.34943/612be18e-22c0-4fc9-b4c7-4fe5acb46ec2."
+    },
+    {
+        "deviceCode": "SBE63630225",
+        "name": "OXYSENSOR deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2019. Cambridge Bay Oxygen Sensor Deployed 2019-07-31. Ocean Networks Canada Society. https://doi.org/10.34943/3870c86d-fc80-449f-b9e2-2d529fa74700."
+    },
+    {
+        "deviceCode": "SBE63630834",
+        "name": "OXYSENSOR deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2014. Cambridge Bay Oxygen Sensor Deployed 2014-09-26. Ocean Networks Canada Society. https://doi.org/10.34943/9479908e-c334-4dd2-80ba-0d1d2c631157."
+    },
+    {
+        "deviceCode": "SBE63630834",
+        "name": "OXYSENSOR deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2016. Cambridge Bay Oxygen Sensor Deployed 2016-08-25. Ocean Networks Canada Society. https://doi.org/10.34943/dedcc889-e09f-4b5a-be17-60bd0e30a21e."
+    },
+    {
+        "deviceCode": "SBE63630834",
+        "name": "OXYSENSOR deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2024. Cambridge Bay Oxygen Sensor Deployed 2024-08-29. Ocean Networks Canada Society. https://doi.org/10.34943/d012c6b8-5f72-4e6c-a178-5b322b70aea1."
+    },
+    {
+        "deviceCode": "SBE63631008",
+        "name": "OXYSENSOR deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2015. Cambridge Bay Oxygen Sensor Deployed 2015-08-27. Ocean Networks Canada Society. https://doi.org/10.34943/bf112f7b-faae-4cd0-b00a-fd57cbdbb1a8."
+    },
+    {
+        "deviceCode": "SBE63631008",
+        "name": "OXYSENSOR deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2017. Cambridge Bay Oxygen Sensor Deployed 2017-09-14. Ocean Networks Canada Society. https://doi.org/10.34943/1d357341-b2ce-4ba9-8b54-dec426544c13."
+    },
+    {
+        "deviceCode": "SBE63631500",
+        "name": "OXYSENSOR deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2022. Cambridge Bay Oxygen Sensor Deployed 2022-09-12. Ocean Networks Canada Society. https://doi.org/10.34943/c50b987f-66a1-4b34-9eb9-60ec04ceafdf."
+    },
+    {
+        "deviceCode": "SBE63631500",
+        "name": "OXYSENSOR deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2023. Cambridge Bay Oxygen Sensor Deployed 2023-08-01. Ocean Networks Canada Society. https://doi.org/10.34943/3bebe4ce-b472-40be-943c-371ad338d8cf."
+    },
+    {
+        "deviceCode": "SBE63631500",
+        "name": "OXYSENSOR deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2023. Cambridge Bay Oxygen Sensor Deployed 2023-08-02. Ocean Networks Canada Society. https://doi.org/10.34943/2882c627-d51a-40f7-ab90-9acf0bf78704."
+    },
+    {
+        "deviceCode": "SBECTD19p7036",
+        "name": "CTD deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2019. Cambridge Bay Conductivity Temperature Depth Deployed 2019-07-31. Ocean Networks Canada Society. https://doi.org/10.34943/88e4918b-4328-4261-a4d2-164e45da4bdf."
+    },
+    {
+        "deviceCode": "SBECTD19p7128",
+        "name": "CTD deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2024. Cambridge Bay Conductivity Temperature Depth Deployed 2024-08-29. Ocean Networks Canada Society. https://doi.org/10.34943/83c71dca-11d5-41f4-81c1-fa03bfb1f4a8."
+    },
+    {
+        "deviceCode": "SBECTD19p7518",
+        "name": "CTD deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2014. Cambridge Bay Conductivity Temperature Depth Deployed 2014-09-26. Ocean Networks Canada Society. https://doi.org/10.34943/3b140acb-acd3-4f0e-8dd1-3ecde627f629."
+    },
+    {
+        "deviceCode": "SBECTD19p7518",
+        "name": "CTD deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2016. Cambridge Bay Conductivity Temperature Depth Deployed 2016-08-25. Ocean Networks Canada Society. https://doi.org/10.34943/e802061f-3ba3-427a-82ec-3724643bd239."
+    },
+    {
+        "deviceCode": "SBECTD19p7518",
+        "name": "CTD deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2018. Cambridge Bay Conductivity Temperature Depth Deployed 2018-07-26. Ocean Networks Canada Society. https://doi.org/10.34943/40192126-dea4-46c5-8759-72cadeb9bb98."
+    },
+    {
+        "deviceCode": "SBECTD19p7589",
+        "name": "CTD deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2015. Cambridge Bay Conductivity Temperature Depth Deployed 2015-08-27. Ocean Networks Canada Society. https://doi.org/10.34943/4dbc9b13-e9ba-4574-8a65-48b2a5708c5f."
+    },
+    {
+        "deviceCode": "SBECTD19p7589",
+        "name": "CTD deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2017. Cambridge Bay Conductivity Temperature Depth Deployed 2017-09-14. Ocean Networks Canada Society. https://doi.org/10.34943/97d282bd-0306-4f6d-ac14-1cb43a57700c."
+    },
+    {
+        "deviceCode": "SBECTD19p7769",
+        "name": "CTD deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2022. Cambridge Bay Conductivity Temperature Depth Deployed 2022-09-12. Ocean Networks Canada Society. https://doi.org/10.34943/ccfdd35d-0b83-48a5-a48d-8c0865471581."
+    },
+    {
+        "deviceCode": "SBECTD19p7769",
+        "name": "CTD deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2023. Cambridge Bay Conductivity Temperature Depth Deployed 2023-08-01. Ocean Networks Canada Society. https://doi.org/10.34943/4326c03a-a193-4bb7-b29b-82cee4fce281."
+    },
+    {
+        "deviceCode": "SBECTD19p7769",
+        "name": "CTD deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2023. Cambridge Bay Conductivity Temperature Depth Deployed 2023-08-02. Ocean Networks Canada Society. https://doi.org/10.34943/55e2b10a-190a-4334-98b4-9cbda08ea2f1."
+    },
+    {
+        "deviceCode": "SUNSAMIpHP0073",
+        "name": "PHSENSOR deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2015. Cambridge Bay pH Sensor Deployed 2015-08-27. Ocean Networks Canada Society. https://doi.org/10.34943/154af709-6213-418e-8d5c-3b0361f6436a."
+    },
+    {
+        "deviceCode": "VEMCOVR2C450094",
+        "name": "ACOUSTICRECEIVER deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2013. Cambridge Bay Acoustic Receiver Deployed 2013-09-03. Ocean Networks Canada Society. https://doi.org/10.34943/e872273b-ee0a-4d19-95db-0e49394402af."
+    },
+    {
+        "deviceCode": "VEMCOVR2C450094",
+        "name": "ACOUSTICRECEIVER deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2014. Cambridge Bay Acoustic Receiver Deployed 2014-09-26. Ocean Networks Canada Society. https://doi.org/10.34943/5c053703-dcb7-4b22-b35d-791cabd0575b."
+    },
+    {
+        "deviceCode": "VEMCOVR2C450094",
+        "name": "ACOUSTICRECEIVER deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2017. Cambridge Bay Acoustic Receiver Deployed 2017-09-14. Ocean Networks Canada Society. https://doi.org/10.34943/d5645197-9227-4a2b-88a6-5afbae34221b."
+    },
+    {
+        "deviceCode": "VEMCOVR2C450094",
+        "name": "ACOUSTICRECEIVER deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2018. Cambridge Bay Acoustic Receiver Deployed 2018-07-26. Ocean Networks Canada Society. https://doi.org/10.34943/eaf3ae89-962b-436c-99e9-5d588cc56b1f."
+    },
+    {
+        "deviceCode": "VEMCOVR2C450094",
+        "name": "ACOUSTICRECEIVER deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2019. Cambridge Bay Acoustic Receiver Deployed 2019-07-31. Ocean Networks Canada Society. https://doi.org/10.34943/1e1b1bc5-8a4b-4ea1-80b2-369a3b94a2dd."
+    },
+    {
+        "deviceCode": "VEMCOVR2C450150",
+        "name": "ACOUSTICRECEIVER deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2015. Cambridge Bay Acoustic Receiver Deployed 2015-08-27. Ocean Networks Canada Society. https://doi.org/10.34943/8268f28c-7eab-4586-af59-2b6064debc8c."
+    },
+    {
+        "deviceCode": "VEMCOVR2C450150",
+        "name": "ACOUSTICRECEIVER deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2016. Cambridge Bay Acoustic Receiver Deployed 2016-08-25. Ocean Networks Canada Society. https://doi.org/10.34943/14fed90a-7ba0-48aa-b8a9-ddce7504073d."
+    },
+    {
+        "deviceCode": "VEMCOVR2W112529",
+        "name": "ACOUSTICRECEIVER deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2023. Cambridge Bay Acoustic Receiver Deployed 2022-09-12. Ocean Networks Canada Society. https://doi.org/10.34943/894bd50a-4cc9-48f3-a05b-04f46af612d1."
+    },
+    {
+        "deviceCode": "WETLABSECOFLRT6106",
+        "name": "FLUOROMETER deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2022. Cambridge Bay Fluorometer Deployed 2022-09-12. Ocean Networks Canada Society. https://doi.org/10.34943/0632c5a5-b88e-4818-babd-f372aee05942."
+    },
+    {
+        "deviceCode": "WETLABSECOFLRT6106",
+        "name": "FLUOROMETER deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2023. Cambridge Bay Fluorometer Deployed 2023-08-01. Ocean Networks Canada Society. https://doi.org/10.34943/6b9fc12d-0e65-450c-80d0-fe5c752aa0b7."
+    },
+    {
+        "deviceCode": "WETLABSECOFLRT6106",
+        "name": "FLUOROMETER deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2023. Cambridge Bay Fluorometer Deployed 2023-08-02. Ocean Networks Canada Society. https://doi.org/10.34943/6c21979e-1964-4829-9bce-e1f5102448a4."
+    },
+    {
+        "deviceCode": "WETLABSECOPARS440",
+        "name": "RADIOMETER deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2016. Cambridge Bay Radiometer Deployed 2016-08-25. Ocean Networks Canada Society. https://doi.org/10.34943/ff25f78a-40ab-4209-9c00-0e09bb21e6be."
+    },
+    {
+        "deviceCode": "WETLABSECOPARS459",
+        "name": "RADIOMETER deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2015. Cambridge Bay Radiometer Deployed 2015-08-27. Ocean Networks Canada Society. https://doi.org/10.34943/5da5d0af-2bc6-4427-baf3-d93059c67879."
+    },
+    {
+        "deviceCode": "WETLABSECOPARS459",
+        "name": "RADIOMETER deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2017. Cambridge Bay Radiometer Deployed 2017-09-14. Ocean Networks Canada Society. https://doi.org/10.34943/e20626dd-99ac-4387-b9bc-e660525f6360."
+    },
+    {
+        "deviceCode": "WETLABSECOPARS459",
+        "name": "RADIOMETER deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2022. Cambridge Bay Radiometer Deployed 2022-09-12. Ocean Networks Canada Society. https://doi.org/10.34943/528287e9-ac73-491f-8ad1-6f7a4b8c1b6d."
+    },
+    {
+        "deviceCode": "WETLABSECOPARS459",
+        "name": "RADIOMETER deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2023. Cambridge Bay Radiometer Deployed 2023-08-01. Ocean Networks Canada Society. https://doi.org/10.34943/aebfe439-660b-4d87-8a5f-e76f74b1a0a0."
+    },
+    {
+        "deviceCode": "WETLABSECOPARS459",
+        "name": "RADIOMETER deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2023. Cambridge Bay Radiometer Deployed 2023-08-02. Ocean Networks Canada Society. https://doi.org/10.34943/1d621a29-56ea-4a79-a1ac-d03bb0d4ba09."
+    },
+    {
+        "deviceCode": "WETLABSFLNTU2586",
+        "name": "FLNTU deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2018. Cambridge Bay Fluorometer Turbidity Deployed 2018-07-26. Ocean Networks Canada Society. https://doi.org/10.34943/909aa66f-dd44-45fe-a243-2aca0880d58a."
+    },
+    {
+        "deviceCode": "WETLABSFLNTUS3441",
+        "name": "FLNTU deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2014. Cambridge Bay Fluorometer Turbidity Deployed 2014-09-26. Ocean Networks Canada Society. https://doi.org/10.34943/f1bccabd-adde-4a85-a0c2-1084d9099cc8."
+    },
+    {
+        "deviceCode": "WETLABSFLNTUS3441",
+        "name": "FLNTU deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2016. Cambridge Bay Fluorometer Turbidity Deployed 2016-08-25. Ocean Networks Canada Society. https://doi.org/10.34943/1740d05e-725e-432f-9c22-f60ced2fa508."
+    },
+    {
+        "deviceCode": "WETLABSFLNTUS3923",
+        "name": "FLNTU deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2015. Cambridge Bay Fluorometer Turbidity Deployed 2015-08-27. Ocean Networks Canada Society. https://doi.org/10.34943/25507fec-1cab-411f-a307-3278f1d7600f."
+    },
+    {
+        "deviceCode": "WETLABSFLNTUS3923",
+        "name": "FLNTU deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2017. Cambridge Bay Fluorometer Turbidity Deployed 2017-09-14. Ocean Networks Canada Society. https://doi.org/10.34943/af27d2de-d170-4c13-a8f8-69c39744d8c3."
+    },
+    {
+        "deviceCode": "WETLABSFLNTUS3923",
+        "name": "FLNTU deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2019. Cambridge Bay Fluorometer Turbidity Deployed 2019-07-31. Ocean Networks Canada Society. https://doi.org/10.34943/c10759f2-d4a3-493f-a679-2d42b2e68fff."
+    },
+    {
+        "deviceCode": "WETLABSFLNTUS3923",
+        "name": "FLNTU deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2024. Cambridge Bay Fluorometer Turbidity Deployed 2024-08-29. Ocean Networks Canada Society. https://doi.org/10.34943/db7a501a-834f-4544-b1e6-830247d681ca."
+    },
+    {
+        "deviceCode": "WETLABSWQM196",
+        "name": "WETLABS_WQM deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2013. Cambridge Bay Water Quality Monitor Deployed 2013-09-03. Ocean Networks Canada Society. https://doi.org/10.34943/511f07f7-236c-4573-8146-6e6994d10bed."
+    },
+    {
+        "deviceCode": "WETLABSWQM233",
+        "name": "WETLABS_WQM deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2012. Cambridge Bay Water Quality Monitor Deployed 2012-10-02. Ocean Networks Canada Society. https://doi.org/10.34943/d1411630-2b5e-418d-b9ca-7f78af5b26b0."
+    },
+    {
+        "deviceCode": "WLNTUS319",
+        "name": "TURBIDITYMETER deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2022. Cambridge Bay Turbidity Meter Deployed 2022-09-12. Ocean Networks Canada Society. https://doi.org/10.34943/d68320b6-4859-466f-aa2c-baaabdbdfbf7."
+    },
+    {
+        "deviceCode": "WLNTUS319",
+        "name": "TURBIDITYMETER deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2023. Cambridge Bay Turbidity Meter Deployed 2023-08-01. Ocean Networks Canada Society. https://doi.org/10.34943/8bb17f52-0afb-47a0-aa27-7b936a24fe36."
+    },
+    {
+        "deviceCode": "WLNTUS319",
+        "name": "TURBIDITYMETER deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2023. Cambridge Bay Turbidity Meter Deployed 2023-08-02. Ocean Networks Canada Society. https://doi.org/10.34943/1521ca37-407f-4231-bbb0-d19107aef805."
+    },
+    {
+        "deviceCode": "XWING-HDWebcam1088",
+        "name": "VIDEOCAM deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2015. Cambridge Bay Video Camera Deployed 2015-08-27. Ocean Networks Canada Society. https://doi.org/10.34943/826f23e1-2fcc-46b2-b648-f5af6992c04d."
+    },
+    {
+        "deviceCode": "XWING-HDWebcam1088",
+        "name": "VIDEOCAM deployment at CBYIP",
+        "description": "Ocean Networks Canada Society. 2016. Cambridge Bay Video Camera Deployed 2016-08-25. Ocean Networks Canada Society. https://doi.org/10.34943/3c5133eb-492a-4c01-bdbc-f48ec80835b0."
+    },
+    {
+        "deviceCode": "PROCO2-35-250-75",
+        "name": "CO2SENSOR deployment at CBYIP.D1",
+        "description": "Ocean Networks Canada Society. 2015. Cambridge Bay Carbon Dioxide Sensor Deployed 2015-08-27. Ocean Networks Canada Society. https://doi.org/10.34943/8e109c74-d525-4940-93cd-098afe514b38."
+    },
+    {
+        "deviceCode": "PROCO2-35-250-75",
+        "name": "CO2SENSOR deployment at CBYIP.D1",
+        "description": "Ocean Networks Canada Society. 2017. Cambridge Bay Carbon Dioxide Sensor Deployed 2017-09-14. Ocean Networks Canada Society. https://doi.org/10.34943/86a934c3-86f0-4f74-a38f-67404d25537f."
+    },
+    {
+        "deviceCode": "PROCO2-35-250-75",
+        "name": "CO2SENSOR deployment at CBYIP.D1",
+        "description": "Ocean Networks Canada Society. 2023. Cambridge Bay Carbon Dioxide Sensor Deployed 2023-08-01. Ocean Networks Canada Society. https://doi.org/10.34943/173deac1-d46d-4d34-a497-e2b33c3d0486."
+    },
+    {
+        "deviceCode": "PROCO2-35-250-75",
+        "name": "CO2SENSOR deployment at CBYIP.D1",
+        "description": "Ocean Networks Canada Society. 2023. Cambridge Bay Carbon Dioxide Sensor Deployed 2023-08-02. Ocean Networks Canada Society. https://doi.org/10.34943/c5f7ddb8-0931-4301-95e5-7bb391df17c2."
+    },
+    {
+        "deviceCode": "PROCO2-36-314-75",
+        "name": "CO2SENSOR deployment at CBYIP.D1",
+        "description": "Ocean Networks Canada Society. 2016. Cambridge Bay Carbon Dioxide Sensor Deployed 2016-08-25. Ocean Networks Canada Society. https://doi.org/10.34943/85a40c45-265a-4c84-908a-ddb5133d078e."
+    },
+    {
+        "deviceCode": "PROCO2-36-314-75",
+        "name": "CO2SENSOR deployment at CBYIP.D1",
+        "description": "Ocean Networks Canada Society. 2018. Cambridge Bay Carbon Dioxide Sensor Deployed 2018-07-26. Ocean Networks Canada Society. https://doi.org/10.34943/b0feb5b9-7f3e-4f6f-a606-c61b9a3e926b."
+    },
+    {
+        "deviceCode": "PROCO2-36-314-75",
+        "name": "CO2SENSOR deployment at CBYIP.D1",
+        "description": "Ocean Networks Canada Society. 2021. Cambridge Bay Carbon Dioxide Sensor Deployed 2021-09-15. Ocean Networks Canada Society. https://doi.org/10.34943/ab76c65c-12b2-4b99-b7f0-8ca286d8d147."
+    },
+    {
+        "deviceCode": "PROCO2-36-314-75",
+        "name": "CO2SENSOR deployment at CBYIP.D1",
+        "description": "Ocean Networks Canada Society. 2022. Cambridge Bay Carbon Dioxide Sensor Deployed 2022-09-12. Ocean Networks Canada Society. https://doi.org/10.34943/646932d2-2c9a-4d45-b098-831ce2829037."
+    },
+    {
+        "deviceCode": "PROCO2-36-314-75",
+        "name": "CO2SENSOR deployment at CBYIP.D1",
+        "description": "Ocean Networks Canada Society. 2024. Cambridge Bay Carbon Dioxide Sensor Deployed 2024-08-29. Ocean Networks Canada Society. https://doi.org/10.34943/54970b94-f2a9-4800-8a60-1c27bd50fc36."
+    },
+    {
+        "deviceCode": "AANDERAA4797PCO2OPTODE33",
+        "name": "CO2SENSOR deployment at CBYIP.D2",
+        "description": "Ocean Networks Canada Society. 2016. Cambridge Bay Carbon Dioxide Sensor Deployed 2016-08-25. Ocean Networks Canada Society. https://doi.org/10.34943/854f9446-4633-4182-a994-33c44c534e1e."
+    },
+    {
+        "deviceCode": "PROCO2-35-250-75",
+        "name": "CO2SENSOR deployment at CBYIP.D3",
+        "description": "Ocean Networks Canada Society. 2019. Cambridge Bay Carbon Dioxide Sensor Deployed 2019-07-31. Ocean Networks Canada Society. https://doi.org/10.34943/f937531f-4e59-4d7a-8ff9-1a509931a044."
+    },
+    {
+        "deviceCode": "AandOpt4531A171",
+        "name": "OXYSENSOR deployment at CBYIP.D4",
+        "description": "Ocean Networks Canada Society. 2024. Cambridge Bay Oxygen Sensor Deployed 2024-08-29. Ocean Networks Canada Society. https://doi.org/10.34943/d9226831-8546-48ae-b13f-fc4e965c0195."
+    },
+    {
+        "deviceCode": "AMLMETRECX50147",
+        "name": "CTD deployment at CBYIP.D4",
+        "description": "Ocean Networks Canada Society. 2024. Cambridge Bay Conductivity Temperature Depth Deployed 2024-08-29. Ocean Networks Canada Society. https://doi.org/10.34943/43479b53-6a87-4896-ba85-cb6517021bb1."
+    },
+    {
+        "deviceCode": "ROSLIGHTS66026",
+        "name": "CAMLIGHTS deployment at CBYIP.K1",
+        "description": "No citation available."
+    },
+    {
+        "deviceCode": "ROSLIGHTS66026",
+        "name": "CAMLIGHTS deployment at CBYIP.K1",
+        "description": "No citation available."
+    },
+    {
+        "deviceCode": "ROSLIGHTS66026",
+        "name": "CAMLIGHTS deployment at CBYIP.K1",
+        "description": "No citation available."
+    },
+    {
+        "deviceCode": "ROSLIGHTS66028",
+        "name": "CAMLIGHTS deployment at CBYIP.K1",
+        "description": "No citation available."
+    },
+    {
+        "deviceCode": "ROSLIGHTS66028",
+        "name": "CAMLIGHTS deployment at CBYIP.K2",
+        "description": "No citation available."
+    },
+    {
+        "deviceCode": "ROSLIGHTS66028",
+        "name": "CAMLIGHTS deployment at CBYIP.K2",
+        "description": "No citation available."
+    },
+    {
+        "deviceCode": "ROSLIGHTS66028",
+        "name": "CAMLIGHTS deployment at CBYIP.K2",
+        "description": "No citation available."
+    },
+    {
+        "deviceCode": "ROSLIGHTS66029",
+        "name": "CAMLIGHTS deployment at CBYIP.K2",
+        "description": "No citation available."
+    },
+    {
+        "deviceCode": "ROSLIGHTS66029",
+        "name": "CAMLIGHTS deployment at CBYIP.K3",
+        "description": "No citation available."
+    },
+    {
+        "deviceCode": "ROSLIGHTS66029",
+        "name": "CAMLIGHTS deployment at CBYIP.K3",
+        "description": "No citation available."
+    },
+    {
+        "deviceCode": "ROSLIGHTS66029",
+        "name": "CAMLIGHTS deployment at CBYIP.K3",
+        "description": "No citation available."
+    },
+    {
+        "deviceCode": "HONEYWELLHMR3300ORIENTATION31963",
+        "name": "ORIENTATION deployment at CBYIU",
+        "description": "Ocean Networks Canada Society. 2015. Cambridge Bay Orientation Instrument Deployed 2015-08-27. Ocean Networks Canada Society. https://doi.org/10.34943/4e5c1cbe-eb01-4ce5-b3f1-7c2ef36ef7f4."
+    },
+    {
+        "deviceCode": "HONEYWELLHMR3300ORIENTATION31963",
+        "name": "ORIENTATION deployment at CBYIU",
+        "description": "Ocean Networks Canada Society. 2016. Cambridge Bay Orientation Instrument Deployed 2016-08-25. Ocean Networks Canada Society. https://doi.org/10.34943/e2d41ae9-1066-49b2-90fb-e9916dd0fb78."
+    },
+    {
+        "deviceCode": "HONEYWELLHMR3300ORIENTATION31963",
+        "name": "ORIENTATION deployment at CBYIU",
+        "description": "Ocean Networks Canada Society. 2017. Cambridge Bay Orientation Instrument Deployed 2017-09-14. Ocean Networks Canada Society. https://doi.org/10.34943/56c1749a-b373-45ee-87d9-34dc92eb9019."
+    },
+    {
+        "deviceCode": "HONEYWELLHMR3300ORIENTATION31963",
+        "name": "ORIENTATION deployment at CBYIU",
+        "description": "Ocean Networks Canada Society. 2018. Cambridge Bay Orientation Instrument Deployed 2018-07-26. Ocean Networks Canada Society. https://doi.org/10.34943/29c556df-eb27-48d3-987a-96277322ef44."
+    },
+    {
+        "deviceCode": "OMEGAIBTHX15120257",
+        "name": "INTERNAL_DEVICE_MONITOR deployment at CBYIU",
+        "description": "Ocean Networks Canada Society. 2015. Cambridge Bay Internal Device Monitor Deployed 2015-08-27. Ocean Networks Canada Society. https://doi.org/10.34943/651586f6-5185-4acc-a28f-0ba63b1ff892."
+    },
+    {
+        "deviceCode": "OMEGAIBTHX15120257",
+        "name": "INTERNAL_DEVICE_MONITOR deployment at CBYIU",
+        "description": "Ocean Networks Canada Society. 2016. Cambridge Bay Internal Device Monitor Deployed 2016-08-25. Ocean Networks Canada Society. https://doi.org/10.34943/1c36816a-77a8-4de7-be15-58d359e70194."
+    },
+    {
+        "deviceCode": "OMEGAIBTHX15120257",
+        "name": "INTERNAL_DEVICE_MONITOR deployment at CBYIU",
+        "description": "Ocean Networks Canada Society. 2017. Cambridge Bay Internal Device Monitor Deployed 2017-09-14. Ocean Networks Canada Society. https://doi.org/10.34943/2a0cefac-b365-4056-b091-f42c923b0480."
+    },
+    {
+        "deviceCode": "OMEGAIBTHX15120257",
+        "name": "INTERNAL_DEVICE_MONITOR deployment at CBYIU",
+        "description": "Ocean Networks Canada Society. 2018. Cambridge Bay Internal Device Monitor Deployed 2018-07-26. Ocean Networks Canada Society. https://doi.org/10.34943/962fd978-8d22-43de-96dd-c8d2c292cd22."
+    },
+    {
+        "deviceCode": "iORELAYTADFC1007725",
+        "name": "ADAPTER deployment at CBYIU.AC1",
+        "description": "Ocean Networks Canada Society. 2015. Cambridge Bay Adapter Deployed 2015-08-27. Ocean Networks Canada Society. https://doi.org/10.34943/3e38ae1c-c1e6-4109-bfee-1573e469f819."
+    },
+    {
+        "deviceCode": "iORELAYTADFC1007725",
+        "name": "ADAPTER deployment at CBYIU.AC1",
+        "description": "Ocean Networks Canada Society. 2016. Cambridge Bay Adapter Deployed 2016-08-25. Ocean Networks Canada Society. https://doi.org/10.34943/1c60a3be-f6aa-4b69-af74-701f09f2ee2c."
+    },
+    {
+        "deviceCode": "iORELAYTADFC1007725",
+        "name": "ADAPTER deployment at CBYIU.AC1",
+        "description": "Ocean Networks Canada Society. 2017. Cambridge Bay Adapter Deployed 2017-09-14. Ocean Networks Canada Society. https://doi.org/10.34943/d7b927ae-cdc0-440c-91b8-83673b9c5ac3."
+    },
+    {
+        "deviceCode": "iORELAYTADFC1007725",
+        "name": "ADAPTER deployment at CBYIU.AC1",
+        "description": "Ocean Networks Canada Society. 2018. Cambridge Bay Adapter Deployed 2018-07-26. Ocean Networks Canada Society. https://doi.org/10.34943/91698539-3f40-40d6-9e4d-f9dc3e842346."
+    },
+    {
+        "deviceCode": "iORELAYTABLC1067517",
+        "name": "ADAPTER deployment at CBYIU.AC2",
+        "description": "Ocean Networks Canada Society. 2015. Cambridge Bay Adapter Deployed 2015-08-27. Ocean Networks Canada Society. https://doi.org/10.34943/7eb298b2-5c45-43e7-8ffc-eeb935fbadfb."
+    },
+    {
+        "deviceCode": "iORELAYTABLC1067517",
+        "name": "ADAPTER deployment at CBYIU.AC2",
+        "description": "Ocean Networks Canada Society. 2016. Cambridge Bay Adapter Deployed 2016-08-25. Ocean Networks Canada Society. https://doi.org/10.34943/19606207-268c-4b29-8613-c39106b62e8c."
+    },
+    {
+        "deviceCode": "iORELAYTABLC1067517",
+        "name": "ADAPTER deployment at CBYIU.AC2",
+        "description": "Ocean Networks Canada Society. 2017. Cambridge Bay Adapter Deployed 2017-09-14. Ocean Networks Canada Society. https://doi.org/10.34943/1b9d3208-a9de-4f52-8168-c00471c7fc3c."
+    },
+    {
+        "deviceCode": "iORELAYTABLC1067517",
+        "name": "ADAPTER deployment at CBYIU.AC2",
+        "description": "Ocean Networks Canada Society. 2018. Cambridge Bay Adapter Deployed 2018-07-26. Ocean Networks Canada Society. https://doi.org/10.34943/62fe26e8-7bf4-4627-b00d-c066a4b117d8."
+    },
+    {
+        "deviceCode": "iORELAYTABLC1067345",
+        "name": "ADAPTER deployment at CBYIU.AC3",
+        "description": "Ocean Networks Canada Society. 2015. Cambridge Bay Adapter Deployed 2015-08-27. Ocean Networks Canada Society. https://doi.org/10.34943/5e4129f8-a827-4f52-96e3-da48175bb5dd."
+    },
+    {
+        "deviceCode": "iORELAYTABLC1067345",
+        "name": "ADAPTER deployment at CBYIU.AC3",
+        "description": "Ocean Networks Canada Society. 2016. Cambridge Bay Adapter Deployed 2016-08-25. Ocean Networks Canada Society. https://doi.org/10.34943/08f6daf9-da2b-4ce8-b6dd-250347b3abc0."
+    },
+    {
+        "deviceCode": "iORELAYTABLC1067345",
+        "name": "ADAPTER deployment at CBYIU.AC3",
+        "description": "Ocean Networks Canada Society. 2017. Cambridge Bay Adapter Deployed 2017-09-14. Ocean Networks Canada Society. https://doi.org/10.34943/49563157-e177-43bd-819c-9052aeb8f595."
+    },
+    {
+        "deviceCode": "iORELAYTABLC1067345",
+        "name": "ADAPTER deployment at CBYIU.AC3",
+        "description": "Ocean Networks Canada Society. 2018. Cambridge Bay Adapter Deployed 2018-07-26. Ocean Networks Canada Society. https://doi.org/10.34943/4c7dc26a-0577-4726-8f60-73c3f551d0ee."
+    },
+    {
+        "deviceCode": "iORELAYTADFC1007805",
+        "name": "ADAPTER deployment at CBYIU.AC4",
+        "description": "Ocean Networks Canada Society. 2015. Cambridge Bay Adapter Deployed 2015-08-27. Ocean Networks Canada Society. https://doi.org/10.34943/c553eb09-c313-4f5b-ad3a-6f554abab756."
+    },
+    {
+        "deviceCode": "iORELAYTADFC1007805",
+        "name": "ADAPTER deployment at CBYIU.AC4",
+        "description": "Ocean Networks Canada Society. 2016. Cambridge Bay Adapter Deployed 2016-08-25. Ocean Networks Canada Society. https://doi.org/10.34943/2e6371b8-fbcd-4250-9e51-8e1ff89924a5."
+    },
+    {
+        "deviceCode": "iORELAYTADFC1007805",
+        "name": "ADAPTER deployment at CBYIU.AC4",
+        "description": "Ocean Networks Canada Society. 2017. Cambridge Bay Adapter Deployed 2017-09-14. Ocean Networks Canada Society. https://doi.org/10.34943/bedd9d94-6cae-4fae-9e88-309d228e5ec9."
+    },
+    {
+        "deviceCode": "iORELAYTADFC1007805",
+        "name": "ADAPTER deployment at CBYIU.AC4",
+        "description": "Ocean Networks Canada Society. 2018. Cambridge Bay Adapter Deployed 2018-07-26. Ocean Networks Canada Society. https://doi.org/10.34943/6fc8b94d-9eac-4052-96b3-6723f7383ae9."
+    },
+    {
+        "deviceCode": "iORELAYTABLC1067321",
+        "name": "ADAPTER deployment at CBYIU.AC5",
+        "description": "Ocean Networks Canada Society. 2015. Cambridge Bay Adapter Deployed 2015-08-27. Ocean Networks Canada Society. https://doi.org/10.34943/22a093cd-226b-4ab1-9aa4-48fabf8fa4a4."
+    },
+    {
+        "deviceCode": "iORELAYTABLC1067321",
+        "name": "ADAPTER deployment at CBYIU.AC5",
+        "description": "Ocean Networks Canada Society. 2016. Cambridge Bay Adapter Deployed 2016-08-25. Ocean Networks Canada Society. https://doi.org/10.34943/acc011c5-9826-4df4-934f-3c583bb6d6fd."
+    },
+    {
+        "deviceCode": "iORELAYTABLC1067321",
+        "name": "ADAPTER deployment at CBYIU.AC5",
+        "description": "Ocean Networks Canada Society. 2017. Cambridge Bay Adapter Deployed 2017-09-14. Ocean Networks Canada Society. https://doi.org/10.34943/9dd23294-b656-4832-a340-3f1f55337a82."
+    },
+    {
+        "deviceCode": "iORELAYTABLC1067321",
+        "name": "ADAPTER deployment at CBYIU.AC5",
+        "description": "Ocean Networks Canada Society. 2018. Cambridge Bay Adapter Deployed 2018-07-26. Ocean Networks Canada Society. https://doi.org/10.34943/20c2dbed-809c-4886-8502-1312066ee2b2."
+    },
+    {
+        "deviceCode": "SRSLSIMBA1516027",
+        "name": "ICE_BUOY deployment at CBYSP",
+        "description": "Ocean Networks Canada Society. 2016. Cambridge Bay Ice Buoy Deployed 2016-02-19. Ocean Networks Canada Society. https://doi.org/10.34943/c9e3e557-e6fa-4891-b78d-a2607a4b251f."
+    },
+    {
+        "deviceCode": "SRSLSIMBA1516027",
+        "name": "ICE_BUOY deployment at CBYSP",
+        "description": "Ocean Networks Canada Society. 2017. Cambridge Bay Ice Buoy Deployed 2017-02-02. Ocean Networks Canada Society. https://doi.org/10.34943/e7329be6-0ffb-456d-b6a4-51c5e48989f5."
+    },
+    {
+        "deviceCode": "SRSLSIMBA1516027",
+        "name": "ICE_BUOY deployment at CBYSP",
+        "description": "Ocean Networks Canada Society. 2017. Cambridge Bay Ice Buoy Deployed 2017-11-01. Ocean Networks Canada Society. https://doi.org/10.34943/712ee276-78f2-4545-81f4-b9f9af871211."
+    },
+    {
+        "deviceCode": "SRSLSIMBACAN0201",
+        "name": "ICE_BUOY deployment at CBYSP",
+        "description": "Ocean Networks Canada Society. 2019. Cambridge Bay Ice Buoy Deployed 2018-11-15. Ocean Networks Canada Society. https://doi.org/10.34943/25af6bdb-8608-4753-8cd7-6da3d40cbdc5."
+    },
+    {
+        "deviceCode": "AXISCAM00408CC1C89C",
+        "name": "VIDEOCAM deployment at CBYSS",
+        "description": "Ocean Networks Canada Society. 2012. Cambridge Bay Video Camera Deployed 2012-10-02. Ocean Networks Canada Society. https://doi.org/10.34943/287272cd-5b8e-41d5-9ee4-8ff8810b11e8."
+    },
+    {
+        "deviceCode": "AXISCAM00408CC1C89C",
+        "name": "VIDEOCAM deployment at CBYSS",
+        "description": "Ocean Networks Canada Society. 2017. Cambridge Bay Video Camera Deployed 2017-09-14. Ocean Networks Canada Society. https://doi.org/10.34943/11060bca-311f-4115-b89c-35c2fc4dce1a."
+    },
+    {
+        "deviceCode": "DIGITALYACHTAISNET1315-0006-01",
+        "name": "AISRECEIVER deployment at CBYSS",
+        "description": "Ocean Networks Canada Society. 2013. Cambridge Bay Automatic Identification Systems Receiver Deployed 2013-08-29. Ocean Networks Canada Society. https://doi.org/10.34943/5e870505-a792-4b8f-957e-74aa8a036703."
+    },
+    {
+        "deviceCode": "VAISALAPTB210J3120006",
+        "name": "BARPRESS deployment at CBYSS",
+        "description": "Ocean Networks Canada Society. 2013. Cambridge Bay Barometric Pressure Sensor Deployed 2013-08-30. Ocean Networks Canada Society. https://doi.org/10.34943/55ff30ab-4a11-41a5-a749-a4fa619bafd8."
+    },
+    {
+        "deviceCode": "DAVIS6162CA111110P024",
+        "name": "METSTN deployment at CBYSS.M1",
+        "description": "Ocean Networks Canada Society. 2012. Cambridge Bay Meteorological Station Deployed 2012-10-02. Ocean Networks Canada Society. https://doi.org/10.34943/7e850ec5-950a-431c-994d-09f4e7ff6e5f."
+    },
+    {
+        "deviceCode": "DAVIS6162CA111110P024",
+        "name": "METSTN deployment at CBYSS.M1",
+        "description": "Ocean Networks Canada Society. 2013. Cambridge Bay Meteorological Station Deployed 2013-09-03. Ocean Networks Canada Society. https://doi.org/10.34943/3e814627-e7ba-4fad-b73a-024b67ebdc1e."
+    },
+    {
+        "deviceCode": "DAVIS6162CA111110P024",
+        "name": "METSTN deployment at CBYSS.M1",
+        "description": "Ocean Networks Canada Society. 2017. Cambridge Bay Meteorological Station Deployed 2017-09-14. Ocean Networks Canada Society. https://doi.org/10.34943/a36844b6-2811-49df-9b30-ca79f448c028."
+    },
+    {
+        "deviceCode": "LUFFTWS501-07209121009031",
+        "name": "METSTN deployment at CBYSS.M2",
+        "description": "Ocean Networks Canada Society. 2013. Cambridge Bay Meteorological Station Deployed 2013-08-29. Ocean Networks Canada Society. https://doi.org/10.34943/c75b04eb-f556-4f46-b657-c3c5c005ef19."
+    },
+    {
+        "deviceCode": "LUFFTWS501-07209121009031",
+        "name": "METSTN deployment at CBYSS.M2",
+        "description": "Ocean Networks Canada Society. 2017. Cambridge Bay Meteorological Station Deployed 2017-09-14. Ocean Networks Canada Society. https://doi.org/10.34943/ffcb3b43-a5ee-4727-9a0c-d1a5a1b7254d."
+    },
+    {
+        "deviceCode": "OMEGAIBTHX15110684",
+        "name": "INTERNAL_DEVICE_MONITOR deployment at CBYSU",
+        "description": "Ocean Networks Canada Society. 2016. Cambridge Bay Internal Device Monitor Deployed 2016-08-25. Ocean Networks Canada Society. https://doi.org/10.34943/867ecc57-080c-4500-a83b-87d7b2671f3f."
+    },
+    {
+        "deviceCode": "OMEGAIBTHX15110684",
+        "name": "INTERNAL_DEVICE_MONITOR deployment at CBYSU",
+        "description": "Ocean Networks Canada Society. 2017. Cambridge Bay Internal Device Monitor Deployed 2017-09-14. Ocean Networks Canada Society. https://doi.org/10.34943/0dae4140-4d53-45b0-b9e8-ca75fbe28185."
+    },
+    {
+        "deviceCode": "TDKLAMBDA15D5095AA",
+        "name": "POWER_SUPPLY deployment at CBYSU",
+        "description": "Ocean Networks Canada Society. 2016. Cambridge Bay Power Supply Deployed 2015-08-27. Ocean Networks Canada Society. https://doi.org/10.34943/bc09262d-7329-451d-8aaf-7b4b1ccd14ac."
+    },
+    {
+        "deviceCode": "TDKLAMBDA15D5095AA",
+        "name": "POWER_SUPPLY deployment at CBYSU",
+        "description": "Ocean Networks Canada Society. 2016. Cambridge Bay Power Supply Deployed 2016-08-25. Ocean Networks Canada Society. https://doi.org/10.34943/8103d295-dcc7-424d-aa1d-89dbd6e34983."
+    },
+    {
+        "deviceCode": "TDKLAMBDA15D5095AA",
+        "name": "POWER_SUPPLY deployment at CBYSU",
+        "description": "Ocean Networks Canada Society. 2017. Cambridge Bay Power Supply Deployed 2017-09-14. Ocean Networks Canada Society. https://doi.org/10.34943/57676bb8-d13a-4700-b429-ffbae68ba8cc."
+    },
+    {
+        "deviceCode": "iORELAYTABHC1037724",
+        "name": "ADAPTER deployment at CBYSU.AC1",
+        "description": "Ocean Networks Canada Society. 2015. Cambridge Bay Adapter Deployed 2015-08-27. Ocean Networks Canada Society. https://doi.org/10.34943/a1e365ba-8af4-4d7f-8d8f-f217ca15710c."
+    },
+    {
+        "deviceCode": "iORELAYTABHC1037724",
+        "name": "ADAPTER deployment at CBYSU.AC1",
+        "description": "Ocean Networks Canada Society. 2016. Cambridge Bay Adapter Deployed 2016-08-25. Ocean Networks Canada Society. https://doi.org/10.34943/373b02e7-cea6-41c3-b9b1-7b51729d3557."
+    },
+    {
+        "deviceCode": "iORELAYTABHC1037724",
+        "name": "ADAPTER deployment at CBYSU.AC1",
+        "description": "Ocean Networks Canada Society. 2017. Cambridge Bay Adapter Deployed 2017-09-14. Ocean Networks Canada Society. https://doi.org/10.34943/77b6ceab-6ef0-4157-a653-574a0992a1e9."
+    },
+    {
+        "deviceCode": "iORELAYTADFC1007695",
+        "name": "ADAPTER deployment at CBYSU.AC2",
+        "description": "Ocean Networks Canada Society. 2016. Cambridge Bay Adapter Deployed 2015-08-27. Ocean Networks Canada Society. https://doi.org/10.34943/753277bc-4d7c-4159-ab58-f0bf4fae386f."
+    },
+    {
+        "deviceCode": "iORELAYTADFC1007695",
+        "name": "ADAPTER deployment at CBYSU.AC2",
+        "description": "Ocean Networks Canada Society. 2016. Cambridge Bay Adapter Deployed 2016-08-25. Ocean Networks Canada Society. https://doi.org/10.34943/68339273-5660-4abb-9da8-2c92996c35d7."
+    },
+    {
+        "deviceCode": "iORELAYTADFC1007695",
+        "name": "ADAPTER deployment at CBYSU.AC2",
+        "description": "Ocean Networks Canada Society. 2017. Cambridge Bay Adapter Deployed 2017-09-14. Ocean Networks Canada Society. https://doi.org/10.34943/5e38779b-7416-4f0b-aad8-074cc2df25f8."
+    }
+]
