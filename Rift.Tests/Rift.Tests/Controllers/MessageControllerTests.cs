@@ -147,7 +147,6 @@ namespace Rift.Tests
             var controller = CreateControllerWithUser(userId);
             var request = new MessageController.CreateMessageRequest { Content = "Hello" };
 
-            Console.WriteLine("\n\n\nToken incremented 155\n\n\n");
             var result = await controller.CreateMessage(request);
 
             var okResult = result as OkObjectResult;
