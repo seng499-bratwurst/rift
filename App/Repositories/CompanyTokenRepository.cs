@@ -45,18 +45,6 @@ public class CompanyTokenRepository : ICompanyTokenRepository
     }
 
 
-    // public async Task<CompanyAPITokens?> UpdateAsync(CompanyAPITokens token)
-    // {
-    //     var existingToken = await GetByTokenAsync(token.ONCApiToken);
-    //     if (existingToken == null)
-    //     {
-    //         return null; // Token not found
-    //     }
-    //     existingToken.Usage = token.Usage; // Update usage count
-    //     _context.CompanyAPITokens.Update(existingToken);
-    //     await _context.SaveChangesAsync();
-    //     return existingToken;
-    // }
 
 
 }
