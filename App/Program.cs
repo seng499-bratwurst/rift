@@ -9,6 +9,10 @@ using Rift.Models;
 using Rift.Services;
 using Rift.Repositories;
 using Rift.App.Clients;
+using Microsoft.AspNetCore.RateLimiting;
+using System.Threading.RateLimiting;
+using System.Xml.Serialization;
+using System.IdentityModel.Tokens.Jwt;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -149,6 +153,45 @@ builder.Services.AddAuthentication(options =>
 // Add Authorization
 builder.Services.AddAuthorization();
 
+builder.Services.AddRateLimiter(options =>
+{
+    options.AddPolicy("PerOncApiToken", context =>
+    {
+        var httpContext = context as HttpContext;
+        var scopedServices = httpContext?.RequestServices;
+
+        string? oncApiToken = httpContext?.Request.Query["token"].FirstOrDefault();
+
+        if (string.IsNullOrWhiteSpace(oncApiToken))
+        {
+            Console.WriteLine("ONCApiToken not found in JWT or headers/query.");
+            return RateLimitPartition.GetNoLimiter("no-token");
+        }
+
+        var dbContext = scopedServices?.GetRequiredService<ApplicationDbContext>();
+        bool tokenExists = dbContext?.CompanyAPITokens.Any(t => t.ONCApiToken == oncApiToken) ?? false;
+
+        if (!tokenExists)
+        {
+            Console.WriteLine($"ONCApiToken '{oncApiToken}' not found in DB.");
+            return RateLimitPartition.GetNoLimiter("not-limited");
+        }
+
+        Console.WriteLine($"Applying rate limiting for token: {oncApiToken}");
+
+        return RateLimitPartition.GetTokenBucketLimiter(oncApiToken, _ => new TokenBucketRateLimiterOptions
+        {
+            TokenLimit = 10, // Maximum tokens allowed per period. keep this the same as TokensPerPeriod
+            TokensPerPeriod = 10, // How many tokens are added per period
+            ReplenishmentPeriod = TimeSpan.FromHours(1), // How often are tokens replenished
+            AutoReplenishment = true, // Disable to manually control replenishment
+            QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+            QueueLimit = 0,
+        });
+        
+    });
+});
+
 
 var app = builder.Build();
 
@@ -168,7 +211,7 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.UseRouting();
-
+app.UseRateLimiter();
 app.UseAuthentication();
 app.UseCors("CorsPolicy");
 app.UseAuthorization();

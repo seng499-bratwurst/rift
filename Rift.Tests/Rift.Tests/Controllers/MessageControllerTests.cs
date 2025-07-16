@@ -21,6 +21,9 @@ namespace Rift.Tests
         private Mock<IConversationService> _conversationServiceMock;
         private Mock<IRAGService> _ragServiceMock;
 
+
+
+
         [TestInitialize]
         public void Setup()
         {
@@ -34,13 +37,15 @@ namespace Rift.Tests
         {
             var user = new ClaimsPrincipal(new ClaimsIdentity(new[]
             {
-                new Claim(ClaimTypes.NameIdentifier, userId)
+                new Claim(ClaimTypes.NameIdentifier, userId),
+                new Claim("ONCApiToken", "token")
             }, "mock"));
             var controller = new MessageController(
                 _messageServiceMock.Object,
                 _conversationServiceMock.Object,
                 _ragServiceMock.Object,
                 _messageEdgeServiceMock.Object
+                // _rateLimitingServiceMock.Object  // Inject the rate limiting service mock
             );
             controller.ControllerContext = new ControllerContext
             {
@@ -56,6 +61,7 @@ namespace Rift.Tests
                 _conversationServiceMock.Object,
                 _ragServiceMock.Object,
                 _messageEdgeServiceMock.Object
+                // _rateLimitingServiceMock.Object  // Inject the rate limiting service mock
             );
             controller.ControllerContext = new ControllerContext
             {
@@ -97,8 +103,10 @@ namespace Rift.Tests
         [TestMethod]
         public async Task CreateMessage_ReturnsNotFound_WhenConversationNull()
         {
-            _conversationServiceMock.Setup(s => s.GetOrCreateConversationByUserId("user1", null))
-                .ReturnsAsync((Conversation)null);
+            _conversationServiceMock
+                .Setup(x => x.GetOrCreateConversationByUserId(It.IsAny<string>(), It.IsAny<int?>()))
+                .ReturnsAsync((Conversation?)null);
+
 
             var controller = CreateControllerWithUser("user1");
             var request = new MessageController.CreateMessageRequest { Content = "Hello" };

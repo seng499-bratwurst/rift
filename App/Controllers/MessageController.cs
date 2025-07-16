@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Rift.Models;
 using Rift.Services;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Rift.Controllers;
 
@@ -29,6 +30,7 @@ public class MessageController : ControllerBase
     /// </summary>
     [HttpPost("messages")]
     [AllowAnonymous]
+    [EnableRateLimiting("PerOncApiToken")]
     public async Task<IActionResult> CreateMessage([FromBody] CreateMessageRequest request)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
