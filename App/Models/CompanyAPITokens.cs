@@ -10,5 +10,5 @@ public class CompanyAPITokens
     public string CompanyName { get; set; } = string.Empty;
     public string? ONCApiToken { get; set; } = null;
 
-    public int? Usage { get; set; } = null; // could remove this since the middlewear already handles this.
+    public int? Usage { get; set; } = null; // could remove this since the middleware already handles this.
 }
