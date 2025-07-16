@@ -105,7 +105,7 @@ namespace Rift.Tests
         {
             _conversationServiceMock
                 .Setup(x => x.GetOrCreateConversationByUserId(It.IsAny<string>(), It.IsAny<int?>()))
-                .ReturnsAsync(new Conversation { Id = 1 });
+                .ReturnsAsync((Conversation?)null);
 
 
             var controller = CreateControllerWithUser("user1");
