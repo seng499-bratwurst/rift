@@ -120,11 +120,6 @@ public class FileController : ControllerBase
         });
     }
 
-    public async Task<OkObjectResult> UploadFile(object uploadRequest)
-    {
-        throw new NotImplementedException();
-    }
-
     public class UploadFileRequest
     {
         public required IFormFile File { get; set; }
