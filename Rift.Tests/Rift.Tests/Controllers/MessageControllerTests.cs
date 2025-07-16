@@ -124,7 +124,8 @@ namespace Rift.Tests
             _conversationServiceMock.Setup(s => s.GetOrCreateConversationByUserId(userId, null))
                 .ReturnsAsync(conversation);
 
-            _ragServiceMock.Setup(l => l.GenerateResponseAsync("Hello", null)).ReturnsAsync("Hi!");
+            _ragServiceMock.Setup(l => l.GenerateResponseAsync("Hello", null))
+                .ReturnsAsync(("Hi!", new List<string>()));
 
             _messageServiceMock.Setup(m => m.CreateMessageAsync(conversation.Id, null, "Hello", "user", 0, 0))
                 .ReturnsAsync(promptMessage);
