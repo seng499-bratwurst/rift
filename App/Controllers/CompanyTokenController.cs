@@ -26,8 +26,8 @@ public class CompanyTokenController : ControllerBase
 
     [HttpPost("company-token")]
     // temporary for testing:
-    [AllowAnonymous]
-    // [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
+    // [AllowAnonymous]
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
     public async Task<IActionResult> SetCompanyToken([FromBody] CreateCompanyTokenRequest request)
     {
         if (string.IsNullOrWhiteSpace(request.CompanyName))
@@ -72,8 +72,8 @@ public class CompanyTokenController : ControllerBase
 
     [HttpDelete("company-token/{token}")]
     // temporary for testing:
-    [AllowAnonymous]
-    // [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
+    // [AllowAnonymous]
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
     public async Task<IActionResult> DeleteCompanyToken(string token)
     {
         if (string.IsNullOrWhiteSpace(token))

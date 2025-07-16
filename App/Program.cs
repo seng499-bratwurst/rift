@@ -79,8 +79,6 @@ builder.Services.AddScoped<IMessageEdgeService, MessageEdgeService>();
 
 builder.Services.AddScoped<ICompanyTokenRepository, CompanyTokenRepository>();
 builder.Services.AddScoped<ICompanyTokenService, CompanyTokenService>();
-// builder.Services.AddScoped<ICompanyRateLimitingService, CompanyRateLimitingService>();
-
 
 
 builder.Services.AddScoped<IRAGService, RAGService>();
@@ -161,22 +159,7 @@ builder.Services.AddRateLimiter(options =>
         var httpContext = context as HttpContext;
         var scopedServices = httpContext?.RequestServices;
 
-        string? jwtToken = httpContext?.Request.Headers.Authorization
-            .FirstOrDefault(h => h.StartsWith("Bearer "))?
-            .Substring("Bearer ".Length);
-
-        string? oncApiToken = null;
-
-        if (!string.IsNullOrWhiteSpace(jwtToken))
-        {
-            var handler = new JwtSecurityTokenHandler();
-            var token = handler.ReadJwtToken(jwtToken);
-            oncApiToken = token.Claims.FirstOrDefault(c => c.Type == "ONCApiToken")?.Value;
-        }
-
-        // Fallbacks (optional)
-        oncApiToken ??= httpContext?.Request.Headers["ONCApiToken"].FirstOrDefault()
-                    ?? httpContext?.Request.Query["ONCApiToken"].FirstOrDefault();
+        string? oncApiToken = httpContext?.Request.Query["token"].FirstOrDefault();
 
         if (string.IsNullOrWhiteSpace(oncApiToken))
         {
