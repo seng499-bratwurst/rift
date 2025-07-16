@@ -197,12 +197,12 @@ builder.Services.AddRateLimiter(options =>
 
         return RateLimitPartition.GetTokenBucketLimiter(oncApiToken, _ => new TokenBucketRateLimiterOptions
         {
-            TokenLimit = 1,
-            TokensPerPeriod = 1,
-            ReplenishmentPeriod = TimeSpan.FromMinutes(1),
+            TokenLimit = 10, // Maximum tokens allowed per period. keep this the same as TokensPerPeriod
+            TokensPerPeriod = 10, // How many tokens are added per period
+            ReplenishmentPeriod = TimeSpan.FromHours(1), // How often are tokens replenished
+            AutoReplenishment = true, // Disable to manually control replenishment
             QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
             QueueLimit = 0,
-            AutoReplenishment = true,
         });
         
     });
