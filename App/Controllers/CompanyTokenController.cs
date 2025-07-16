@@ -20,7 +20,7 @@ public class CompanyTokenController : ControllerBase
     {
         public string CompanyName { get; set; } = null!;
         public string? ONCApiToken { get; set; }
-        public int Usage { get; set; } // could remove this since the middlewear already handles this.
+        public int Usage { get; set; } // could remove this since the middleware already handles this.
     }
 
 
