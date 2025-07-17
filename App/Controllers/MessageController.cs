@@ -322,11 +322,11 @@ public class MessageController : ControllerBase
     }
 
     /// <summary>
-    /// PATCH endpoint to mark a message as helpful (thumbs up).
+    /// PATCH endpoint to update message feedback (thumbs up/down).
     /// </summary>
-    [HttpPatch("messages/{messageId}/helpful")]
+    [HttpPatch("messages/{messageId}/feedback")]
     [Authorize(AuthenticationSchemes = "Bearer")]
-    public async Task<IActionResult> MarkMessageAsHelpful(int messageId)
+    public async Task<IActionResult> UpdateMessageFeedback(int messageId, [FromBody] UpdateFeedbackRequest request)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (string.IsNullOrEmpty(userId))
@@ -339,45 +339,7 @@ public class MessageController : ControllerBase
             });
         }
 
-        var updated = await _messageService.UpdateMessageFeedbackAsync(messageId, userId, true);
-
-        if (updated == null)
-        {
-            return NotFound(new ApiResponse<object>
-            {
-                Success = false,
-                Error = "Message not found or permission denied.",
-                Data = null
-            });
-        }
-
-        return Ok(new ApiResponse<object>
-        {
-            Success = true,
-            Error = null,
-            Data = new { updated.Id, updated.IsHelpful }
-        });
-    }
-
-    /// <summary>
-    /// PATCH endpoint to mark a message as not helpful (thumbs down).
-    /// </summary>
-    [HttpPatch("messages/{messageId}/not-helpful")]
-    [Authorize(AuthenticationSchemes = "Bearer")]
-    public async Task<IActionResult> MarkMessageAsNotHelpful(int messageId)
-    {
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (string.IsNullOrEmpty(userId))
-        {
-            return Unauthorized(new ApiResponse<object>
-            {
-                Success = false,
-                Error = "Unauthorized",
-                Data = null
-            });
-        }
-
-        var updated = await _messageService.UpdateMessageFeedbackAsync(messageId, userId, false);
+        var updated = await _messageService.UpdateMessageFeedbackAsync(messageId, userId, request.IsHelpful);
 
         if (updated == null)
         {
@@ -450,6 +412,11 @@ public class MessageController : ControllerBase
     {
         public float XCoordinate { get; set; }
         public float YCoordinate { get; set; }
+    }
+
+    public class UpdateFeedbackRequest
+    {
+        public bool IsHelpful { get; set; }
     }
 
 }
