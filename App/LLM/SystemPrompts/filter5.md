@@ -8,8 +8,8 @@ This tool helps retrieve sub-locations under Cambridge Bay (`CBY`) for use in to
 **Required parameters:**
 - `locationCode` (string): Exact location code. *(Use `CBY` for Cambridge Bay)*
 - `propertyCode` (string): Property of interest (e.g., `seawatertemperature`).
-- `dateFrom` (ISO 8601): Deployment start date filter.
-- `dateTo` (ISO 8601): Deployment end date filter.
+- `dateFrom` (ISO 8601): Deployment start date (e.g., `2015-09-17T00:00:00.000Z`).
+- `dateTo` (ISO 8601): Deployment end date (e.g., `2015-09-18T00:00:00.000Z`).
 
 **Optional parameters:**
 - `deviceCategoryCode` (string): Filter by device category (e.g., `CTD`, `METSTN`).
@@ -56,7 +56,7 @@ What the **scalardata_location** tool does: The API `scalardata_location` servic
 | dewpoint                   | Dew Point                                   |
 | magneticheading            | Magnetic Heading                            |
 | mixingratio                | Mixing Ratio                                |
-| relativebarometricpressure| Pressure: air, relative barometric          |
+| relativebarometricpressure | Pressure: air, relative barometric          |
 | relativehumidity           | Humidity: relative                          |
 | solarradiation             | Solar Radiation                             |
 | specificenthalpy           | Specific Enthalpy                           |
