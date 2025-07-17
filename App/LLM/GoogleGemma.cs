@@ -42,17 +42,20 @@ namespace Rift.LLM
         }
 
         /// <summary>
-        /// Sends a the user prompt to the google flash 2.5 to generate an ONC API call if needed.
+        /// Sends a the user prompt to the google 2.5 flash to generate an ONC API call if needed.
         /// </summary>
         public async Task<string> GatherOncAPIData(string prompt)
         {
             // read the system prompt from the file
             string systemPrompt;
             systemPrompt = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "LLM/SystemPrompts", "filter5.md"));
+            
+            // Current date and time in the format of yyyy-MM-ddTHH:mm:ss.fffZ
+            string currentDate = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
 
-            // create the messages list for function call looping
+            // create the messages list for function call looping and adding the current date and time to the system prompt
             var messages = new List<object>{
-                new { role = "system", content = systemPrompt },
+                new { role = "system", content = systemPrompt+$"\n\nCurrent Date and Time: {currentDate}" },
                 new { role = "user", content = prompt }
             };
 
