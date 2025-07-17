@@ -9,10 +9,7 @@ using Rift.Models;
 using Rift.Services;
 using Rift.Repositories;
 using Rift.App.Clients;
-using Microsoft.AspNetCore.RateLimiting;
 using System.Threading.RateLimiting;
-using System.Xml.Serialization;
-using System.IdentityModel.Tokens.Jwt;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -206,6 +203,8 @@ using (var scope = app.Services.CreateScope())
 
     var services = scope.ServiceProvider;
     await SeedRoles.SeedRolesAndAdminAsync(services);
+    var seedFiles = new SeedFiles(chromaDbClient: services.GetRequiredService<ChromaDBClient>());
+    await seedFiles.SeedAsync(fileDb);
     // Uncomment the line below to seed the dev admin user. For development purposes only.
     // await SeedDevAdmin.SeedAsync(services);
 }

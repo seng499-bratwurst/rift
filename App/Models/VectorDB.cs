@@ -192,6 +192,24 @@ public class DocumentResponse
     public Dictionary<string, object>? Metadata { get; set; }
 }
 
+public class CollectionDocumentsWrapper
+{
+    [JsonPropertyName("documents")]
+    public CollectionDocumentResponse[] Documents { get; set; } = Array.Empty<CollectionDocumentResponse>();
+}
+
+public class CollectionDocumentResponse
+{
+    [JsonPropertyName("id")]
+    public string Id { get; set; } = string.Empty;
+
+    [JsonPropertyName("text")]
+    public string Text { get; set; } = string.Empty;
+
+    [JsonPropertyName("metadata")]
+    public Dictionary<string, object>? Metadata { get; set; }
+}
+
 public class CollectionResponse
 {
     [JsonPropertyName("name")]
