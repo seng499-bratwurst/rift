@@ -321,6 +321,82 @@ public class MessageController : ControllerBase
         });
     }
 
+    /// <summary>
+    /// PATCH endpoint to mark a message as helpful (thumbs up).
+    /// </summary>
+    [HttpPatch("messages/{messageId}/helpful")]
+    [Authorize(AuthenticationSchemes = "Bearer")]
+    public async Task<IActionResult> MarkMessageAsHelpful(int messageId)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized(new ApiResponse<object>
+            {
+                Success = false,
+                Error = "Unauthorized",
+                Data = null
+            });
+        }
+
+        var updated = await _messageService.UpdateMessageFeedbackAsync(messageId, userId, true);
+
+        if (updated == null)
+        {
+            return NotFound(new ApiResponse<object>
+            {
+                Success = false,
+                Error = "Message not found or permission denied.",
+                Data = null
+            });
+        }
+
+        return Ok(new ApiResponse<object>
+        {
+            Success = true,
+            Error = null,
+            Data = new { updated.Id, updated.IsHelpful }
+        });
+    }
+
+    /// <summary>
+    /// PATCH endpoint to mark a message as not helpful (thumbs down).
+    /// </summary>
+    [HttpPatch("messages/{messageId}/not-helpful")]
+    [Authorize(AuthenticationSchemes = "Bearer")]
+    public async Task<IActionResult> MarkMessageAsNotHelpful(int messageId)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized(new ApiResponse<object>
+            {
+                Success = false,
+                Error = "Unauthorized",
+                Data = null
+            });
+        }
+
+        var updated = await _messageService.UpdateMessageFeedbackAsync(messageId, userId, false);
+
+        if (updated == null)
+        {
+            return NotFound(new ApiResponse<object>
+            {
+                Success = false,
+                Error = "Message not found or permission denied.",
+                Data = null
+            });
+        }
+
+        return Ok(new ApiResponse<object>
+        {
+            Success = true,
+            Error = null,
+            Data = new { updated.Id, updated.IsHelpful }
+        });
+    }
+
     [HttpDelete("messages/{messageId}")]
     [Authorize(AuthenticationSchemes = "Bearer")]
     public async Task<IActionResult> DeleteMessage(int messageId)

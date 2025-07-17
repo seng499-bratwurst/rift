@@ -24,5 +24,11 @@ public interface IMessageService
         float yCoordinate
     );
 
+    Task<Message?> UpdateMessageFeedbackAsync(
+        int messageId,
+        string userId,
+        bool isHelpful
+    );
+
     Task<Message?> DeleteMessageAsync(string userId, int messageId);
 }

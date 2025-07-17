@@ -192,5 +192,259 @@ namespace Rift.Tests
             Assert.IsTrue(apiResponse.Success);
             Assert.AreEqual(2, apiResponse.Data.Count);
         }
+
+        [TestMethod]
+        public async Task MarkMessageAsHelpful_ReturnsOk_WhenMessageExists()
+        {
+            var userId = "user1";
+            int messageId = 123;
+            var updatedMessage = new Message 
+            { 
+                Id = messageId, 
+                IsHelpful = true,
+                XCoordinate = 0f,
+                YCoordinate = 0f
+            };
+            
+            _messageServiceMock.Setup(m => m.UpdateMessageFeedbackAsync(messageId, userId, true))
+                .ReturnsAsync(updatedMessage);
+
+            var controller = CreateControllerWithUser(userId);
+
+            var result = await controller.MarkMessageAsHelpful(messageId);
+
+            var okResult = result as OkObjectResult;
+            Assert.IsNotNull(okResult);
+            var apiResponse = okResult.Value as ApiResponse<object>;
+            Assert.IsNotNull(apiResponse);
+            Assert.IsTrue(apiResponse!.Success);
+            Assert.IsNull(apiResponse.Error);
+            
+            // Verify the response data
+            var data = JsonSerializer.Deserialize<Dictionary<string, object>>(
+                JsonSerializer.Serialize(apiResponse.Data));
+            Assert.IsNotNull(data);
+            Assert.AreEqual(messageId, ((JsonElement)data!["Id"]).GetInt32());
+            Assert.AreEqual(true, ((JsonElement)data["IsHelpful"]).GetBoolean());
+        }
+
+        [TestMethod]
+        public async Task MarkMessageAsHelpful_ReturnsUnauthorized_WhenUserNotAuthenticated()
+        {
+            var controller = CreateControllerWithoutUser();
+
+            var result = await controller.MarkMessageAsHelpful(123);
+
+            var unauthorizedResult = result as UnauthorizedObjectResult;
+            Assert.IsNotNull(unauthorizedResult);
+            var apiResponse = unauthorizedResult.Value as ApiResponse<object>;
+            Assert.IsNotNull(apiResponse);
+            Assert.IsFalse(apiResponse!.Success);
+            Assert.AreEqual("Unauthorized", apiResponse.Error);
+        }
+
+        [TestMethod]
+        public async Task MarkMessageAsHelpful_ReturnsNotFound_WhenMessageNotFound()
+        {
+            var userId = "user1";
+            int messageId = 999;
+            
+            _messageServiceMock.Setup(m => m.UpdateMessageFeedbackAsync(messageId, userId, true))
+                .ReturnsAsync((Message?)null);
+
+            var controller = CreateControllerWithUser(userId);
+
+            var result = await controller.MarkMessageAsHelpful(messageId);
+
+            var notFoundResult = result as NotFoundObjectResult;
+            Assert.IsNotNull(notFoundResult);
+            var apiResponse = notFoundResult.Value as ApiResponse<object>;
+            Assert.IsNotNull(apiResponse);
+            Assert.IsFalse(apiResponse!.Success);
+            Assert.AreEqual("Message not found or permission denied.", apiResponse.Error);
+        }
+
+        [TestMethod]
+        public async Task MarkMessageAsNotHelpful_ReturnsOk_WhenMessageExists()
+        {
+            var userId = "user1";
+            int messageId = 123;
+            var updatedMessage = new Message 
+            { 
+                Id = messageId, 
+                IsHelpful = false,
+                XCoordinate = 0f,
+                YCoordinate = 0f
+            };
+            
+            _messageServiceMock.Setup(m => m.UpdateMessageFeedbackAsync(messageId, userId, false))
+                .ReturnsAsync(updatedMessage);
+
+            var controller = CreateControllerWithUser(userId);
+
+            var result = await controller.MarkMessageAsNotHelpful(messageId);
+
+            var okResult = result as OkObjectResult;
+            Assert.IsNotNull(okResult);
+            var apiResponse = okResult.Value as ApiResponse<object>;
+            Assert.IsNotNull(apiResponse);
+            Assert.IsTrue(apiResponse!.Success);
+            Assert.IsNull(apiResponse.Error);
+            
+            // Verify the response data
+            var data = JsonSerializer.Deserialize<Dictionary<string, object>>(
+                JsonSerializer.Serialize(apiResponse.Data));
+            Assert.IsNotNull(data);
+            Assert.AreEqual(messageId, ((JsonElement)data!["Id"]).GetInt32());
+            Assert.AreEqual(false, ((JsonElement)data["IsHelpful"]).GetBoolean());
+        }
+
+        [TestMethod]
+        public async Task MarkMessageAsNotHelpful_ReturnsUnauthorized_WhenUserNotAuthenticated()
+        {
+            var controller = CreateControllerWithoutUser();
+
+            var result = await controller.MarkMessageAsNotHelpful(123);
+
+            var unauthorizedResult = result as UnauthorizedObjectResult;
+            Assert.IsNotNull(unauthorizedResult);
+            var apiResponse = unauthorizedResult.Value as ApiResponse<object>;
+            Assert.IsNotNull(apiResponse);
+            Assert.IsFalse(apiResponse!.Success);
+            Assert.AreEqual("Unauthorized", apiResponse.Error);
+        }
+
+        [TestMethod]
+        public async Task MarkMessageAsNotHelpful_ReturnsNotFound_WhenMessageNotFound()
+        {
+            var userId = "user1";
+            int messageId = 999;
+            
+            _messageServiceMock.Setup(m => m.UpdateMessageFeedbackAsync(messageId, userId, false))
+                .ReturnsAsync((Message?)null);
+
+            var controller = CreateControllerWithUser(userId);
+
+            var result = await controller.MarkMessageAsNotHelpful(messageId);
+
+            var notFoundResult = result as NotFoundObjectResult;
+            Assert.IsNotNull(notFoundResult);
+            var apiResponse = notFoundResult.Value as ApiResponse<object>;
+            Assert.IsNotNull(apiResponse);
+            Assert.IsFalse(apiResponse!.Success);
+            Assert.AreEqual("Message not found or permission denied.", apiResponse.Error);
+        }
+
+        [TestMethod]
+        public async Task MarkMessageAsHelpful_VerifiesServiceCall_WithCorrectParameters()
+        {
+            var userId = "user1";
+            int messageId = 123;
+            var updatedMessage = new Message 
+            { 
+                Id = messageId, 
+                IsHelpful = true,
+                XCoordinate = 0f,
+                YCoordinate = 0f
+            };
+            
+            _messageServiceMock.Setup(m => m.UpdateMessageFeedbackAsync(messageId, userId, true))
+                .ReturnsAsync(updatedMessage);
+
+            var controller = CreateControllerWithUser(userId);
+
+            await controller.MarkMessageAsHelpful(messageId);
+
+            _messageServiceMock.Verify(m => m.UpdateMessageFeedbackAsync(messageId, userId, true), Times.Once);
+        }
+
+        [TestMethod]
+        public async Task MarkMessageAsNotHelpful_VerifiesServiceCall_WithCorrectParameters()
+        {
+            var userId = "user1";
+            int messageId = 123;
+            var updatedMessage = new Message 
+            { 
+                Id = messageId, 
+                IsHelpful = false,
+                XCoordinate = 0f,
+                YCoordinate = 0f
+            };
+            
+            _messageServiceMock.Setup(m => m.UpdateMessageFeedbackAsync(messageId, userId, false))
+                .ReturnsAsync(updatedMessage);
+
+            var controller = CreateControllerWithUser(userId);
+
+            await controller.MarkMessageAsNotHelpful(messageId);
+
+            _messageServiceMock.Verify(m => m.UpdateMessageFeedbackAsync(messageId, userId, false), Times.Once);
+        }
+
+        [TestMethod]
+        public async Task MarkMessageAsHelpful_HandlesEdgeCase_WhenIsHelpfulChangesFromFalseToTrue()
+        {
+            var userId = "user1";
+            int messageId = 123;
+            var updatedMessage = new Message 
+            { 
+                Id = messageId, 
+                IsHelpful = true, // Changed from false to true
+                XCoordinate = 0f,
+                YCoordinate = 0f
+            };
+            
+            _messageServiceMock.Setup(m => m.UpdateMessageFeedbackAsync(messageId, userId, true))
+                .ReturnsAsync(updatedMessage);
+
+            var controller = CreateControllerWithUser(userId);
+
+            var result = await controller.MarkMessageAsHelpful(messageId);
+
+            var okResult = result as OkObjectResult;
+            Assert.IsNotNull(okResult);
+            var apiResponse = okResult.Value as ApiResponse<object>;
+            Assert.IsNotNull(apiResponse);
+            Assert.IsTrue(apiResponse!.Success);
+            
+            // Verify the response data
+            var data = JsonSerializer.Deserialize<Dictionary<string, object>>(
+                JsonSerializer.Serialize(apiResponse.Data));
+            Assert.IsNotNull(data);
+            Assert.AreEqual(true, ((JsonElement)data!["IsHelpful"]).GetBoolean());
+        }
+
+        [TestMethod]
+        public async Task MarkMessageAsNotHelpful_HandlesEdgeCase_WhenIsHelpfulChangesFromTrueToFalse()
+        {
+            var userId = "user1";
+            int messageId = 123;
+            var updatedMessage = new Message 
+            { 
+                Id = messageId, 
+                IsHelpful = false, // Changed from true to false
+                XCoordinate = 0f,
+                YCoordinate = 0f
+            };
+            
+            _messageServiceMock.Setup(m => m.UpdateMessageFeedbackAsync(messageId, userId, false))
+                .ReturnsAsync(updatedMessage);
+
+            var controller = CreateControllerWithUser(userId);
+
+            var result = await controller.MarkMessageAsNotHelpful(messageId);
+
+            var okResult = result as OkObjectResult;
+            Assert.IsNotNull(okResult);
+            var apiResponse = okResult.Value as ApiResponse<object>;
+            Assert.IsNotNull(apiResponse);
+            Assert.IsTrue(apiResponse!.Success);
+            
+            // Verify the response data
+            var data = JsonSerializer.Deserialize<Dictionary<string, object>>(
+                JsonSerializer.Serialize(apiResponse.Data));
+            Assert.IsNotNull(data);
+            Assert.AreEqual(false, ((JsonElement)data!["IsHelpful"]).GetBoolean());
+        }
     }
 }
