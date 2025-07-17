@@ -43,11 +43,18 @@ public class PromptBuilder
         contextContent.Append("[API Data] \n\n" + oncApiData + "\n\n");
         
         contextContent.Append("[Relevant Document Chunks] \n\n");
-        var documentChunks = relevantDocuments.Select(doc => new DocumentChunk
-        {
-            Title = doc.Source,
-            Content = doc.Content
-        }).ToList() ?? new List<DocumentChunk>();
+        var documentChunks = relevantDocuments.Select(doc => {
+            var docTitle = string.Empty;
+            if (doc.Metadata != null && doc.Metadata.ContainsKey("name"))
+            {
+                docTitle = doc.Metadata["name"].ToString() ?? string.Empty;
+            }
+            return new DocumentChunk
+            {
+                Title = docTitle,
+                Content = doc.Content
+            };
+        }).ToList();
 
         foreach (var doc in documentChunks)
         {
