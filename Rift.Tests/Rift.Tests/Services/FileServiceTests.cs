@@ -27,14 +27,14 @@ namespace Rift.Tests.Services
         [TestMethod]
         public async Task UploadFileAsync_ReturnsFileEntity()
         {
-            var file = new FileEntity { Id = 1, FileName = "test.txt", Content = "abc", UploadedBy = "user" };
+            var file = new FileEntity { Id = 1, Name = "test.txt", Content = "abc", UploadedBy = "user" };
             _fileRepositoryMock.Setup(r => r.AddAsync(file)).ReturnsAsync(file);
 
             var result = await _service.UploadFileAsync(file);
 
             Assert.IsNotNull(result);
             Assert.AreEqual(1, result.Id);
-            Assert.AreEqual("test.txt", result.FileName);
+            Assert.AreEqual("test.txt", result.Name);
         }
 
         [TestMethod]

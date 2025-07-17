@@ -46,7 +46,7 @@ public class FileController : ControllerBase
 
         var fileEntity = new FileEntity
         {
-            FileName = file.FileName,
+            Name = file.FileName,
             Content = fileContents,
             Size = file.Length,
             CreatedAt = DateTime.UtcNow,

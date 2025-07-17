@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -9,11 +10,9 @@ public class FileEntity
     public int Id { get; set; }
 
     [Required]
-    [MaxLength(255)]
-    public required string FileName { get; set; }
+    public required string Name { get; set; }
 
-    [Required]
-    public required string Content { get; set; }
+    public string Content { get; set; } = string.Empty;
 
     public long Size { get; set; }
 
@@ -33,10 +32,7 @@ public class FileEntityDto
     [Required]
     [MaxLength(255)]
     public required string FileName { get; set; }
-
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
-    [Required]
     public required string UploadedBy { get; set; }
     public required string SourceLink { get; set; }
     public required string SourceType { get; set; }

@@ -1,0 +1,79 @@
+using Rift.App.Clients;
+using Rift.Models;
+
+public class SeedFiles
+{
+    private readonly ChromaDBClient _chromaDbClient;
+
+    public SeedFiles(ChromaDBClient chromaDbClient)
+    {
+        _chromaDbClient = chromaDbClient;
+    }
+
+    public async Task SeedAsync(FileDbContext dbContext)
+    {
+        Console.WriteLine("Seeding files...");
+
+        var collections = await _chromaDbClient.ListCollectionsAsync();
+
+        Console.WriteLine($"Found {collections?.Count} collections in ChromaDB.");
+
+        if (collections == null || collections.Count == 0)
+        {
+            Console.WriteLine("No collections found. Skipping file seeding.");
+            return;
+        }
+
+        foreach (var collection in collections)
+        {
+            Console.WriteLine($"Processing collection: {collection.Name}");
+            var documents = await _chromaDbClient.GetCollectionDocumentsAsync(collection.Name);
+            if (documents == null)
+            {
+                Console.WriteLine($"No documents found in collection '{collection.Name}'.");
+                continue;
+            }
+            Console.WriteLine($"Found {documents.Length} documents in collection '{collection.Name}'.");
+
+            var names = new List<string>();
+            var fileEntities = new List<FileEntity>();
+
+            foreach (var document in documents)
+            {
+                var name = document.Metadata?.ContainsKey("name") == true ? document.Metadata["name"]?.ToString() : null;
+
+                if (string.IsNullOrEmpty(name) || names.Contains(name))
+                {
+                    continue;
+                }
+
+                if (document.Metadata != null)
+                {
+                    Console.WriteLine("Metadata for document:");
+                    foreach (var kvp in document.Metadata)
+                    {
+                        Console.WriteLine($"  {kvp.Key}: {kvp.Value}");
+                    }
+                }
+
+                var sourceType = document.Metadata?.ContainsKey("source_type") == true ? document.Metadata["source_type"]?.ToString() : null;
+                var sourceLink = document.Metadata?.ContainsKey("source_link") == true ? document.Metadata["source_link"]?.ToString() : string.Empty;
+
+                names.Add(name);
+                var fileEntity = new FileEntity
+                {
+                    Name = name,
+                    UploadedBy = "system",
+                    SourceLink = sourceLink ?? string.Empty,
+                    SourceType = sourceType ?? string.Empty,
+                };
+                fileEntities.Add(fileEntity);
+            }
+
+            dbContext.Files.AddRange(fileEntities);
+            await dbContext.SaveChangesAsync();
+        }
+
+        Console.WriteLine("File seeding completed.");
+    }
+}

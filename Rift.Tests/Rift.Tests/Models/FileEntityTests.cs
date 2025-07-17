@@ -24,7 +24,7 @@ namespace Rift.Tests.Models
             var file = new FileEntity
             {
                 Id = 1,
-                FileName = "file.txt",
+                Name = "file.txt",
                 Content = "file content",
                 Size = 123,
                 UploadedBy = "user1",
@@ -42,7 +42,7 @@ namespace Rift.Tests.Models
             // but still fail validation due to [Required] attributes.
             var file = new FileEntity
             {
-                FileName = "",
+                Name = "",
                 Content = "",
                 UploadedBy = ""
             };
@@ -59,7 +59,7 @@ namespace Rift.Tests.Models
         {
             var file = new FileEntity
             {
-                FileName = new string('a', 256),
+                Name = new string('a', 256),
                 Content = "content",
                 UploadedBy = "user"
             };

@@ -84,7 +84,7 @@ namespace Rift.Tests
                 .ReturnsAsync(new FileEntity
                 {
                     Id = 42,
-                    FileName = "test.txt",
+                    Name = "test.txt",
                     Content = "file content",
                     UploadedBy = "admin1",
                     Size = 123,

@@ -38,7 +38,7 @@ namespace Rift.Tests.Repositories
         {
             var file = new FileEntity
             {
-                FileName = "test.txt",
+                Name = "test.txt",
                 Content = "abc",
                 UploadedBy = "user",
                 Size = 123,
@@ -48,7 +48,7 @@ namespace Rift.Tests.Repositories
             var result = await _repository.AddAsync(file);
 
             Assert.IsNotNull(result);
-            Assert.AreEqual("test.txt", result.FileName);
+            Assert.AreEqual("test.txt", result.Name);
 
             var dbFile = await _dbContext.Files.FindAsync(result.Id);
             Assert.IsNotNull(dbFile);
@@ -59,8 +59,8 @@ namespace Rift.Tests.Repositories
         public async Task GetAllAsync_ReturnsAllFilesAsDtos()
         {
             _dbContext.Files.AddRange(
-                new FileEntity { FileName = "a.txt", Content = "A", UploadedBy = "user1", Size = 1, CreatedAt = DateTime.UtcNow },
-                new FileEntity { FileName = "b.txt", Content = "B", UploadedBy = "user2", Size = 2, CreatedAt = DateTime.UtcNow }
+                new FileEntity { Name = "a.txt", Content = "A", UploadedBy = "user1", Size = 1, CreatedAt = DateTime.UtcNow },
+                new FileEntity { Name = "b.txt", Content = "B", UploadedBy = "user2", Size = 2, CreatedAt = DateTime.UtcNow }
             );
             await _dbContext.SaveChangesAsync();
 
@@ -77,7 +77,7 @@ namespace Rift.Tests.Repositories
         {
             var file = new FileEntity
             {
-                FileName = "findme.txt",
+                Name = "findme.txt",
                 Content = "find",
                 UploadedBy = "user",
                 Size = 10,
@@ -89,7 +89,7 @@ namespace Rift.Tests.Repositories
             var result = await _repository.GetByIdAsync(file.Id);
 
             Assert.IsNotNull(result);
-            Assert.AreEqual("findme.txt", result.FileName);
+            Assert.AreEqual("findme.txt", result.Name);
         }
 
         [TestMethod]
@@ -104,7 +104,7 @@ namespace Rift.Tests.Repositories
         {
             var file = new FileEntity
             {
-                FileName = "delete.txt",
+                Name = "delete.txt",
                 Content = "del",
                 UploadedBy = "user",
                 Size = 5,
