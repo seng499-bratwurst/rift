@@ -262,7 +262,8 @@ namespace Rift.LLM
                             } 
                     },
                     // auto is the default choice for the LLM to decide when and which tool to call or not call at any tool
-                    tool_choice = "auto"
+                    tool_choice = "auto",
+                    temperature = 0.2
                 };
 
                 // creating the curl request and sending a post request 
