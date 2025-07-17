@@ -106,5 +106,87 @@ namespace Rift.Tests.Services
 
             Assert.IsNull(result);
         }
+
+        [TestMethod]
+        public async Task UpdateMessageFeedbackAsync_UpdatesIsHelpful_WhenMessageExists()
+        {
+            var userId = "user1";
+            int messageId = 10;
+            var message = new Message
+            {
+                Id = messageId,
+                IsHelpful = null,
+                XCoordinate = 0f,
+                YCoordinate = 0f
+            };
+            _messageRepositoryMock.Setup(r => r.GetByIdAsync(userId, messageId))
+                .ReturnsAsync(message);
+            _messageRepositoryMock.Setup(r => r.UpdateAsync(It.IsAny<Message>()))
+                .ReturnsAsync((Message m) => m);
+
+            var result = await _service.UpdateMessageFeedbackAsync(userId, messageId, true);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(true, result.IsHelpful);
+        }
+
+        [TestMethod]
+        public async Task UpdateMessageFeedbackAsync_UpdatesIsHelpfulToFalse_WhenMessageExists()
+        {
+            var userId = "user1";
+            int messageId = 10;
+            var message = new Message
+            {
+                Id = messageId,
+                IsHelpful = true,
+                XCoordinate = 0f,
+                YCoordinate = 0f
+            };
+            _messageRepositoryMock.Setup(r => r.GetByIdAsync(userId, messageId))
+                .ReturnsAsync(message);
+            _messageRepositoryMock.Setup(r => r.UpdateAsync(It.IsAny<Message>()))
+                .ReturnsAsync((Message m) => m);
+
+            var result = await _service.UpdateMessageFeedbackAsync(userId, messageId, false);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(false, result.IsHelpful);
+        }
+
+        [TestMethod]
+        public async Task UpdateMessageFeedbackAsync_ReturnsNull_WhenMessageNotFound()
+        {
+            var userId = "user1";
+            int messageId = 10;
+            _messageRepositoryMock.Setup(r => r.GetByIdAsync(userId, messageId))
+                .ReturnsAsync((Message?)null);
+
+            var result = await _service.UpdateMessageFeedbackAsync(userId, messageId, true);
+
+            Assert.IsNull(result);
+        }
+
+        [TestMethod]
+        public async Task UpdateMessageFeedbackAsync_VerifiesRepositoryCall_WhenMessageExists()
+        {
+            var userId = "user1";
+            int messageId = 10;
+            var message = new Message
+            {
+                Id = messageId,
+                IsHelpful = null,
+                XCoordinate = 0f,
+                YCoordinate = 0f
+            };
+            _messageRepositoryMock.Setup(r => r.GetByIdAsync(userId, messageId))
+                .ReturnsAsync(message);
+            _messageRepositoryMock.Setup(r => r.UpdateAsync(It.IsAny<Message>()))
+                .ReturnsAsync((Message m) => m);
+
+            await _service.UpdateMessageFeedbackAsync(userId, messageId, true);
+
+            _messageRepositoryMock.Verify(r => r.GetByIdAsync(userId, messageId), Times.Once);
+            _messageRepositoryMock.Verify(r => r.UpdateAsync(It.Is<Message>(m => m.Id == messageId && m.IsHelpful == true)), Times.Once);
+        }
     }
 }

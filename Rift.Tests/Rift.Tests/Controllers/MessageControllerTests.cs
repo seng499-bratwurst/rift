@@ -70,6 +70,12 @@ namespace Rift.Tests
             return controller;
         }
 
+        private static Dictionary<string, object> DeserializeApiResponseData(ApiResponse<object> apiResponse)
+        {
+            return JsonSerializer.Deserialize<Dictionary<string, object>>(
+                JsonSerializer.Serialize(apiResponse.Data))!;
+        }
+
         [TestMethod]
         public async Task CreateMessage_ReturnsBadRequest_WhenContentIsEmpty()
         {
@@ -132,7 +138,8 @@ namespace Rift.Tests
             _conversationServiceMock.Setup(s => s.GetOrCreateConversationByUserId(userId, null))
                 .ReturnsAsync(conversation);
 
-            _ragServiceMock.Setup(l => l.GenerateResponseAsync("Hello", null)).ReturnsAsync("Hi!");
+            _ragServiceMock.Setup(l => l.GenerateResponseAsync("Hello", null))
+                .ReturnsAsync(("Hi!", new List<string>()));
 
             _messageServiceMock.Setup(m => m.CreateMessageAsync(conversation.Id, null, "Hello", "user", 0, 0))
                 .ReturnsAsync(promptMessage);
@@ -191,6 +198,264 @@ namespace Rift.Tests
             var apiResponse = okResult.Value as ApiResponse<List<Message>>;
             Assert.IsTrue(apiResponse.Success);
             Assert.AreEqual(2, apiResponse.Data.Count);
+        }
+
+        [TestMethod]
+        public async Task UpdateMessageFeedback_ReturnsOk_WhenMessageExistsAndFeedbackIsTrue()
+        {
+            var userId = "user1";
+            int messageId = 123;
+            var updatedMessage = new Message 
+            { 
+                Id = messageId, 
+                IsHelpful = true,
+                XCoordinate = 0f,
+                YCoordinate = 0f
+            };
+            
+            _messageServiceMock.Setup(m => m.UpdateMessageFeedbackAsync(userId, messageId, true))
+                .ReturnsAsync(updatedMessage);
+
+            var controller = CreateControllerWithUser(userId);
+            var request = new MessageController.UpdateFeedbackRequest { IsHelpful = true };
+
+            var result = await controller.UpdateMessageFeedback(messageId, request);
+
+            var okResult = result as OkObjectResult;
+            Assert.IsNotNull(okResult);
+            var apiResponse = okResult.Value as ApiResponse<object>;
+            Assert.IsNotNull(apiResponse);
+            Assert.IsTrue(apiResponse!.Success);
+            Assert.IsNull(apiResponse.Error);
+            
+            // Verify the response data
+            var data = JsonSerializer.Deserialize<Dictionary<string, object>>(
+                JsonSerializer.Serialize(apiResponse.Data));
+            Assert.IsNotNull(data);
+            Assert.AreEqual(messageId, ((JsonElement)data!["Id"]).GetInt32());
+            Assert.AreEqual(true, ((JsonElement)data["IsHelpful"]).GetBoolean());
+        }
+
+        [TestMethod]
+        public async Task UpdateMessageFeedback_ReturnsOk_WhenMessageExistsAndFeedbackIsFalse()
+        {
+            var userId = "user1";
+            int messageId = 123;
+            var updatedMessage = new Message 
+            { 
+                Id = messageId, 
+                IsHelpful = false,
+                XCoordinate = 0f,
+                YCoordinate = 0f
+            };
+            
+            _messageServiceMock.Setup(m => m.UpdateMessageFeedbackAsync(userId, messageId, false))
+                .ReturnsAsync(updatedMessage);
+
+            var controller = CreateControllerWithUser(userId);
+            var request = new MessageController.UpdateFeedbackRequest { IsHelpful = false };
+
+            var result = await controller.UpdateMessageFeedback(messageId, request);
+
+            var okResult = result as OkObjectResult;
+            Assert.IsNotNull(okResult);
+            var apiResponse = okResult.Value as ApiResponse<object>;
+            Assert.IsNotNull(apiResponse);
+            Assert.IsTrue(apiResponse!.Success);
+            Assert.IsNull(apiResponse.Error);
+            
+            // Verify the response data
+            var data = JsonSerializer.Deserialize<Dictionary<string, object>>(
+                JsonSerializer.Serialize(apiResponse.Data));
+            Assert.IsNotNull(data);
+            Assert.AreEqual(messageId, ((JsonElement)data!["Id"]).GetInt32());
+            Assert.AreEqual(false, ((JsonElement)data["IsHelpful"]).GetBoolean());
+        }
+
+        [TestMethod]
+        public async Task UpdateMessageFeedback_ReturnsUnauthorized_WhenUserNotAuthenticated()
+        {
+            var controller = CreateControllerWithoutUser();
+            var request = new MessageController.UpdateFeedbackRequest { IsHelpful = true };
+
+            var result = await controller.UpdateMessageFeedback(123, request);
+
+            var unauthorizedResult = result as UnauthorizedObjectResult;
+            Assert.IsNotNull(unauthorizedResult);
+            var apiResponse = unauthorizedResult.Value as ApiResponse<object>;
+            Assert.IsNotNull(apiResponse);
+            Assert.IsFalse(apiResponse!.Success);
+            Assert.AreEqual("Unauthorized", apiResponse.Error);
+        }
+
+        [TestMethod]
+        public async Task UpdateMessageFeedback_ReturnsNotFound_WhenMessageNotFound()
+        {
+            var userId = "user1";
+            int messageId = 999;
+            
+            _messageServiceMock.Setup(m => m.UpdateMessageFeedbackAsync(userId, messageId, true))
+                .ReturnsAsync((Message?)null);
+
+            var controller = CreateControllerWithUser(userId);
+            var request = new MessageController.UpdateFeedbackRequest { IsHelpful = true };
+
+            var result = await controller.UpdateMessageFeedback(messageId, request);
+
+            var notFoundResult = result as NotFoundObjectResult;
+            Assert.IsNotNull(notFoundResult);
+            var apiResponse = notFoundResult.Value as ApiResponse<object>;
+            Assert.IsNotNull(apiResponse);
+            Assert.IsFalse(apiResponse!.Success);
+            Assert.AreEqual("Message not found or permission denied.", apiResponse.Error);
+        }
+
+        [TestMethod]
+        public async Task UpdateMessageFeedback_VerifiesServiceCall_WithCorrectParameters()
+        {
+            var userId = "user1";
+            int messageId = 123;
+            var updatedMessage = new Message 
+            { 
+                Id = messageId, 
+                IsHelpful = true,
+                XCoordinate = 0f,
+                YCoordinate = 0f
+            };
+            
+            _messageServiceMock.Setup(m => m.UpdateMessageFeedbackAsync(userId, messageId, true))
+                .ReturnsAsync(updatedMessage);
+
+            var controller = CreateControllerWithUser(userId);
+            var request = new MessageController.UpdateFeedbackRequest { IsHelpful = true };
+
+            await controller.UpdateMessageFeedback(messageId, request);
+
+            _messageServiceMock.Verify(m => m.UpdateMessageFeedbackAsync(userId, messageId, true), Times.Once);
+        }
+
+        [TestMethod]
+        public async Task UpdateMessageFeedback_VerifiesServiceCall_WithFalseParameter()
+        {
+            var userId = "user1";
+            int messageId = 123;
+            var updatedMessage = new Message 
+            { 
+                Id = messageId, 
+                IsHelpful = false,
+                XCoordinate = 0f,
+                YCoordinate = 0f
+            };
+            
+            _messageServiceMock.Setup(m => m.UpdateMessageFeedbackAsync(userId, messageId, false))
+                .ReturnsAsync(updatedMessage);
+
+            var controller = CreateControllerWithUser(userId);
+            var request = new MessageController.UpdateFeedbackRequest { IsHelpful = false };
+
+            await controller.UpdateMessageFeedback(messageId, request);
+
+            _messageServiceMock.Verify(m => m.UpdateMessageFeedbackAsync(userId, messageId, false), Times.Once);
+        }
+
+        [TestMethod]
+        public async Task UpdateMessageFeedback_HandlesEdgeCase_WhenFeedbackChangesFromFalseToTrue()
+        {
+            var userId = "user1";
+            int messageId = 123;
+            var updatedMessage = new Message 
+            { 
+                Id = messageId, 
+                IsHelpful = true, // Changed from false to true
+                XCoordinate = 0f,
+                YCoordinate = 0f
+            };
+            
+            _messageServiceMock.Setup(m => m.UpdateMessageFeedbackAsync(userId, messageId, true))
+                .ReturnsAsync(updatedMessage);
+
+            var controller = CreateControllerWithUser(userId);
+            var request = new MessageController.UpdateFeedbackRequest { IsHelpful = true };
+
+            var result = await controller.UpdateMessageFeedback(messageId, request);
+
+            var okResult = result as OkObjectResult;
+            Assert.IsNotNull(okResult);
+            var apiResponse = okResult.Value as ApiResponse<object>;
+            Assert.IsNotNull(apiResponse);
+            Assert.IsTrue(apiResponse!.Success);
+            
+            // Verify the response data
+            var data = JsonSerializer.Deserialize<Dictionary<string, object>>(
+                JsonSerializer.Serialize(apiResponse.Data));
+            Assert.IsNotNull(data);
+            Assert.AreEqual(true, ((JsonElement)data!["IsHelpful"]).GetBoolean());
+        }
+
+        [TestMethod]
+        public async Task UpdateMessageFeedback_HandlesEdgeCase_WhenFeedbackChangesFromTrueToFalse()
+        {
+            var userId = "user1";
+            int messageId = 123;
+            var updatedMessage = new Message 
+            { 
+                Id = messageId, 
+                IsHelpful = false, // Changed from true to false
+                XCoordinate = 0f,
+                YCoordinate = 0f
+            };
+            
+            _messageServiceMock.Setup(m => m.UpdateMessageFeedbackAsync(userId, messageId, false))
+                .ReturnsAsync(updatedMessage);
+
+            var controller = CreateControllerWithUser(userId);
+            var request = new MessageController.UpdateFeedbackRequest { IsHelpful = false };
+
+            var result = await controller.UpdateMessageFeedback(messageId, request);
+
+            var okResult = result as OkObjectResult;
+            Assert.IsNotNull(okResult);
+            var apiResponse = okResult.Value as ApiResponse<object>;
+            Assert.IsNotNull(apiResponse);
+            Assert.IsTrue(apiResponse!.Success);
+            
+            // Verify the response data
+            var data = JsonSerializer.Deserialize<Dictionary<string, object>>(
+                JsonSerializer.Serialize(apiResponse.Data));
+            Assert.IsNotNull(data);
+            Assert.AreEqual(false, ((JsonElement)data!["IsHelpful"]).GetBoolean());
+        }
+
+        [TestMethod]
+        public async Task UpdateMessageFeedback_HandlesMultipleUpdatesCorrectly()
+        {
+            var userId = "user1";
+            int messageId = 123;
+            var controller = CreateControllerWithUser(userId);
+
+            // First update: set to true
+            var updatedMessage1 = new Message { Id = messageId, IsHelpful = true, XCoordinate = 0f, YCoordinate = 0f };
+            _messageServiceMock.Setup(m => m.UpdateMessageFeedbackAsync(userId, messageId, true))
+                .ReturnsAsync(updatedMessage1);
+
+            var request1 = new MessageController.UpdateFeedbackRequest { IsHelpful = true };
+            var result1 = await controller.UpdateMessageFeedback(messageId, request1);
+            var okResult1 = result1 as OkObjectResult;
+            Assert.IsNotNull(okResult1);
+
+            // Second update: set to false
+            var updatedMessage2 = new Message { Id = messageId, IsHelpful = false, XCoordinate = 0f, YCoordinate = 0f };
+            _messageServiceMock.Setup(m => m.UpdateMessageFeedbackAsync(userId, messageId, false))
+                .ReturnsAsync(updatedMessage2);
+
+            var request2 = new MessageController.UpdateFeedbackRequest { IsHelpful = false };
+            var result2 = await controller.UpdateMessageFeedback(messageId, request2);
+            var okResult2 = result2 as OkObjectResult;
+            Assert.IsNotNull(okResult2);
+
+            // Verify both calls were made
+            _messageServiceMock.Verify(m => m.UpdateMessageFeedbackAsync(userId, messageId, true), Times.Once);
+            _messageServiceMock.Verify(m => m.UpdateMessageFeedbackAsync(userId, messageId, false), Times.Once);
         }
     }
 }

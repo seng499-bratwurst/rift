@@ -34,6 +34,24 @@ public class ChromaDBClient
     {
         try
         {
+            // Normalize file extension from .txt to .md format
+            if (request.Metadata != null)
+            {
+                // Check for common filename fields and normalize them
+                var filenameFields = new[] { "filename", "file_name", "fileName", "name" };
+                foreach (var field in filenameFields)
+                {
+                    if (request.Metadata.ContainsKey(field))
+                    {
+                        var fileName = request.Metadata[field]?.ToString();
+                        if (!string.IsNullOrWhiteSpace(fileName))
+                        {
+                            request.Metadata[field] = NormalizeFileExtension(fileName);
+                        }
+                    }
+                }
+            }
+
             // Preprocess metadata to handle any remaining lists that might be in the Dictionary<string, object>
             if (request.Metadata != null)
             {
@@ -77,8 +95,26 @@ public class ChromaDBClient
     {
         try
         {
-            // No need for additional preprocessing since we've updated the model
-            // to use string for Tags instead of List<string>
+            // Normalize file extensions from .txt to .md format for all documents in the batch
+            foreach (var document in request.Documents)
+            {
+                if (document.Metadata != null)
+                {
+                    // Check for common filename fields and normalize them
+                    var filenameFields = new[] { "filename", "file_name", "fileName", "name" };
+                    foreach (var field in filenameFields)
+                    {
+                        if (document.Metadata.ContainsKey(field))
+                        {
+                            var fileName = document.Metadata[field]?.ToString();
+                            if (!string.IsNullOrWhiteSpace(fileName))
+                            {
+                                document.Metadata[field] = NormalizeFileExtension(fileName);
+                            }
+                        }
+                    }
+                }
+            }
 
             var response = await _httpClient.PostAsJsonAsync($"{_baseUrl}/documents/batch", request, _jsonOptions);
 
@@ -183,6 +219,24 @@ public class ChromaDBClient
             _logger.LogError(ex, "Exception occurred while deleting document {DocumentId}", documentId);
             return false;
         }
+    }
+
+    /// <summary>
+    /// Normalize file extensions to ensure all files are stored as .md format
+    /// </summary>
+    private static string NormalizeFileExtension(string fileName)
+    {
+        if (string.IsNullOrWhiteSpace(fileName))
+            return fileName;
+
+        // Check if the file has a .txt extension and convert it to .md
+        if (fileName.EndsWith(".txt", StringComparison.OrdinalIgnoreCase))
+        {
+            return fileName.Substring(0, fileName.Length - 4) + ".md";
+        }
+
+        // If no extension or already .md, return as is
+        return fileName;
     }
 
     #endregion
