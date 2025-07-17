@@ -321,6 +321,47 @@ public class MessageController : ControllerBase
         });
     }
 
+    /// <summary>
+    /// PATCH endpoint to update message feedback (thumbs up/down).
+    /// </summary>
+    [HttpPatch("messages/{messageId}/feedback")]
+    [Authorize(AuthenticationSchemes = "Bearer")]
+    [ProducesResponseType(typeof(ApiResponse<object>), 200)]
+    [ProducesResponseType(typeof(ApiResponse<object>), 401)]
+    [ProducesResponseType(typeof(ApiResponse<object>), 404)]
+    public async Task<IActionResult> UpdateMessageFeedback(int messageId, [FromBody] UpdateFeedbackRequest request)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized(new ApiResponse<object>
+            {
+                Success = false,
+                Error = "Unauthorized",
+                Data = null
+            });
+        }
+
+        var updated = await _messageService.UpdateMessageFeedbackAsync(userId, messageId, request.IsHelpful);
+
+        if (updated == null)
+        {
+            return NotFound(new ApiResponse<object>
+            {
+                Success = false,
+                Error = "Message not found or permission denied.",
+                Data = null
+            });
+        }
+
+        return Ok(new ApiResponse<object>
+        {
+            Success = true,
+            Error = null,
+            Data = new { updated.Id, updated.IsHelpful }
+        });
+    }
+
     [HttpDelete("messages/{messageId}")]
     [Authorize(AuthenticationSchemes = "Bearer")]
     public async Task<IActionResult> DeleteMessage(int messageId)
@@ -374,6 +415,17 @@ public class MessageController : ControllerBase
     {
         public float XCoordinate { get; set; }
         public float YCoordinate { get; set; }
+    }
+
+    /// <summary>
+    /// Request model for updating message feedback.
+    /// </summary>
+    public class UpdateFeedbackRequest
+    {
+        /// <summary>
+        /// Indicates whether the message was helpful. True for thumbs up (helpful), false for thumbs down (not helpful).
+        /// </summary>
+        public bool IsHelpful { get; set; }
     }
 
 }
