@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Rift.App.Clients;
 using Rift.Models;
 
@@ -13,6 +14,14 @@ public class SeedFiles
     public async Task SeedAsync(FileDbContext dbContext)
     {
         Console.WriteLine("Seeding files...");
+
+        var numFiles = await dbContext.Files.CountAsync();
+
+        if (numFiles > 0)
+        {
+            Console.WriteLine("Files already exist in the database. Skipping seeding.");
+            return;
+        }
 
         var collections = await _chromaDbClient.ListCollectionsAsync();
 
