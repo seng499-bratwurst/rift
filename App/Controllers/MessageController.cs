@@ -140,6 +140,7 @@ public class MessageController : ControllerBase
             Data = new
             {
                 ConversationId = conversationId,
+                RelevantDocTitles = relevantDocTitles,
                 Response = llmResponse,
                 PromptMessageId = promptMessage?.Id,
                 ResponseMessageId = responseMessage?.Id,
