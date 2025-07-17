@@ -81,7 +81,8 @@ public class MessageController : ControllerBase
 
         var messageHistory = await _messageService.GetMessagesForConversationAsync(userId, conversationId);
 
-        var llmResponse = await _ragService.GenerateResponseAsync(request.Content, messageHistory);
+        // var llmResponse = await _ragService.GenerateResponseAsync(request.Content, messageHistory);
+        var (llmResponse, relevantDocTitles) = await _ragService.GenerateResponseAsync(request.Content, messageHistory);
 
 
         // Create the message with the users prompt
@@ -141,6 +142,7 @@ public class MessageController : ControllerBase
             Data = new
             {
                 ConversationId = conversationId,
+                RelevantDocTitles = relevantDocTitles,
                 Response = llmResponse,
                 PromptMessageId = promptMessage?.Id,
                 ResponseMessageId = responseMessage?.Id,
@@ -190,7 +192,8 @@ public class MessageController : ControllerBase
 
         var messageHistory = await _messageService.GetGuestMessagesForConversationAsync(sessionId, conversationId);
 
-        var llmResponse = await _ragService.GenerateResponseAsync(request.Content, messageHistory);
+        // var llmResponse = await _ragService.GenerateResponseAsync(request.Content, messageHistory);
+        var (llmResponse, relevantDocTitles) = await _ragService.GenerateResponseAsync(request.Content, messageHistory);
 
         // Store the user's message
         var promptMessage = await _messageService.CreateMessageAsync(
@@ -249,6 +252,7 @@ public class MessageController : ControllerBase
             Data = new
             {
                 Response = llmResponse,
+                RelevantDocTitles = relevantDocTitles,
                 SessionId = sessionId,
                 PromptMessageId = promptMessage?.Id,
                 ResponseMessageId = responseMessage?.Id,
