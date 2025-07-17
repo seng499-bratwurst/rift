@@ -48,36 +48,36 @@ namespace Rift.LLM
         {
             string systemPrompt;
             // All property codes from the Cambridge Bay observatory
-            string[] propertyCodes = {
-                "absolutebarometricpressure",
-                "absolutehumidity", 
-                "airdensity",
-                "airtemperature",
-                "dewpoint",
-                "magneticheading",
-                "mixingratio",
-                "relativebarometricpressure",
-                "relativehumidity",
-                "solarradiation",
-                "specificenthalpy",
-                "wetbulbtemperature",
-                "windchilltemperature",
-                "winddirection",
-                "windspeed",
-                "conductivity",
-                "density",
-                "oxygen",
-                "pressure",
-                "salinity",
-                "seawatertemperature",
-                "soundspeed",
-                "turbidityntu",
-                "chlorophyll",
-                "icedraft",
-                "parphotonbased",
-                "ph",
-                "sigmatheta"
-            };
+            // string[] propertyCodes = {
+            //     "absolutebarometricpressure",
+            //     "absolutehumidity", 
+            //     "airdensity",
+            //     "airtemperature",
+            //     "dewpoint",
+            //     "magneticheading",
+            //     "mixingratio",
+            //     "relativebarometricpressure",
+            //     "relativehumidity",
+            //     "solarradiation",
+            //     "specificenthalpy",
+            //     "wetbulbtemperature",
+            //     "windchilltemperature",
+            //     "winddirection",
+            //     "windspeed",
+            //     "conductivity",
+            //     "density",
+            //     "oxygen",
+            //     "pressure",
+            //     "salinity",
+            //     "seawatertemperature",
+            //     "soundspeed",
+            //     "turbidityntu",
+            //     "chlorophyll",
+            //     "icedraft",
+            //     "parphotonbased",
+            //     "ph",
+            //     "sigmatheta"
+            // };
 
             // string pattern = @"\b(" + string.Join("|", propertyCodes) + @")\b";
             // Regex regex = new Regex(pattern, RegexOptions.IgnoreCase);
@@ -213,8 +213,136 @@ namespace Rift.LLM
                                     required = new string[] { "locationCode", "propertyCode", "dateFrom", "dateTo" }
                                 }
                             }
-                        }
                     }, 
+                    new{
+                       type = "function",
+                            function = new {
+                                name = "devices",
+                                description = "Returns all devices at based on the filter criteria",
+                                parameters = new {
+                                    type = "object",
+                                    properties = new {
+                                        locationCode = new {
+                                            type = "string",
+                                            description = "Filter by exact location code (e.g., BACAX)."
+                                        },
+                                        deviceCategoryCode = new {
+                                            type = "string",
+                                            description = "Filter by device category (e.g., CTD)."
+                                        },
+                                        deviceCode = new {
+                                            type = "string",
+                                            description = "Filter by specific device code."
+                                        },
+                                        propertyCode = new {
+                                            type = "string",
+                                            description = "Filter by property measured (e.g., conductivity)."
+                                        },
+                                        dateFrom = new {
+                                            type = "string",
+                                            description = "Deployment start date (ISO 8601)."
+                                        },
+                                        dateTo = new {
+                                            type = "string",
+                                            description = "Deployment end date (ISO 8601)."
+                                        },
+                                        includeChildren = new {
+                                            type = "boolean",
+                                            description = "Return all devices that are deployed at a specific location and sub-tree locations. Requires a valid location code. ONLY USE WHEN MENTIONED BY THE USER."
+                                        },
+                                        dataProductCode = new {
+                                            type = "string",
+                                            description = "Return all devices that have the ability to return a specific data product code."
+                                        },
+                                        deviceId = new {
+                                            type = "string",
+                                            description = "Return a single device matching a specific device ID."
+                                        },
+                                        deviceName = new {
+                                            type = "string",
+                                            description = "Return all devices where the device name contains a keyword."
+                                    }
+                                }
+                            }
+                        } 
+                    },
+                    new{
+                       type = "function",
+                            function = new {
+                                name = "dataProducts",
+                                description = "returns all data products defined in Oceans 3.0 that meet a filter criteria.",
+                                parameters = new {
+                                    type = "object",
+                                    properties = new {
+                                        locationCode = new {
+                                            type = "string",
+                                            description = "Filter by exact location code (e.g., BACAX)."
+                                        },
+                                        deviceCategoryCode = new {
+                                            type = "string",
+                                            description = "Filter by device category (e.g., CTD)."
+                                        },
+                                        deviceCode = new {
+                                            type = "string",
+                                            description = "Filter by specific device code."
+                                        },
+                                        propertyCode = new {
+                                            type = "string",
+                                            description = "Filter by property measured (e.g., conductivity)."
+                                        },
+                                        dataProductCode = new {
+                                            type = "string",
+                                            description = "Return all data product extensions matching a specific data product code (e.g., `HSD`)."
+                                        },
+                                        extension = new {
+                                            type = "string",
+                                            description = "Return all data products that have a specific file extension (e.g., `png`)."
+                                        },
+                                        dataProductName = new {
+                                            type = "stirng",
+                                            description = "Return all data products where the data product name contains a keyword."
+                                        },
+                                    }
+                                }
+                            }
+                        },
+                    new{
+                       type = "function",
+                            function = new {
+                                name = "properties",
+                                description = "returns all properties defined in Oceans 3.0 that meet a filter criteria.",
+                                parameters = new {
+                                    type = "object",
+                                    properties = new {
+                                        locationCode = new {
+                                            type = "string",
+                                            description = "Filter by exact location code (e.g., BACAX)."
+                                        },
+                                        deviceCategoryCode = new {
+                                            type = "string",
+                                            description = "Filter by device category (e.g., CTD)."
+                                        },
+                                        deviceCode = new {
+                                            type = "string",
+                                            description = "Filter by specific device code."
+                                        },
+                                        propertyCode = new {
+                                            type = "string",
+                                            description = "Filter by property measured (e.g., conductivity)."
+                                        },
+                                        propertyName = new {
+                                            type = "string",
+                                            description = "Return all properties where the property name contains a keyword."
+                                        },
+                                        description = new {
+                                            type = "string",
+                                            description = "Return all properties where the description contains a keyword."
+                                        }
+                                    }
+                                }
+                            }
+                        } 
+                    },
                     tool_choice = "auto"
                 };
 
