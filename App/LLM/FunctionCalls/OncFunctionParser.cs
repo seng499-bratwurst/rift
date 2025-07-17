@@ -15,29 +15,22 @@ namespace Rift.LLM
         public (string functionName, Dictionary<string, string?> functionParams) ExtractFunctionAndQueries(string functionCallName, string functionCallParams)
         {
             functionCallParams = Regex.Replace(functionCallParams, @",\s*}", "}");
-            Console.WriteLine($"Function Call Params: {functionCallParams}");
-            // functionCallParams = Regex.Replace(functionCallParams, @",\s*]", "]");
+            // Console.WriteLine($"Function Call Params: {functionCallParams}");
             string functionName = "";
 
             if (functionCallName == "scalardata_location"){
                 functionName = "scalardata/location";
-                Console.WriteLine($"Function Name: {functionName}");
+                // Console.WriteLine($"Function Name: {functionName}");
             }else if (functionCallName == "locations_tree"){
                 functionName = "locations/tree";
-                Console.WriteLine($"Function Name: {functionName}");
+                // Console.WriteLine($"Function Name: {functionName}");
             }else{
                 functionName = functionCallName;
                 // Console.WriteLine($"Function Name: {functionName}");
             }
 
             using JsonDocument innerDoc = JsonDocument.Parse(functionCallParams);
-            // Console.WriteLine($"Inner Doc: {innerDoc.RootElement}");
             var root = innerDoc.RootElement;
-
-            // string functionName = root.GetProperty("function").GetString() ?? string.Empty;
-
-            // var argsElement = root.GetProperty("args");
-            // string argsElement = functionCallParams;
 
             var args = new Dictionary<string, string?>();
             foreach (var prop in root.EnumerateObject())

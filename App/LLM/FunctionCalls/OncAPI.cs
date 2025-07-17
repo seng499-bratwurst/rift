@@ -36,7 +36,7 @@ public class OncAPI
                 urlPath.Append("&" + string.Join("&", validParams.Select(kv => $"{kv.Key}={kv.Value}")));
             }
         }
-        Console.WriteLine("urlPath: "+urlPath.ToString());
+        // Console.WriteLine("urlPath: "+urlPath.ToString());
        
         var oncResponse = new HttpResponseMessage();
         try{
