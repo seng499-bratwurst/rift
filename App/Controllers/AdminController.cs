@@ -34,7 +34,7 @@ public class AdminController : ControllerBase
             {
                 Id = user.Id,
                 Name = user.Name,
-                Email = user.Email,
+                Email = user?.Email ?? string.Empty,
                 Roles = new List<string>(roles)
             });
         }

@@ -16,7 +16,7 @@ public class FileService : IFileService
     public async Task<FileEntity> UploadFileAsync(FileEntity file)
     {
         // Normalize the file extension to .md if it's .txt
-        file.FileName = NormalizeFileExtension(file.FileName);
+        file.Name = NormalizeFileExtension(file.Name);
         return await _fileRepository.AddAsync(file);
     }
 
