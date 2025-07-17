@@ -26,10 +26,47 @@ jobs:
       - name: Install swagger-cli
         run: npm install -g swagger-cli
 
+      - name: Create .env file for Docker
+        run: |
+          echo "POSTGRES_USER=testuser" >> .env
+          echo "POSTGRES_PASSWORD=testpass" >> .env
+          echo "POSTGRES_DB=testdb" >> .env
+          echo "TOGETHER_API_KEY=dummy" >> .env
+          echo "HF_API_KEY=dummy" >> .env
+          echo "GOOGLE_API_KEY=dummy" >> .env
+          echo "ONC_TOKEN=dummy" >> .env
+
+      - name: Start services with health checks
+        run: |
+          docker-compose up -d
+          
+      - name: Wait for app to be ready
+        run: |
+          echo "Waiting for app to be ready..."
+          for i in {1..24}; do
+            if curl -f http://localhost:5000/swagger/v1/swagger.json >/dev/null 2>&1; then
+              echo "App is ready!"
+              break
+            fi
+            echo "Attempt $i/24: App not ready yet, waiting 30 seconds..."
+            sleep 30
+          done
+          
+          # Final check
+          if ! curl -f http://localhost:5000/swagger/v1/swagger.json >/dev/null 2>&1; then
+            echo "App failed to start within 4 minutes"
+            docker-compose logs app
+            exit 1
+          fi
+
       - name: Run update script
         run: |
           chmod +x ./doc/update-astrolabe-docs.sh
           ./doc/update-astrolabe-docs.sh
+
+      - name: Stop services
+        if: always()
+        run: docker-compose down
   deploy-doc:
     if: ${{ github.event_name == 'push' }}
     name: Deploy API documentation on Bump.sh
