@@ -11,7 +11,7 @@ if the tool has a property to include children everytime set that as **true**
 
 The date format needs to be explicitly in **ISO 8601** format otherwise the ONC 3.0 API will fail. 
 Example accepted date format: 2015-09-17T00:00:00.000Z
-if time range is not mentioned in user prompt dont fill it, unless its a required parameter.
+if time range is not mentioned in user prompt you are allowed to use the current date and time, **BUT ONLY IF YOU NEED IT TO CALL THE TOOL IF NOT REQUIRED THEN DONT USE THE DATE PARAMETERS**
 
 use these tools only if required, otherwise just respond based only on your own knowlegde.
 
