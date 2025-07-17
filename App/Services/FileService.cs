@@ -15,7 +15,27 @@ public class FileService : IFileService
 
     public async Task<FileEntity> UploadFileAsync(FileEntity file)
     {
+        // Normalize the file extension to .md if it's .txt
+        file.FileName = NormalizeFileExtension(file.FileName);
         return await _fileRepository.AddAsync(file);
+    }
+
+    /// <summary>
+    /// Normalize file extensions to ensure all files are stored as .md format
+    /// </summary>
+    private static string NormalizeFileExtension(string fileName)
+    {
+        if (string.IsNullOrWhiteSpace(fileName))
+            return fileName;
+
+        // Check if the file has a .txt extension and convert it to .md
+        if (fileName.EndsWith(".txt", StringComparison.OrdinalIgnoreCase))
+        {
+            return fileName.Substring(0, fileName.Length - 4) + ".md";
+        }
+
+        // If no extension or already .md, return as is
+        return fileName;
     }
 
     public async Task<IEnumerable<FileEntityDto>> GetAllFilesAsync()

@@ -25,7 +25,7 @@ public class RAGService : IRAGService
         _responseProcessor = responseProcessor;
     }
 
-    public async Task<string> GenerateResponseAsync(string userQuery, List<Message>? messageHistory)
+    public async Task<(string cleanedResponse, List<string> relevantDocTitles)> GenerateResponseAsync(string userQuery, List<Message>? messageHistory)
     {
         messageHistory ??= new List<Message>();
 
@@ -33,7 +33,11 @@ public class RAGService : IRAGService
 
         var relevantDocuments = (await _chromaDbClient.GetRelevantDataAsync(userQuery, similarityThreshold: 0.5)).RelevantDocuments;
 
-
+        var relevantDocTitles = relevantDocuments
+            .Select(doc => doc.Id.Split('_')[0])
+            .Distinct()
+            .ToList();
+        // Console.WriteLine($"Relevant Document Titles: {string.Join(", ", relevantDocTitles)}");
         // TODO: Add reranker back once new prompts are working
         // var rerankRequest = new RerankRequest
         // {
@@ -59,6 +63,6 @@ public class RAGService : IRAGService
 
         var cleanedResponse = _responseProcessor.ProcessResponse(finalResponse);
 
-        return cleanedResponse;
+        return (cleanedResponse, relevantDocTitles);
     }
 }

@@ -1,0 +1,147 @@
+[
+    {
+        "deviceCategoryCode": "AISRECEIVER",
+        "name": "Automatic Identification Systems Receiver",
+        "description": "Automatic Identification Systems Receiver -  Land-based Automatic Identification System (AIS) receivers provide data that track marine vessels within range of the receiver. The data are used to monitor, understand and mitigate the impacts of marine shipping activities."
+    },
+    {
+        "deviceCategoryCode": "DIVE_COMPUTER",
+        "name": "Dive Computer",
+        "description": "Dive Computer -  Dive computers are devices used by scuba divers to measure the time and depth of a dive."
+    },
+    {
+        "deviceCategoryCode": "NAV",
+        "name": "Navigation System",
+        "description": "Navigation -  Navigational instruments are used to measure and record positional information of ships, buoys, and autonomous underwater vehicles (AUVs). Typical sensors include latitude, longitude, speed, heading, pitch, roll, and depth."
+    },
+    {
+        "deviceCategoryCode": "ROV_CAMERA",
+        "name": "Remotely Operated Vehicle Camera",
+        "description": "Remotely Operated Vehicle Camera -  Remotely Operated Vehicle (ROV) video cameras are used for many purposes. Operators can use ROV cameras for instrument operations, navigation, and maintenance procedures. They can also monitor the composition, abundance, behaviour, and interactions of organisms, and investigate the characteristics of seafloor geology."
+    },
+    {
+        "deviceCategoryCode": "JB",
+        "name": "Junction Box",
+        "description": "Junction Box -  Junction Boxes supply power and communications to deployed instruments. Junction boxes have a number of serial and ethernet ports, including 400V ethernet ports that enable connections to other junction boxes and high-voltage instruments. Junction boxes can convert high voltages to lower voltages (15V, 24V or 48V) required by many instruments."
+    },
+    {
+        "deviceCategoryCode": "ACOUSTICRECEIVER",
+        "name": "Acoustic Receiver",
+        "description": "Acoustic Receiver -  Acoustic receivers detect and decode transmissions from acoustic tags. Receivers are categorized as passive or active which define how the receivers are used."
+    },
+    {
+        "deviceCategoryCode": "ADCP1200KHZ",
+        "name": "Acoustic Doppler Current Profiler 1200 kHz",
+        "description": "Acoustic Doppler Current Profiler 1200 kHz  -  Acoustic Doppler Current Profilers are hydroacoustic instruments, similar to sonars. ADCPs measure current speed and direction at multiple predetermined depths simultaneously. ADCPs use the Doppler effect of sound waves that are scattered by particles in seawater over a depth range."
+    },
+    {
+        "deviceCategoryCode": "CAMLIGHTS",
+        "name": "Camera Lights",
+        "description": "Camera Lights -  Camera lights are used to improve visibility where cameras are deployed. Light controls and schedules can be remotely-controlled from on-shore using software. The length of time that lights are on is limited in order to minimize impact on the environment."
+    },
+    {
+        "deviceCategoryCode": "CTD",
+        "name": "Conductivity Temperature Depth",
+        "description": "Conductivity Temperature (and Depth Sensor) -  Conductivity Temperature Depth (CTD) is an instrument package that contains sensors for measuring the conductivity, temperature, and pressure of seawater. Salinity, sound velocity, depth and density are variables that can be derived from sensor measurements. CTDs can carry additional instruments and sensors such as oxygen sensors, turbidity sensors and fluorometers."
+    },
+    {
+        "deviceCategoryCode": "FLNTU",
+        "name": "Fluorometer Turbidity",
+        "description": "Fluorometer Turbidity -  Fluorometer Turbidity instruments measure chlorophyll fluorescence and turbidity within the same volume of seawater. The instrument uses a light emitting diode (LED) to provide an excitation source. The fluoresced light is received by a detector at a particular angle from the LED source, and uses an interference filter to discriminate against scattered excitation light. Turbidity is measured at the same time, by detecting scattered light from a LED, which is positioned at the same angle as the chlorophyll fluorescence."
+    },
+    {
+        "deviceCategoryCode": "FLUOROMETER",
+        "name": "Fluorometer",
+        "description": "Fluorometer -  Fluorometers measure the amount of stimulated electromagnetic radiation (fluorescence) produced by pulses of electromagnetic radiation emitted into the water column."
+    },
+    {
+        "deviceCategoryCode": "HYDROPHONE",
+        "name": "Hydrophone",
+        "description": "Hydrophone -  Hydrophones are devices containing transducers that convert underwater sound waves into electrical signals. They are acoustic instruments that can process data while they are being collected to produce calibrated waveform data. Hydrophones are typically used to study vocalizations of marine mammals, ship traffic and ambient noise."
+    },
+    {
+        "deviceCategoryCode": "ICEPROFILER",
+        "name": "Ice Profiler",
+        "description": "Ice Profiler -  Ice Profiler instruments are upward looking single beam echosounders mounted on the ocean floor and are specialized to measure ice draft. They can estimate ice forces, determine the thickness of ice, and the detail of the underside of sea-ice."
+    },
+    {
+        "deviceCategoryCode": "NITRATESENSOR",
+        "name": "Nitrate sensor",
+        "description": "Nitrate Sensor -  Nitrate sensors measure the concentration of nitrate, a major nutrient for phytoplankton."
+    },
+    {
+        "deviceCategoryCode": "OXYSENSOR",
+        "name": "Oxygen Sensor",
+        "description": "Oxygen Sensor -  Oxygen sensors measure dissolved oxygen concentration in seawater."
+    },
+    {
+        "deviceCategoryCode": "PHSENSOR",
+        "name": "pH Sensor",
+        "description": "pH Sensor -  pH sensors measure the acidity, or alkalinity, of sea water by the concentration of hydrogen ions in the water column."
+    },
+    {
+        "deviceCategoryCode": "PLANKTONSAMPLER",
+        "name": "Plankton Sampler",
+        "description": "Plankton Sampler -  Plankton Samplers collect samples of plankton from the water column in a time series. Samples are analyzed upon the recovery of the instrument, to provide qualitative and quantitative information about plankton in the water column."
+    },
+    {
+        "deviceCategoryCode": "RADIOMETER",
+        "name": "Radiometer",
+        "description": "Radiometer -  Radiometers collect measurements of electromagnetic radiation in the ocean environment."
+    },
+    {
+        "deviceCategoryCode": "TURBIDITYMETER",
+        "name": "Turbidity Meter",
+        "description": "Turbidity Meter -  Turbidity meters are sensors that detect scattered light from suspended particles in water. The amount of scattered light that reaches the detector is proportional to the turbidity or particle concentration in the water."
+    },
+    {
+        "deviceCategoryCode": "VIDEOCAM",
+        "name": "Video Camera",
+        "description": "Video Camera -  Video cameras record video of characteristics of the surrounding environments and can be deployed on fixed and mobile platforms."
+    },
+    {
+        "deviceCategoryCode": "WETLABS_WQM",
+        "name": "Water Quality Monitor",
+        "description": "Water Quality Monitor -  Water Quality Monitors (WQM) have sensors to measure temperature, salinity, depth, dissolved oxygen, chlorophyll fluorescence, turbidity and backscattering data."
+    },
+    {
+        "deviceCategoryCode": "CO2SENSOR",
+        "name": "Carbon Dioxide Sensor",
+        "description": "Carbon Dioxide Sensor -  Carbon Dioxide sensors monitor CO2 levels in the ocean. CO2 sensors measure the partial pressure, or the concentration of dissolved CO2 in seawater by a variety of techniques."
+    },
+    {
+        "deviceCategoryCode": "INTERNAL_DEVICE_MONITOR",
+        "name": "Internal Device Monitor",
+        "description": "Internal Device Monitor -  Internal device monitors record the internal conditions of a another device or sensor. They are used to ensure proper functioning of the host instrument."
+    },
+    {
+        "deviceCategoryCode": "ORIENTATION",
+        "name": "Orientation Instrument",
+        "description": "Orientation -  Orientation instruments are used on ships, ROVs and instrument packages to record variables like heading, pitch and roll."
+    },
+    {
+        "deviceCategoryCode": "ADAPTER",
+        "name": "Adapter",
+        "description": "Adapter -  Instrument adapters connect a variety of sensors and instruments. Typically, these devices do not collect any data, and our digital infrastructure system does not communicate with them."
+    },
+    {
+        "deviceCategoryCode": "ICE_BUOY",
+        "name": "Ice Buoy",
+        "description": "Ice Buoy -  Ice Mass Balance Buoys measure various parameters including ice surface and bottom position, ice drift, meteorological data, and snow-ice-ocean temperature profiles."
+    },
+    {
+        "deviceCategoryCode": "BARPRESS",
+        "name": "Barometric Pressure Sensor",
+        "description": "Barometric Pressure Sensor -  Barometric pressure sensors are used to monitor weather fluctuations and conditions above the surface of the water."
+    },
+    {
+        "deviceCategoryCode": "METSTN",
+        "name": "Meteorological Station",
+        "description": "Meteorological Station -  Meteorological stations are instruments that make routine meteorological measurements on the atmosphere and are comprised of a suite of sensors. Typical examples of measurements include temperature, barometric pressure, humidity, rainfall, solar radiation, wind speed and direction."
+    },
+    {
+        "deviceCategoryCode": "POWER_SUPPLY",
+        "name": "Power Supply",
+        "description": "Power Supply -  Power supplies provide power to associated devices."
+    }
+]

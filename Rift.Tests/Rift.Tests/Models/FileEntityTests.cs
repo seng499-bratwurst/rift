@@ -76,7 +76,9 @@ namespace Rift.Tests.Models
                 Id = 1,
                 FileName = "file.txt",
                 UploadedBy = "user1",
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow,
+                SourceType = "cambridge_bay_papers",
+                SourceLink = "http://example.com"
             };
 
             var results = ValidateModel(dto);
@@ -89,7 +91,9 @@ namespace Rift.Tests.Models
             var dto = new FileEntityDto
             {
                 FileName = "",
-                UploadedBy = ""
+                UploadedBy = "",
+                SourceType = "",
+                SourceLink = ""
             };
 
             var results = ValidateModel(dto);
@@ -104,7 +108,9 @@ namespace Rift.Tests.Models
             var dto = new FileEntityDto
             {
                 FileName = new string('b', 256),
-                UploadedBy = "user"
+                UploadedBy = "user",
+                SourceType = "cambridge_bay_papers",
+                SourceLink = "http://example.com"
             };
 
             var results = ValidateModel(dto);

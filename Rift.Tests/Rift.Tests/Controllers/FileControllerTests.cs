@@ -59,7 +59,13 @@ namespace Rift.Tests
             var controller = CreateControllerWithUser("user1", false);
             var fileMock = new Mock<IFormFile>();
 
-            var result = await controller.UploadFile(fileMock.Object);
+            var uploadRequest = new FileController.UploadFileRequest
+            {
+                File = fileMock.Object,
+                SourceLink = "http://example.com/",
+                SourceType = "test_source"
+            };
+            var result = await controller.UploadFile(uploadRequest);
 
             Assert.IsInstanceOfType(result, typeof(ForbidResult));
         }
@@ -85,7 +91,14 @@ namespace Rift.Tests
                     CreatedAt = System.DateTime.UtcNow
                 });
 
-            var result = await controller.UploadFile(fileMock.Object);
+            var uploadRequest = new FileController.UploadFileRequest
+            {
+                File = fileMock.Object,
+                SourceLink = "http://example.com/",
+                SourceType = "test_source"
+            };
+
+            var result = await controller.UploadFile(uploadRequest);
 
             var okResult = result as OkObjectResult;
             Assert.IsNotNull(okResult);
@@ -114,7 +127,9 @@ namespace Rift.Tests
                 {
                     Id = 1,
                     FileName = "a.txt",
-                    UploadedBy = "admin1"
+                    UploadedBy = "admin1",
+                    SourceType = "cambridge_bay_papers",
+                    SourceLink = "http://example.com/"
                 }
             };
             _fileServiceMock.Setup(s => s.GetAllFilesAsync()).ReturnsAsync(files);

@@ -21,9 +21,12 @@ public class FileEntity
 
     [Required]
     public required string UploadedBy { get; set; }
+    public string SourceLink { get; set; } = string.Empty;
+    public string SourceType { get; set; } = string.Empty;
 }
 
-public class FileEntityDto{
+public class FileEntityDto
+{
     [Key]
     public int Id { get; set; }
 
@@ -35,4 +38,6 @@ public class FileEntityDto{
 
     [Required]
     public required string UploadedBy { get; set; }
+    public required string SourceLink { get; set; }
+    public required string SourceType { get; set; }
 }

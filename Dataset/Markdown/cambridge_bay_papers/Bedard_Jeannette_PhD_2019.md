@@ -1,4 +1,4 @@
-# Source: Bedard, J. (2019). The role of variable oceanographic and environmental conditions on acoustic tracking effectiveness (Doctoral dissertation, University of Victoria). University of Victoria Libraries. http://hdl.handle.net/1828/11357 
+# Source: http://hdl.handle.net/1828/11357 
 # ID: RoleOfVariableConditions
 
 The Role of Variable Oceanographic and Environmental Conditions on Acoustic

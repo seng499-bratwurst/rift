@@ -63,6 +63,23 @@ public class MessageService : IMessageService
         return await _messageRepository.UpdateAsync(message);
     }
 
+    public async Task<Message?> UpdateMessageFeedbackAsync(
+        string userId,
+        int messageId,
+        bool isHelpful
+    )
+    {
+        var message = await _messageRepository.GetByIdAsync(userId, messageId);
+        if (message == null)
+        {
+            return null; // Message not found
+        }
+
+        message.IsHelpful = isHelpful;
+
+        return await _messageRepository.UpdateAsync(message);
+    }
+
     public async Task<Message?> DeleteMessageAsync(string userId, int messageId)
     {
         return await _messageRepository.DeleteAsync(userId, messageId);

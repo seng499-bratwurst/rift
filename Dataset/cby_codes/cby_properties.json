@@ -1,0 +1,537 @@
+[
+    {
+        "propertyCode": "depth",
+        "name": "Depth",
+        "description": "Depth"
+    },
+    {
+        "propertyCode": "latitude",
+        "name": "Latitude",
+        "description": "Latitude: in degrees"
+    },
+    {
+        "propertyCode": "longitude",
+        "name": "Longitude",
+        "description": "Longitude: in degrees"
+    },
+    {
+        "propertyCode": "seawatertemperature",
+        "name": "Sea Water Temperature",
+        "description": "Temperature: sea water"
+    },
+    {
+        "propertyCode": "amperage",
+        "name": "Amperage",
+        "description": "Amperage"
+    },
+    {
+        "propertyCode": "electricalresistance",
+        "name": "Electrical Resistance",
+        "description": "Electrical Resistance"
+    },
+    {
+        "propertyCode": "groundfault",
+        "name": "Ground Fault",
+        "description": "Ground Fault"
+    },
+    {
+        "propertyCode": "internaltemperature",
+        "name": "Internal Temperature",
+        "description": "Temperature: instrument internal temperature"
+    },
+    {
+        "propertyCode": "statuscode",
+        "name": "Status Code",
+        "description": "Status Code"
+    },
+    {
+        "propertyCode": "voltage",
+        "name": "Voltage",
+        "description": "Voltage: voltage sensor"
+    },
+    {
+        "propertyCode": "batterycharge",
+        "name": "Battery Charge",
+        "description": "Battery Charge"
+    },
+    {
+        "propertyCode": "cameralight",
+        "name": "Camera Light",
+        "description": "Camera Light"
+    },
+    {
+        "propertyCode": "camerapan",
+        "name": "Camera Pan",
+        "description": "Camera Pan"
+    },
+    {
+        "propertyCode": "cameratilt",
+        "name": "Camera Tilt",
+        "description": "Camera Tilt"
+    },
+    {
+        "propertyCode": "chlorophyll",
+        "name": "Chlorophyll",
+        "description": "Chlorophyll"
+    },
+    {
+        "propertyCode": "co2concentrationlinearized",
+        "name": "CO2 Concentration Linearized",
+        "description": "Concentration: carbon dioxide, linearized"
+    },
+    {
+        "propertyCode": "co2partialpressure",
+        "name": "CO2 Partial Pressure",
+        "description": "Pressure: carbon dioxide, partial pressure"
+    },
+    {
+        "propertyCode": "conductivity",
+        "name": "Conductivity",
+        "description": "Conductivity: siemens per metre"
+    },
+    {
+        "propertyCode": "density",
+        "name": "Density",
+        "description": "Density"
+    },
+    {
+        "propertyCode": "electriccharge",
+        "name": "Electric Charge",
+        "description": "Electric Charge"
+    },
+    {
+        "propertyCode": "engineeringcount",
+        "name": "Engineering Count",
+        "description": "Count: engineering data"
+    },
+    {
+        "propertyCode": "focus",
+        "name": "Focus",
+        "description": "Focus"
+    },
+    {
+        "propertyCode": "gassaturation",
+        "name": "Gas Saturation",
+        "description": "Saturation: of gas"
+    },
+    {
+        "propertyCode": "gpsintervaltimeofweek",
+        "name": "GPS Interval Time of Week",
+        "description": "Time: GPS interval time of week"
+    },
+    {
+        "propertyCode": "gregoriantime",
+        "name": "Gregorian Time",
+        "description": "Time: Gregorian days since 19700101T000000Z"
+    },
+    {
+        "propertyCode": "icedraft",
+        "name": "Ice Draft",
+        "description": "Ice Draft"
+    },
+    {
+        "propertyCode": "internalhumidity",
+        "name": "Internal Humidity",
+        "description": "Humidity: internal to calibrate instrument"
+    },
+    {
+        "propertyCode": "internalph",
+        "name": "Internal pH",
+        "description": "pH: internal or reference pH"
+    },
+    {
+        "propertyCode": "magneticheading",
+        "name": "Magnetic Heading",
+        "description": "Magnetic Heading"
+    },
+    {
+        "propertyCode": "magnetometer",
+        "name": "Magnetometer",
+        "description": "Magnetic flux density"
+    },
+    {
+        "propertyCode": "microgacceleration",
+        "name": "Micro-g Acceleration",
+        "description": "Acceleration: micro-g"
+    },
+    {
+        "propertyCode": "nitrateconcentration",
+        "name": "Nitrate Concentration",
+        "description": "Concentration: nitrate"
+    },
+    {
+        "propertyCode": "oxygen",
+        "name": "Oxygen",
+        "description": "Oxygen: optode sensor"
+    },
+    {
+        "propertyCode": "parphotonbased",
+        "name": "PAR Photon-based",
+        "description": "Radiation: par, photon"
+    },
+    {
+        "propertyCode": "ph",
+        "name": "pH",
+        "description": "pH"
+    },
+    {
+        "propertyCode": "pingtime",
+        "name": "Ping Time",
+        "description": "Ping time to target"
+    },
+    {
+        "propertyCode": "pitch",
+        "name": "Pitch",
+        "description": "Pitch"
+    },
+    {
+        "propertyCode": "pressure",
+        "name": "Pressure",
+        "description": "Pressure"
+    },
+    {
+        "propertyCode": "resevoirvolume",
+        "name": "Resevoir Volume",
+        "description": "Reservoir Volume"
+    },
+    {
+        "propertyCode": "roll",
+        "name": "Roll",
+        "description": "Roll"
+    },
+    {
+        "propertyCode": "runtimesensor",
+        "name": "Runtime Sensor",
+        "description": "Runtime Sensor"
+    },
+    {
+        "propertyCode": "salinity",
+        "name": "Salinity",
+        "description": "Salinity"
+    },
+    {
+        "propertyCode": "seawatertemperature",
+        "name": "Sea Water Temperature",
+        "description": "Temperature: sea water"
+    },
+    {
+        "propertyCode": "sigmat",
+        "name": "Sigma-t",
+        "description": "Sigma-t"
+    },
+    {
+        "propertyCode": "sigmatheta",
+        "name": "Sigma-theta",
+        "description": "Sigma-theta"
+    },
+    {
+        "propertyCode": "soundpressurelevel",
+        "name": "Sound Pressure Level",
+        "description": "Sound Pressure Level"
+    },
+    {
+        "propertyCode": "soundspeed",
+        "name": "Sound Speed",
+        "description": "Sound Speed: sound velocity sensor"
+    },
+    {
+        "propertyCode": "targetpersistence",
+        "name": "Target Persistence",
+        "description": "Target Persistence"
+    },
+    {
+        "propertyCode": "tilt",
+        "name": "Tilt",
+        "description": "Tilt: tilt sensor"
+    },
+    {
+        "propertyCode": "totalpressure",
+        "name": "Total Pressure",
+        "description": "Pressure: total depth pressure sensor"
+    },
+    {
+        "propertyCode": "turbidityntu",
+        "name": "Turbidity NTU",
+        "description": "Turbidity: nephelometric turbidity units"
+    },
+    {
+        "propertyCode": "zoom",
+        "name": "Zoom",
+        "description": "Zoom"
+    },
+    {
+        "propertyCode": "co2concentrationlinearized",
+        "name": "CO2 Concentration Linearized",
+        "description": "Concentration: carbon dioxide, linearized"
+    },
+    {
+        "propertyCode": "co2partialpressure",
+        "name": "CO2 Partial Pressure",
+        "description": "Pressure: carbon dioxide, partial pressure"
+    },
+    {
+        "propertyCode": "gasstreampressure",
+        "name": "Gas Stream Pressure",
+        "description": "Pressure: for dissolved gas sensors"
+    },
+    {
+        "propertyCode": "scientificcount",
+        "name": "Scientific Count",
+        "description": "Count: scientific data counter"
+    },
+    {
+        "propertyCode": "calibratedphaseangle",
+        "name": "Calibrated Phase Angle",
+        "description": "Calibrated Phase Angle"
+    },
+    {
+        "propertyCode": "compensatedphaseangle",
+        "name": "Compensated Phase Angle",
+        "description": "Compensated Phase Angle"
+    },
+    {
+        "propertyCode": "biofoulingprevention",
+        "name": "Biofouling Prevention",
+        "description": "Biofouling Prevention"
+    },
+    {
+        "propertyCode": "dewpoint",
+        "name": "Dew Point",
+        "description": "Dew Point"
+    },
+    {
+        "propertyCode": "internalpressure",
+        "name": "Internal Pressure",
+        "description": "Pressure: internal pressure of instrument"
+    },
+    {
+        "propertyCode": "onoffsensor",
+        "name": "On/Off Sensor",
+        "description": "On/Off Sensor"
+    },
+    {
+        "propertyCode": "airtemperature",
+        "name": "Air Temperature",
+        "description": "Temperature: air"
+    },
+    {
+        "propertyCode": "altitude",
+        "name": "Altitude",
+        "description": "Depth: altitude"
+    },
+    {
+        "propertyCode": "differentialtemperature",
+        "name": "Differential Temperature",
+        "description": "Temperature: differential"
+    },
+    {
+        "propertyCode": "icethickness",
+        "name": "Ice Thickness",
+        "description": "Thickness: ice"
+    },
+    {
+        "propertyCode": "snowthickness",
+        "name": "Snow Thickness",
+        "description": "Thickness: snow"
+    },
+    {
+        "propertyCode": "srslicebalancebuoytemperature",
+        "name": "SRSL Ice Balance Buoy Temperature",
+        "description": "Temperature: air, snow, ice, sea water"
+    },
+    {
+        "propertyCode": "absolutebarometricpressure",
+        "name": "Absolute Barometric Pressure",
+        "description": "Pressure: air, absolute barometric"
+    },
+    {
+        "propertyCode": "absolutehumidity",
+        "name": "Absolute Humidity",
+        "description": "Humidity: absolute"
+    },
+    {
+        "propertyCode": "airdensity",
+        "name": "Air Density",
+        "description": "Density: air"
+    },
+    {
+        "propertyCode": "airtemperature",
+        "name": "Air Temperature",
+        "description": "Temperature: air"
+    },
+    {
+        "propertyCode": "barometrictrend",
+        "name": "Barometric Trend",
+        "description": "Barometric Trend"
+    },
+    {
+        "propertyCode": "dewpoint",
+        "name": "Dew Point",
+        "description": "Dew Point"
+    },
+    {
+        "propertyCode": "magneticheading",
+        "name": "Magnetic Heading",
+        "description": "Magnetic Heading"
+    },
+    {
+        "propertyCode": "mixingratio",
+        "name": "Mixing Ratio",
+        "description": "Mixing Ratio"
+    },
+    {
+        "propertyCode": "rainfallrate",
+        "name": "Rainfall Rate",
+        "description": "Rainfall Rate"
+    },
+    {
+        "propertyCode": "relativebarometricpressure",
+        "name": "Relative Barometric Pressure",
+        "description": "Pressure: air, relative barometric"
+    },
+    {
+        "propertyCode": "relativehumidity",
+        "name": "Relative Humidity",
+        "description": "Humidity: relative"
+    },
+    {
+        "propertyCode": "solarradiation",
+        "name": "Solar Radiation",
+        "description": "Solar Radiation"
+    },
+    {
+        "propertyCode": "specificenthalpy",
+        "name": "Specific Enthalpy",
+        "description": "Specific Enthalpy"
+    },
+    {
+        "propertyCode": "uvindex",
+        "name": "UV Index",
+        "description": "UV Index"
+    },
+    {
+        "propertyCode": "wetbulbtemperature",
+        "name": "Wet Bulb Temperature",
+        "description": "Temperature: wet bulb"
+    },
+    {
+        "propertyCode": "windchilltemperature",
+        "name": "Wind Chill Temperature",
+        "description": "Temperature: air, wind chill"
+    },
+    {
+        "propertyCode": "winddirection",
+        "name": "Wind Direction",
+        "description": "Wind Direction"
+    },
+    {
+        "propertyCode": "windspeed",
+        "name": "Wind Speed",
+        "description": "Wind Speed"
+    },
+    {
+        "propertyCode": "barometrictrend",
+        "name": "Barometric Trend",
+        "description": "Barometric Trend"
+    },
+    {
+        "propertyCode": "rainfallrate",
+        "name": "Rainfall Rate",
+        "description": "Rainfall Rate"
+    },
+    {
+        "propertyCode": "relativebarometricpressure",
+        "name": "Relative Barometric Pressure",
+        "description": "Pressure: air, relative barometric"
+    },
+    {
+        "propertyCode": "relativehumidity",
+        "name": "Relative Humidity",
+        "description": "Humidity: relative"
+    },
+    {
+        "propertyCode": "solarradiation",
+        "name": "Solar Radiation",
+        "description": "Solar Radiation"
+    },
+    {
+        "propertyCode": "uvindex",
+        "name": "UV Index",
+        "description": "UV Index"
+    },
+    {
+        "propertyCode": "absolutehumidity",
+        "name": "Absolute Humidity",
+        "description": "Humidity: absolute"
+    },
+    {
+        "propertyCode": "airdensity",
+        "name": "Air Density",
+        "description": "Density: air"
+    },
+    {
+        "propertyCode": "airtemperature",
+        "name": "Air Temperature",
+        "description": "Temperature: air"
+    },
+    {
+        "propertyCode": "dewpoint",
+        "name": "Dew Point",
+        "description": "Dew Point"
+    },
+    {
+        "propertyCode": "magneticheading",
+        "name": "Magnetic Heading",
+        "description": "Magnetic Heading"
+    },
+    {
+        "propertyCode": "mixingratio",
+        "name": "Mixing Ratio",
+        "description": "Mixing Ratio"
+    },
+    {
+        "propertyCode": "relativebarometricpressure",
+        "name": "Relative Barometric Pressure",
+        "description": "Pressure: air, relative barometric"
+    },
+    {
+        "propertyCode": "relativehumidity",
+        "name": "Relative Humidity",
+        "description": "Humidity: relative"
+    },
+    {
+        "propertyCode": "solarradiation",
+        "name": "Solar Radiation",
+        "description": "Solar Radiation"
+    },
+    {
+        "propertyCode": "specificenthalpy",
+        "name": "Specific Enthalpy",
+        "description": "Specific Enthalpy"
+    },
+    {
+        "propertyCode": "wetbulbtemperature",
+        "name": "Wet Bulb Temperature",
+        "description": "Temperature: wet bulb"
+    },
+    {
+        "propertyCode": "windchilltemperature",
+        "name": "Wind Chill Temperature",
+        "description": "Temperature: air, wind chill"
+    },
+    {
+        "propertyCode": "winddirection",
+        "name": "Wind Direction",
+        "description": "Wind Direction"
+    },
+    {
+        "propertyCode": "windspeed",
+        "name": "Wind Speed",
+        "description": "Wind Speed"
+    },
+    {
+        "propertyCode": "benderelectricalresistance",
+        "name": "Bender Electrical Resistance",
+        "description": "Bender Electrical Resistance"
+    }
+]

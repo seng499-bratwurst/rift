@@ -34,6 +34,24 @@ public class ChromaDBClient
     {
         try
         {
+            // Normalize file extension from .txt to .md format
+            if (request.Metadata != null)
+            {
+                // Check for common filename fields and normalize them
+                var filenameFields = new[] { "filename", "file_name", "fileName", "name" };
+                foreach (var field in filenameFields)
+                {
+                    if (request.Metadata.ContainsKey(field))
+                    {
+                        var fileName = request.Metadata[field]?.ToString();
+                        if (!string.IsNullOrWhiteSpace(fileName))
+                        {
+                            request.Metadata[field] = NormalizeFileExtension(fileName);
+                        }
+                    }
+                }
+            }
+
             // Preprocess metadata to handle any remaining lists that might be in the Dictionary<string, object>
             if (request.Metadata != null)
             {
@@ -77,8 +95,26 @@ public class ChromaDBClient
     {
         try
         {
-            // No need for additional preprocessing since we've updated the model
-            // to use string for Tags instead of List<string>
+            // Normalize file extensions from .txt to .md format for all documents in the batch
+            foreach (var document in request.Documents)
+            {
+                if (document.Metadata != null)
+                {
+                    // Check for common filename fields and normalize them
+                    var filenameFields = new[] { "filename", "file_name", "fileName", "name" };
+                    foreach (var field in filenameFields)
+                    {
+                        if (document.Metadata.ContainsKey(field))
+                        {
+                            var fileName = document.Metadata[field]?.ToString();
+                            if (!string.IsNullOrWhiteSpace(fileName))
+                            {
+                                document.Metadata[field] = NormalizeFileExtension(fileName);
+                            }
+                        }
+                    }
+                }
+            }
 
             var response = await _httpClient.PostAsJsonAsync($"{_baseUrl}/documents/batch", request, _jsonOptions);
 
@@ -183,6 +219,24 @@ public class ChromaDBClient
             _logger.LogError(ex, "Exception occurred while deleting document {DocumentId}", documentId);
             return false;
         }
+    }
+
+    /// <summary>
+    /// Normalize file extensions to ensure all files are stored as .md format
+    /// </summary>
+    private static string NormalizeFileExtension(string fileName)
+    {
+        if (string.IsNullOrWhiteSpace(fileName))
+            return fileName;
+
+        // Check if the file has a .txt extension and convert it to .md
+        if (fileName.EndsWith(".txt", StringComparison.OrdinalIgnoreCase))
+        {
+            return fileName.Substring(0, fileName.Length - 4) + ".md";
+        }
+
+        // If no extension or already .md, return as is
+        return fileName;
     }
 
     #endregion
@@ -482,13 +536,14 @@ public class ChromaDBClient
 
             var queryResponse = await SemanticQueryAsync(semanticRequest);
 
-            if (queryResponse?.Results?.Documents == null || queryResponse.Results.Documents.Count == 0)
+            if (queryResponse?.Results?.Documents == null || queryResponse?.Results?.Ids == null || queryResponse.Results.Documents.Count == 0)
             {
                 _logger.LogWarning("No documents returned from semantic query for: {Query}", query);
                 return ragContext;
             }
 
             var documents = queryResponse.Results.Documents[0];
+            var ids = queryResponse.Results.Ids[0];
             var metadatas = queryResponse.Results.Metadatas.Count > 0 ? queryResponse.Results.Metadatas[0] : new List<Dictionary<string, object>?>();
             var distances = queryResponse.Results.Distances.Count > 0 ? queryResponse.Results.Distances[0] : new List<double>();
 
@@ -502,7 +557,7 @@ public class ChromaDBClient
 
             var candidateDocuments = new List<(RelevantDocument doc, double similarity)>();
 
-            for (int i = 0; i < documents.Count && i < distances.Count; i++)
+            for (int i = 0; i < documents.Count && i < ids.Count && i < distances.Count; i++)
             {
                 var distance = distances[i];
 
@@ -519,7 +574,7 @@ public class ChromaDBClient
                 }
 
                 var metadata = metadatas.Count > i ? metadatas[i] : null;
-                var documentId = GetDocumentId(metadata, i);
+                var documentId = ids[i];
 
                 var relevantDoc = new RelevantDocument
                 {
@@ -532,7 +587,7 @@ public class ChromaDBClient
                 // Parse metadata if available
                 if (metadata != null)
                 {
-                    relevantDoc.Metadata = CreateDocumentMetadata(metadata);
+                    relevantDoc.Metadata = metadata;
                 }
 
                 candidateDocuments.Add((relevantDoc, similarity));
@@ -580,60 +635,9 @@ public class ChromaDBClient
         return ragContext;
     }
 
-    private static string GetDocumentId(Dictionary<string, object>? metadata, int fallbackIndex)
-    {
-        if (metadata?.TryGetValue("id", out var idObj) == true && idObj?.ToString() is string id && !string.IsNullOrEmpty(id))
-        {
-            return id;
-        }
-
-        if (metadata?.TryGetValue("document_id", out var docIdObj) == true && docIdObj?.ToString() is string docId && !string.IsNullOrEmpty(docId))
-        {
-            return docId;
-        }
-
-        return $"doc_{fallbackIndex}";
-    }
-
     private static string ExtractMetadataValue(Dictionary<string, object>? metadata, string key, string defaultValue = "")
     {
         return metadata?.TryGetValue(key, out var valueObj) == true ? valueObj?.ToString() ?? defaultValue : defaultValue;
-    }
-
-    private static DocumentMetadata CreateDocumentMetadata(Dictionary<string, object> metadata)
-    {
-        var docMetadata = new DocumentMetadata
-        {
-            Source = ExtractMetadataValue(metadata, "source"),
-            DataType = ExtractMetadataValue(metadata, "data_type"),
-            Timestamp = ExtractMetadataValue(metadata, "timestamp"),
-            Location = ExtractMetadataValue(metadata, "location"),
-            InstrumentType = ExtractMetadataValue(metadata, "instrument_type")
-        };
-
-        // Parse depth as double
-        if (metadata.TryGetValue("depth", out var depthObj) &&
-            double.TryParse(depthObj?.ToString(), NumberStyles.Float, CultureInfo.InvariantCulture, out var depth))
-        {
-            docMetadata.Depth = depth;
-        }
-
-        // Parse tags - handle both array and string formats
-        if (metadata.TryGetValue("tags", out var tagsObj))
-        {
-            docMetadata.Tags = tagsObj switch
-            {
-                JsonElement tagsElement when tagsElement.ValueKind == JsonValueKind.Array =>
-                    string.Join(",", tagsElement.EnumerateArray()
-                        .Where(tag => tag.ValueKind == JsonValueKind.String)
-                        .Select(tag => tag.GetString()!)
-                        .Where(tag => !string.IsNullOrEmpty(tag))),
-                string tagsStr when !string.IsNullOrEmpty(tagsStr) => tagsStr,
-                _ => string.Empty
-            };
-        }
-
-        return docMetadata;
     }
 
     /// <summary>
@@ -694,19 +698,7 @@ public class ChromaDBClient
 
                 if (metadata != null)
                 {
-                    relevantDoc.Metadata = new DocumentMetadata
-                    {
-                        Source = metadata.TryGetValue("source", out var srcObj) ? srcObj?.ToString() ?? "" : "",
-                        DataType = metadata.TryGetValue("data_type", out var dtObj) ? dtObj?.ToString() ?? "" : "",
-                        Timestamp = metadata.TryGetValue("timestamp", out var tsObj) ? tsObj?.ToString() : null,
-                        Location = metadata.TryGetValue("location", out var locObj) ? locObj?.ToString() : null,
-                        InstrumentType = metadata.TryGetValue("instrument_type", out var instObj) ? instObj?.ToString() : null
-                    };
-
-                    if (metadata.TryGetValue("depth", out var depthObj) && double.TryParse(depthObj?.ToString(), out var depth))
-                    {
-                        relevantDoc.Metadata.Depth = depth;
-                    }
+                    relevantDoc.Metadata = metadata;
                 }
 
                 ragContext.RelevantDocuments.Add(relevantDoc);
