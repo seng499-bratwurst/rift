@@ -18,6 +18,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      chromadb:
+        condition: service_started
     restart: on-failure
 
   chromadb:
