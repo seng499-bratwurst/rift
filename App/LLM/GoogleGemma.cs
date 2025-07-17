@@ -248,7 +248,7 @@ namespace Rift.LLM
                                         },
                                         includeChildren = new {
                                             type = "boolean",
-                                            description = "Return all devices that are deployed at a specific location and sub-tree locations. Requires a valid location code. ONLY USE WHEN MENTIONED BY THE USER."
+                                            description = "Return all devices that are deployed at a specific location and sub-tree locations. always true for Cambridge Bay"
                                         },
                                         dataProductCode = new {
                                             type = "string",
@@ -266,46 +266,6 @@ namespace Rift.LLM
                             }
                         } 
                     },
-                    new{
-                       type = "function",
-                            function = new {
-                                name = "dataProducts",
-                                description = "returns all data products defined in Oceans 3.0 that meet a filter criteria.",
-                                parameters = new {
-                                    type = "object",
-                                    properties = new {
-                                        locationCode = new {
-                                            type = "string",
-                                            description = "Filter by exact location code (e.g., BACAX)."
-                                        },
-                                        deviceCategoryCode = new {
-                                            type = "string",
-                                            description = "Filter by device category (e.g., CTD)."
-                                        },
-                                        deviceCode = new {
-                                            type = "string",
-                                            description = "Filter by specific device code."
-                                        },
-                                        propertyCode = new {
-                                            type = "string",
-                                            description = "Filter by property measured (e.g., conductivity)."
-                                        },
-                                        dataProductCode = new {
-                                            type = "string",
-                                            description = "Return all data product extensions matching a specific data product code (e.g., `HSD`)."
-                                        },
-                                        extension = new {
-                                            type = "string",
-                                            description = "Return all data products that have a specific file extension (e.g., `png`)."
-                                        },
-                                        dataProductName = new {
-                                            type = "stirng",
-                                            description = "Return all data products where the data product name contains a keyword."
-                                        },
-                                    }
-                                }
-                            }
-                        },
                     new{
                        type = "function",
                             function = new {
