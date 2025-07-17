@@ -126,7 +126,7 @@ namespace Rift.Tests
                 new FileEntityDto
                 {
                     Id = 1,
-                    FileName = "a.txt",
+                    Name = "a.txt",
                     UploadedBy = "admin1",
                     SourceType = "cambridge_bay_papers",
                     SourceLink = "http://example.com/"

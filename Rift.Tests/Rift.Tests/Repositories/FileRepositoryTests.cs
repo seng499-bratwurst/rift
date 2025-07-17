@@ -68,8 +68,8 @@ namespace Rift.Tests.Repositories
 
             var list = result.ToList();
             Assert.AreEqual(2, list.Count);
-            Assert.AreEqual("a.txt", list[0].FileName);
-            Assert.AreEqual("b.txt", list[1].FileName);
+            Assert.AreEqual("a.txt", list[0].Name);
+            Assert.AreEqual("b.txt", list[1].Name);
         }
 
         [TestMethod]

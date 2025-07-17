@@ -25,7 +25,7 @@ namespace Rift.Repositories
             .Select(file => new FileEntityDto
             {
                 Id = file.Id,
-                FileName = file.Name,
+                Name = file.Name,
                 CreatedAt = file.CreatedAt,
                 UploadedBy = file.UploadedBy,
                 SourceLink = file.SourceLink,

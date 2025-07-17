@@ -31,9 +31,10 @@ public class FileEntityDto
 
     [Required]
     [MaxLength(255)]
-    public required string FileName { get; set; }
+    public required string Name { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    [Required]
     public required string UploadedBy { get; set; }
-    public required string SourceLink { get; set; }
-    public required string SourceType { get; set; }
+    public string SourceLink { get; set; } = string.Empty;
+    public string SourceType { get; set; } = string.Empty;
 }

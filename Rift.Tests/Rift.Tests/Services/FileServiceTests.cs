@@ -34,7 +34,7 @@ namespace Rift.Tests.Services
 
             Assert.IsNotNull(result);
             Assert.AreEqual(1, result.Id);
-            Assert.AreEqual("test.md", result.FileName); // Filename should be normalized from .txt to .md
+            Assert.AreEqual("test.md", result.Name); // Filename should be normalized from .txt to .md
         }
 
         [TestMethod]
@@ -42,15 +42,15 @@ namespace Rift.Tests.Services
         {
             var files = new List<FileEntityDto>
             {
-                new FileEntityDto { Id = 1, FileName = "a.txt", UploadedBy = "user", SourceType = "cambridge_bay_papers", SourceLink = "http://example.com/" },
-                new FileEntityDto { Id = 2, FileName = "b.txt", UploadedBy = "user", SourceType = "cambridge_bay_papers", SourceLink = "http://example.com/"  }
+                new FileEntityDto { Id = 1, Name = "a.txt", UploadedBy = "user", SourceType = "cambridge_bay_papers", SourceLink = "http://example.com/" },
+                new FileEntityDto { Id = 2, Name = "b.txt", UploadedBy = "user", SourceType = "cambridge_bay_papers", SourceLink = "http://example.com/"  }
             };
             _fileRepositoryMock.Setup(r => r.GetAllAsync()).ReturnsAsync(files);
 
             var result = await _service.GetAllFilesAsync();
 
             Assert.AreEqual(2, ((List<FileEntityDto>)result).Count);
-            Assert.AreEqual("a.txt", ((List<FileEntityDto>)result)[0].FileName);
+            Assert.AreEqual("a.txt", ((List<FileEntityDto>)result)[0].Name);
         }
 
         [TestMethod]
@@ -116,49 +116,49 @@ namespace Rift.Tests.Services
         [TestMethod]
         public async Task UploadFileAsync_NormalizesFileExtension_TxtToMd()
         {
-            var file = new FileEntity { Id = 1, FileName = "document.txt", Content = "content", UploadedBy = "user" };
+            var file = new FileEntity { Id = 1, Name = "document.txt", Content = "content", UploadedBy = "user" };
             _fileRepositoryMock.Setup(r => r.AddAsync(It.IsAny<FileEntity>())).ReturnsAsync(file);
 
             var result = await _service.UploadFileAsync(file);
 
             Assert.IsNotNull(result);
-            Assert.AreEqual("document.md", result.FileName);
+            Assert.AreEqual("document.md", result.Name);
         }
 
         [TestMethod]
         public async Task UploadFileAsync_PreservesFileExtension_WhenAlreadyMd()
         {
-            var file = new FileEntity { Id = 1, FileName = "document.md", Content = "content", UploadedBy = "user" };
+            var file = new FileEntity { Id = 1, Name = "document.md", Content = "content", UploadedBy = "user" };
             _fileRepositoryMock.Setup(r => r.AddAsync(It.IsAny<FileEntity>())).ReturnsAsync(file);
 
             var result = await _service.UploadFileAsync(file);
 
             Assert.IsNotNull(result);
-            Assert.AreEqual("document.md", result.FileName);
+            Assert.AreEqual("document.md", result.Name);
         }
 
         [TestMethod]
         public async Task UploadFileAsync_PreservesFileExtension_WhenNotTxt()
         {
-            var file = new FileEntity { Id = 1, FileName = "document.pdf", Content = "content", UploadedBy = "user" };
+            var file = new FileEntity { Id = 1, Name = "document.pdf", Content = "content", UploadedBy = "user" };
             _fileRepositoryMock.Setup(r => r.AddAsync(It.IsAny<FileEntity>())).ReturnsAsync(file);
 
             var result = await _service.UploadFileAsync(file);
 
             Assert.IsNotNull(result);
-            Assert.AreEqual("document.pdf", result.FileName);
+            Assert.AreEqual("document.pdf", result.Name);
         }
 
         [TestMethod]
         public async Task UploadFileAsync_NormalizesFileExtension_CaseInsensitive()
         {
-            var file = new FileEntity { Id = 1, FileName = "document.TXT", Content = "content", UploadedBy = "user" };
+            var file = new FileEntity { Id = 1, Name = "document.TXT", Content = "content", UploadedBy = "user" };
             _fileRepositoryMock.Setup(r => r.AddAsync(It.IsAny<FileEntity>())).ReturnsAsync(file);
 
             var result = await _service.UploadFileAsync(file);
 
             Assert.IsNotNull(result);
-            Assert.AreEqual("document.md", result.FileName);
+            Assert.AreEqual("document.md", result.Name);
         }
 
         #region Edge Case Tests for File Extension Normalization
@@ -166,122 +166,122 @@ namespace Rift.Tests.Services
         [TestMethod]
         public async Task UploadFileAsync_HandlesNullFileName()
         {
-            var file = new FileEntity { Id = 1, FileName = null!, Content = "content", UploadedBy = "user" };
+            var file = new FileEntity { Id = 1, Name = null!, Content = "content", UploadedBy = "user" };
             _fileRepositoryMock.Setup(r => r.AddAsync(It.IsAny<FileEntity>())).ReturnsAsync(file);
 
             var result = await _service.UploadFileAsync(file);
 
             Assert.IsNotNull(result);
-            Assert.IsNull(result.FileName); // Should remain null
+            Assert.IsNull(result.Name); // Should remain null
         }
 
         [TestMethod]
         public async Task UploadFileAsync_HandlesEmptyFileName()
         {
-            var file = new FileEntity { Id = 1, FileName = "", Content = "content", UploadedBy = "user" };
+            var file = new FileEntity { Id = 1, Name = "", Content = "content", UploadedBy = "user" };
             _fileRepositoryMock.Setup(r => r.AddAsync(It.IsAny<FileEntity>())).ReturnsAsync(file);
 
             var result = await _service.UploadFileAsync(file);
 
             Assert.IsNotNull(result);
-            Assert.AreEqual("", result.FileName); // Should remain empty
+            Assert.AreEqual("", result.Name); // Should remain empty
         }
 
         [TestMethod]
         public async Task UploadFileAsync_HandlesWhitespaceOnlyFileName()
         {
-            var file = new FileEntity { Id = 1, FileName = "   ", Content = "content", UploadedBy = "user" };
+            var file = new FileEntity { Id = 1, Name = "   ", Content = "content", UploadedBy = "user" };
             _fileRepositoryMock.Setup(r => r.AddAsync(It.IsAny<FileEntity>())).ReturnsAsync(file);
 
             var result = await _service.UploadFileAsync(file);
 
             Assert.IsNotNull(result);
-            Assert.AreEqual("   ", result.FileName); // Should remain unchanged
+            Assert.AreEqual("   ", result.Name); // Should remain unchanged
         }
 
         [TestMethod]
         public async Task UploadFileAsync_HandlesFileNameWithoutExtension()
         {
-            var file = new FileEntity { Id = 1, FileName = "document", Content = "content", UploadedBy = "user" };
+            var file = new FileEntity { Id = 1, Name = "document", Content = "content", UploadedBy = "user" };
             _fileRepositoryMock.Setup(r => r.AddAsync(It.IsAny<FileEntity>())).ReturnsAsync(file);
 
             var result = await _service.UploadFileAsync(file);
 
             Assert.IsNotNull(result);
-            Assert.AreEqual("document", result.FileName); // Should remain unchanged
+            Assert.AreEqual("document", result.Name); // Should remain unchanged
         }
 
         [TestMethod]
         public async Task UploadFileAsync_HandlesFileNameWithOnlyDot()
         {
-            var file = new FileEntity { Id = 1, FileName = "document.", Content = "content", UploadedBy = "user" };
+            var file = new FileEntity { Id = 1, Name = "document.", Content = "content", UploadedBy = "user" };
             _fileRepositoryMock.Setup(r => r.AddAsync(It.IsAny<FileEntity>())).ReturnsAsync(file);
 
             var result = await _service.UploadFileAsync(file);
 
             Assert.IsNotNull(result);
-            Assert.AreEqual("document.", result.FileName); // Should remain unchanged
+            Assert.AreEqual("document.", result.Name); // Should remain unchanged
         }
 
         [TestMethod]
         public async Task UploadFileAsync_HandlesFileNameWithMultipleDots()
         {
-            var file = new FileEntity { Id = 1, FileName = "document.backup.txt", Content = "content", UploadedBy = "user" };
+            var file = new FileEntity { Id = 1, Name = "document.backup.txt", Content = "content", UploadedBy = "user" };
             _fileRepositoryMock.Setup(r => r.AddAsync(It.IsAny<FileEntity>())).ReturnsAsync(file);
 
             var result = await _service.UploadFileAsync(file);
 
             Assert.IsNotNull(result);
-            Assert.AreEqual("document.backup.md", result.FileName); // Should normalize the final extension
+            Assert.AreEqual("document.backup.md", result.Name); // Should normalize the final extension
         }
 
         [TestMethod]
         public async Task UploadFileAsync_HandlesFileNameStartingWithDot()
         {
-            var file = new FileEntity { Id = 1, FileName = ".txt", Content = "content", UploadedBy = "user" };
+            var file = new FileEntity { Id = 1, Name = ".txt", Content = "content", UploadedBy = "user" };
             _fileRepositoryMock.Setup(r => r.AddAsync(It.IsAny<FileEntity>())).ReturnsAsync(file);
 
             var result = await _service.UploadFileAsync(file);
 
             Assert.IsNotNull(result);
-            Assert.AreEqual(".md", result.FileName); // Should normalize to .md
+            Assert.AreEqual(".md", result.Name); // Should normalize to .md
         }
 
         [TestMethod]
         public async Task UploadFileAsync_HandlesVeryLongFileName()
         {
             var longBaseName = new string('a', 250);
-            var file = new FileEntity { Id = 1, FileName = $"{longBaseName}.txt", Content = "content", UploadedBy = "user" };
+            var file = new FileEntity { Id = 1, Name = $"{longBaseName}.txt", Content = "content", UploadedBy = "user" };
             _fileRepositoryMock.Setup(r => r.AddAsync(It.IsAny<FileEntity>())).ReturnsAsync(file);
 
             var result = await _service.UploadFileAsync(file);
 
             Assert.IsNotNull(result);
-            Assert.AreEqual($"{longBaseName}.md", result.FileName); // Should normalize extension even for long names
+            Assert.AreEqual($"{longBaseName}.md", result.Name); // Should normalize extension even for long names
         }
 
         [TestMethod]
         public async Task UploadFileAsync_HandlesFileNameWithSpecialCharacters()
         {
-            var file = new FileEntity { Id = 1, FileName = "file-name_with@special#chars.txt", Content = "content", UploadedBy = "user" };
+            var file = new FileEntity { Id = 1, Name = "file-name_with@special#chars.txt", Content = "content", UploadedBy = "user" };
             _fileRepositoryMock.Setup(r => r.AddAsync(It.IsAny<FileEntity>())).ReturnsAsync(file);
 
             var result = await _service.UploadFileAsync(file);
 
             Assert.IsNotNull(result);
-            Assert.AreEqual("file-name_with@special#chars.md", result.FileName); // Should normalize extension
+            Assert.AreEqual("file-name_with@special#chars.md", result.Name); // Should normalize extension
         }
 
         [TestMethod]
         public async Task UploadFileAsync_HandlesFileNameWithUnicodeCharacters()
         {
-            var file = new FileEntity { Id = 1, FileName = "файл测试文档.txt", Content = "content", UploadedBy = "user" };
+            var file = new FileEntity { Id = 1, Name = "файл测试文档.txt", Content = "content", UploadedBy = "user" };
             _fileRepositoryMock.Setup(r => r.AddAsync(It.IsAny<FileEntity>())).ReturnsAsync(file);
 
             var result = await _service.UploadFileAsync(file);
 
             Assert.IsNotNull(result);
-            Assert.AreEqual("файл测试文档.md", result.FileName); // Should normalize extension with unicode
+            Assert.AreEqual("файл测试文档.md", result.Name); // Should normalize extension with unicode
         }
 
         [TestMethod]
@@ -291,13 +291,13 @@ namespace Rift.Tests.Services
             
             foreach (var extension in testCases)
             {
-                var file = new FileEntity { Id = 1, FileName = $"document{extension}", Content = "content", UploadedBy = "user" };
+                var file = new FileEntity { Id = 1, Name = $"document{extension}", Content = "content", UploadedBy = "user" };
                 _fileRepositoryMock.Setup(r => r.AddAsync(It.IsAny<FileEntity>())).ReturnsAsync(file);
 
                 var result = await _service.UploadFileAsync(file);
 
                 Assert.IsNotNull(result);
-                Assert.AreEqual("document.md", result.FileName, $"Failed for extension: {extension}");
+                Assert.AreEqual("document.md", result.Name, $"Failed for extension: {extension}");
             }
         }
 
