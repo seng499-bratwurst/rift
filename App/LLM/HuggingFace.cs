@@ -100,9 +100,9 @@ namespace Rift.LLM
                 }
                 else if (useFunction)
                 {
-                    var (functionName, functionParams) = _parser.ExtractFunctionAndQueries(LLMContentFiltered);
+                    // var (functionName, functionParams) = _parser.ExtractFunctionAndQueries(LLMContentFiltered);
                     
-                    return await _parser.OncAPICall(functionName, functionParams);
+                    // return await _parser.OncAPICall(functionName, functionParams);
                 }
             }
 
