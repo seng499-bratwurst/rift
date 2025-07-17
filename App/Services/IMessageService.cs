@@ -25,8 +25,8 @@ public interface IMessageService
     );
 
     Task<Message?> UpdateMessageFeedbackAsync(
-        int messageId,
         string userId,
+        int messageId,
         bool isHelpful
     );
 

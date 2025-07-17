@@ -124,7 +124,7 @@ namespace Rift.Tests.Services
             _messageRepositoryMock.Setup(r => r.UpdateAsync(It.IsAny<Message>()))
                 .ReturnsAsync((Message m) => m);
 
-            var result = await _service.UpdateMessageFeedbackAsync(messageId, userId, true);
+            var result = await _service.UpdateMessageFeedbackAsync(userId, messageId, true);
 
             Assert.IsNotNull(result);
             Assert.AreEqual(true, result.IsHelpful);
@@ -147,7 +147,7 @@ namespace Rift.Tests.Services
             _messageRepositoryMock.Setup(r => r.UpdateAsync(It.IsAny<Message>()))
                 .ReturnsAsync((Message m) => m);
 
-            var result = await _service.UpdateMessageFeedbackAsync(messageId, userId, false);
+            var result = await _service.UpdateMessageFeedbackAsync(userId, messageId, false);
 
             Assert.IsNotNull(result);
             Assert.AreEqual(false, result.IsHelpful);
@@ -161,7 +161,7 @@ namespace Rift.Tests.Services
             _messageRepositoryMock.Setup(r => r.GetByIdAsync(userId, messageId))
                 .ReturnsAsync((Message?)null);
 
-            var result = await _service.UpdateMessageFeedbackAsync(messageId, userId, true);
+            var result = await _service.UpdateMessageFeedbackAsync(userId, messageId, true);
 
             Assert.IsNull(result);
         }
@@ -183,7 +183,7 @@ namespace Rift.Tests.Services
             _messageRepositoryMock.Setup(r => r.UpdateAsync(It.IsAny<Message>()))
                 .ReturnsAsync((Message m) => m);
 
-            await _service.UpdateMessageFeedbackAsync(messageId, userId, true);
+            await _service.UpdateMessageFeedbackAsync(userId, messageId, true);
 
             _messageRepositoryMock.Verify(r => r.GetByIdAsync(userId, messageId), Times.Once);
             _messageRepositoryMock.Verify(r => r.UpdateAsync(It.Is<Message>(m => m.Id == messageId && m.IsHelpful == true)), Times.Once);

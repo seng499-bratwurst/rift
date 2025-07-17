@@ -64,8 +64,8 @@ public class MessageService : IMessageService
     }
 
     public async Task<Message?> UpdateMessageFeedbackAsync(
-        int messageId,
         string userId,
+        int messageId,
         bool isHelpful
     )
     {

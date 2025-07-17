@@ -70,6 +70,12 @@ namespace Rift.Tests
             return controller;
         }
 
+        private static Dictionary<string, object> DeserializeApiResponseData(ApiResponse<object> apiResponse)
+        {
+            return JsonSerializer.Deserialize<Dictionary<string, object>>(
+                JsonSerializer.Serialize(apiResponse.Data))!;
+        }
+
         [TestMethod]
         public async Task CreateMessage_ReturnsBadRequest_WhenContentIsEmpty()
         {
@@ -206,7 +212,7 @@ namespace Rift.Tests
                 YCoordinate = 0f
             };
             
-            _messageServiceMock.Setup(m => m.UpdateMessageFeedbackAsync(messageId, userId, true))
+            _messageServiceMock.Setup(m => m.UpdateMessageFeedbackAsync(userId, messageId, true))
                 .ReturnsAsync(updatedMessage);
 
             var controller = CreateControllerWithUser(userId);
@@ -242,7 +248,7 @@ namespace Rift.Tests
                 YCoordinate = 0f
             };
             
-            _messageServiceMock.Setup(m => m.UpdateMessageFeedbackAsync(messageId, userId, false))
+            _messageServiceMock.Setup(m => m.UpdateMessageFeedbackAsync(userId, messageId, false))
                 .ReturnsAsync(updatedMessage);
 
             var controller = CreateControllerWithUser(userId);
@@ -287,7 +293,7 @@ namespace Rift.Tests
             var userId = "user1";
             int messageId = 999;
             
-            _messageServiceMock.Setup(m => m.UpdateMessageFeedbackAsync(messageId, userId, true))
+            _messageServiceMock.Setup(m => m.UpdateMessageFeedbackAsync(userId, messageId, true))
                 .ReturnsAsync((Message?)null);
 
             var controller = CreateControllerWithUser(userId);
@@ -316,7 +322,7 @@ namespace Rift.Tests
                 YCoordinate = 0f
             };
             
-            _messageServiceMock.Setup(m => m.UpdateMessageFeedbackAsync(messageId, userId, true))
+            _messageServiceMock.Setup(m => m.UpdateMessageFeedbackAsync(userId, messageId, true))
                 .ReturnsAsync(updatedMessage);
 
             var controller = CreateControllerWithUser(userId);
@@ -324,7 +330,7 @@ namespace Rift.Tests
 
             await controller.UpdateMessageFeedback(messageId, request);
 
-            _messageServiceMock.Verify(m => m.UpdateMessageFeedbackAsync(messageId, userId, true), Times.Once);
+            _messageServiceMock.Verify(m => m.UpdateMessageFeedbackAsync(userId, messageId, true), Times.Once);
         }
 
         [TestMethod]
@@ -340,7 +346,7 @@ namespace Rift.Tests
                 YCoordinate = 0f
             };
             
-            _messageServiceMock.Setup(m => m.UpdateMessageFeedbackAsync(messageId, userId, false))
+            _messageServiceMock.Setup(m => m.UpdateMessageFeedbackAsync(userId, messageId, false))
                 .ReturnsAsync(updatedMessage);
 
             var controller = CreateControllerWithUser(userId);
@@ -348,7 +354,7 @@ namespace Rift.Tests
 
             await controller.UpdateMessageFeedback(messageId, request);
 
-            _messageServiceMock.Verify(m => m.UpdateMessageFeedbackAsync(messageId, userId, false), Times.Once);
+            _messageServiceMock.Verify(m => m.UpdateMessageFeedbackAsync(userId, messageId, false), Times.Once);
         }
 
         [TestMethod]
@@ -364,7 +370,7 @@ namespace Rift.Tests
                 YCoordinate = 0f
             };
             
-            _messageServiceMock.Setup(m => m.UpdateMessageFeedbackAsync(messageId, userId, true))
+            _messageServiceMock.Setup(m => m.UpdateMessageFeedbackAsync(userId, messageId, true))
                 .ReturnsAsync(updatedMessage);
 
             var controller = CreateControllerWithUser(userId);
@@ -398,7 +404,7 @@ namespace Rift.Tests
                 YCoordinate = 0f
             };
             
-            _messageServiceMock.Setup(m => m.UpdateMessageFeedbackAsync(messageId, userId, false))
+            _messageServiceMock.Setup(m => m.UpdateMessageFeedbackAsync(userId, messageId, false))
                 .ReturnsAsync(updatedMessage);
 
             var controller = CreateControllerWithUser(userId);
@@ -428,7 +434,7 @@ namespace Rift.Tests
 
             // First update: set to true
             var updatedMessage1 = new Message { Id = messageId, IsHelpful = true, XCoordinate = 0f, YCoordinate = 0f };
-            _messageServiceMock.Setup(m => m.UpdateMessageFeedbackAsync(messageId, userId, true))
+            _messageServiceMock.Setup(m => m.UpdateMessageFeedbackAsync(userId, messageId, true))
                 .ReturnsAsync(updatedMessage1);
 
             var request1 = new MessageController.UpdateFeedbackRequest { IsHelpful = true };
@@ -438,7 +444,7 @@ namespace Rift.Tests
 
             // Second update: set to false
             var updatedMessage2 = new Message { Id = messageId, IsHelpful = false, XCoordinate = 0f, YCoordinate = 0f };
-            _messageServiceMock.Setup(m => m.UpdateMessageFeedbackAsync(messageId, userId, false))
+            _messageServiceMock.Setup(m => m.UpdateMessageFeedbackAsync(userId, messageId, false))
                 .ReturnsAsync(updatedMessage2);
 
             var request2 = new MessageController.UpdateFeedbackRequest { IsHelpful = false };
@@ -447,8 +453,8 @@ namespace Rift.Tests
             Assert.IsNotNull(okResult2);
 
             // Verify both calls were made
-            _messageServiceMock.Verify(m => m.UpdateMessageFeedbackAsync(messageId, userId, true), Times.Once);
-            _messageServiceMock.Verify(m => m.UpdateMessageFeedbackAsync(messageId, userId, false), Times.Once);
+            _messageServiceMock.Verify(m => m.UpdateMessageFeedbackAsync(userId, messageId, true), Times.Once);
+            _messageServiceMock.Verify(m => m.UpdateMessageFeedbackAsync(userId, messageId, false), Times.Once);
         }
     }
 }

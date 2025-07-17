@@ -326,6 +326,9 @@ public class MessageController : ControllerBase
     /// </summary>
     [HttpPatch("messages/{messageId}/feedback")]
     [Authorize(AuthenticationSchemes = "Bearer")]
+    [ProducesResponseType(typeof(ApiResponse<object>), 200)]
+    [ProducesResponseType(typeof(ApiResponse<object>), 401)]
+    [ProducesResponseType(typeof(ApiResponse<object>), 404)]
     public async Task<IActionResult> UpdateMessageFeedback(int messageId, [FromBody] UpdateFeedbackRequest request)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -339,7 +342,7 @@ public class MessageController : ControllerBase
             });
         }
 
-        var updated = await _messageService.UpdateMessageFeedbackAsync(messageId, userId, request.IsHelpful);
+        var updated = await _messageService.UpdateMessageFeedbackAsync(userId, messageId, request.IsHelpful);
 
         if (updated == null)
         {
@@ -414,8 +417,14 @@ public class MessageController : ControllerBase
         public float YCoordinate { get; set; }
     }
 
+    /// <summary>
+    /// Request model for updating message feedback.
+    /// </summary>
     public class UpdateFeedbackRequest
     {
+        /// <summary>
+        /// Indicates whether the message was helpful. True for thumbs up (helpful), false for thumbs down (not helpful).
+        /// </summary>
         public bool IsHelpful { get; set; }
     }
 
