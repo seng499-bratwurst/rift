@@ -275,7 +275,7 @@ public class ChromaDBClient
     }
 
     /// <summary>
-    /// Get information about a specific collection
+    /// Get documents for a specific collection
     /// </summary>
     public async Task<CollectionDocumentResponse[]?> GetCollectionDocumentsAsync(string collectionName)
     {
