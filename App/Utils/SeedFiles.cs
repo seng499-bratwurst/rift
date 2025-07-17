@@ -56,15 +56,6 @@ public class SeedFiles
                     continue;
                 }
 
-                if (document.Metadata != null)
-                {
-                    Console.WriteLine("Metadata for document:");
-                    foreach (var kvp in document.Metadata)
-                    {
-                        Console.WriteLine($"  {kvp.Key}: {kvp.Value}");
-                    }
-                }
-
                 var sourceType = document.Metadata?.ContainsKey("source_type") == true ? document.Metadata["source_type"]?.ToString() : null;
                 var sourceLink = document.Metadata?.ContainsKey("source_link") == true ? document.Metadata["source_link"]?.ToString() : string.Empty;
 
