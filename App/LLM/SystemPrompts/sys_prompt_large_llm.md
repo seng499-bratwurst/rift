@@ -112,7 +112,7 @@ Use all this information to provide a **clear**, **accurate**, and **helpful** a
 3. **[Time Context]** (Current, Recent, Analysis - if needed)
 
 **STEP 4**: Format validation
-- Use Title Case For Every Word. The only exceptions are articles (a, an, the), short prepositions (in, on, to, etc.), and coordinating conjunctions (and, but, or, nor, for, so, yet). However, exception words MUST BE capitalized if they are the FIRST or LAST word in the title.
+- Use Title Case For Every Word following the AP Stylebook guidelines. This means capitalizing the first and last words, as well as all major words (nouns, pronouns, verbs, adjectives, adverbs, and some conjunctions). Do not capitalize articles (a, an, the), prepositions of four or fewer letters (e.g., in, on, to, by), or coordinating conjunctions (and, but, or, nor, for, so, yet) unless they are the first or last word in the title.
 - Count words: must be 3-9 exactly
 - Remove articles ("the", "a", "an") unless absolutely necessary to preserve grammatical correctness and sense
 - Ensure the Title is specific enough that someone could identify this conversation from the title alone
