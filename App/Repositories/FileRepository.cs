@@ -39,6 +39,22 @@ namespace Rift.Repositories
             return await _dbContext.Files.FindAsync(fileId);
         }
 
+        public async Task<List<FileEntityDto>> GetDocumentsByIdsAsync(List<int> ids)
+        {
+            return await _dbContext.Files
+                .Where(f => ids.Contains(f.Id))
+                .Select(f => new FileEntityDto
+                {
+                    Id = f.Id,
+                    Name = f.Name,
+                    CreatedAt = f.CreatedAt,
+                    UploadedBy = f.UploadedBy,
+                    SourceLink = f.SourceLink,
+                    SourceType = f.SourceType
+                })
+                .ToListAsync();
+        }
+
         public async Task<int?> DeleteAsync(int fileId)
         {
             var file = await _dbContext.Files.FindAsync(fileId);

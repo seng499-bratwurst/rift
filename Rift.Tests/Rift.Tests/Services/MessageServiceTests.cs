@@ -13,13 +13,17 @@ namespace Rift.Tests.Services
     public class MessageServiceTests
     {
         private Mock<IMessageRepository> _messageRepositoryMock = null!;
+        private Mock<IMessageFilesRepository> _messageFilesRepositoryMock = null!;
+        private Mock<IFileRepository> _fileRepositoryMock = null!;
         private MessageService _service = null!;
 
         [TestInitialize]
         public void Setup()
         {
             _messageRepositoryMock = new Mock<IMessageRepository>();
-            _service = new MessageService(_messageRepositoryMock.Object);
+            _messageFilesRepositoryMock = new Mock<IMessageFilesRepository>();
+            _fileRepositoryMock = new Mock<IFileRepository>();
+            _service = new MessageService(_messageRepositoryMock.Object, _messageFilesRepositoryMock.Object, _fileRepositoryMock.Object);
         }
 
         [TestMethod]

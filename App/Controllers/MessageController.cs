@@ -16,18 +16,21 @@ public class MessageController : ControllerBase
     private readonly IConversationService _conversationService;
     private readonly IRAGService _ragService;
     private readonly IFileService _fileService;
+    private readonly IMessageFilesService _messageFileService;
 
     public MessageController(
         IMessageService messageService,
         IConversationService conversationService,
         IRAGService ragService,
         IMessageEdgeService messageEdgeService,
-        IFileService fileService
+        IFileService fileService,
+        IMessageFilesService messageFileService
         )
     {
         _messageService = messageService;
         _messageEdgeService = messageEdgeService;
         _ragService = ragService;
+        _messageFileService = messageFileService;
         _conversationService = conversationService;
         _fileService = fileService;
     }
@@ -122,6 +125,8 @@ public class MessageController : ControllerBase
             });
         }
 
+        // Save the files that were used as context for the LLM response message
+        await _messageFileService.InsertMessageFilesAsync(documents, responseMessage.Id);
         await _conversationService.UpdateLastInteractionTime(conversationId);
 
         MessageEdge promptToResponseEdge = await _messageEdgeService.CreateEdgeAsync(new MessageEdge

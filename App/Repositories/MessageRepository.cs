@@ -9,10 +9,12 @@ namespace Rift.Repositories;
 public class MessageRepository : IMessageRepository
 {
     private readonly ApplicationDbContext _context;
+    private readonly FileDbContext _filesDbContext;
 
-    public MessageRepository(ApplicationDbContext context)
+    public MessageRepository(ApplicationDbContext context, FileDbContext filesDbContext)
     {
         _context = context;
+        _filesDbContext = filesDbContext;
     }
 
     public async Task<Message?> GetByIdAsync(string userId, int messageId)

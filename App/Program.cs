@@ -77,6 +77,8 @@ builder.Services.AddScoped<IMessageEdgeService, MessageEdgeService>();
 builder.Services.AddScoped<ICompanyTokenRepository, CompanyTokenRepository>();
 builder.Services.AddScoped<ICompanyTokenService, CompanyTokenService>();
 
+builder.Services.AddScoped<IMessageFilesRepository, MessageFilesRepository>();
+builder.Services.AddScoped<IMessageFilesService, MessageFilesService>();
 
 builder.Services.AddScoped<IRAGService, RAGService>();
 builder.Services.AddScoped<ReRankerClient>();
