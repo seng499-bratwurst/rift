@@ -52,8 +52,9 @@ namespace Rift.Repositories
 
         public async Task<IEnumerable<FileEntityDto>> GetFilesByNamesAsync(IEnumerable<string> names)
         {
-            return await _dbContext.Files
-                .Where(f => names.Contains(f.Name))
+            var nameSet = new HashSet<string>(names);
+            var result = await _dbContext.Files
+                .Where(f => nameSet.Contains(f.Name))
                 .Select(f => new FileEntityDto
                 {
                     Name = f.Name,
@@ -64,6 +65,7 @@ namespace Rift.Repositories
                     SourceType = f.SourceType
                 })
                 .ToListAsync();
+            return result;
         }
     }
 }
