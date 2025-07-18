@@ -8,4 +8,5 @@ public interface IFileRepository
     Task<IEnumerable<FileEntityDto>> GetAllAsync();
     Task<FileEntity?> GetByIdAsync(int fileId);
     Task<int?> DeleteAsync(int fileId);
+    Task<IEnumerable<FileEntityDto>> GetFilesByNamesAsync(IEnumerable<string> names);
 }
