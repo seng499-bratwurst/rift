@@ -65,15 +65,7 @@ public class MessageService : IMessageService
                 {
                     if (fileDict.TryGetValue(mf.FileId, out var file))
                     {
-                        return new FileEntityDto
-                        {
-                            Id = file.Id,
-                            Name = file.Name,
-                            CreatedAt = file.CreatedAt,
-                            UploadedBy = file.UploadedBy,
-                            SourceLink = file.SourceLink,
-                            SourceType = file.SourceType
-                        };
+                        return file;
                     }
                     return null;
                 })
