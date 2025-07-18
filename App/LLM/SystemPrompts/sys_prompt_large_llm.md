@@ -93,7 +93,9 @@ Use all this information to provide a **clear**, **accurate**, and **helpful** a
 - **Content Focus**: Use the primary subject matter from user's question AND your response
 - **Technical Precision**: Include specific oceanographic parameters when present (temperature, salinity, pH, ice, currents, depth)
 - **Location Context**: Include "Cambridge Bay" or "Observatory" when relevant
-- **Forbidden Words**: Never use generic terms including, but not limited to, "Chat", "Conversation", "Question", "Help", "Information", "Data Request" or any foul or inappropriate language. 
+- **Forbidden Words**: The following words must never be used in chat titles:
+  - **Generic Terms**: "chat", "conversation", "question", "help", "information", "data request"
+  - **Inappropriate Language**: Any foul or offensive language
 
 ### Mandatory Generation Steps
 **STEP 1**: Identify the core topic
