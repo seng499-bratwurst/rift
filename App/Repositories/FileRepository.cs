@@ -49,5 +49,21 @@ namespace Rift.Repositories
             }
             return file?.Id;
         }
+
+        public async Task<IEnumerable<FileEntityDto>> GetFilesByNamesAsync(IEnumerable<string> names)
+        {
+            return await _dbContext.Files
+                .Where(f => names.Contains(f.Name))
+                .Select(f => new FileEntityDto
+                {
+                    Name = f.Name,
+                    Id = f.Id,
+                    CreatedAt = f.CreatedAt,
+                    UploadedBy = f.UploadedBy,
+                    SourceLink = f.SourceLink,
+                    SourceType = f.SourceType
+                })
+                .ToListAsync();
+        }
     }
 }

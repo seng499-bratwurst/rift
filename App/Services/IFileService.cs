@@ -8,4 +8,6 @@ public interface IFileService
     Task<IEnumerable<FileEntityDto>> GetAllFilesAsync();
     Task<int?> DeleteFileByIdAsync(int fileId);
     Task<string> ExtractTextAsync(IFormFile file);
+
+    Task<IEnumerable<FileEntityDto>> GetFilesByTitlesAsync(IEnumerable<string> relevantDocTitles);
 }

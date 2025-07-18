@@ -57,14 +57,14 @@ public class SeedFiles
                 }
 
                 var sourceType = document.Metadata?.ContainsKey("source_type") == true ? document.Metadata["source_type"]?.ToString() : null;
-                var sourceLink = document.Metadata?.ContainsKey("source_link") == true ? document.Metadata["source_link"]?.ToString() : string.Empty;
+                var source = document.Metadata?.ContainsKey("source") == true ? document.Metadata["source"]?.ToString() : string.Empty;
 
                 names.Add(name);
                 var fileEntity = new FileEntity
                 {
                     Name = name,
                     UploadedBy = "system",
-                    SourceLink = sourceLink ?? string.Empty,
+                    SourceLink = source ?? string.Empty,
                     SourceType = sourceType ?? string.Empty,
                 };
                 fileEntities.Add(fileEntity);
