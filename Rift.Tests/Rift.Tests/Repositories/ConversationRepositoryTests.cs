@@ -137,5 +137,176 @@ namespace Rift.Tests.Repositories
             var result = await _repository.GetConversationById("user-x", 12345);
             Assert.IsNull(result);
         }
+
+        [TestMethod]
+        public async Task UpdateConversationTitle_UpdatesTitle_WhenConversationExists()
+        {
+            // Arrange
+            var conversation = new Conversation
+            {
+                Id = 1,
+                UserId = "user1",
+                Title = null,
+                FirstInteraction = DateTime.UtcNow,
+                LastInteraction = DateTime.UtcNow
+            };
+            _dbContext.Conversations.Add(conversation);
+            await _dbContext.SaveChangesAsync();
+
+            var newTitle = "Cambridge Bay Temperature Analysis";
+
+            // Act
+            var result = await _repository.UpdateConversationTitle(1, newTitle);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(1, result.Id);
+            Assert.AreEqual(newTitle, result.Title);
+
+            // Verify in database
+            var dbConversation = await _dbContext.Conversations.FindAsync(1);
+            Assert.IsNotNull(dbConversation);
+            Assert.AreEqual(newTitle, dbConversation.Title);
+        }
+
+        [TestMethod]
+        public async Task UpdateConversationTitle_ReturnsNull_WhenConversationDoesNotExist()
+        {
+            // Act
+            var result = await _repository.UpdateConversationTitle(999, "Non Existent Title");
+
+            // Assert
+            Assert.IsNull(result);
+        }
+
+        [TestMethod]
+        public async Task UpdateConversationTitle_UpdatesOnlyTitle_LeavesOtherFieldsUnchanged()
+        {
+            // Arrange
+            var originalTime = DateTime.UtcNow.AddHours(-1);
+            var conversation = new Conversation
+            {
+                Id = 2,
+                UserId = "user2",
+                Title = "Original Title",
+                FirstInteraction = originalTime,
+                LastInteraction = originalTime
+            };
+            _dbContext.Conversations.Add(conversation);
+            await _dbContext.SaveChangesAsync();
+
+            var newTitle = "Ice Conditions Marine Life Impact";
+
+            // Act
+            var result = await _repository.UpdateConversationTitle(2, newTitle);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(2, result.Id);
+            Assert.AreEqual(newTitle, result.Title);
+            Assert.AreEqual("user2", result.UserId);
+            Assert.AreEqual(originalTime.ToString(), result.FirstInteraction.ToString());
+            Assert.AreEqual(originalTime.ToString(), result.LastInteraction.ToString());
+        }
+
+        [TestMethod]
+        public async Task UpdateConversationTitle_HandlesEmptyTitle()
+        {
+            // Arrange
+            var conversation = new Conversation
+            {
+                Id = 3,
+                UserId = "user3",
+                Title = "Original Title",
+                FirstInteraction = DateTime.UtcNow,
+                LastInteraction = DateTime.UtcNow
+            };
+            _dbContext.Conversations.Add(conversation);
+            await _dbContext.SaveChangesAsync();
+
+            // Act
+            var result = await _repository.UpdateConversationTitle(3, "");
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(3, result.Id);
+            Assert.AreEqual("", result.Title);
+        }
+
+        [TestMethod]
+        public async Task UpdateConversationTitle_HandlesNullTitle()
+        {
+            // Arrange
+            var conversation = new Conversation
+            {
+                Id = 4,
+                UserId = "user4",
+                Title = "Original Title",
+                FirstInteraction = DateTime.UtcNow,
+                LastInteraction = DateTime.UtcNow
+            };
+            _dbContext.Conversations.Add(conversation);
+            await _dbContext.SaveChangesAsync();
+
+            // Act
+            var result = await _repository.UpdateConversationTitle(4, null!);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(4, result.Id);
+            Assert.IsNull(result.Title);
+        }
+
+        [TestMethod]
+        public async Task UpdateConversationTitle_HandlesLongTitle()
+        {
+            // Arrange
+            var conversation = new Conversation
+            {
+                Id = 5,
+                UserId = "user5",
+                Title = null,
+                FirstInteraction = DateTime.UtcNow,
+                LastInteraction = DateTime.UtcNow
+            };
+            _dbContext.Conversations.Add(conversation);
+            await _dbContext.SaveChangesAsync();
+
+            var longTitle = new string('A', 500); // Very long title
+
+            // Act
+            var result = await _repository.UpdateConversationTitle(5, longTitle);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(5, result.Id);
+            Assert.AreEqual(longTitle, result.Title);
+        }
+
+        [TestMethod]
+        public async Task UpdateConversationTitle_HandlesSpecialCharacters()
+        {
+            // Arrange
+            var conversation = new Conversation
+            {
+                Id = 6,
+                UserId = "user6",
+                Title = null,
+                FirstInteraction = DateTime.UtcNow,
+                LastInteraction = DateTime.UtcNow
+            };
+            _dbContext.Conversations.Add(conversation);
+            await _dbContext.SaveChangesAsync();
+
+            var titleWithSpecialChars = "Temperature: 2.5°C & Ice Coverage ~85% @Cambridge Bay";
+
+            // Act
+            var result = await _repository.UpdateConversationTitle(6, titleWithSpecialChars);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(6, result.Id);
+            Assert.AreEqual(titleWithSpecialChars, result.Title);
+        }
     }
 }

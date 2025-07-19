@@ -82,7 +82,7 @@ public class MessageController : ControllerBase
         var messageHistory = await _messageService.GetMessagesForConversationAsync(userId, conversationId);
 
         // var llmResponse = await _ragService.GenerateResponseAsync(request.Content, messageHistory);
-        var (llmResponse, relevantDocTitles) = await _ragService.GenerateResponseAsync(request.Content, messageHistory);
+        var (llmResponse, relevantDocTitles, conversationTitle) = await _ragService.GenerateResponseAsync(request.Content, messageHistory);
 
 
         // Create the message with the users prompt
@@ -113,6 +113,12 @@ public class MessageController : ControllerBase
                 Error = "Failed to create messages.",
                 Data = null
             });
+        }
+
+        // Update conversation title if conversation title was extracted from LLM response and conversation doesn't already have a title
+        if (!string.IsNullOrWhiteSpace(conversationTitle) && string.IsNullOrEmpty(conversation.Title))
+        {
+            await _conversationService.UpdateConversationTitle(conversationId, conversationTitle);
         }
 
         await _conversationService.UpdateLastInteractionTime(conversationId);
@@ -193,7 +199,7 @@ public class MessageController : ControllerBase
         var messageHistory = await _messageService.GetGuestMessagesForConversationAsync(sessionId, conversationId);
 
         // var llmResponse = await _ragService.GenerateResponseAsync(request.Content, messageHistory);
-        var (llmResponse, relevantDocTitles) = await _ragService.GenerateResponseAsync(request.Content, messageHistory);
+        var (llmResponse, relevantDocTitles, conversationTitle) = await _ragService.GenerateResponseAsync(request.Content, messageHistory);
 
         // Store the user's message
         var promptMessage = await _messageService.CreateMessageAsync(
@@ -223,6 +229,12 @@ public class MessageController : ControllerBase
                 Error = "Failed to create messages.",
                 Data = null
             });
+        }
+
+        // Update conversation title if conversation title was extracted from LLM response and conversation doesn't already have a title
+        if (!string.IsNullOrWhiteSpace(conversationTitle) && string.IsNullOrEmpty(conversation.Title))
+        {
+            await _conversationService.UpdateConversationTitle(conversationId, conversationTitle);
         }
 
         await _conversationService.UpdateLastInteractionTime(conversationId);

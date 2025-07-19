@@ -25,7 +25,7 @@ public class RAGService : IRAGService
         _responseProcessor = responseProcessor;
     }
 
-    public async Task<(string cleanedResponse, List<string> relevantDocTitles)> GenerateResponseAsync(string userQuery, List<Message>? messageHistory)
+    public async Task<(string cleanedResponse, List<string> relevantDocTitles, string? conversationTitle)> GenerateResponseAsync(string userQuery, List<Message>? messageHistory)
     {
         messageHistory ??= new List<Message>();
 
@@ -61,8 +61,8 @@ public class RAGService : IRAGService
 
         var finalResponse = await _llmProvider.GenerateFinalResponseRAG(prompt);
 
-        var cleanedResponse = _responseProcessor.ProcessResponse(finalResponse);
+        var (cleanedResponse, conversationTitle) = _responseProcessor.ProcessResponse(finalResponse);
 
-        return (cleanedResponse, relevantDocTitles);
+        return (cleanedResponse, relevantDocTitles, conversationTitle);
     }
 }

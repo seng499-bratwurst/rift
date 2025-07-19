@@ -102,4 +102,20 @@ public class ConversationRepository : IConversationRepository
 
         return conversation;
     }
+
+    public async Task<Conversation?> UpdateConversationTitle(int conversationId, string title)
+    {
+        var conversation = await _context.Conversations
+          .FirstOrDefaultAsync(c => c.Id == conversationId);
+
+        if (conversation == null)
+        {
+            return null;
+        }
+
+        conversation.Title = title;
+        await _context.SaveChangesAsync();
+
+        return conversation;
+    }
 }

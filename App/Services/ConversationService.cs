@@ -60,4 +60,9 @@ public class ConversationService : IConversationService
     {
         return await _repository.UpdateLastInteractionTime(conversationId);
     }
+
+    public async Task<Conversation?> UpdateConversationTitle(int conversationId, string title)
+    {
+        return await _repository.UpdateConversationTitle(conversationId, title);
+    }
 }

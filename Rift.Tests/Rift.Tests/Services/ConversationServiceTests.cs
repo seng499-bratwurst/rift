@@ -172,5 +172,51 @@ namespace Rift.Tests.Services
 
             Assert.IsNull(result);
         }
+
+        [TestMethod]
+        public async Task UpdateConversationTitle_ReturnsConversation_WhenFound()
+        {
+            int conversationId = 42;
+            string title = "Cambridge Bay Temperature Analysis";
+            var updatedConversation = new Conversation { Id = conversationId, Title = title };
+            _repositoryMock.Setup(r => r.UpdateConversationTitle(conversationId, title)).ReturnsAsync(updatedConversation);
+
+            var result = await _service.UpdateConversationTitle(conversationId, title);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(conversationId, result.Id);
+            Assert.AreEqual(title, result.Title);
+        }
+
+        [TestMethod]
+        public async Task UpdateConversationTitle_ReturnsNull_WhenNotFound()
+        {
+            int conversationId = 404;
+            string title = "Non Existent Conversation";
+            _repositoryMock.Setup(r => r.UpdateConversationTitle(conversationId, title)).ReturnsAsync((Conversation?)null);
+
+            var result = await _service.UpdateConversationTitle(conversationId, title);
+
+            Assert.IsNull(result);
+        }
+
+        [TestMethod]
+        public async Task UpdateConversationTitle_UpdatesTitle_WithValidData()
+        {
+            int conversationId = 15;
+            string originalTitle = "Old Title";
+            string newTitle = "Ice Conditions Marine Life Impact";
+            var conversation = new Conversation { Id = conversationId, Title = originalTitle };
+            var updatedConversation = new Conversation { Id = conversationId, Title = newTitle };
+            
+            _repositoryMock.Setup(r => r.UpdateConversationTitle(conversationId, newTitle)).ReturnsAsync(updatedConversation);
+
+            var result = await _service.UpdateConversationTitle(conversationId, newTitle);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(conversationId, result.Id);
+            Assert.AreEqual(newTitle, result.Title);
+            Assert.AreNotEqual(originalTitle, result.Title);
+        }
     }
 }
