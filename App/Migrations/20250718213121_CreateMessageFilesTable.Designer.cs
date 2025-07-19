@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -10,9 +11,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Rift.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250718213121_CreateMessageFilesTable")]
+    partial class CreateMessageFilesTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -197,43 +200,6 @@ namespace Rift.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Conversations");
-                });
-
-            modelBuilder.Entity("Rift.Models.FileEntityDto", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int?>("MessageId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("SourceLink")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("SourceType")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("UploadedBy")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MessageId");
-
-                    b.ToTable("FileEntityDto");
                 });
 
             modelBuilder.Entity("Rift.Models.Message", b =>
@@ -468,13 +434,6 @@ namespace Rift.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Rift.Models.FileEntityDto", b =>
-                {
-                    b.HasOne("Rift.Models.Message", null)
-                        .WithMany("Documents")
-                        .HasForeignKey("MessageId");
-                });
-
             modelBuilder.Entity("Rift.Models.Message", b =>
                 {
                     b.HasOne("Rift.Models.Conversation", "Conversation")
@@ -512,8 +471,6 @@ namespace Rift.Migrations
 
             modelBuilder.Entity("Rift.Models.Message", b =>
                 {
-                    b.Navigation("Documents");
-
                     b.Navigation("IncomingEdges");
 
                     b.Navigation("OutgoingEdges");

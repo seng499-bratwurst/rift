@@ -13,7 +13,9 @@ namespace Rift.Tests.Repositories
     public class MessageRepositoryTests
     {
         private DbContextOptions<ApplicationDbContext> _dbOptions = null!;
+        private DbContextOptions<FileDbContext> _fileDbOptions = null!;
         private ApplicationDbContext _dbContext = null!;
+        private FileDbContext _fileDbContext = null!;
         private MessageRepository _repository = null!;
 
         [TestInitialize]
@@ -22,8 +24,12 @@ namespace Rift.Tests.Repositories
             _dbOptions = new DbContextOptionsBuilder<ApplicationDbContext>()
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;
+            _fileDbOptions = new DbContextOptionsBuilder<FileDbContext>()
+                .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
+                .Options;
             _dbContext = new ApplicationDbContext(_dbOptions);
-            _repository = new MessageRepository(_dbContext);
+            _fileDbContext = new FileDbContext(_fileDbOptions);
+            _repository = new MessageRepository(_dbContext, _fileDbContext);
         }
 
         [TestCleanup]

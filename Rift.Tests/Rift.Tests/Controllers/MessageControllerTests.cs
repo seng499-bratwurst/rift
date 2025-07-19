@@ -21,6 +21,7 @@ namespace Rift.Tests
         private Mock<IConversationService> _conversationServiceMock;
         private Mock<IRAGService> _ragServiceMock;
         private Mock<IFileService> _fileServiceMock;
+        private Mock<IMessageFilesService> _messageFilesServiceMock;
         [TestInitialize]
         public void Setup()
         {
@@ -29,6 +30,7 @@ namespace Rift.Tests
             _conversationServiceMock = new Mock<IConversationService>();
             _ragServiceMock = new Mock<IRAGService>();
             _fileServiceMock = new Mock<IFileService>();
+            _messageFilesServiceMock = new Mock<IMessageFilesService>();
         }
 
         private MessageController CreateControllerWithUser(string userId)
@@ -43,7 +45,8 @@ namespace Rift.Tests
                 _conversationServiceMock.Object,
                 _ragServiceMock.Object,
                 _messageEdgeServiceMock.Object,
-                _fileServiceMock.Object
+                _fileServiceMock.Object,
+                _messageFilesServiceMock.Object
             );
             controller.ControllerContext = new ControllerContext
             {
@@ -59,7 +62,8 @@ namespace Rift.Tests
                 _conversationServiceMock.Object,
                 _ragServiceMock.Object,
                 _messageEdgeServiceMock.Object,
-                _fileServiceMock.Object
+                _fileServiceMock.Object,
+                _messageFilesServiceMock.Object
             );
             controller.ControllerContext = new ControllerContext
             {

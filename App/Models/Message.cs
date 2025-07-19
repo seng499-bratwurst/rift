@@ -19,6 +19,7 @@ public class Message
     public Message? PromptMessage { get; set; }
     public ICollection<MessageEdge> OutgoingEdges { get; set; } = new List<MessageEdge>();
     public ICollection<MessageEdge> IncomingEdges { get; set; } = new List<MessageEdge>();
+    public ICollection<FileEntityDto> Documents { get; set; } = new List<FileEntityDto>();
 
 }
 
