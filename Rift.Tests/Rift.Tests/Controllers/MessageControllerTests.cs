@@ -20,10 +20,7 @@ namespace Rift.Tests
         private Mock<IMessageEdgeService> _messageEdgeServiceMock;
         private Mock<IConversationService> _conversationServiceMock;
         private Mock<IRAGService> _ragServiceMock;
-
-
-
-
+        private Mock<IFileService> _fileServiceMock;
         [TestInitialize]
         public void Setup()
         {
@@ -31,6 +28,7 @@ namespace Rift.Tests
             _messageEdgeServiceMock = new Mock<IMessageEdgeService>();
             _conversationServiceMock = new Mock<IConversationService>();
             _ragServiceMock = new Mock<IRAGService>();
+            _fileServiceMock = new Mock<IFileService>();
         }
 
         private MessageController CreateControllerWithUser(string userId)
@@ -44,8 +42,8 @@ namespace Rift.Tests
                 _messageServiceMock.Object,
                 _conversationServiceMock.Object,
                 _ragServiceMock.Object,
-                _messageEdgeServiceMock.Object
-                // _rateLimitingServiceMock.Object  // Inject the rate limiting service mock
+                _messageEdgeServiceMock.Object,
+                _fileServiceMock.Object
             );
             controller.ControllerContext = new ControllerContext
             {
@@ -60,8 +58,8 @@ namespace Rift.Tests
                 _messageServiceMock.Object,
                 _conversationServiceMock.Object,
                 _ragServiceMock.Object,
-                _messageEdgeServiceMock.Object
-                // _rateLimitingServiceMock.Object  // Inject the rate limiting service mock
+                _messageEdgeServiceMock.Object,
+                _fileServiceMock.Object
             );
             controller.ControllerContext = new ControllerContext
             {

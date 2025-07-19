@@ -14,15 +14,22 @@ public class MessageController : ControllerBase
     private readonly IMessageService _messageService;
     private readonly IMessageEdgeService _messageEdgeService;
     private readonly IConversationService _conversationService;
-
     private readonly IRAGService _ragService;
+    private readonly IFileService _fileService;
 
-    public MessageController(IMessageService messageService, IConversationService conversationService, IRAGService ragService, IMessageEdgeService messageEdgeService)
+    public MessageController(
+        IMessageService messageService,
+        IConversationService conversationService,
+        IRAGService ragService,
+        IMessageEdgeService messageEdgeService,
+        IFileService fileService
+        )
     {
         _messageService = messageService;
         _messageEdgeService = messageEdgeService;
         _ragService = ragService;
         _conversationService = conversationService;
+        _fileService = fileService;
     }
 
     /// <summary>
@@ -84,6 +91,7 @@ public class MessageController : ControllerBase
         // var llmResponse = await _ragService.GenerateResponseAsync(request.Content, messageHistory);
         var (llmResponse, relevantDocTitles, conversationTitle) = await _ragService.GenerateResponseAsync(request.Content, messageHistory);
 
+        var documents = await _fileService.GetFilesByTitlesAsync(relevantDocTitles);
 
         // Create the message with the users prompt
         var promptMessage = await _messageService.CreateMessageAsync(
@@ -148,7 +156,7 @@ public class MessageController : ControllerBase
             Data = new
             {
                 ConversationId = conversationId,
-                RelevantDocTitles = relevantDocTitles,
+                Documents = documents,
                 Response = llmResponse,
                 PromptMessageId = promptMessage?.Id,
                 ResponseMessageId = responseMessage?.Id,
@@ -200,6 +208,8 @@ public class MessageController : ControllerBase
 
         // var llmResponse = await _ragService.GenerateResponseAsync(request.Content, messageHistory);
         var (llmResponse, relevantDocTitles, conversationTitle) = await _ragService.GenerateResponseAsync(request.Content, messageHistory);
+
+        var documents = await _fileService.GetFilesByTitlesAsync(relevantDocTitles);
 
         // Store the user's message
         var promptMessage = await _messageService.CreateMessageAsync(
@@ -264,7 +274,7 @@ public class MessageController : ControllerBase
             Data = new
             {
                 Response = llmResponse,
-                RelevantDocTitles = relevantDocTitles,
+                Documents = documents,
                 SessionId = sessionId,
                 PromptMessageId = promptMessage?.Id,
                 ResponseMessageId = responseMessage?.Id,

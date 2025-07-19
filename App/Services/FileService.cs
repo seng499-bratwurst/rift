@@ -69,4 +69,12 @@ public class FileService : IFileService
         }
         return string.Empty;
     }
+
+    public async Task<IEnumerable<FileEntityDto>> GetFilesByTitlesAsync(IEnumerable<string> relevantDocTitles)
+    {
+        if (relevantDocTitles == null || !relevantDocTitles.Any())
+            return Enumerable.Empty<FileEntityDto>();
+
+        return await _fileRepository.GetFilesByNamesAsync(relevantDocTitles);
+    }
 }
