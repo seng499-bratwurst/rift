@@ -142,6 +142,14 @@ public class AuthController : ControllerBase
         });
     }
 
+    [HttpPost("logout")]
+    [Authorize]
+    public IActionResult Logout()
+    {
+        Response.Cookies.Delete("jwt");
+        return Ok(new { message = "Logged out successfully." });
+    }
+
     private void SetJwtCookie(string jwt)
     {
         Response.Cookies.Append("jwt", jwt, new CookieOptions
