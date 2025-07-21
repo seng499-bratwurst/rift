@@ -80,6 +80,8 @@ builder.Services.AddScoped<ICompanyTokenService, CompanyTokenService>();
 builder.Services.AddScoped<IMessageFilesRepository, MessageFilesRepository>();
 builder.Services.AddScoped<IMessageFilesService, MessageFilesService>();
 
+builder.Services.AddScoped<IFileMetricsService, FileMetricsService>();
+
 builder.Services.AddScoped<IRAGService, RAGService>();
 builder.Services.AddScoped<ReRankerClient>();
 builder.Services.AddScoped<ResponseProcessor>();
