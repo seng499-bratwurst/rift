@@ -14,6 +14,7 @@ public class ApplicationDbContext : IdentityDbContext<User>
     public DbSet<MessageEdge> MessageEdges { get; set; }
 
     public DbSet<CompanyAPITokens> CompanyAPITokens { get; set; }
+    public DbSet<MessageFiles> MessageFiles { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

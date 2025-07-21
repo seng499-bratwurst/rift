@@ -3,6 +3,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using Rift.App.Models;
+using Rift.LLM.FunctionCalls;
 
 namespace Rift.LLM
 {
@@ -17,6 +18,7 @@ namespace Rift.LLM
         private readonly string _oncModelName;
         private readonly string _finalModelName;
         private readonly OncFunctionParser _parser;
+        // private readonly OncAPI _oncApiClient;
 
         /// <summary>
         /// Constructor reads values from appsettings.json
@@ -35,144 +37,150 @@ namespace Rift.LLM
             // }
             _apiKey = config["LLMSettings:GoogleGemma:ApiKey"] ?? throw new ArgumentNullException("GoogleGemma ApiKey missing in config");
             _endpoint = config["LLMSettings:GoogleGemma:Endpoint"] ?? throw new ArgumentNullException("GoogleGemma Endpoint missing in config");
-            _oncModelName = config["LLMSettings:GoogleGemma:ONCModelName"] ?? "gemma-3n-e4b-it";
-            _finalModelName = config["LLMSettings:GoogleGemma:FinalModelName"] ?? "gemini-2.5-flash";
+            _oncModelName = config["LLMSettings:GoogleGemma:ONCModelName"] ?? "gemini-2.5-flash";
+            _finalModelName = config["LLMSettings:GoogleGemma:FinalModelName"] ?? "gemini-2.5-pro";
             _parser = parser;
         }
 
         /// <summary>
-        /// Sends a prompt to the Gemma 3n model to generate an ONC API call.
+        /// Sends a the user prompt to the google 2.5 flash to generate an ONC API call if needed.
         /// </summary>
         public async Task<string> GatherOncAPIData(string prompt)
         {
+            // read the system prompt from the file
             string systemPrompt;
-            // All property codes from the Cambridge Bay observatory
-            string[] propertyCodes = {
-                "absolutebarometricpressure",
-                "absolutehumidity", 
-                "airdensity",
-                "airtemperature",
-                "dewpoint",
-                "magneticheading",
-                "mixingratio",
-                "relativebarometricpressure",
-                "relativehumidity",
-                "solarradiation",
-                "specificenthalpy",
-                "wetbulbtemperature",
-                "windchilltemperature",
-                "winddirection",
-                "windspeed",
-                "conductivity",
-                "density",
-                "oxygen",
-                "pressure",
-                "salinity",
-                "seawatertemperature",
-                "soundspeed",
-                "turbidityntu",
-                "chlorophyll",
-                "icedraft",
-                "parphotonbased",
-                "ph",
-                "sigmatheta"
+            systemPrompt = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "LLM/SystemPrompts", "onc_sys_prompt.md"));
+            
+            // Current date and time in the format of yyyy-MM-ddTHH:mm:ss.fffZ
+            string currentDate = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
+
+            // create the messages list for function call looping and adding the current date and time to the system prompt
+            var messages = new List<object>{
+                new { role = "system", content = systemPrompt+$"\n\nCurrent Date and Time: {currentDate}" },
+                new { role = "user", content = prompt }
             };
 
-            string pattern = @"\b(" + string.Join("|", propertyCodes) + @")\b";
-            Regex regex = new Regex(pattern, RegexOptions.IgnoreCase);
-
-            bool hasPropertyCode = regex.IsMatch(prompt);
-
-            if (hasPropertyCode){
-                // Console.WriteLine("using filter4.md");
-                systemPrompt = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "LLM/SystemPrompts", "filter4.md"));
-            }else{
-                // Console.WriteLine("using function_call_required_or_not.md");
-                systemPrompt = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "LLM/SystemPrompts", "function_call_required_or_not.md"));
-            }
-            var payload = new
-            {
-                model = _oncModelName,
-                messages = new[]
+            // infinite loop through the messages list and call the ONC API if needed, only break out of the loop when the LLM thinks the user prompt is answered
+            // tools: scalardata_location, locations_tree, deployments, devices, properties
+            while (true){
+                object? generalResponse = null;
+                var payload = new
                 {
-                    new { role = "user", content = systemPrompt },
-                    new { role = "user", content = prompt }
-                }
-            };
-
-            var json = JsonSerializer.Serialize(payload);
-
-            var request = new HttpRequestMessage(HttpMethod.Post, _endpoint)
-            {
-                Content = new StringContent(json, Encoding.UTF8, "application/json")
-            };
-            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
-
-            var response = await _httpClient.SendAsync(request);
-    
-            if (!response.IsSuccessStatusCode)
-            {
-                var errorContent = await response.Content.ReadAsStringAsync();
-                throw new HttpRequestException("Failed to Generate ONC data using small LLM:\n" +
-                $"Status Code:{response.StatusCode}\nError: {errorContent}\n");
-            }
-
-            response.EnsureSuccessStatusCode();
-
-            var responseContent = await response.Content.ReadAsStringAsync();
-
-            using var doc = JsonDocument.Parse(responseContent);
-
-            // OpenAI-compatible response: { "choices": [ { "message": { "content": "..." } } ] }
-            var content = doc.RootElement
-                .GetProperty("choices")[0]
-                .GetProperty("message")
-                .GetProperty("content")
-                .GetString();
-
-            Console.WriteLine($"Content: {content}");
-
-    
-            var match = Regex.Match(content!, @"\{(?:[^{}]|(?<open>\{)|(?<-open>\}))*\}(?(open)(?!))", RegexOptions.Singleline);
-
-            object? generalResponse = null;
-
-            if (!match.Success)
-            {
-                generalResponse = new {
-                    response = content,
-                    message = "ONC API call not required. Answer based on the user prompt."
+                    // LLM Model: google 2.5 flash
+                    model = _oncModelName,
+                    // messages: the user prompt and the assistant's response (list)
+                    messages = messages,
+                    // tools are defined in the Tools.cs file under the FunctionCalls
+                    tools = Tools.GetTools(),
+                    // auto is the default choice for the LLM to decide when and which tool to call or not call at any tool
+                    tool_choice = "auto",
+                    // using the temperature as 0.2 to make the LLM more reliable for tool calls
+                    temperature = 0.2
                 };
-            }else
-            {
-                String LLMContentFiltered = match.Value;
-                // Console.WriteLine($"Filtered Content: {LLMContentFiltered}");
 
-                using var innerDoc = JsonDocument.Parse(LLMContentFiltered);
-                bool useFunction = innerDoc.RootElement.GetProperty("use_function").GetBoolean();
+                // creating the curl request and sending a post request 
 
-                if (!useFunction)
+                var json = JsonSerializer.Serialize(payload);
+                var request = new HttpRequestMessage(HttpMethod.Post, _endpoint)
                 {
-                    generalResponse = new {
-                        message = "ONC API call not required. Answer based on the user prompt."
-                    };
+                    Content = new StringContent(json, Encoding.UTF8, "application/json")
+                };
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
+                var response = await _httpClient.SendAsync(request);
+                // Console.WriteLine($"Response: {response}");
+                if (!response.IsSuccessStatusCode)
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    throw new HttpRequestException("Failed to Generate ONC data using small LLM:\n" +
+                    $"Status Code:{response.StatusCode}\nError: {errorContent}\n");
+                }
+                response.EnsureSuccessStatusCode();
 
+                var responseContent = await response.Content.ReadAsStringAsync();
+                // Console.WriteLine($"Response Content: {responseContent}");
+
+                using var doc = JsonDocument.Parse(responseContent);
+                var message = doc.RootElement.GetProperty("choices")[0].GetProperty("message");
+                string? content;
+                string? functionCallName;
+                string? functionCallParams;
+                // if the response has tool_calls, then we need to call the ONC API
+                if (message.TryGetProperty("tool_calls", out var toolCalls) && toolCalls.GetArrayLength() > 0){
+                    functionCallName = toolCalls[0].GetProperty("function").GetProperty("name").GetString();
+                    if (functionCallName == null)
+                    {
+                        throw new Exception("Function Call Name is null");
+                    }
+                    // Console.WriteLine($"Function Call Name: {functionCallName}");
+                    functionCallParams = toolCalls[0].GetProperty("function").GetProperty("arguments").GetString();
+                    if (functionCallParams == null)
+                    {
+                        throw new Exception("Function Call Params is null");
+                    }
+                    // adding the tool call to the messages list (as the assistant)
+                    messages.Add(new {
+                        role = "assistant",
+                        tool_calls = new[]
+                        {
+                            new {
+                            function = new {
+                                arguments = functionCallParams,
+                                name = functionCallName,
+                            },
+                            id = functionCallName,
+                            type = "function"
+                            }
+                        }
+                    });
+
+                    // Console.WriteLine($"Function Call Params: {functionCallParams}");
+
+                    // extracting the function name and parameters from the tool call
+                    var (functionName, functionParams) = _parser.ExtractFunctionAndQueries(functionCallName, functionCallParams);
+                    // Console.WriteLine($"Function Name: {functionName}");
+                    // Console.WriteLine($"Function Params: {functionParams}");
+
+                    // calling the ONC API
+                    var result = await _parser.OncAPICall(functionName, functionParams);
+
+                    // adding the result to the messages list (as the tool)
+                    messages.Add(new {
+                        tool_call_id = functionCallName,
+                        role = "tool",
+                        name = functionCallName,
+                        content = result,
+                    });
+                    //  Console.WriteLine($"MESSAGES: {messages}");
+
+                    // continue the loop
+                    continue;
+                    
+                }
+                // if the response has content, it means the LLM has answered the user prompt and no more tool calls are needed
+                else if (message.TryGetProperty("content", out var contentElement))
+                {
+                    content = contentElement.GetString();
+                    if (content == null)
+                    {
+                        throw new Exception("Content is null");
+                    }
+                    // Console.WriteLine($"Content: {content}");
+
+                    // creating the general response object 
+                    generalResponse = new {
+                        response = content,
+                        message = "Response from the ONC API Assistant."
+                    };
+                    // returning the general response in json format
                     return JsonSerializer.Serialize(generalResponse);
                 }
-                else if (useFunction)
-                {
-                    var (functionName, functionParams) = _parser.ExtractFunctionAndQueries(LLMContentFiltered);
-                    return await _parser.OncAPICall(functionName, functionParams);
-                }
-            }
-            
-            return JsonSerializer.Serialize(generalResponse);
+            };
         }
 
         /// <summary>
         /// Sends a prompt and ONC API response to the Gemma 3n model to generate a final user-facing answer.
         /// </summary>
-        /// !!! DEPRECATED !!!
+        /// !!! DEPRECATED  !!!
         /// The message pipeline from the frontend uses the GenerateFinalResponseRAG method instead.
         /// Just keeping this so Ishan is happy :)
         public async Task<string> GenerateFinalResponse(string prompt, JsonElement onc_api_response)
