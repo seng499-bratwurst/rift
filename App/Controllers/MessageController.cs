@@ -4,6 +4,8 @@ using System.Security.Claims;
 using Rift.Models;
 using Rift.Services;
 using Microsoft.AspNetCore.RateLimiting;
+using System.Text;
+using System.Text.Json;
 
 namespace Rift.Controllers;
 
@@ -81,8 +83,12 @@ public class MessageController : ControllerBase
 
         var messageHistory = await _messageService.GetMessagesForConversationAsync(userId, conversationId);
 
-        var llmResponse = await _ragService.GenerateResponseAsync(request.Content, messageHistory);
+        // Check if client wants streaming
+        var acceptHeader = Request.Headers["Accept"].ToString();
+        bool wantsStreaming = acceptHeader.Contains("text/event-stream");
+        wantsStreaming = true;
 
+        var llmResponse = await _ragService.GenerateResponseAsync(request.Content, messageHistory);
 
         // Create the message with the users prompt
         var promptMessage = await _messageService.CreateMessageAsync(
@@ -134,19 +140,36 @@ public class MessageController : ControllerBase
             )).ToArray();
         }
 
-        return Ok(new ApiResponse<object>
+        if (wantsStreaming)
         {
-            Success = true,
-            Error = null,
-            Data = new
+            // Set up Server-Sent Events headers
+            Response.Headers["Content-Type"] = "text/event-stream";
+            Response.Headers["Cache-Control"] = "no-cache";
+            Response.Headers["Connection"] = "keep-alive";
+            Response.Headers["Access-Control-Allow-Origin"] = "*";
+
+            await StreamResponseWithSameFormat(llmResponse, conversationId, promptMessage?.Id, responseMessage?.Id, 
+                                              (new[] { promptToResponseEdge }).Concat(edges).ToArray());
+            
+            return new EmptyResult();
+        }
+        else
+        {
+            // Non-streaming response (original behavior)
+            return Ok(new ApiResponse<object>
             {
-                ConversationId = conversationId,
-                Response = llmResponse,
-                PromptMessageId = promptMessage?.Id,
-                ResponseMessageId = responseMessage?.Id,
-                CreatedEdges = (new[] { promptToResponseEdge }).Concat(edges).ToArray(),
-            }
-        });
+                Success = true,
+                Error = null,
+                Data = new
+                {
+                    ConversationId = conversationId,
+                    Response = llmResponse,
+                    PromptMessageId = promptMessage?.Id,
+                    ResponseMessageId = responseMessage?.Id,
+                    CreatedEdges = (new[] { promptToResponseEdge }).Concat(edges).ToArray(),
+                }
+            });
+        }
     }
 
     /// <summary>
@@ -189,6 +212,11 @@ public class MessageController : ControllerBase
         var conversationId = conversation!.Id;
 
         var messageHistory = await _messageService.GetGuestMessagesForConversationAsync(sessionId, conversationId);
+
+        // Check if client wants streaming
+        var acceptHeader = Request.Headers["Accept"].ToString();
+        bool wantsStreaming = acceptHeader.Contains("text/event-stream");
+        wantsStreaming = true;
 
         var llmResponse = await _ragService.GenerateResponseAsync(request.Content, messageHistory);
 
@@ -242,19 +270,36 @@ public class MessageController : ControllerBase
             )).ToArray();
         }
 
-        return Ok(new ApiResponse<object>
+        if (wantsStreaming)
         {
-            Success = true,
-            Error = null,
-            Data = new
+            // Set up Server-Sent Events headers
+            Response.Headers["Content-Type"] = "text/event-stream";
+            Response.Headers["Cache-Control"] = "no-cache";
+            Response.Headers["Connection"] = "keep-alive";
+            Response.Headers["Access-Control-Allow-Origin"] = "*";
+
+            await StreamGuestResponseWithSameFormat(llmResponse, sessionId, promptMessage?.Id, responseMessage?.Id, 
+                                                   (new[] { promptToResponseEdge }).Concat(edges).ToArray());
+            
+            return new EmptyResult();
+        }
+        else
+        {
+            // Non-streaming response (original behavior)
+            return Ok(new ApiResponse<object>
             {
-                Response = llmResponse,
-                SessionId = sessionId,
-                PromptMessageId = promptMessage?.Id,
-                ResponseMessageId = responseMessage?.Id,
-                CreatedEdges = (new[] { promptToResponseEdge }).Concat(edges).ToArray(),
-            }
-        });
+                Success = true,
+                Error = null,
+                Data = new
+                {
+                    Response = llmResponse,
+                    SessionId = sessionId,
+                    PromptMessageId = promptMessage?.Id,
+                    ResponseMessageId = responseMessage?.Id,
+                    CreatedEdges = (new[] { promptToResponseEdge }).Concat(edges).ToArray(),
+                }
+            });
+        }
     }
 
     [HttpGet("conversations/{conversationId}/messages")]
@@ -426,6 +471,94 @@ public class MessageController : ControllerBase
         /// Indicates whether the message was helpful. True for thumbs up (helpful), false for thumbs down (not helpful).
         /// </summary>
         public bool IsHelpful { get; set; }
+    }
+
+    private async Task StreamResponseWithSameFormat(string fullResponse, int conversationId, int? promptMessageId, int? responseMessageId, MessageEdge[] createdEdges)
+    {
+        var words = fullResponse.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        var streamedContent = new StringBuilder();
+
+        for (int i = 0; i < words.Length; i++)
+        {
+            var word = words[i];
+            if (i > 0) streamedContent.Append(" ");
+            streamedContent.Append(word);
+
+            // Create the same response format as the original, but with progressive content
+            var progressiveResponse = new ApiResponse<object>
+            {
+                Success = true,
+                Error = null,
+                Data = new
+                {
+                    ConversationId = conversationId,
+                    Response = streamedContent.ToString(),
+                    PromptMessageId = promptMessageId,
+                    ResponseMessageId = responseMessageId,
+                    CreatedEdges = createdEdges.Select(e => new { e.Id, e.SourceMessageId, e.TargetMessageId, e.SourceHandle, e.TargetHandle }).ToArray(),
+                    IsStreaming = true,
+                    IsComplete = i == words.Length - 1
+                }
+            };
+
+            // Send as Server-Sent Event
+            var jsonResponse = JsonSerializer.Serialize(progressiveResponse);
+            await SendSSEEvent("message", jsonResponse);
+            
+            // Add small delay between words for streaming effect
+            await Task.Delay(50);
+        }
+
+        // Send final close event
+        await SendSSEEvent("close", "");
+    }
+
+    private async Task StreamGuestResponseWithSameFormat(string fullResponse, string sessionId, int? promptMessageId, int? responseMessageId, MessageEdge[] createdEdges)
+    {
+        var words = fullResponse.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        var streamedContent = new StringBuilder();
+
+        for (int i = 0; i < words.Length; i++)
+        {
+            var word = words[i];
+            if (i > 0) streamedContent.Append(" ");
+            streamedContent.Append(word);
+
+            // Create the same response format as the original guest response, but with progressive content
+            var progressiveResponse = new ApiResponse<object>
+            {
+                Success = true,
+                Error = null,
+                Data = new
+                {
+                    Response = streamedContent.ToString(),
+                    SessionId = sessionId,
+                    PromptMessageId = promptMessageId,
+                    ResponseMessageId = responseMessageId,
+                    CreatedEdges = createdEdges.Select(e => new { e.Id, e.SourceMessageId, e.TargetMessageId, e.SourceHandle, e.TargetHandle }).ToArray(),
+                    IsStreaming = true,
+                    IsComplete = i == words.Length - 1
+                }
+            };
+
+            // Send as Server-Sent Event
+            var jsonResponse = JsonSerializer.Serialize(progressiveResponse);
+            await SendSSEEvent("message", jsonResponse);
+            
+            // Add small delay between words for streaming effect
+            await Task.Delay(50);
+        }
+
+        // Send final close event
+        await SendSSEEvent("close", "");
+    }
+
+    private async Task SendSSEEvent(string eventType, string data)
+    {
+        var eventData = $"event: {eventType}\ndata: {data}\n\n";
+        var bytes = Encoding.UTF8.GetBytes(eventData);
+        await Response.Body.WriteAsync(bytes, 0, bytes.Length);
+        await Response.Body.FlushAsync();
     }
 
 }
