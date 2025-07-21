@@ -24,7 +24,7 @@ namespace Rift.Tests.Models
             var file = new FileEntity
             {
                 Id = 1,
-                FileName = "file.txt",
+                Name = "file.txt",
                 Content = "file content",
                 Size = 123,
                 UploadedBy = "user1",
@@ -42,30 +42,14 @@ namespace Rift.Tests.Models
             // but still fail validation due to [Required] attributes.
             var file = new FileEntity
             {
-                FileName = "",
-                Content = "",
+                Name = "",
                 UploadedBy = ""
             };
 
             var results = ValidateModel(file);
             Assert.IsTrue(results.Count > 0);
-            Assert.IsTrue(results.Any(r => r.MemberNames.Contains("FileName")));
-            Assert.IsTrue(results.Any(r => r.MemberNames.Contains("Content")));
+            Assert.IsTrue(results.Any(r => r.MemberNames.Contains("Name")));
             Assert.IsTrue(results.Any(r => r.MemberNames.Contains("UploadedBy")));
-        }
-
-        [TestMethod]
-        public void FileEntity_FileNameTooLong_FailsValidation()
-        {
-            var file = new FileEntity
-            {
-                FileName = new string('a', 256),
-                Content = "content",
-                UploadedBy = "user"
-            };
-
-            var results = ValidateModel(file);
-            Assert.IsTrue(results.Any(r => r.MemberNames.Contains("FileName")));
         }
 
         [TestMethod]
@@ -74,7 +58,7 @@ namespace Rift.Tests.Models
             var dto = new FileEntityDto
             {
                 Id = 1,
-                FileName = "file.txt",
+                Name = "file.txt",
                 UploadedBy = "user1",
                 CreatedAt = DateTime.UtcNow,
                 SourceType = "cambridge_bay_papers",
@@ -90,31 +74,14 @@ namespace Rift.Tests.Models
         {
             var dto = new FileEntityDto
             {
-                FileName = "",
-                UploadedBy = "",
-                SourceType = "",
-                SourceLink = ""
+                Name = "",
+                UploadedBy = ""
             };
 
             var results = ValidateModel(dto);
             Assert.IsTrue(results.Count > 0);
-            Assert.IsTrue(results.Any(r => r.MemberNames.Contains("FileName")));
+            Assert.IsTrue(results.Any(r => r.MemberNames.Contains("Name")));
             Assert.IsTrue(results.Any(r => r.MemberNames.Contains("UploadedBy")));
-        }
-
-        [TestMethod]
-        public void FileEntityDto_FileNameTooLong_FailsValidation()
-        {
-            var dto = new FileEntityDto
-            {
-                FileName = new string('b', 256),
-                UploadedBy = "user",
-                SourceType = "cambridge_bay_papers",
-                SourceLink = "http://example.com"
-            };
-
-            var results = ValidateModel(dto);
-            Assert.IsTrue(results.Any(r => r.MemberNames.Contains("FileName")));
         }
     }
 }

@@ -25,7 +25,7 @@ namespace Rift.Repositories
             .Select(file => new FileEntityDto
             {
                 Id = file.Id,
-                FileName = file.FileName,
+                Name = file.Name,
                 CreatedAt = file.CreatedAt,
                 UploadedBy = file.UploadedBy,
                 SourceLink = file.SourceLink,
@@ -39,6 +39,22 @@ namespace Rift.Repositories
             return await _dbContext.Files.FindAsync(fileId);
         }
 
+        public async Task<List<FileEntityDto>> GetDocumentsByIdsAsync(List<int> ids)
+        {
+            return await _dbContext.Files
+                .Where(f => ids.Contains(f.Id))
+                .Select(f => new FileEntityDto
+                {
+                    Id = f.Id,
+                    Name = f.Name,
+                    CreatedAt = f.CreatedAt,
+                    UploadedBy = f.UploadedBy,
+                    SourceLink = f.SourceLink,
+                    SourceType = f.SourceType
+                })
+                .ToListAsync();
+        }
+
         public async Task<int?> DeleteAsync(int fileId)
         {
             var file = await _dbContext.Files.FindAsync(fileId);
@@ -48,6 +64,24 @@ namespace Rift.Repositories
                 await _dbContext.SaveChangesAsync();
             }
             return file?.Id;
+        }
+
+        public async Task<IEnumerable<FileEntityDto>> GetFilesByNamesAsync(IEnumerable<string> names)
+        {
+            var nameSet = new HashSet<string>(names);
+            var result = await _dbContext.Files
+                .Where(f => nameSet.Contains(f.Name))
+                .Select(f => new FileEntityDto
+                {
+                    Name = f.Name,
+                    Id = f.Id,
+                    CreatedAt = f.CreatedAt,
+                    UploadedBy = f.UploadedBy,
+                    SourceLink = f.SourceLink,
+                    SourceType = f.SourceType
+                })
+                .ToListAsync();
+            return result;
         }
     }
 }

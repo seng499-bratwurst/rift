@@ -6,10 +6,14 @@ namespace Rift.Services;
 public class MessageService : IMessageService
 {
     private readonly IMessageRepository _messageRepository;
+    private readonly IMessageFilesRepository _messageFileRepository;
+    private readonly IFileRepository _fileRepository;
 
-    public MessageService(IMessageRepository messageRepository)
+    public MessageService(IMessageRepository messageRepository, IMessageFilesRepository messageFileRepository, IFileRepository fileRepository)
     {
+        _messageFileRepository = messageFileRepository;
         _messageRepository = messageRepository;
+        _fileRepository = fileRepository;
     }
 
     public async Task<Message?> CreateMessageAsync(
@@ -36,7 +40,57 @@ public class MessageService : IMessageService
 
     public async Task<List<Message>> GetMessagesForConversationAsync(string userId, int conversationId)
     {
-        return await _messageRepository.GetUserConversationMessagesAsync(userId, conversationId);
+        // Get messages for the conversation
+        var messages = await _messageRepository.GetUserConversationMessagesAsync(userId, conversationId) ?? new List<Message>();
+        var messageIds = messages.Select(m => m.Id).ToList();
+
+        // Get files associated with the messages
+        var messageFiles = await _messageFileRepository.GetMessageFilesByMessageIdsAsync(messageIds) ?? new List<MessageFiles>();
+        var fileIds = messageFiles.Select(mf => mf.FileId).Distinct().ToList();
+
+        // Get files from the separate files repository
+        var files = await _fileRepository.GetDocumentsByIdsAsync(fileIds) ?? new List<FileEntityDto>();
+        var fileDict = files.ToDictionary(f => f.Id);
+
+        // Group messagefiles by message
+        var messageFilesByMessageId = messageFiles
+            .GroupBy(mf => mf.MessageId)
+            .ToDictionary(g => g.Key, g => g.ToList());
+
+        // Combine messages with their associated files - Note: this would be much easier if Files were not in a separate database.
+        var result = messages.Select(m =>
+        {
+            var docs = messageFilesByMessageId.TryGetValue(m.Id, out var mfs)
+                ? mfs.Select(mf =>
+                {
+                    if (fileDict.TryGetValue(mf.FileId, out var file))
+                    {
+                        return file;
+                    }
+                    return null;
+                })
+                .OfType<FileEntityDto>()
+                .ToList()
+                : new List<FileEntityDto>();
+
+            return new Message
+            {
+                Id = m.Id,
+                ConversationId = m.ConversationId,
+                PromptMessageId = m.PromptMessageId,
+                Content = m.Content,
+                OncApiQuery = m.OncApiQuery,
+                OncApiResponse = m.OncApiResponse,
+                IsHelpful = m.IsHelpful,
+                Role = m.Role,
+                XCoordinate = m.XCoordinate,
+                YCoordinate = m.YCoordinate,
+                CreatedAt = m.CreatedAt,
+                Documents = docs
+            };
+        }).ToList();
+
+        return result;
     }
 
     public async Task<List<Message>> GetGuestMessagesForConversationAsync(string sessionId, int conversationId)

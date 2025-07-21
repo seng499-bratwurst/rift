@@ -329,6 +329,39 @@ public class ChromaDBClient
     }
 
     /// <summary>
+    /// Get documents for a specific collection
+    /// </summary>
+    public async Task<CollectionDocumentResponse[]?> GetCollectionDocumentsAsync(string collectionName)
+    {
+        try
+        {
+            var response = await _httpClient.GetAsync($"{_baseUrl}/collections/{collectionName}/documents");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                var wrapper = JsonSerializer.Deserialize<CollectionDocumentsWrapper>(content, _jsonOptions);
+                return wrapper?.Documents;
+            }
+
+            if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                _logger.LogWarning("Collection {CollectionName} not found", collectionName);
+                return null;
+            }
+
+            var errorContent = await response.Content.ReadAsStringAsync();
+            _logger.LogError("Failed to get collection {CollectionName}: {Error}", collectionName, errorContent);
+            return null;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Exception occurred while getting collection {CollectionName}", collectionName);
+            return null;
+        }
+    }
+
+    /// <summary>
     /// Delete a collection
     /// </summary>
     public async Task<bool> DeleteCollectionAsync(string collectionName)
