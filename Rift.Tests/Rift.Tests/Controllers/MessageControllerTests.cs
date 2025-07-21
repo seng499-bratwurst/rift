@@ -10,6 +10,7 @@ using Rift.Services;
 using Rift.LLM;
 using Rift.Models;
 using System.Text.Json;
+using System.IO;
 
 namespace Rift.Tests
 {
@@ -128,65 +129,70 @@ namespace Rift.Tests
             Assert.AreEqual("Conversation not found.", apiResponse.Error);
         }
 
-        // [TestMethod]
-        // public async Task CreateMessage_ReturnsOk_WithValidData()
-        // {
-        //     var userId = "user1";
-        //     var conversation = new Conversation { Id = 5, UserId = userId };
-        //     var promptMessage = new Message { Id = 10, Content = "Hello", Role = "user", XCoordinate = 0, YCoordinate = 0 };
-        //     var responseMessage = new Message { Id = 11, Content = "Hi!", Role = "assistant", XCoordinate = 1, YCoordinate = 1 };
-        //     var edge = new MessageEdge { SourceMessageId = 10, TargetMessageId = 11 };
+        [TestMethod]
+        public async Task CreateMessage_ReturnsOk_WithValidData()
+        {
+            var userId = "user1";
+            var conversation = new Conversation { Id = 5, UserId = userId };
+            var promptMessage = new Message { Id = 10, Content = "Hello", Role = "user", XCoordinate = 0, YCoordinate = 0 };
+            var responseMessage = new Message { Id = 11, Content = "Hi!", Role = "assistant", XCoordinate = 1, YCoordinate = 1 };
+            var edge = new MessageEdge { SourceMessageId = 10, TargetMessageId = 11 };
 
-        //     _conversationServiceMock.Setup(s => s.GetOrCreateConversationByUserId(userId, null))
-        //         .ReturnsAsync(conversation);
+            _conversationServiceMock.Setup(s => s.GetOrCreateConversationByUserId(userId, null))
+                .ReturnsAsync(conversation);
 
-        //     _messageServiceMock.Setup(m => m.GetMessagesForConversationAsync(userId, conversation.Id))
-        //         .ReturnsAsync(new List<Message>());
+            _messageServiceMock.Setup(m => m.GetMessagesForConversationAsync(userId, conversation.Id))
+                .ReturnsAsync(new List<Message>());
 
-        //     _ragServiceMock.Setup(l => l.GenerateResponseAsync("Hello", It.IsAny<List<Message>>())).ReturnsAsync("Hi!");
+            // Update RAG service mock to return tuple (response, document titles)
+            _ragServiceMock.Setup(l => l.GenerateResponseAsync("Hello", It.IsAny<List<Message>>()))
+                .ReturnsAsync(("Hi!", new List<string> { "doc1.pdf", "doc2.pdf" }));
 
-        //     _messageServiceMock.Setup(m => m.CreateMessageAsync(conversation.Id, null, "Hello", "user", 0, 0))
-        //         .ReturnsAsync(promptMessage);
-        //     _messageServiceMock.Setup(m => m.CreateMessageAsync(conversation.Id, promptMessage.Id, "Hi!", "assistant", 0, 0))
-        //         .ReturnsAsync(responseMessage);
+            // Remove the file service mock setup since it's causing issues
+            // The controller will call it but we don't need to verify its exact behavior for this test
 
-        //     _messageEdgeServiceMock.Setup(e => e.CreateEdgeAsync(It.IsAny<MessageEdge>()))
-        //         .ReturnsAsync(edge);
-        //     _messageEdgeServiceMock.Setup(e => e.CreateMessageEdgesFromSourcesAsync(It.IsAny<int>(), It.IsAny<PartialMessageEdge[]>()))
-        //         .ReturnsAsync(new List<MessageEdge>());
+            _messageServiceMock.Setup(m => m.CreateMessageAsync(conversation.Id, null, "Hello", "user", 0, 0))
+                .ReturnsAsync(promptMessage);
+            _messageServiceMock.Setup(m => m.CreateMessageAsync(conversation.Id, promptMessage.Id, "Hi!", "assistant", 0, 0))
+                .ReturnsAsync(responseMessage);
 
-        //     _conversationServiceMock.Setup(c => c.UpdateLastInteractionTime(It.IsAny<int>()))
-        //         .ReturnsAsync(conversation);
+            _messageEdgeServiceMock.Setup(e => e.CreateEdgeAsync(It.IsAny<MessageEdge>()))
+                .ReturnsAsync(edge);
+            _messageEdgeServiceMock.Setup(e => e.CreateMessageEdgesFromSourcesAsync(It.IsAny<int>(), It.IsAny<PartialMessageEdge[]>()))
+                .ReturnsAsync(new List<MessageEdge>());
 
-        //     var controller = CreateControllerWithUser(userId);
+            _conversationServiceMock.Setup(c => c.UpdateLastInteractionTime(It.IsAny<int>()))
+                .ReturnsAsync(conversation);
 
-        //     // Create a real HttpContext with a memory stream for the response body
-        //     var httpContext = new DefaultHttpContext();
-        //     httpContext.Response.Body = new MemoryStream();
-        //     httpContext.User = new ClaimsPrincipal(new ClaimsIdentity(new[]
-        //     {
-        //         new Claim(ClaimTypes.NameIdentifier, userId),
-        //         new Claim("ONCApiToken", "token")
-        //     }, "mock"));
+            var controller = CreateControllerWithUser(userId);
 
-        //     controller.ControllerContext.HttpContext = httpContext;
+            // Create a real HttpContext with a memory stream for the response body
+            var httpContext = new DefaultHttpContext();
+            httpContext.Response.Body = new MemoryStream();
+            httpContext.User = new ClaimsPrincipal(new ClaimsIdentity(new[]
+            {
+                new Claim(ClaimTypes.NameIdentifier, userId),
+                new Claim("ONCApiToken", "token")
+            }, "mock"));
 
-        //     var request = new MessageController.CreateMessageRequest { Content = "Hello" };
+            controller.ControllerContext.HttpContext = httpContext;
 
-        //     var result = await controller.CreateMessage(request);
+            var request = new MessageController.CreateMessageRequest { Content = "Hello" };
 
-        //     // Since streaming is enabled by default, expect EmptyResult
-        //     var emptyResult = result as EmptyResult;
-        //     Assert.IsNotNull(emptyResult, "Expected EmptyResult due to streaming being enabled");
+            var result = await controller.CreateMessage(request);
 
-        //     // Verify that the services were called correctly
-        //     _conversationServiceMock.Verify(s => s.GetOrCreateConversationByUserId(userId, null), Times.Once);
-        //     _ragServiceMock.Verify(l => l.GenerateResponseAsync("Hello", It.IsAny<List<Message>>()), Times.Once);
-        //     _messageServiceMock.Verify(m => m.CreateMessageAsync(conversation.Id, null, "Hello", "user", 0, 0), Times.Once);
-        //     _messageServiceMock.Verify(m => m.CreateMessageAsync(conversation.Id, promptMessage.Id, "Hi!", "assistant", 0, 0), Times.Once);
-        //     _messageEdgeServiceMock.Verify(e => e.CreateEdgeAsync(It.IsAny<MessageEdge>()), Times.Once);
-        //     _conversationServiceMock.Verify(c => c.UpdateLastInteractionTime(conversation.Id), Times.Once);
-        // }
+            // Since streaming is enabled by default, expect EmptyResult
+            var emptyResult = result as EmptyResult;
+            Assert.IsNotNull(emptyResult, "Expected EmptyResult due to streaming being enabled");
+
+            // Verify that the services were called correctly (excluding file service for now)
+            _conversationServiceMock.Verify(s => s.GetOrCreateConversationByUserId(userId, null), Times.Once);
+            _ragServiceMock.Verify(l => l.GenerateResponseAsync("Hello", It.IsAny<List<Message>>()), Times.Once);
+            _messageServiceMock.Verify(m => m.CreateMessageAsync(conversation.Id, null, "Hello", "user", 0, 0), Times.Once);
+            _messageServiceMock.Verify(m => m.CreateMessageAsync(conversation.Id, promptMessage.Id, "Hi!", "assistant", 0, 0), Times.Once);
+            _messageEdgeServiceMock.Verify(e => e.CreateEdgeAsync(It.IsAny<MessageEdge>()), Times.Once);
+            _conversationServiceMock.Verify(c => c.UpdateLastInteractionTime(conversation.Id), Times.Once);
+        }
 
         [TestMethod]
         public async Task GetMessages_ReturnsUnauthorized_WhenUserIdMissing()
