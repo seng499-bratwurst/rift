@@ -1,3 +1,4 @@
+using System;
 using Microsoft.EntityFrameworkCore;
 using Rift.Models;
 
@@ -23,6 +24,23 @@ namespace Rift.Repositories
             return await _context.MessageFiles
                 .Where(mf => messageIds.Contains(mf.MessageId))
                 .ToListAsync();
+        }
+
+        public async Task<int> GetVotes(int fileId, bool isHelpful)
+        {
+            return await _context.MessageFiles
+                .Where(mf => mf.FileId == fileId)
+                .Join(_context.Messages,
+                      mf => mf.MessageId,
+                      m => m.Id,
+                      (mf, m) => m)
+                .CountAsync(m => m.IsHelpful == isHelpful);
+        }
+
+        public async Task<int> GetUsages(int fileId)
+        {
+            return await _context.MessageFiles
+                .CountAsync(mf => mf.FileId == fileId);
         }
     }
 }
