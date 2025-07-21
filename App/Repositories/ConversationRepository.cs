@@ -102,4 +102,26 @@ public class ConversationRepository : IConversationRepository
 
         return conversation;
     }
+
+    public async Task<bool> UpdateConversationTitle(int conversationId, string title)
+    {
+        var conversation = await _context.Conversations
+            .FirstOrDefaultAsync(c => c.Id == conversationId);
+
+        if (conversation == null)
+        {
+            return false;
+        }
+
+        // Only update if no existing title (don't overwrite existing titles)
+        if (!string.IsNullOrEmpty(conversation.Title))
+        {
+            return false;
+        }
+
+        conversation.Title = title;
+        await _context.SaveChangesAsync();
+
+        return true;
+    }
 }

@@ -16,13 +16,15 @@ public class MessageController : ControllerBase
     private readonly IConversationService _conversationService;
     private readonly IRAGService _ragService;
     private readonly IFileService _fileService;
+    private readonly IConversationTitleService _conversationTitleService;
 
     public MessageController(
         IMessageService messageService,
         IConversationService conversationService,
         IRAGService ragService,
         IMessageEdgeService messageEdgeService,
-        IFileService fileService
+        IFileService fileService,
+        IConversationTitleService conversationTitleService
         )
     {
         _messageService = messageService;
@@ -30,6 +32,7 @@ public class MessageController : ControllerBase
         _ragService = ragService;
         _conversationService = conversationService;
         _fileService = fileService;
+        _conversationTitleService = conversationTitleService;
     }
 
     /// <summary>
@@ -123,6 +126,21 @@ public class MessageController : ControllerBase
         }
 
         await _conversationService.UpdateLastInteractionTime(conversationId);
+
+        // Generate conversation title if this is the first interaction (no existing title)
+        try
+        {
+            Console.WriteLine($"Attempting to generate title for conversation {conversationId}");
+            var title = await _conversationTitleService.GenerateTitleAsync(request.Content, llmResponse);
+            Console.WriteLine($"Generated title: '{title}'");
+            var updateResult = await _conversationTitleService.UpdateConversationTitleAsync(conversationId, title);
+            Console.WriteLine($"Title update result: {updateResult}");
+        }
+        catch (Exception ex)
+        {
+            // Log the error but don't fail the message creation
+            Console.WriteLine($"Warning: Failed to generate conversation title: {ex.Message}");
+        }
 
         MessageEdge promptToResponseEdge = await _messageEdgeService.CreateEdgeAsync(new MessageEdge
         {
@@ -235,6 +253,21 @@ public class MessageController : ControllerBase
         }
 
         await _conversationService.UpdateLastInteractionTime(conversationId);
+
+        // Generate conversation title if this is the first interaction (no existing title)
+        try
+        {
+            Console.WriteLine($"Attempting to generate title for guest conversation {conversationId}");
+            var title = await _conversationTitleService.GenerateTitleAsync(request.Content, llmResponse);
+            Console.WriteLine($"Generated title: '{title}'");
+            var updateResult = await _conversationTitleService.UpdateConversationTitleAsync(conversationId, title);
+            Console.WriteLine($"Title update result: {updateResult}");
+        }
+        catch (Exception ex)
+        {
+            // Log the error but don't fail the message creation
+            Console.WriteLine($"Warning: Failed to generate conversation title: {ex.Message}");
+        }
 
         MessageEdge promptToResponseEdge = await _messageEdgeService.CreateEdgeAsync(new MessageEdge
         {
