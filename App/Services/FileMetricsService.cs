@@ -63,17 +63,9 @@ public class FileMetricsService : IFileMetricsService
             var upVotes = await _messageFilesRepository.GetVotes(file.Id, true, messageIds);
             var downVotes = await _messageFilesRepository.GetVotes(file.Id, false, messageIds);
             var usages = await _messageFilesRepository.GetUsages(file.Id, messageIds);
-            Console.WriteLine($"File ID: {file.Id}, Name: {file.Name}, UpVotes: {upVotes}, DownVotes: {downVotes}, Usages: {usages}");
             result.UpVotes += upVotes;
             result.DownVotes += downVotes;
             result.Usages += usages;
-        }
-
-        Console.WriteLine($"Found {messageIds.Count} messages containing topic '{topic}'");
-
-        foreach (var id in messageIds)
-        {
-            Console.WriteLine($"Message ID containing topic '{topic}': {id}");
         }
 
         return result;

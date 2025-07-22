@@ -49,7 +49,6 @@ public class FileMetricsController : ControllerBase
         }
 
         var metrics = await _fileMetricsService.GetFileMetricsByTopicAsync(search);
-        Console.WriteLine($"Retrieved metrics for topic '{search}'");
         return Ok(new ApiResponse<FileMetricTopic>
         {
             Success = true,
