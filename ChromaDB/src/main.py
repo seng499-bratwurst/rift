@@ -365,31 +365,42 @@ async def get_document(document_id: str, collection_name: str = "oceanographic_d
         logger.error(f"Failed to get document {document_id}: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to retrieve document")
 
-@app.get("/documents/{source_doc}")
-async def get_source_document(source_document_name: str, collection_name: str = "oceanographic_data"):
-    """Get a specific elements by their source document."""
-    try:
-        collection = chroma_client.get_collection(
-            name=collection_name
+@app.get("/documents/by-source/{source_doc}")
+async def get_documents_by_source(
+    source_doc: str,
+    collection_name: str = "oceanographic_data"
+):
+    """
+    Fetch *all* documents whose metadata.source_doc == source_doc.
+    """
+    collection = chroma_client.get_collection(name=collection_name)
+
+    # Pull back ids, docs and metadatas matching the filter
+    result = collection.get(
+        where   = {"source_doc": {"$eq": source_doc}},
+        include = ["documents", "metadatas"]
+    )
+
+    ids   = result.get("ids", [])
+    docs  = result.get("documents", [])
+    metas = result.get("metadatas", [])
+
+    if not ids:
+        raise HTTPException(
+            status_code=404,
+            detail=f"No documents found with source_doc = '{source_doc}'"
         )
 
-        result = collection.get(where={"source_doc": {"$eq": source_doc}},
-                                        include=["ids", "documents", "metadatas"])
+    # Build a list of JSON objects
+    out: List[Dict[str, Any]] = []
+    for _id, text, meta in zip(ids, docs, metas):
+        out.append({
+            "id":       _id,
+            "document": text,
+            "metadata": meta
+        })
 
-        if not result["documents"] or len(result["documents"]) == 0:
-            raise HTTPException(status_code=404, detail="Document not found")
-
-        return {
-            "id": document_id,
-            "document": result["documents"][0],
-            "metadata": result["metadatas"][0] if result["metadatas"] else None
-        }
-
-    except HTTPException:
-        raise
-    except Exception as e:
-        logger.error(f"Failed to get document {document_id}: {str(e)}")
-        raise HTTPException(status_code=500, detail="Failed to retrieve document")
+    return {"documents": out}
 
 @app.get("/collections/{collection_name}/documents")
 async def get_all_documents(collection_name: str = "oceanographic_data"):
@@ -479,44 +490,37 @@ async def delete_document(document_id: str, collection_name: str = "oceanographi
         logger.error(f"Failed to delete document {document_id}: {str(e)}")
         raise HTTPException(status_code=400, detail=f"Failed to delete document: {str(e)}")
 
-@app.delete("/documents/{source-doc}")
+@app.delete("/documents/by-source/{source_doc}")
 async def delete_documents_by_source_doc(
     source_doc: str,
     collection_name: str = "oceanographic_data"
 ):
-    """Delete all documents in the collection with the given source_doc in their metadata."""
-    try:
-        collection = chroma_client.get_collection(name=collection_name)
+    """
+    Delete all documents whose metadata.source_doc == source_doc.
+    """
+    collection = chroma_client.get_collection(name=collection_name)
 
-        results = collection.get(
-            where={"source_doc": {"$eq": source_doc}},
-            include=["ids"]
-        )
-        ids_to_delete = results.get("ids", [])
+    # find all matching IDs
+    results        = collection.get(
+        where   = {"source_doc": {"$eq": source_doc}},
+#         include = ["ids"]
+    )
+    ids_to_delete = results["ids"]
 
-        if not ids_to_delete:
-            return {
-                "status": "not found",
-                "detail": f"No documents found with source_doc '{source_doc}'"
-            }
-
-        deleted_count = collection.delete(ids=ids_to_delete)
-
-        # chroma_client.persist()
-
-        return {
-            "status": "deleted",
-            "source_doc": source_doc,
-            "deleted_ids": ids_to_delete,
-            "count": deleted_count
-        }
-
-    except Exception as e:
-        logger.error(f"Failed to delete documents by source_doc: {e}")
+    if not ids_to_delete:
         raise HTTPException(
-            status_code=400,
-            detail=f"Failed to delete documents by source_doc: {str(e)}"
+            status_code=404,
+            detail=f"No documents found with source_doc '{source_doc}'"
         )
+
+    deleted_count = collection.delete(ids=ids_to_delete)
+
+    return {
+        "status":     "deleted",
+        "source_doc": source_doc,
+        "deleted_ids": ids_to_delete,
+        "count":      deleted_count
+    }
 
 # Query Endpoints
 @app.post("/query")
