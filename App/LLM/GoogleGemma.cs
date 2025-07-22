@@ -119,14 +119,16 @@ namespace Rift.LLM
                     // Console.WriteLine($"Function Params: {functionParams}");
 
                     // calling the ONC API
-                    var result = await _parser.OncAPICall(functionName, functionParams);
+                    var (userURL, result) = await _parser.OncAPICall(functionName, functionParams);
+                    result = result + $"\n\nHere is the user URL: {userURL}";
+                    Console.WriteLine("userURL from google.cs file: " + userURL);
 
                     // adding the result to the messages list (as the tool)
                     messages.Add(new {
                         tool_call_id = functionCallName,
                         role = "tool",
                         name = functionCallName,
-                        content = result,
+                        content = result
                     });
 
                     // continue the loop
@@ -162,7 +164,7 @@ namespace Rift.LLM
             string jsonInput = JsonSerializer.Serialize(onc_api_response, new JsonSerializerOptions { WriteIndented = true });
             var systemPrompt = "You are a helpful Ocean Networks Canada assistant that interprets the data given and answers the user prompt with accuracy.";
 
-            string fullPrompt = $"{prompt}\n\nHere is the ONC API response:\n{jsonInput}";
+            string fullPrompt = $"{prompt}\n\nHere is the ONC API response:\n{jsonInput}\n\nReturn the most revelant user URL based on the user prompt (if there are any) otherwise dont mention it.";
 
             var payload = new
             {

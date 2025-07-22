@@ -18,11 +18,14 @@ public class OncAPI
 
     }
 
-    public async Task<JsonElement> GetDataAsync(
+    public async Task<(string, JsonElement)> GetDataAsync(
         string DataEndpoint,
         Dictionary<string, string?>? queryParams = null
     )
     {
+        Console.WriteLine("DataEndpoint: " + DataEndpoint);
+        var userURL = new StringBuilder("https://data.oceannetworks.ca/api/"+DataEndpoint+"?token={YOUR_ONC_TOKEN}");
+        Console.WriteLine("userURL: " + userURL);
         var urlPath = new StringBuilder(DataEndpoint);
         urlPath.Append("?token=" + _oncToken);
 
@@ -34,9 +37,11 @@ public class OncAPI
             if (validParams.Count > 0)
             {
                 urlPath.Append("&" + string.Join("&", validParams.Select(kv => $"{kv.Key}={kv.Value}")));
+                userURL.Append("&" + string.Join("&", validParams.Select(kv => $"{kv.Key}={kv.Value}")));
             }
         }
         // Console.WriteLine("urlPath: "+urlPath.ToString());
+        Console.WriteLine("userURL: " + userURL.ToString());
        
         var oncResponse = new HttpResponseMessage();
         try{
@@ -54,13 +59,14 @@ public class OncAPI
                 statusCode = (int)oncResponse.StatusCode,
                 details = ex.Message
             };
-            return JsonDocument.Parse(JsonSerializer.Serialize(generalErrorResponse)).RootElement.Clone();
+            return ("",JsonDocument.Parse(JsonSerializer.Serialize(generalErrorResponse)).RootElement.Clone());
         }
 
         var oncContent = await oncResponse.Content.ReadAsStringAsync();
         var oncData = JsonDocument.Parse(oncContent).RootElement.Clone();
         // Console.WriteLine("oncData: " + oncData);
+        // var userURLJson = JsonSerializer.Serialize(new { userURL = userURL.ToString() });
         
-        return oncData;
+        return (userURL.ToString(),oncData);
     }
 }
