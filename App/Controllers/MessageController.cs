@@ -492,82 +492,114 @@ public class MessageController : ControllerBase
 
     private async Task StreamResponseWithSameFormat(string fullResponse, int conversationId, int? promptMessageId, int? responseMessageId, MessageEdge[] createdEdges)
     {
-        var words = fullResponse.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-        var streamedContent = new StringBuilder();
-
-        for (int i = 0; i < words.Length; i++)
+        try
         {
-            var word = words[i];
-            if (i > 0) streamedContent.Append(" ");
-            streamedContent.Append(word);
+            var words = fullResponse.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            var streamedContent = new StringBuilder();
 
-            // Create the same response format as the original, but with progressive content
-            var progressiveResponse = new ApiResponse<object>
+            for (int i = 0; i < words.Length; i++)
             {
-                Success = true,
-                Error = null,
-                Data = new
+                var word = words[i];
+                if (i > 0) streamedContent.Append(" ");
+                streamedContent.Append(word);
+
+                // Create the same response format as the original, but with progressive content
+                var progressiveResponse = new ApiResponse<object>
                 {
-                    ConversationId = conversationId,
-                    Response = streamedContent.ToString(),
-                    PromptMessageId = promptMessageId,
-                    ResponseMessageId = responseMessageId,
-                    CreatedEdges = createdEdges.Select(e => new { e.Id, e.SourceMessageId, e.TargetMessageId, e.SourceHandle, e.TargetHandle }).ToArray(),
-                    IsStreaming = true,
-                    IsComplete = i == words.Length - 1
-                }
-            };
+                    Success = true,
+                    Error = null,
+                    Data = new
+                    {
+                        ConversationId = conversationId,
+                        Response = streamedContent.ToString(),
+                        PromptMessageId = promptMessageId,
+                        ResponseMessageId = responseMessageId,
+                        CreatedEdges = createdEdges.Select(e => new { e.Id, e.SourceMessageId, e.TargetMessageId, e.SourceHandle, e.TargetHandle }).ToArray(),
+                        IsStreaming = true,
+                        IsComplete = i == words.Length - 1
+                    }
+                };
 
-            // Send as Server-Sent Event
-            var jsonResponse = JsonSerializer.Serialize(progressiveResponse);
-            await SendSSEEvent("message", jsonResponse);
-            
-            // Add small delay between words for streaming effect
-            await Task.Delay(50);
+                // Send as Server-Sent Event
+                var jsonResponse = JsonSerializer.Serialize(progressiveResponse);
+                await SendSSEEvent("message", jsonResponse);
+                
+                // Add small delay between words for streaming effect
+                var user_streaming_delay = 50; // Adjust this value as needed
+                await Task.Delay(user_streaming_delay);
+            }
+
+            // Send final close event
+            await SendSSEEvent("close", "");
         }
-
-        // Send final close event
-        await SendSSEEvent("close", "");
+        catch (Exception ex)
+        {
+            // Send error event in case of streaming failure
+            var errorResponse = new ApiResponse<object>
+            {
+                Success = false,
+                Error = $"Streaming error: {ex.Message}",
+                Data = null
+            };
+            var errorJson = JsonSerializer.Serialize(errorResponse);
+            await SendSSEEvent("error", errorJson);
+        }
     }
 
     private async Task StreamGuestResponseWithSameFormat(string fullResponse, string sessionId, int? promptMessageId, int? responseMessageId, MessageEdge[] createdEdges)
     {
-        var words = fullResponse.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-        var streamedContent = new StringBuilder();
-
-        for (int i = 0; i < words.Length; i++)
+        try
         {
-            var word = words[i];
-            if (i > 0) streamedContent.Append(" ");
-            streamedContent.Append(word);
+            var words = fullResponse.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            var streamedContent = new StringBuilder();
 
-            // Create the same response format as the original guest response, but with progressive content
-            var progressiveResponse = new ApiResponse<object>
+            for (int i = 0; i < words.Length; i++)
             {
-                Success = true,
-                Error = null,
-                Data = new
+                var word = words[i];
+                if (i > 0) streamedContent.Append(" ");
+                streamedContent.Append(word);
+
+                // Create the same response format as the original guest response, but with progressive content
+                var progressiveResponse = new ApiResponse<object>
                 {
-                    Response = streamedContent.ToString(),
-                    SessionId = sessionId,
-                    PromptMessageId = promptMessageId,
-                    ResponseMessageId = responseMessageId,
-                    CreatedEdges = createdEdges.Select(e => new { e.Id, e.SourceMessageId, e.TargetMessageId, e.SourceHandle, e.TargetHandle }).ToArray(),
-                    IsStreaming = true,
-                    IsComplete = i == words.Length - 1
-                }
-            };
+                    Success = true,
+                    Error = null,
+                    Data = new
+                    {
+                        Response = streamedContent.ToString(),
+                        SessionId = sessionId,
+                        PromptMessageId = promptMessageId,
+                        ResponseMessageId = responseMessageId,
+                        CreatedEdges = createdEdges.Select(e => new { e.Id, e.SourceMessageId, e.TargetMessageId, e.SourceHandle, e.TargetHandle }).ToArray(),
+                        IsStreaming = true,
+                        IsComplete = i == words.Length - 1
+                    }
+                };
 
-            // Send as Server-Sent Event
-            var jsonResponse = JsonSerializer.Serialize(progressiveResponse);
-            await SendSSEEvent("message", jsonResponse);
-            
-            // Add small delay between words for streaming effect
-            await Task.Delay(50);
+                // Send as Server-Sent Event
+                var jsonResponse = JsonSerializer.Serialize(progressiveResponse);
+                await SendSSEEvent("message", jsonResponse);
+
+                // Add small delay between words for streaming effect
+                var guest_streaming_delay = 50; // Adjust this value as needed
+                await Task.Delay(guest_streaming_delay);
+            }
+
+            // Send final close event
+            await SendSSEEvent("close", "");
         }
-
-        // Send final close event
-        await SendSSEEvent("close", "");
+        catch (Exception ex)
+        {
+            // Send error event in case of streaming failure
+            var errorResponse = new ApiResponse<object>
+            {
+                Success = false,
+                Error = $"Streaming error: {ex.Message}",
+                Data = null
+            };
+            var errorJson = JsonSerializer.Serialize(errorResponse);
+            await SendSSEEvent("error", errorJson);
+        }
     }
 
     private async Task SendSSEEvent(string eventType, string data)
