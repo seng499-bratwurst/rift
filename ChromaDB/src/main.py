@@ -276,7 +276,7 @@ def get_supported_doc_types():
     """Return the supported doc types for use in frontends."""
     return {"doc_types": list(SUPPORTED_TYPES.keys())}
 
-@app.post("/documents/batch")
+@app.post("/documents/add")
 async def add_batch_documents(
     file: UploadFile = File(...),
     doc_type: DocTypeEnum = Form(...),
