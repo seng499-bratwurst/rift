@@ -4,8 +4,6 @@ using System.Security.Claims;
 using Rift.Models;
 using Rift.Services;
 using Microsoft.AspNetCore.RateLimiting;
-using System.Text;
-using System.Text.Json;
 
 namespace Rift.Controllers;
 
@@ -93,10 +91,6 @@ public class MessageController : ControllerBase
 
         var messageHistory = await _messageService.GetMessagesForConversationAsync(userId, conversationId);
 
-        var acceptHeader = Request.Headers["Accept"].ToString();
-        bool wantsStreaming = acceptHeader.Contains("text/event-stream");
-        wantsStreaming = true;
-
         var (llmResponse, relevantDocTitles) = await _ragService.GenerateResponseAsync(request.Content, messageHistory);
 
         var documents = await _fileService.GetFilesByTitlesAsync(relevantDocTitles);
@@ -153,37 +147,20 @@ public class MessageController : ControllerBase
             )).ToArray();
         }
 
-        if (wantsStreaming)
+        return Ok(new ApiResponse<object>
         {
-            // Set up Server-Sent Events headers
-            Response.Headers["Content-Type"] = "text/event-stream";
-            Response.Headers["Cache-Control"] = "no-cache";
-            Response.Headers["Connection"] = "keep-alive";
-            Response.Headers["Access-Control-Allow-Origin"] = "*";
-
-            await StreamResponseWithSameFormat(llmResponse, conversationId, promptMessage?.Id, responseMessage?.Id, 
-                                              (new[] { promptToResponseEdge }).Concat(edges).ToArray());
-            
-            return new EmptyResult();
-        }
-        else
-        {
-            // Non-streaming response (original behavior)
-            return Ok(new ApiResponse<object>
+            Success = true,
+            Error = null,
+            Data = new
             {
-                Success = true,
-                Error = null,
-                Data = new
-                {
-                    ConversationId = conversationId,
-                    Documents = documents,
-                    Response = llmResponse,
-                    PromptMessageId = promptMessage?.Id,
-                    ResponseMessageId = responseMessage?.Id,
-                    CreatedEdges = (new[] { promptToResponseEdge }).Concat(edges).ToArray(),
-                }
-            });
-        }
+                ConversationId = conversationId,
+                Documents = documents,
+                Response = llmResponse,
+                PromptMessageId = promptMessage?.Id,
+                ResponseMessageId = responseMessage?.Id,
+                CreatedEdges = (new[] { promptToResponseEdge }).Concat(edges).ToArray(),
+            }
+        });
     }
 
     /// <summary>
@@ -227,10 +204,6 @@ public class MessageController : ControllerBase
 
         var messageHistory = await _messageService.GetGuestMessagesForConversationAsync(sessionId, conversationId);
 
-        // Check if client wants streaming
-        var acceptHeader = Request.Headers["Accept"].ToString();
-        bool wantsStreaming = acceptHeader.Contains("text/event-stream");
-        wantsStreaming = true;
         // var llmResponse = await _ragService.GenerateResponseAsync(request.Content, messageHistory);
         var (llmResponse, relevantDocTitles) = await _ragService.GenerateResponseAsync(request.Content, messageHistory);
 
@@ -286,37 +259,20 @@ public class MessageController : ControllerBase
             )).ToArray();
         }
 
-        if (wantsStreaming)
+        return Ok(new ApiResponse<object>
         {
-            // Set up Server-Sent Events headers
-            Response.Headers["Content-Type"] = "text/event-stream";
-            Response.Headers["Cache-Control"] = "no-cache";
-            Response.Headers["Connection"] = "keep-alive";
-            Response.Headers["Access-Control-Allow-Origin"] = "*";
-
-            await StreamGuestResponseWithSameFormat(llmResponse, sessionId, promptMessage?.Id, responseMessage?.Id, 
-                                                   (new[] { promptToResponseEdge }).Concat(edges).ToArray());
-            
-            return new EmptyResult();
-        }
-        else
-        {
-            // Non-streaming response (original behavior)
-            return Ok(new ApiResponse<object>
+            Success = true,
+            Error = null,
+            Data = new
             {
-                Success = true,
-                Error = null,
-                Data = new
-                {
-                    Response = llmResponse,
-                    Documents = documents,
-                    SessionId = sessionId,
-                    PromptMessageId = promptMessage?.Id,
-                    ResponseMessageId = responseMessage?.Id,
-                    CreatedEdges = (new[] { promptToResponseEdge }).Concat(edges).ToArray(),
-                }
-            });
-        }
+                Response = llmResponse,
+                Documents = documents,
+                SessionId = sessionId,
+                PromptMessageId = promptMessage?.Id,
+                ResponseMessageId = responseMessage?.Id,
+                CreatedEdges = (new[] { promptToResponseEdge }).Concat(edges).ToArray(),
+            }
+        });
     }
 
     [HttpGet("conversations/{conversationId}/messages")]
@@ -488,126 +444,6 @@ public class MessageController : ControllerBase
         /// Indicates whether the message was helpful. True for thumbs up (helpful), false for thumbs down (not helpful).
         /// </summary>
         public bool IsHelpful { get; set; }
-    }
-
-    private async Task StreamResponseWithSameFormat(string fullResponse, int conversationId, int? promptMessageId, int? responseMessageId, MessageEdge[] createdEdges)
-    {
-        try
-        {
-            var words = fullResponse.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-            var streamedContent = new StringBuilder();
-
-            for (int i = 0; i < words.Length; i++)
-            {
-                var word = words[i];
-                if (i > 0) streamedContent.Append(" ");
-                streamedContent.Append(word);
-
-                // Create the same response format as the original, but with progressive content
-                var progressiveResponse = new ApiResponse<object>
-                {
-                    Success = true,
-                    Error = null,
-                    Data = new
-                    {
-                        ConversationId = conversationId,
-                        Response = streamedContent.ToString(),
-                        PromptMessageId = promptMessageId,
-                        ResponseMessageId = responseMessageId,
-                        CreatedEdges = createdEdges.Select(e => new { e.Id, e.SourceMessageId, e.TargetMessageId, e.SourceHandle, e.TargetHandle }).ToArray(),
-                        IsStreaming = true,
-                        IsComplete = i == words.Length - 1
-                    }
-                };
-
-                // Send as Server-Sent Event
-                var jsonResponse = JsonSerializer.Serialize(progressiveResponse);
-                await SendSSEEvent("message", jsonResponse);
-                
-                // Add small delay between words for streaming effect
-                var user_streaming_delay = 50; // Adjust this value as needed
-                await Task.Delay(user_streaming_delay);
-            }
-
-            // Send final close event
-            await SendSSEEvent("close", "");
-        }
-        catch (Exception ex)
-        {
-            // Send error event in case of streaming failure
-            var errorResponse = new ApiResponse<object>
-            {
-                Success = false,
-                Error = $"Streaming error: {ex.Message}",
-                Data = null
-            };
-            var errorJson = JsonSerializer.Serialize(errorResponse);
-            await SendSSEEvent("error", errorJson);
-        }
-    }
-
-    private async Task StreamGuestResponseWithSameFormat(string fullResponse, string sessionId, int? promptMessageId, int? responseMessageId, MessageEdge[] createdEdges)
-    {
-        try
-        {
-            var words = fullResponse.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-            var streamedContent = new StringBuilder();
-
-            for (int i = 0; i < words.Length; i++)
-            {
-                var word = words[i];
-                if (i > 0) streamedContent.Append(" ");
-                streamedContent.Append(word);
-
-                // Create the same response format as the original guest response, but with progressive content
-                var progressiveResponse = new ApiResponse<object>
-                {
-                    Success = true,
-                    Error = null,
-                    Data = new
-                    {
-                        Response = streamedContent.ToString(),
-                        SessionId = sessionId,
-                        PromptMessageId = promptMessageId,
-                        ResponseMessageId = responseMessageId,
-                        CreatedEdges = createdEdges.Select(e => new { e.Id, e.SourceMessageId, e.TargetMessageId, e.SourceHandle, e.TargetHandle }).ToArray(),
-                        IsStreaming = true,
-                        IsComplete = i == words.Length - 1
-                    }
-                };
-
-                // Send as Server-Sent Event
-                var jsonResponse = JsonSerializer.Serialize(progressiveResponse);
-                await SendSSEEvent("message", jsonResponse);
-
-                // Add small delay between words for streaming effect
-                var guest_streaming_delay = 50; // Adjust this value as needed
-                await Task.Delay(guest_streaming_delay);
-            }
-
-            // Send final close event
-            await SendSSEEvent("close", "");
-        }
-        catch (Exception ex)
-        {
-            // Send error event in case of streaming failure
-            var errorResponse = new ApiResponse<object>
-            {
-                Success = false,
-                Error = $"Streaming error: {ex.Message}",
-                Data = null
-            };
-            var errorJson = JsonSerializer.Serialize(errorResponse);
-            await SendSSEEvent("error", errorJson);
-        }
-    }
-
-    private async Task SendSSEEvent(string eventType, string data)
-    {
-        var eventData = $"event: {eventType}\ndata: {data}\n\n";
-        var bytes = Encoding.UTF8.GetBytes(eventData);
-        await Response.Body.WriteAsync(bytes, 0, bytes.Length);
-        await Response.Body.FlushAsync();
     }
 
 }
