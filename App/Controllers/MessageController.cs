@@ -42,7 +42,6 @@ public class MessageController : ControllerBase
     /// Endpoint for authenticated and anonymous users (existing behavior).
     /// </summary>
     [HttpPost("messages")]
-    [AllowAnonymous]
     [EnableRateLimiting("PerOncApiToken")]
     public async Task<IActionResult> CreateMessage([FromBody] CreateMessageRequest request)
     {

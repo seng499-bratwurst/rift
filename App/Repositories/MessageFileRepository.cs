@@ -25,21 +25,39 @@ namespace Rift.Repositories
                 .ToListAsync();
         }
 
-        public async Task<int> GetVotes(int fileId, bool isHelpful)
+        public async Task<int> GetVotes(int fileId, bool isHelpful, List<int>? messageIds = null)
         {
-            return await _context.MessageFiles
-                .Where(mf => mf.FileId == fileId)
+
+            var query = _context.MessageFiles
+            .Where(mf => mf.FileId == fileId);
+
+            if (messageIds != null && messageIds.Count > 0)
+            {
+                query = query.Where(mf => messageIds.Contains(mf.MessageId));
+            }
+
+            var result = await query
                 .Join(_context.Messages,
                       mf => mf.MessageId,
                       m => m.Id,
                       (mf, m) => m)
                 .CountAsync(m => m.IsHelpful == isHelpful);
+
+            return result;
         }
 
-        public async Task<int> GetUsages(int fileId)
+        public async Task<int> GetUsages(int fileId, List<int>? messageIds = null)
         {
-            return await _context.MessageFiles
-                .CountAsync(mf => mf.FileId == fileId);
+            var query = _context.MessageFiles.AsQueryable();
+
+            query = query.Where(mf => mf.FileId == fileId);
+
+            if (messageIds != null && messageIds.Count > 0)
+            {
+                query = query.Where(mf => messageIds.Contains(mf.MessageId));
+            }
+
+            return await query.CountAsync();
         }
     }
 }
