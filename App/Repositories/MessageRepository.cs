@@ -1,8 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using Rift.Models;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Rift.Repositories;
 
@@ -73,5 +70,14 @@ public class MessageRepository : IMessageRepository
         _context.Messages.Remove(message);
         await _context.SaveChangesAsync();
         return message;
+    }
+
+    public async Task<List<int>> GetMessageIdsContainingTextAsync(string text)
+    {
+        var loweredText = text.ToLower();
+        return await _context.Messages
+            .Where(m => m.PromptMessageId != null && m.Content != null && EF.Functions.Like(m.Content.ToLower(), $"%{loweredText}%"))
+            .Select(m => m.Id)
+            .ToListAsync();
     }
 }

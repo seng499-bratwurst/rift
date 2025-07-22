@@ -31,5 +31,30 @@ public class FileMetricsController : ControllerBase
             Data = metrics
         });
     }
-}
 
+    /// <summary>
+    /// Get file metrics by topic.
+    /// </summary>
+    [HttpGet("metrics/topic")]
+    public async Task<IActionResult> GetFileMetricsByTopic([FromQuery] string search = "")
+    {
+        if (string.IsNullOrEmpty(search))
+        {
+            return BadRequest(new ApiResponse<string>
+            {
+                Success = false,
+                Error = "Topic cannot be empty.",
+                Data = null
+            });
+        }
+
+        var metrics = await _fileMetricsService.GetFileMetricsByTopicAsync(search);
+        Console.WriteLine($"Retrieved metrics for topic '{search}'");
+        return Ok(new ApiResponse<FileMetricTopic>
+        {
+            Success = true,
+            Error = null,
+            Data = metrics
+        });
+    }
+}

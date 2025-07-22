@@ -12,4 +12,5 @@ public interface IMessageRepository
     Task<Message?> DeleteAsync(string userId, int messageId);
     Task<List<Message>> GetUserConversationMessagesAsync(string userId, int conversationId);
     Task<List<Message>> GetGuestConversationMessagesAsync(string sessionId, int conversationId);
+    Task<List<int>> GetMessageIdsContainingTextAsync(string text);
 }
