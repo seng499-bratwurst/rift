@@ -46,9 +46,11 @@ public class FileMetricsService : IFileMetricsService
         var result =new FileMetricTopic
         {
             Topic = topic,
-            UpVotes = 0,
-            DownVotes = 0,
-            Usages = 0,
+            FileUpVotes = 0,
+            FileDownVotes = 0,
+            FilesReferenced = 0,
+            QueryCount = 0,
+            
         };
 
         var messageIds = await _messageRepository.GetMessageIdsContainingTextAsync(topic);
@@ -58,14 +60,16 @@ public class FileMetricsService : IFileMetricsService
             return result;
         }
 
+        result.QueryCount = messageIds.Count;
+
         foreach (var file in files)
         {
             var upVotes = await _messageFilesRepository.GetVotes(file.Id, true, messageIds);
             var downVotes = await _messageFilesRepository.GetVotes(file.Id, false, messageIds);
             var usages = await _messageFilesRepository.GetUsages(file.Id, messageIds);
-            result.UpVotes += upVotes;
-            result.DownVotes += downVotes;
-            result.Usages += usages;
+            result.FileUpVotes += upVotes;
+            result.FileDownVotes += downVotes;
+            result.FilesReferenced += usages;
         }
 
         return result;

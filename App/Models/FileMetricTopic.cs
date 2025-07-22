@@ -3,7 +3,8 @@ namespace Rift.Models;
 public class FileMetricTopic
 {
     public required string Topic { get; set; }
-    public required int UpVotes { get; set; }
-    public required int DownVotes { get; set; }
-    public required int Usages { get; set; }
+    public required int FileUpVotes { get; set; }
+    public required int FileDownVotes { get; set; }
+    public required int FilesReferenced { get; set; }
+    public required int QueryCount { get; set; }
 }
