@@ -12,4 +12,6 @@ public interface IConversationRepository
 
     Task<Conversation?> GetConversationById(string userId, int conversationId);
     Task<Conversation?> UpdateLastInteractionTime(int conversationId);
+    Task<Conversation?> UpdateConversationTitle(int conversationId, string title);
+    Task<Conversation?> GetConversationByIdOnly(int conversationId);
 }

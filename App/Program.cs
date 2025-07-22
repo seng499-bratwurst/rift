@@ -82,6 +82,12 @@ builder.Services.AddScoped<IMessageFilesService, MessageFilesService>();
 
 builder.Services.AddScoped<IFileMetricsService, FileMetricsService>();
 
+// Add Gemini Title Service
+builder.Services.AddHttpClient();
+// TODO: Debug compilation issue with GeminiTitleService 
+// Temporarily commenting out to allow Docker build to succeed
+builder.Services.AddScoped<IGeminiTitleService, GeminiTitleService>();
+
 builder.Services.AddScoped<IRAGService, RAGService>();
 builder.Services.AddScoped<ReRankerClient>();
 builder.Services.AddScoped<ResponseProcessor>();

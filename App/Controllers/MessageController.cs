@@ -17,6 +17,8 @@ public class MessageController : ControllerBase
     private readonly IRAGService _ragService;
     private readonly IFileService _fileService;
     private readonly IMessageFilesService _messageFileService;
+    // TODO: Re-enable once compilation issue is resolved
+    private readonly IGeminiTitleService? _geminiTitleService;
 
     public MessageController(
         IMessageService messageService,
@@ -24,7 +26,9 @@ public class MessageController : ControllerBase
         IRAGService ragService,
         IMessageEdgeService messageEdgeService,
         IFileService fileService,
-        IMessageFilesService messageFileService
+        IMessageFilesService messageFileService,
+        // TODO: Re-enable once compilation issue is resolved
+        IGeminiTitleService? geminiTitleService = null
         )
     {
         _messageService = messageService;
@@ -33,6 +37,8 @@ public class MessageController : ControllerBase
         _messageFileService = messageFileService;
         _conversationService = conversationService;
         _fileService = fileService;
+        // TODO: Re-enable once compilation issue is resolved
+        _geminiTitleService = geminiTitleService;
     }
 
     /// <summary>
@@ -128,6 +134,9 @@ public class MessageController : ControllerBase
         // Save the files that were used as context for the LLM response message
         await _messageFileService.InsertMessageFilesAsync(documents, responseMessage.Id);
         await _conversationService.UpdateLastInteractionTime(conversationId);
+
+        // TODO: Re-enable once Gemini compilation issue is resolved
+        await GenerateConversationTitleIfNeeded(conversationId, request.Content, llmResponse);
 
         MessageEdge promptToResponseEdge = await _messageEdgeService.CreateEdgeAsync(new MessageEdge
         {
@@ -240,6 +249,9 @@ public class MessageController : ControllerBase
         }
 
         await _conversationService.UpdateLastInteractionTime(conversationId);
+
+        // TODO: Re-enable once Gemini compilation issue is resolved
+        await GenerateConversationTitleIfNeeded(conversationId, request.Content, llmResponse);
 
         MessageEdge promptToResponseEdge = await _messageEdgeService.CreateEdgeAsync(new MessageEdge
         {
@@ -415,6 +427,42 @@ public class MessageController : ControllerBase
             Data = message
         });
     }
+
+    private async Task GenerateConversationTitleIfNeeded(int conversationId, string userPrompt, string assistantResponse)
+    {
+        try
+        {
+            // First, check if the conversation already has a title
+            var conversation = await _conversationService.GetConversationByIdOnly(conversationId);
+            
+            if (conversation != null && !string.IsNullOrEmpty(conversation.Title))
+            {
+                // Title already exists, don't override it
+                return;
+            }
+
+            // Generate new title using Gemini
+            // TODO: Re-enable once compilation issue is resolved
+            string generatedTitle = "New Conversation"; // Default fallback
+            
+            if (_geminiTitleService != null)
+            {
+                generatedTitle = await _geminiTitleService.GenerateTitleAsync(userPrompt, assistantResponse);
+            }
+            
+            if (!string.IsNullOrEmpty(generatedTitle) && generatedTitle != "New Conversation")
+            {
+                // Store the generated title in the conversation
+                await _conversationService.UpdateConversationTitle(conversationId, generatedTitle);
+                Console.WriteLine($"Generated and stored conversation title: {generatedTitle}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to generate conversation title: {ex.Message}");
+        }
+    }
+
     public class CreateMessageRequest
     {
         public int? ConversationId { get; set; }
