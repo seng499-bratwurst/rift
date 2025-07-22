@@ -17,7 +17,6 @@ public class MessageController : ControllerBase
     private readonly IRAGService _ragService;
     private readonly IFileService _fileService;
     private readonly IMessageFilesService _messageFileService;
-    // TODO: Re-enable once compilation issue is resolved
     private readonly IGeminiTitleService? _geminiTitleService;
 
     public MessageController(
@@ -27,7 +26,6 @@ public class MessageController : ControllerBase
         IMessageEdgeService messageEdgeService,
         IFileService fileService,
         IMessageFilesService messageFileService,
-        // TODO: Re-enable once compilation issue is resolved
         IGeminiTitleService? geminiTitleService = null
         )
     {
@@ -37,7 +35,6 @@ public class MessageController : ControllerBase
         _messageFileService = messageFileService;
         _conversationService = conversationService;
         _fileService = fileService;
-        // TODO: Re-enable once compilation issue is resolved
         _geminiTitleService = geminiTitleService;
     }
 
@@ -135,7 +132,6 @@ public class MessageController : ControllerBase
         await _messageFileService.InsertMessageFilesAsync(documents, responseMessage.Id);
         await _conversationService.UpdateLastInteractionTime(conversationId);
 
-        // TODO: Re-enable once Gemini compilation issue is resolved
         await GenerateConversationTitleIfNeeded(conversationId, request.Content, llmResponse);
 
         MessageEdge promptToResponseEdge = await _messageEdgeService.CreateEdgeAsync(new MessageEdge
@@ -250,7 +246,6 @@ public class MessageController : ControllerBase
 
         await _conversationService.UpdateLastInteractionTime(conversationId);
 
-        // TODO: Re-enable once Gemini compilation issue is resolved
         await GenerateConversationTitleIfNeeded(conversationId, request.Content, llmResponse);
 
         MessageEdge promptToResponseEdge = await _messageEdgeService.CreateEdgeAsync(new MessageEdge
@@ -442,19 +437,21 @@ public class MessageController : ControllerBase
             }
 
             // Generate new title using Gemini
-            // TODO: Re-enable once compilation issue is resolved
-            string generatedTitle = "New Conversation"; // Default fallback
-            
             if (_geminiTitleService != null)
             {
-                generatedTitle = await _geminiTitleService.GenerateTitleAsync(userPrompt, assistantResponse);
+                var generatedTitle = await _geminiTitleService.GenerateTitleAsync(userPrompt, assistantResponse);
+                
+                // Only update if we get a non-fallback title
+                if (!string.IsNullOrEmpty(generatedTitle) && generatedTitle != "New Conversation")
+                {
+                    await _conversationService.UpdateConversationTitle(conversationId, generatedTitle);
+                    Console.WriteLine($"Generated and stored conversation title: {generatedTitle}");
+                }
             }
-            
-            if (!string.IsNullOrEmpty(generatedTitle) && generatedTitle != "New Conversation")
+            else
             {
-                // Store the generated title in the conversation
-                await _conversationService.UpdateConversationTitle(conversationId, generatedTitle);
-                Console.WriteLine($"Generated and stored conversation title: {generatedTitle}");
+                // No Gemini service available, use default title
+                await _conversationService.UpdateConversationTitle(conversationId, "New Conversation");
             }
         }
         catch (Exception ex)
