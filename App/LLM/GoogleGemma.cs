@@ -121,7 +121,7 @@ namespace Rift.LLM
                     // calling the ONC API
                     var (userURL, result) = await _parser.OncAPICall(functionName, functionParams);
                     result = result + $"\n\nHere is the user URL: {userURL}";
-                    Console.WriteLine("userURL from google.cs file: " + userURL);
+                    // Console.WriteLine("userURL from google.cs file: " + userURL);
 
                     // adding the result to the messages list (as the tool)
                     messages.Add(new {

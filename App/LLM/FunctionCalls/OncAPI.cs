@@ -25,7 +25,7 @@ public class OncAPI
     {
         Console.WriteLine("DataEndpoint: " + DataEndpoint);
         var userURL = new StringBuilder("https://data.oceannetworks.ca/api/"+DataEndpoint+"?token={YOUR_ONC_TOKEN}");
-        Console.WriteLine("userURL: " + userURL);
+        // Console.WriteLine("userURL: " + userURL);
         var urlPath = new StringBuilder(DataEndpoint);
         urlPath.Append("?token=" + _oncToken);
 
@@ -41,7 +41,7 @@ public class OncAPI
             }
         }
         // Console.WriteLine("urlPath: "+urlPath.ToString());
-        Console.WriteLine("userURL: " + userURL.ToString());
+        // Console.WriteLine("userURL: " + userURL.ToString());
        
         var oncResponse = new HttpResponseMessage();
         try{
