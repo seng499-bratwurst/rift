@@ -172,5 +172,69 @@ namespace Rift.Tests.Services
 
             Assert.IsNull(result);
         }
+
+        [TestMethod]
+        public async Task UpdateConversationTitle_ReturnsConversation_WhenFound()
+        {
+            // Arrange
+            int conversationId = 1;
+            string title = "New Conversation Title";
+            var updatedConversation = new Conversation { Id = conversationId, Title = title };
+            _repositoryMock.Setup(r => r.UpdateConversationTitle(conversationId, title)).ReturnsAsync(updatedConversation);
+
+            // Act
+            var result = await _service.UpdateConversationTitle(conversationId, title);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(conversationId, result.Id);
+            Assert.AreEqual(title, result.Title);
+        }
+
+        [TestMethod]
+        public async Task UpdateConversationTitle_ReturnsNull_WhenNotFound()
+        {
+            // Arrange
+            int conversationId = 404;
+            string title = "New Title";
+            _repositoryMock.Setup(r => r.UpdateConversationTitle(conversationId, title)).ReturnsAsync((Conversation?)null);
+
+            // Act
+            var result = await _service.UpdateConversationTitle(conversationId, title);
+
+            // Assert
+            Assert.IsNull(result);
+        }
+
+        [TestMethod]
+        public async Task GetConversationByIdOnly_ReturnsConversation_WhenFound()
+        {
+            // Arrange
+            int conversationId = 1;
+            var conversation = new Conversation { Id = conversationId, Title = "Test Title" };
+            _repositoryMock.Setup(r => r.GetConversationByIdOnly(conversationId)).ReturnsAsync(conversation);
+
+            // Act
+            var result = await _service.GetConversationByIdOnly(conversationId);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(conversationId, result.Id);
+            Assert.AreEqual("Test Title", result.Title);
+        }
+
+        [TestMethod]
+        public async Task GetConversationByIdOnly_ReturnsNull_WhenNotFound()
+        {
+            // Arrange
+            int conversationId = 404;
+            _repositoryMock.Setup(r => r.GetConversationByIdOnly(conversationId)).ReturnsAsync((Conversation?)null);
+
+            // Act
+            var result = await _service.GetConversationByIdOnly(conversationId);
+
+            // Assert
+            Assert.IsNull(result);
+        }
     }
 }

@@ -17,6 +17,7 @@ public class MessageController : ControllerBase
     private readonly IRAGService _ragService;
     private readonly IFileService _fileService;
     private readonly IMessageFilesService _messageFileService;
+    private readonly IGeminiTitleService? _geminiTitleService;
 
     public MessageController(
         IMessageService messageService,
@@ -24,7 +25,8 @@ public class MessageController : ControllerBase
         IRAGService ragService,
         IMessageEdgeService messageEdgeService,
         IFileService fileService,
-        IMessageFilesService messageFileService
+        IMessageFilesService messageFileService,
+        IGeminiTitleService? geminiTitleService = null
         )
     {
         _messageService = messageService;
@@ -33,6 +35,7 @@ public class MessageController : ControllerBase
         _messageFileService = messageFileService;
         _conversationService = conversationService;
         _fileService = fileService;
+        _geminiTitleService = geminiTitleService;
     }
 
     /// <summary>
@@ -128,6 +131,8 @@ public class MessageController : ControllerBase
         // Save the files that were used as context for the LLM response message
         await _messageFileService.InsertMessageFilesAsync(documents, responseMessage.Id);
         await _conversationService.UpdateLastInteractionTime(conversationId);
+
+        await GenerateConversationTitleIfNeeded(conversationId, request.Content, llmResponse);
 
         MessageEdge promptToResponseEdge = await _messageEdgeService.CreateEdgeAsync(new MessageEdge
         {
@@ -240,6 +245,8 @@ public class MessageController : ControllerBase
         }
 
         await _conversationService.UpdateLastInteractionTime(conversationId);
+
+        await GenerateConversationTitleIfNeeded(conversationId, request.Content, llmResponse);
 
         MessageEdge promptToResponseEdge = await _messageEdgeService.CreateEdgeAsync(new MessageEdge
         {
@@ -415,6 +422,44 @@ public class MessageController : ControllerBase
             Data = message
         });
     }
+
+    private async Task GenerateConversationTitleIfNeeded(int conversationId, string userPrompt, string assistantResponse)
+    {
+        try
+        {
+            // First, check if the conversation already has a title
+            var conversation = await _conversationService.GetConversationByIdOnly(conversationId);
+            
+            if (conversation != null && !string.IsNullOrEmpty(conversation.Title))
+            {
+                // Title already exists, don't override it
+                return;
+            }
+
+            // Generate new title using Gemini
+            if (_geminiTitleService != null)
+            {
+                var generatedTitle = await _geminiTitleService.GenerateTitleAsync(userPrompt, assistantResponse);
+                
+                // Only update if we get a non-fallback title
+                if (!string.IsNullOrEmpty(generatedTitle) && generatedTitle != "New Conversation")
+                {
+                    await _conversationService.UpdateConversationTitle(conversationId, generatedTitle);
+                    Console.WriteLine($"Generated and stored conversation title: {generatedTitle}");
+                }
+            }
+            else
+            {
+                // No Gemini service available, use default title
+                await _conversationService.UpdateConversationTitle(conversationId, "New Conversation");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to generate conversation title: {ex.Message}");
+        }
+    }
+
     public class CreateMessageRequest
     {
         public int? ConversationId { get; set; }

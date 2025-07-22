@@ -82,6 +82,10 @@ builder.Services.AddScoped<IMessageFilesService, MessageFilesService>();
 
 builder.Services.AddScoped<IFileMetricsService, FileMetricsService>();
 
+builder.Services.AddHttpClient();
+
+builder.Services.AddScoped<IGeminiTitleService, GeminiTitleService>();
+
 builder.Services.AddScoped<IRAGService, RAGService>();
 builder.Services.AddScoped<ReRankerClient>();
 builder.Services.AddScoped<ResponseProcessor>();

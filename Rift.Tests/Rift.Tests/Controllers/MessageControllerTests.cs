@@ -22,6 +22,7 @@ namespace Rift.Tests
         private Mock<IRAGService> _ragServiceMock;
         private Mock<IFileService> _fileServiceMock;
         private Mock<IMessageFilesService> _messageFilesServiceMock;
+        private Mock<IGeminiTitleService> _geminiTitleServiceMock = null!;
         [TestInitialize]
         public void Setup()
         {
@@ -31,6 +32,7 @@ namespace Rift.Tests
             _ragServiceMock = new Mock<IRAGService>();
             _fileServiceMock = new Mock<IFileService>();
             _messageFilesServiceMock = new Mock<IMessageFilesService>();
+            _geminiTitleServiceMock = new Mock<IGeminiTitleService>();
         }
 
         private MessageController CreateControllerWithUser(string userId)
@@ -46,7 +48,8 @@ namespace Rift.Tests
                 _ragServiceMock.Object,
                 _messageEdgeServiceMock.Object,
                 _fileServiceMock.Object,
-                _messageFilesServiceMock.Object
+                _messageFilesServiceMock.Object,
+                _geminiTitleServiceMock.Object
             );
             controller.ControllerContext = new ControllerContext
             {
@@ -63,7 +66,8 @@ namespace Rift.Tests
                 _ragServiceMock.Object,
                 _messageEdgeServiceMock.Object,
                 _fileServiceMock.Object,
-                _messageFilesServiceMock.Object
+                _messageFilesServiceMock.Object,
+                _geminiTitleServiceMock.Object
             );
             controller.ControllerContext = new ControllerContext
             {
@@ -458,6 +462,277 @@ namespace Rift.Tests
             // Verify both calls were made
             _messageServiceMock.Verify(m => m.UpdateMessageFeedbackAsync(userId, messageId, true), Times.Once);
             _messageServiceMock.Verify(m => m.UpdateMessageFeedbackAsync(userId, messageId, false), Times.Once);
+        }
+
+        [TestMethod]
+        public async Task CreateMessage_WithGeminiService_CallsTitleGeneration()
+        {
+            // Arrange
+            var userId = "test-user";
+            var conversationId = 1;
+            var userContent = "What is the temperature?";
+            var llmResponse = "The temperature is 15°C.";
+            var generatedTitle = "Temperature Inquiry";
+
+            var conversation = new Conversation { Id = conversationId, UserId = userId };
+            var promptMessage = new Message { Id = 1, Content = userContent, Role = "user", XCoordinate = 0f, YCoordinate = 0f, CreatedAt = DateTime.UtcNow };
+            var responseMessage = new Message { Id = 2, Content = llmResponse, Role = "assistant", XCoordinate = 100f, YCoordinate = 100f, CreatedAt = DateTime.UtcNow };
+            var edge = new MessageEdge { Id = 1, SourceMessageId = 1, TargetMessageId = 2 };
+
+            _conversationServiceMock.Setup(c => c.GetOrCreateConversationByUserId(userId, conversationId))
+                .ReturnsAsync(conversation);
+            _ragServiceMock.Setup(r => r.GenerateResponseAsync(userContent, It.IsAny<List<Message>>()))
+                .ReturnsAsync((llmResponse, new List<string>()));
+            _messageServiceMock.Setup(m => m.CreateMessageAsync(conversationId, null, userContent, "user", It.IsAny<float>(), It.IsAny<float>()))
+                .ReturnsAsync(promptMessage);
+            _messageServiceMock.Setup(m => m.CreateMessageAsync(conversationId, 1, llmResponse, "assistant", It.IsAny<float>(), It.IsAny<float>()))
+                .ReturnsAsync(responseMessage);
+            _messageEdgeServiceMock.Setup(e => e.CreateEdgeAsync(It.IsAny<MessageEdge>()))
+                .ReturnsAsync(edge);
+            _fileServiceMock.Setup(f => f.GetFilesByTitlesAsync(It.IsAny<string[]>()))
+                .ReturnsAsync(new List<FileEntityDto>());
+            _conversationServiceMock.Setup(c => c.GetConversationByIdOnly(conversationId))
+                .ReturnsAsync(conversation);
+            _geminiTitleServiceMock.Setup(g => g.GenerateTitleAsync(userContent, llmResponse))
+                .ReturnsAsync(generatedTitle);
+
+            var controller = CreateControllerWithUser(userId);
+            var request = new MessageController.CreateMessageRequest
+            {
+                ConversationId = conversationId,
+                Content = userContent,
+                XCoordinate = 0f,
+                YCoordinate = 0f,
+                ResponseXCoordinate = 100f,
+                ResponseYCoordinate = 100f
+            };
+
+            // Act
+            var result = await controller.CreateMessage(request);
+
+            // Assert
+            Assert.IsInstanceOfType<OkObjectResult>(result);
+            _geminiTitleServiceMock.Verify(g => g.GenerateTitleAsync(userContent, llmResponse), Times.Once);
+            _conversationServiceMock.Verify(c => c.UpdateConversationTitle(conversationId, generatedTitle), Times.Once);
+        }
+
+        [TestMethod]
+        public async Task CreateMessage_WithExistingTitle_DoesNotOverrideTitle()
+        {
+            // Arrange
+            var userId = "test-user";
+            var conversationId = 1;
+            var userContent = "What is the temperature?";
+            var llmResponse = "The temperature is 15°C.";
+
+            var conversation = new Conversation { Id = conversationId, UserId = userId, Title = "Existing Title" };
+            var promptMessage = new Message { Id = 1, Content = userContent, Role = "user", XCoordinate = 0f, YCoordinate = 0f, CreatedAt = DateTime.UtcNow };
+            var responseMessage = new Message { Id = 2, Content = llmResponse, Role = "assistant", XCoordinate = 100f, YCoordinate = 100f, CreatedAt = DateTime.UtcNow };
+            var edge = new MessageEdge { Id = 1, SourceMessageId = 1, TargetMessageId = 2 };
+
+            _conversationServiceMock.Setup(c => c.GetOrCreateConversationByUserId(userId, conversationId))
+                .ReturnsAsync(conversation);
+            _ragServiceMock.Setup(r => r.GenerateResponseAsync(userContent, It.IsAny<List<Message>>()))
+                .ReturnsAsync((llmResponse, new List<string>()));
+            _messageServiceMock.Setup(m => m.CreateMessageAsync(conversationId, null, userContent, "user", It.IsAny<float>(), It.IsAny<float>()))
+                .ReturnsAsync(promptMessage);
+            _messageServiceMock.Setup(m => m.CreateMessageAsync(conversationId, 1, llmResponse, "assistant", It.IsAny<float>(), It.IsAny<float>()))
+                .ReturnsAsync(responseMessage);
+            _messageEdgeServiceMock.Setup(e => e.CreateEdgeAsync(It.IsAny<MessageEdge>()))
+                .ReturnsAsync(edge);
+            _fileServiceMock.Setup(f => f.GetFilesByTitlesAsync(It.IsAny<string[]>()))
+                .ReturnsAsync(new List<FileEntityDto>());
+            _conversationServiceMock.Setup(c => c.GetConversationByIdOnly(conversationId))
+                .ReturnsAsync(conversation);
+
+            var controller = CreateControllerWithUser(userId);
+            var request = new MessageController.CreateMessageRequest
+            {
+                ConversationId = conversationId,
+                Content = userContent,
+                XCoordinate = 0f,
+                YCoordinate = 0f,
+                ResponseXCoordinate = 100f,
+                ResponseYCoordinate = 100f
+            };
+
+            // Act
+            var result = await controller.CreateMessage(request);
+
+            // Assert
+            Assert.IsInstanceOfType<OkObjectResult>(result);
+            _geminiTitleServiceMock.Verify(g => g.GenerateTitleAsync(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+            _conversationServiceMock.Verify(c => c.UpdateConversationTitle(It.IsAny<int>(), It.IsAny<string>()), Times.Never);
+        }
+
+        [TestMethod]
+        public async Task CreateMessage_WithoutGeminiService_UsesDefaultTitle()
+        {
+            // Arrange
+            var userId = "test-user";
+            var conversationId = 1;
+            var userContent = "What is the temperature?";
+            var llmResponse = "The temperature is 15°C.";
+
+            var conversation = new Conversation { Id = conversationId, UserId = userId };
+            var promptMessage = new Message { Id = 1, Content = userContent, Role = "user", XCoordinate = 0f, YCoordinate = 0f, CreatedAt = DateTime.UtcNow };
+            var responseMessage = new Message { Id = 2, Content = llmResponse, Role = "assistant", XCoordinate = 100f, YCoordinate = 100f, CreatedAt = DateTime.UtcNow };
+            var edge = new MessageEdge { Id = 1, SourceMessageId = 1, TargetMessageId = 2 };
+
+            // Create controller without Gemini service
+            var controller = new MessageController(
+                _messageServiceMock.Object,
+                _conversationServiceMock.Object,
+                _ragServiceMock.Object,
+                _messageEdgeServiceMock.Object,
+                _fileServiceMock.Object,
+                _messageFilesServiceMock.Object,
+                null // No Gemini service
+            );
+
+            var user = new ClaimsPrincipal(new ClaimsIdentity(new[]
+            {
+                new Claim(ClaimTypes.NameIdentifier, userId)
+            }, "mock"));
+            controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = new DefaultHttpContext { User = user }
+            };
+
+            _conversationServiceMock.Setup(c => c.GetOrCreateConversationByUserId(userId, conversationId))
+                .ReturnsAsync(conversation);
+            _ragServiceMock.Setup(r => r.GenerateResponseAsync(userContent, It.IsAny<List<Message>>()))
+                .ReturnsAsync((llmResponse, new List<string>()));
+            _messageServiceMock.Setup(m => m.CreateMessageAsync(conversationId, null, userContent, "user", It.IsAny<float>(), It.IsAny<float>()))
+                .ReturnsAsync(promptMessage);
+            _messageServiceMock.Setup(m => m.CreateMessageAsync(conversationId, 1, llmResponse, "assistant", It.IsAny<float>(), It.IsAny<float>()))
+                .ReturnsAsync(responseMessage);
+            _messageEdgeServiceMock.Setup(e => e.CreateEdgeAsync(It.IsAny<MessageEdge>()))
+                .ReturnsAsync(edge);
+            _fileServiceMock.Setup(f => f.GetFilesByTitlesAsync(It.IsAny<string[]>()))
+                .ReturnsAsync(new List<FileEntityDto>());
+            _conversationServiceMock.Setup(c => c.GetConversationByIdOnly(conversationId))
+                .ReturnsAsync(conversation);
+
+            var request = new MessageController.CreateMessageRequest
+            {
+                ConversationId = conversationId,
+                Content = userContent,
+                XCoordinate = 0f,
+                YCoordinate = 0f,
+                ResponseXCoordinate = 100f,
+                ResponseYCoordinate = 100f
+            };
+
+            // Act
+            var result = await controller.CreateMessage(request);
+
+            // Assert
+            Assert.IsInstanceOfType<OkObjectResult>(result);
+            _conversationServiceMock.Verify(c => c.UpdateConversationTitle(conversationId, "New Conversation"), Times.Once);
+        }
+
+        [TestMethod]
+        public async Task CreateMessage_GeminiServiceFails_UsesDefaultTitle()
+        {
+            // Arrange
+            var userId = "test-user";
+            var conversationId = 1;
+            var userContent = "What is the temperature?";
+            var llmResponse = "The temperature is 15°C.";
+
+            var conversation = new Conversation { Id = conversationId, UserId = userId };
+            var promptMessage = new Message { Id = 1, Content = userContent, Role = "user", XCoordinate = 0f, YCoordinate = 0f, CreatedAt = DateTime.UtcNow };
+            var responseMessage = new Message { Id = 2, Content = llmResponse, Role = "assistant", XCoordinate = 100f, YCoordinate = 100f, CreatedAt = DateTime.UtcNow };
+            var edge = new MessageEdge { Id = 1, SourceMessageId = 1, TargetMessageId = 2 };
+
+            _conversationServiceMock.Setup(c => c.GetOrCreateConversationByUserId(userId, conversationId))
+                .ReturnsAsync(conversation);
+            _ragServiceMock.Setup(r => r.GenerateResponseAsync(userContent, It.IsAny<List<Message>>()))
+                .ReturnsAsync((llmResponse, new List<string>()));
+            _messageServiceMock.Setup(m => m.CreateMessageAsync(conversationId, null, userContent, "user", It.IsAny<float>(), It.IsAny<float>()))
+                .ReturnsAsync(promptMessage);
+            _messageServiceMock.Setup(m => m.CreateMessageAsync(conversationId, 1, llmResponse, "assistant", It.IsAny<float>(), It.IsAny<float>()))
+                .ReturnsAsync(responseMessage);
+            _messageEdgeServiceMock.Setup(e => e.CreateEdgeAsync(It.IsAny<MessageEdge>()))
+                .ReturnsAsync(edge);
+            _fileServiceMock.Setup(f => f.GetFilesByTitlesAsync(It.IsAny<string[]>()))
+                .ReturnsAsync(new List<FileEntityDto>());
+            _conversationServiceMock.Setup(c => c.GetConversationByIdOnly(conversationId))
+                .ReturnsAsync(conversation);
+            _geminiTitleServiceMock.Setup(g => g.GenerateTitleAsync(userContent, llmResponse))
+                .ReturnsAsync("New Conversation"); // Simulate failure
+
+            var controller = CreateControllerWithUser(userId);
+            var request = new MessageController.CreateMessageRequest
+            {
+                ConversationId = conversationId,
+                Content = userContent,
+                XCoordinate = 0f,
+                YCoordinate = 0f,
+                ResponseXCoordinate = 100f,
+                ResponseYCoordinate = 100f
+            };
+
+            // Act
+            var result = await controller.CreateMessage(request);
+
+            // Assert
+            Assert.IsInstanceOfType<OkObjectResult>(result);
+            _geminiTitleServiceMock.Verify(g => g.GenerateTitleAsync(userContent, llmResponse), Times.Once);
+            // Should not update title when Gemini fails
+            _conversationServiceMock.Verify(c => c.UpdateConversationTitle(It.IsAny<int>(), It.IsAny<string>()), Times.Never);
+        }
+
+        [TestMethod]
+        public async Task CreateGuestMessage_WithGeminiService_CallsTitleGeneration()
+        {
+            // Arrange
+            var sessionId = "test-session";
+            var userContent = "What is the temperature?";
+            var llmResponse = "The temperature is 15°C.";
+            var generatedTitle = "Temperature Inquiry";
+
+            var conversation = new Conversation { Id = 1, SessionId = sessionId };
+            var promptMessage = new Message { Id = 1, Content = userContent, Role = "user", XCoordinate = 0f, YCoordinate = 0f, CreatedAt = DateTime.UtcNow };
+            var responseMessage = new Message { Id = 2, Content = llmResponse, Role = "assistant", XCoordinate = 100f, YCoordinate = 100f, CreatedAt = DateTime.UtcNow };
+            var edge = new MessageEdge { Id = 1, SourceMessageId = 1, TargetMessageId = 2 };
+
+            _conversationServiceMock.Setup(c => c.GetConversationsForSessionAsync(sessionId))
+                .ReturnsAsync(conversation);
+            _ragServiceMock.Setup(r => r.GenerateResponseAsync(userContent, It.IsAny<List<Message>>()))
+                .ReturnsAsync((llmResponse, new List<string>()));
+            _messageServiceMock.Setup(m => m.CreateMessageAsync(1, null, userContent, "user", It.IsAny<float>(), It.IsAny<float>()))
+                .ReturnsAsync(promptMessage);
+            _messageServiceMock.Setup(m => m.CreateMessageAsync(1, 1, llmResponse, "assistant", It.IsAny<float>(), It.IsAny<float>()))
+                .ReturnsAsync(responseMessage);
+            _messageEdgeServiceMock.Setup(e => e.CreateEdgeAsync(It.IsAny<MessageEdge>()))
+                .ReturnsAsync(edge);
+            _fileServiceMock.Setup(f => f.GetFilesByTitlesAsync(It.IsAny<string[]>()))
+                .ReturnsAsync(new List<FileEntityDto>());
+            _conversationServiceMock.Setup(c => c.GetConversationByIdOnly(1))
+                .ReturnsAsync(conversation);
+            _geminiTitleServiceMock.Setup(g => g.GenerateTitleAsync(userContent, llmResponse))
+                .ReturnsAsync(generatedTitle);
+
+            var controller = CreateControllerWithoutUser();
+            var request = new MessageController.CreateMessageRequest
+            {
+                SessionId = sessionId,
+                Content = userContent,
+                XCoordinate = 0f,
+                YCoordinate = 0f,
+                ResponseXCoordinate = 100f,
+                ResponseYCoordinate = 100f
+            };
+
+            // Act
+            var result = await controller.CreateGuestMessage(request);
+
+            // Assert
+            Assert.IsInstanceOfType<OkObjectResult>(result);
+            _geminiTitleServiceMock.Verify(g => g.GenerateTitleAsync(userContent, llmResponse), Times.Once);
+            _conversationServiceMock.Verify(c => c.UpdateConversationTitle(1, generatedTitle), Times.Once);
         }
     }
 }
