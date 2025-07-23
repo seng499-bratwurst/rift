@@ -180,7 +180,7 @@ async def delete_collection(collection_name: str):
 @app.post("/documents/initial")
 async def add_initial_documents():
     """Add the initial documents that exist internally within the repo. Run with caution - this can take several minutes."""
-    doc_types = ["cambridge_bay_papers", "cambridge_bay_web_articles", "confluence_json"] # TODO: Change this to SUPPORTED_TYPES
+    doc_types = list(SUPPORTED_TYPES.keys())
     batch_size = 100
     
     try:
