@@ -29,8 +29,13 @@ builder.Services.AddOpenApiDocument(options =>
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
-    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-    options.UseNpgsql(connectionString);
+    var dbHost = Environment.GetEnvironmentVariable("POSTGRES_HOST");
+    var dbPort = Environment.GetEnvironmentVariable("POSTGRES_PORT");
+    var dbUser = Environment.GetEnvironmentVariable("POSTGRES_USER");
+    var dbPassword = Environment.GetEnvironmentVariable("POSTGRES_PASSWORD");
+    var dbName = Environment.GetEnvironmentVariable("POSTGRES_DB");
+    var dbConnStr = $"Host={dbHost};Port={dbPort};Database={dbName};Username={dbUser};Password={dbPassword}";
+    options.UseNpgsql(dbConnStr);
 });
 
 builder.Services.AddDbContext<FileDbContext>(options =>
