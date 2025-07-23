@@ -51,10 +51,12 @@ public class FileService : IFileService
     public async Task<string> ExtractTextAsync(IFormFile file)
     {
         var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
+        string text = string.Empty;
+
         if (extension == ".txt" || extension == ".md")
         {
             using var sr = new StreamReader(file.OpenReadStream(), Encoding.UTF8);
-            return await sr.ReadToEndAsync();
+            text = await sr.ReadToEndAsync();
         }
         else if (extension == ".pdf")
         {
@@ -65,9 +67,9 @@ public class FileService : IFileService
             {
                 sb.AppendLine(page.Text);
             }
-            return sb.ToString();
+            text = sb.ToString();
         }
-        return string.Empty;
+        return text.Replace("\0", string.Empty);
     }
 
     public async Task<IEnumerable<FileEntityDto>> GetFilesByTitlesAsync(IEnumerable<string> relevantDocTitles)
