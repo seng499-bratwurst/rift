@@ -35,6 +35,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     var dbPassword = Environment.GetEnvironmentVariable("POSTGRES_PASSWORD");
     var dbName = Environment.GetEnvironmentVariable("POSTGRES_DB");
     var dbConnStr = $"Host={dbHost};Port={dbPort};Database={dbName};Username={dbUser};Password={dbPassword}";
+    Console.WriteLine($"Using database connection string: {dbConnStr}");
     options.UseNpgsql(dbConnStr);
 });
 
@@ -46,8 +47,8 @@ builder.Services.AddDbContext<FileDbContext>(options =>
     var fileDbUser = Environment.GetEnvironmentVariable("FILEDB_USER");
     var fileDbPassword = Environment.GetEnvironmentVariable("FILEDB_PASSWORD");
     var fileDbName = Environment.GetEnvironmentVariable("FILEDB_DB");
-
     var fileDbConnStr = $"Host={fileDbHost};Port={fileDbPort};Database={fileDbName};Username={fileDbUser};Password={fileDbPassword}";
+    Console.WriteLine($"Using file database connection string: {fileDbConnStr}");
     options.UseNpgsql(fileDbConnStr);
 });
 
