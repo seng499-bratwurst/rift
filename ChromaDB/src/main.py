@@ -177,39 +177,6 @@ async def delete_collection(collection_name: str):
         logger.error(f"Failed to delete collection {collection_name}: {str(e)}")
         raise HTTPException(status_code=404, detail="Collection not found")
 
-# # Document Management
-# @app.post("/documents/add")
-# async def add_document(request: AddRequest):
-#     """Add a single document to the collection."""
-#     try:
-#         collection = get_or_create_collection(request.collection_name)
-#
-#         # Clean metadata to remove None values and convert lists to strings
-#         metadata = None
-#         if request.metadata:
-#             # Convert any list values to comma-separated strings
-#             for key, value in request.metadata.items():
-#                 if isinstance(value, list):
-#                     request.metadata[key] = ",".join(str(item) for item in value)
-#
-#             # Remove None values
-#             clean_metadata = {k: v for k, v in request.metadata.items() if v is not None}
-#             metadata = clean_metadata if clean_metadata else None
-#
-#         collection.add(
-#             documents=[request.text],
-#             ids=[request.id],
-#             metadatas=[clean_metadata] if clean_metadata else None
-#         )
-#
-#         logger.info(f"Added document {request.id} to {request.collection_name}")
-#         return {"status": "added", "id": request.id}
-#
-#     except Exception as e:
-#         logger.error(f"Failed to add document {request.id}: {str(e)}")
-#         raise HTTPException(status_code=400, detail=f"Failed to add document: {str(e)}")
-
-
 @app.post("/documents/initial")
 async def add_initial_documents():
     """Add the initial documents that exist internally within the repo. Run with caution - this can take several minutes."""
@@ -428,50 +395,6 @@ async def get_all_documents(collection_name: str = "oceanographic_data"):
         return {"documents": documents}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to get documents: {str(e)}")
-
-# @app.put("/documents/{document_id}")
-# async def update_document(document_id: str, request: UpdateDocumentRequest, collection_name: str = "oceanographic_data"):
-#     """Update a document's content or metadata."""
-#     try:
-#         collection = chroma_client.get_collection(
-#             name=collection_name
-#         )
-#
-#         update_data = {}
-#         if request.text:
-#             update_data["documents"] = [request.text]
-#         if request.metadata:
-#             # Clean metadata to remove None values
-#             clean_metadata = {k: v for k, v in request.metadata.items() if v is not None}
-#             if clean_metadata:
-#                 update_data["metadatas"] = [clean_metadata]
-#
-#         if not update_data:
-#             raise HTTPException(status_code=400, detail="No update data provided")
-#
-#         collection.update(ids=[document_id], **update_data)
-#
-#         logger.info(f"Updated document {document_id}")
-#         return {"status": "updated", "id": document_id}
-#
-#     except Exception as e:
-#         logger.error(f"Failed to update document {document_id}: {str(e)}")
-#         raise HTTPException(status_code=400, detail=f"Failed to update document: {str(e)}")
-
-@app.get("/documents/source-docs")
-async def list_source_docs(collection_name: str = "oceanographic_data"):
-    col = chroma_client.get_collection(name=collection_name)
-
-    # ask for every doc (no filter) and pull back all metadata
-    all_meta = col.get(
-        where={},                            # match every item
-        n_results=col.count(),              # up to the total number of docs
-        include=["metadatas"]
-    )
-
-    vals = {m["source_doc"] for m in all_meta["metadatas"]}
-    return {"known_source_docs": list(vals)}
-
 
 @app.delete("/documents/{document_id}")
 async def delete_document(document_id: str, collection_name: str = "oceanographic_data"):
