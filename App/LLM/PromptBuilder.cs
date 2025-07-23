@@ -68,12 +68,15 @@ public class PromptBuilder
             content = contextContent.ToString()
         });
 
+        // Current date and time in the format of yyyy-MM-ddTHH:mm:ss.fffZ
+        var currentDate = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
+
         var prompt = new Prompt
         {
-            SystemPrompt = _systemPrompt.ToString(),
+            SystemPrompt = _systemPrompt.ToString() + $"\n\nCurrent Date and Time: {currentDate}",
             UserQuery = userQuery,
             Messages = messages,
-            OncAPIData= oncApiData,
+            OncAPIData = oncApiData,
             RelevantDocumentChunks = documentChunks
         };
 
