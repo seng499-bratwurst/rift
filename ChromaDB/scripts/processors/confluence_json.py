@@ -45,7 +45,8 @@ class ConfluenceJson(BaseDocumentProcessor):
         metadata = {
             'source_type': 'confluence_json',
             'name': source_file.replace('.json', ''),
-            'created_at': created_at
+            'source_doc': source_file.replace('.json', ''),
+            'created_at': created_at,
         }
         
         if metadata['name'] == "properties":

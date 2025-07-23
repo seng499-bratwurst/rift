@@ -11,6 +11,9 @@ import uvicorn
 import sys
 from pathlib import Path
 from datetime import datetime
+from fastapi import UploadFile, File, Form
+from rag_data_processing import SUPPORTED_TYPES
+from enum import Enum
 
 project_root = Path(__file__).parent.parent
 scripts_dir = project_root / "scripts"
@@ -93,6 +96,12 @@ class UpdateDocumentRequest(BaseModel):
     text: Optional[str] = None
     metadata: Optional[Dict[str, Any]] = None
 
+# Enum for supported doc types (for OpenAPI dropdown)
+class DocTypeEnum(str, Enum):
+    cambridge_bay_papers = "cambridge_bay_papers"
+    cambridge_bay_web_articles = "cambridge_bay_web_articles"
+    confluence_json = "confluence_json"
+
 # Collection Management
 def get_or_create_collection(collection_name: str):
     """Gets a collection or creates it if it doesn't exist."""
@@ -159,43 +168,10 @@ async def delete_collection(collection_name: str):
         logger.error(f"Failed to delete collection {collection_name}: {str(e)}")
         raise HTTPException(status_code=404, detail="Collection not found")
 
-# Document Management
-@app.post("/documents/add")
-async def add_document(request: AddRequest):
-    """Add a single document to the collection."""
-    try:
-        collection = get_or_create_collection(request.collection_name)
-
-        # Clean metadata to remove None values and convert lists to strings
-        metadata = None
-        if request.metadata:
-            # Convert any list values to comma-separated strings
-            for key, value in request.metadata.items():
-                if isinstance(value, list):
-                    request.metadata[key] = ",".join(str(item) for item in value)
-
-            # Remove None values
-            clean_metadata = {k: v for k, v in request.metadata.items() if v is not None}
-            metadata = clean_metadata if clean_metadata else None
-
-        collection.add(
-            documents=[request.text],
-            ids=[request.id],
-            metadatas=[clean_metadata] if clean_metadata else None
-        )
-
-        logger.info(f"Added document {request.id} to {request.collection_name}")
-        return {"status": "added", "id": request.id}
-
-    except Exception as e:
-        logger.error(f"Failed to add document {request.id}: {str(e)}")
-        raise HTTPException(status_code=400, detail=f"Failed to add document: {str(e)}")
-
-
 @app.post("/documents/initial")
 async def add_initial_documents():
     """Add the initial documents that exist internally within the repo. Run with caution - this can take several minutes."""
-    doc_types = ["cambridge_bay_papers", "cambridge_bay_web_articles", "confluence_json"]
+    doc_types = list(SUPPORTED_TYPES.keys())
     batch_size = 100
     
     try:
@@ -253,45 +229,74 @@ async def add_initial_documents():
         logger.error(f"Failed to add initial documents: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"An error occurred during initial document processing: {e}")
 
-@app.post("/documents/batch")
-async def add_batch_documents(request: BatchDocuments):
-    """Add multiple documents to the collection in batch."""
+@app.get("/supported_doc_types")
+def get_supported_doc_types():
+    """Return the supported doc types for use in frontends."""
+    return {"doc_types": list(SUPPORTED_TYPES.keys())}
+
+@app.post("/documents/add")
+async def add_batch_documents(
+    file: UploadFile = File(...),
+    doc_type: DocTypeEnum = Form(...),
+    collection_name: str = Form("oceanographic_data")
+):
+    """Add a single document to the collection via file upload and doc type selection (Enum). Only adds new documents; returns error if any document ID already exists."""
+    batch_size = 100
     try:
-        collection = get_or_create_collection(collection_name="oceanographic_data")
-
-        documents = [doc.text for doc in request.documents]
-        ids = [doc.id for doc in request.documents]
-
-        # Clean metadatas to remove None values and convert lists to strings
-        metadatas = []
-        for doc in request.documents:
-            if doc.metadata:
-                # Convert the model to dict
-                metadata_dict = doc.metadata.dict()
-
-                # Convert any list values to comma-separated strings
-                for key, value in metadata_dict.items():
-                    if isinstance(value, list):
-                        metadata_dict[key] = ",".join(str(item) for item in value)
-
-                # Remove None values
-                clean_metadata = {k: v for k, v in metadata_dict.items() if v is not None}
-                metadatas.append(clean_metadata if clean_metadata else None)
+        collection = get_or_create_collection(collection_name=collection_name)
+        all_documents = []
+        all_ids = []
+        all_metadatas = []
+        name_counters = {}
+        duplicate_ids = []
+        content = (await file.read()).decode("utf-8")
+        filename = file.filename
+        raw_docs = [{'content': content, 'filename': filename}]
+        if doc_type not in SUPPORTED_TYPES:
+            raise HTTPException(status_code=400, detail=f"Unsupported doc_type: {doc_type}")
+        processor_cls = SUPPORTED_TYPES[doc_type]
+        processor = processor_cls(raw_docs)
+        chunks = processor.chunk_with_metadata()
+        for chunk in chunks:
+            name = chunk['metadata'].get('name', filename)
+            idx = name_counters.get(name, 0)
+            chunk_id = f"{name}_{idx}"
+            name_counters[name] = idx + 1
+            # Check if this ID already exists
+            try:
+                existing = collection.get(ids=[chunk_id], include=["ids"])
+                ids_list = existing.get("ids", [])
+                exists = ids_list and ids_list[0] is not None
+            except Exception:
+                exists = False
+            if exists:
+                raise HTTPException(status_code=400, detail=f"Document ID already exists: {chunk_id}")
             else:
-                metadatas.append(None)
-
-        collection.add(
-            documents=documents,
-            ids=ids,
-            metadatas=metadatas
-        )
-
-        logger.info(f"Added {len(documents)} documents to {request.collection_name}")
-        return {"status": "added", "count": len(documents)}
-
+                all_documents.append(chunk['text'])
+                all_metadatas.append(chunk['metadata'])
+                all_ids.append(chunk_id)
+        if duplicate_ids:
+            return {"status": "error", "detail": f"The following document IDs already exist and were not added: {duplicate_ids}", "duplicate_ids": duplicate_ids}, 400
+        if not all_documents:
+            return {"status": "no documents found"}
+        # Add in batches (should only be one batch, but keep for consistency)
+        for i in range(0, len(all_documents), batch_size):
+            batch_docs = all_documents[i:i + batch_size]
+            batch_ids = all_ids[i:i + batch_size]
+            batch_metadatas = all_metadatas[i:i + batch_size]
+            collection.add(documents=batch_docs, ids=batch_ids, metadatas=batch_metadatas)
+        return {
+            "status": "completed",
+            "results": [
+                {"id": cid, "status": "added"} for cid in all_ids
+            ],
+            "file": file.filename,
+            "doc_type": str(doc_type)
+        }
     except Exception as e:
-        logger.error(f"Failed to add batch documents: {str(e)}")
-        raise HTTPException(status_code=400, detail=f"Failed to add documents: {str(e)}")
+        logger.error(f"Failed to add document: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Failed to add document: {e}")
+
 
 @app.get("/documents/{document_id}")
 async def get_document(document_id: str, collection_name: str = "oceanographic_data"):
@@ -317,6 +322,43 @@ async def get_document(document_id: str, collection_name: str = "oceanographic_d
     except Exception as e:
         logger.error(f"Failed to get document {document_id}: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to retrieve document")
+
+@app.get("/documents/by-source/{source_doc}")
+async def get_documents_by_source(
+    source_doc: str,
+    collection_name: str = "oceanographic_data"
+):
+    """
+    Fetch *all* documents whose metadata.source_doc == source_doc.
+    """
+    collection = chroma_client.get_collection(name=collection_name)
+
+    # Pull back ids, docs and metadatas matching the filter
+    result = collection.get(
+        where   = {"source_doc": {"$eq": source_doc}},
+        include = ["documents", "metadatas"]
+    )
+
+    ids   = result.get("ids", [])
+    docs  = result.get("documents", [])
+    metas = result.get("metadatas", [])
+
+    if not ids:
+        raise HTTPException(
+            status_code=404,
+            detail=f"No documents found with source_doc = '{source_doc}'"
+        )
+
+    # Build a list of JSON objects
+    out: List[Dict[str, Any]] = []
+    for _id, text, meta in zip(ids, docs, metas):
+        out.append({
+            "id":       _id,
+            "document": text,
+            "metadata": meta
+        })
+
+    return {"documents": out}
 
 @app.get("/collections/{collection_name}/documents")
 async def get_all_documents(collection_name: str = "oceanographic_data"):
@@ -345,35 +387,6 @@ async def get_all_documents(collection_name: str = "oceanographic_data"):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to get documents: {str(e)}")
 
-@app.put("/documents/{document_id}")
-async def update_document(document_id: str, request: UpdateDocumentRequest, collection_name: str = "oceanographic_data"):
-    """Update a document's content or metadata."""
-    try:
-        collection = chroma_client.get_collection(
-            name=collection_name
-        )
-
-        update_data = {}
-        if request.text:
-            update_data["documents"] = [request.text]
-        if request.metadata:
-            # Clean metadata to remove None values
-            clean_metadata = {k: v for k, v in request.metadata.items() if v is not None}
-            if clean_metadata:
-                update_data["metadatas"] = [clean_metadata]
-
-        if not update_data:
-            raise HTTPException(status_code=400, detail="No update data provided")
-
-        collection.update(ids=[document_id], **update_data)
-
-        logger.info(f"Updated document {document_id}")
-        return {"status": "updated", "id": document_id}
-
-    except Exception as e:
-        logger.error(f"Failed to update document {document_id}: {str(e)}")
-        raise HTTPException(status_code=400, detail=f"Failed to update document: {str(e)}")
-
 @app.delete("/documents/{document_id}")
 async def delete_document(document_id: str, collection_name: str = "oceanographic_data"):
     """Delete a specific document."""
@@ -390,6 +403,38 @@ async def delete_document(document_id: str, collection_name: str = "oceanographi
     except Exception as e:
         logger.error(f"Failed to delete document {document_id}: {str(e)}")
         raise HTTPException(status_code=400, detail=f"Failed to delete document: {str(e)}")
+
+@app.delete("/documents/by-source/{source_doc}")
+async def delete_documents_by_source_doc(
+    source_doc: str,
+    collection_name: str = "oceanographic_data"
+):
+    """
+    Delete all documents whose metadata.source_doc == source_doc.
+    """
+    collection = chroma_client.get_collection(name=collection_name)
+
+    # find all matching IDs
+    results        = collection.get(
+        where   = {"source_doc": {"$eq": source_doc}},
+#         include = ["ids"]
+    )
+    ids_to_delete = results["ids"]
+
+    if not ids_to_delete:
+        raise HTTPException(
+            status_code=404,
+            detail=f"No documents found with source_doc '{source_doc}'"
+        )
+
+    deleted_count = collection.delete(ids=ids_to_delete)
+
+    return {
+        "status":     "deleted",
+        "source_doc": source_doc,
+        "deleted_ids": ids_to_delete,
+        "count":      deleted_count
+    }
 
 # Query Endpoints
 @app.post("/query")
