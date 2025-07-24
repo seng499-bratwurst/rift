@@ -35,19 +35,15 @@ public class RAGService : IRAGService
         var chromaDocuments = (await _chromaDbClient.GetRelevantDataAsync(userQuery, 20, similarityThreshold: 0.5)).RelevantDocuments;
 
         var relevantDocuments = chromaDocuments.Select(doc => {
-            var documentTitle = string.Empty;
-            if (doc.Metadata?.GetValueOrDefault("source_type")?.ToString() != "confluence_json")
-            {
-                documentTitle = doc.Metadata?.GetValueOrDefault("source_doc")?.ToString();
-            } 
-            else
+            var documentTitle = doc.Metadata?.GetValueOrDefault("source_doc")?.ToString();
+            if (doc.Metadata?.GetValueOrDefault("source_type")?.ToString() == "confluence_json")
             {
                 documentTitle = "ONC Confluence Data (" + doc.Metadata?.GetValueOrDefault("source_doc")?.ToString() + ")";
             }
             
             return new DocumentChunk
             {
-                SourceId = doc.Id.Split('_')[0],
+                SourceId = doc.Metadata?.GetValueOrDefault("source_doc")?.ToString() ?? string.Empty,
                 Title = documentTitle ?? string.Empty,
                 Content = doc.Content
             };
