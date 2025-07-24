@@ -29,14 +29,37 @@ builder.Services.AddOpenApiDocument(options =>
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
-    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-    options.UseNpgsql(connectionString);
+    var dbHost = Environment.GetEnvironmentVariable("POSTGRES_HOST");
+    var dbPort = Environment.GetEnvironmentVariable("POSTGRES_PORT");
+    var dbUser = Environment.GetEnvironmentVariable("POSTGRES_USER");
+    var dbPassword = Environment.GetEnvironmentVariable("POSTGRES_PASSWORD");
+    var dbName = Environment.GetEnvironmentVariable("POSTGRES_DB");
+    var dbConnStr = $"Host={dbHost};Port={dbPort};Database={dbName};Username={dbUser};Password={dbPassword}";
+
+    if (string.IsNullOrEmpty(dbHost))
+    {
+        dbConnStr = builder.Configuration.GetConnectionString("DefaultConnection");
+    }
+
+    options.UseNpgsql(dbConnStr);
 });
 
 builder.Services.AddDbContext<FileDbContext>(options =>
 {
     var fileDbConnectionString = builder.Configuration.GetConnectionString("FileDbConnection");
-    options.UseNpgsql(fileDbConnectionString);
+    var fileDbHost = Environment.GetEnvironmentVariable("FILEDB_HOST");
+    var fileDbPort = Environment.GetEnvironmentVariable("FILEDB_PORT");
+    var fileDbUser = Environment.GetEnvironmentVariable("FILEDB_USER");
+    var fileDbPassword = Environment.GetEnvironmentVariable("FILEDB_PASSWORD");
+    var fileDbName = Environment.GetEnvironmentVariable("FILEDB_DB");
+    var fileDbConnStr = $"Host={fileDbHost};Port={fileDbPort};Database={fileDbName};Username={fileDbUser};Password={fileDbPassword}";
+
+    if (string.IsNullOrEmpty(fileDbHost))
+    {
+        fileDbConnStr = builder.Configuration.GetConnectionString("FileDbConnection");
+    }
+
+    options.UseNpgsql(fileDbConnStr);
 });
 
 // Add Identity
@@ -193,7 +216,7 @@ builder.Services.AddRateLimiter(options =>
             QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
             QueueLimit = 0,
         });
-        
+
     });
 });
 
