@@ -4,6 +4,7 @@ using System.Security.Claims;
 using Rift.Models;
 using Rift.Services;
 using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.EntityFrameworkCore;
 
 namespace Rift.Controllers;
 
@@ -42,7 +43,6 @@ public class MessageController : ControllerBase
     /// Endpoint for authenticated and anonymous users (existing behavior).
     /// </summary>
     [HttpPost("messages")]
-    [EnableRateLimiting("PerOncApiToken")]
     public async Task<IActionResult> CreateMessage([FromBody] CreateMessageRequest request)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -281,6 +281,86 @@ public class MessageController : ControllerBase
         });
     }
 
+    /// <summary>
+    /// Endpoint for external companies to use our LLM and RAG services.
+    /// Requires company token authentication via X-Company-Token header.
+    /// Optionally accepts message history to provide conversation context.
+    /// </summary>
+    [HttpPost("messages/company")]
+    [AllowAnonymous]
+    [EnableRateLimiting("PerCompanyToken")]
+    public async Task<IActionResult> CreateCompanyMessage([FromBody] CreateCompanyMessageRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(request.Content))
+        {
+            return BadRequest(new ApiResponse<object>
+            {
+                Success = false,
+                Error = "Message content cannot be empty.",
+                Data = null
+            });
+        }
+
+        // Get company token from header
+        string? companyToken = Request.Headers["X-Company-Token"].FirstOrDefault();
+        
+        if (string.IsNullOrWhiteSpace(companyToken))
+        {
+            return Unauthorized(new ApiResponse<object>
+            {
+                Success = false,
+                Error = "Company token is required in X-Company-Token header.",
+                Data = null
+            });
+        }
+
+        // Validate company token exists in database
+        using var scope = HttpContext.RequestServices.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        var companyRecord = await dbContext.CompanyAPITokens.FirstOrDefaultAsync(t => t.ONCApiToken == companyToken);
+        
+        if (companyRecord == null)
+        {
+            return Unauthorized(new ApiResponse<object>
+            {
+                Success = false,
+                Error = "Invalid company token.",
+                Data = null
+            });
+        }
+
+        try
+        {
+            // Generate LLM response using RAG service
+            // Use provided message history or empty list if not provided
+            var messageHistory = ConvertToMessageList(request.MessageHistory);
+            var (llmResponse, relevantDocTitles) = await _ragService.GenerateResponseAsync(request.Content, messageHistory);
+
+            var documents = await _fileService.GetFilesByTitlesAsync(relevantDocTitles);
+
+            return Ok(new ApiResponse<object>
+            {
+                Success = true,
+                Error = null,
+                Data = new
+                {
+                    Response = llmResponse,
+                    Documents = documents,
+                }
+            });
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error processing company message: {ex.Message}");
+            return StatusCode(500, new ApiResponse<object>
+            {
+                Success = false,
+                Error = "An error occurred while processing your request.",
+                Data = null
+            });
+        }
+    }
+
     [HttpGet("conversations/{conversationId}/messages")]
     [Authorize(AuthenticationSchemes = "Bearer")]
     public async Task<IActionResult> GetMessages(int conversationId)
@@ -459,6 +539,29 @@ public class MessageController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Converts company message history items to Message objects for RAG service.
+    /// </summary>
+    private List<Message> ConvertToMessageList(List<CompanyMessageHistoryItem>? messageHistory)
+    {
+        if (messageHistory == null || !messageHistory.Any())
+        {
+            return new List<Message>();
+        }
+
+        return messageHistory.Select((item, index) => new Message
+        {
+            Id = index + 1, // Temporary ID for processing
+            ConversationId = 0, // Not stored, just for processing
+            PromptMessageId = null,
+            Content = item.Content,
+            Role = item.Role,
+            CreatedAt = DateTime.UtcNow,
+            XCoordinate = 0,
+            YCoordinate = 0
+        }).ToList();
+    }
+
     public class CreateMessageRequest
     {
         public int? ConversationId { get; set; }
@@ -488,6 +591,39 @@ public class MessageController : ControllerBase
         /// Indicates whether the message was helpful. True for thumbs up (helpful), false for thumbs down (not helpful).
         /// </summary>
         public bool IsHelpful { get; set; }
+    }
+
+    /// <summary>
+    /// Request model for company message endpoint.
+    /// </summary>
+    public class CreateCompanyMessageRequest
+    {
+        /// <summary>
+        /// The user's message content.
+        /// </summary>
+        public string Content { get; set; } = string.Empty;
+        
+        /// <summary>
+        /// Optional conversation history to provide context for the LLM response.
+        /// Should be ordered chronologically with alternating user/assistant messages.
+        /// </summary>
+        public List<CompanyMessageHistoryItem>? MessageHistory { get; set; } = null;
+    }
+
+    /// <summary>
+    /// Represents a message history item for company requests.
+    /// </summary>
+    public class CompanyMessageHistoryItem
+    {
+        /// <summary>
+        /// The role of the message sender. Should be either "user" or "assistant".
+        /// </summary>
+        public string Role { get; set; } = string.Empty;
+        
+        /// <summary>
+        /// The content of the message.
+        /// </summary>
+        public string Content { get; set; } = string.Empty;
     }
 
 }
