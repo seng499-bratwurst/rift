@@ -14,7 +14,7 @@ public class PromptBuilder
         _systemPrompt = systemPrompt;
     }
 
-    public Prompt BuildPrompt(string userQuery, List<Message> messageHistory, string oncApiData, List<RelevantDocument> relevantDocuments)
+    public Prompt BuildPrompt(string userQuery, List<Message> messageHistory, string oncApiData, List<DocumentChunk> relevantDocuments)
     {
         var messages = new List<PromptMessage>
         {
@@ -43,13 +43,8 @@ public class PromptBuilder
         contextContent.Append("[API Data] \n\n" + oncApiData + "\n\n");
         
         contextContent.Append("[Relevant Document Chunks] \n\n");
-        var documentChunks = relevantDocuments.Select(doc => new DocumentChunk
-        {
-            Title = doc.Source,
-            Content = doc.Content
-        }).ToList() ?? new List<DocumentChunk>();
 
-        foreach (var doc in documentChunks)
+        foreach (var doc in relevantDocuments)
         {
 
             contextContent.Append($"\t[Document {doc.Title}]\n {doc.Content}\n");
@@ -61,13 +56,16 @@ public class PromptBuilder
             content = contextContent.ToString()
         });
 
+        // Current date and time in the format of yyyy-MM-ddTHH:mm:ss.fffZ
+        var currentDate = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
+
         var prompt = new Prompt
         {
-            SystemPrompt = _systemPrompt.ToString(),
+            SystemPrompt = _systemPrompt.ToString() + $"\n\nCurrent Date and Time: {currentDate}",
             UserQuery = userQuery,
             Messages = messages,
-            OncAPIData= oncApiData,
-            RelevantDocumentChunks = documentChunks
+            OncAPIData = oncApiData,
+            RelevantDocumentChunks = relevantDocuments
         };
 
         return prompt;

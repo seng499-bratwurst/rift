@@ -11,9 +11,13 @@ tokenizer = AutoTokenizer.from_pretrained("BAAI/bge-reranker-base")
 model = AutoModelForSequenceClassification.from_pretrained("BAAI/bge-reranker-base")
 model.eval()
 
+class RerankedDocument(BaseModel):
+    title: str
+    content: str
+
 class RerankRequest(BaseModel):
     query: str
-    docs: List[str]
+    docs: List[RerankedDocument]
 
 @app.post("/rerank")
 async def rerank(request: RerankRequest):
@@ -23,13 +27,13 @@ async def rerank(request: RerankRequest):
     if not docs:
         return {"reranked_docs": []}
 
-    pairs = [f"{query} [SEP] {doc}" for doc in docs]
+    pairs = [f"{query} [SEP] {doc.content}" for doc in docs]
     inputs = tokenizer(pairs, return_tensors='pt', padding=True, truncation=True)
     with torch.no_grad():
         scores = model(**inputs).logits.squeeze(-1).tolist()
 
     reranked = sorted(zip(docs, scores), key=lambda x: x[1], reverse=True)
-    return {"reranked_docs": [doc for doc, score in reranked]}
+    return {"reranked_docs": [doc for doc, score in reranked[:10]]}  # Return top 10 reranked documents
 
 @app.get("/rerank")
 async def test():
