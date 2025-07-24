@@ -1,27 +1,31 @@
-using Microsoft.EntityFrameworkCore;
-using Rift.App.Clients;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 using Rift.Models;
+using Rift.App.Clients;
+using Microsoft.EntityFrameworkCore;
 
-public class SeedFiles
+[ApiController]
+[Route("api")]
+public class InitialDocumentsController : ControllerBase
 {
     private readonly ChromaDBClient _chromaDbClient;
+    private readonly FileDbContext _dbContext;
 
-    public SeedFiles(ChromaDBClient chromaDbClient)
+
+    public InitialDocumentsController(ChromaDBClient chromaDbClient, FileDbContext dbContext)
     {
+        _dbContext = dbContext;
         _chromaDbClient = chromaDbClient;
     }
 
-    public async Task SeedAsync(FileDbContext dbContext)
+    [HttpGet("initial-documents")]
+    public async Task<IActionResult> GetInitialDocuments()
     {
         Console.WriteLine("Seeding files...");
 
-        var numFiles = await dbContext.Files.CountAsync();
-
-        if (numFiles > 0)
-        {
-            Console.WriteLine("Files already exist in the database. Skipping seeding.");
-            return;
-        }
+        _dbContext.Files.RemoveRange(_dbContext.Files);
+        await _dbContext.SaveChangesAsync();
 
         var collections = await _chromaDbClient.ListCollectionsAsync();
 
@@ -30,7 +34,7 @@ public class SeedFiles
         if (collections == null || collections.Count == 0)
         {
             Console.WriteLine("No collections found. Skipping file seeding.");
-            return;
+            return Ok("No collections found. Skipping file seeding.");
         }
 
         foreach (var collection in collections)
@@ -74,10 +78,11 @@ public class SeedFiles
                 fileEntities.Add(fileEntity);
             }
 
-            dbContext.Files.AddRange(fileEntities);
-            await dbContext.SaveChangesAsync();
+            _dbContext.Files.AddRange(fileEntities);
+            await _dbContext.SaveChangesAsync();
         }
 
         Console.WriteLine("File seeding completed.");
+        return Ok("File seeding completed.");
     }
 }

@@ -1,6 +1,8 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Rift.App.Clients;
+using Rift.App.Models;
 using Rift.Models;
 using Rift.Services;
 
@@ -12,10 +14,12 @@ namespace Rift.Controllers;
 public class FileController : ControllerBase
 {
     private readonly IFileService _fileService;
+    private readonly ChromaDBClient _chromaDBClient;
 
-    public FileController(IFileService fileService)
+    public FileController(IFileService fileService, ChromaDBClient chromaDBClient)
     {
         _fileService = fileService;
+        _chromaDBClient = chromaDBClient;
     }
 
     [HttpPost("")]
@@ -42,20 +46,47 @@ public class FileController : ControllerBase
 
         var file = request.File;
 
-        var fileContents = await _fileService.ExtractTextAsync(file);
+        // var fileContents = await _fileService.ExtractTextAsync(file); // Commenting out because its unnecessary for now
 
         var fileEntity = new FileEntity
         {
-            Name = file.FileName,
-            Content = fileContents,
+            Name = Path.GetFileNameWithoutExtension(file.FileName),
+            SourceDoc = Path.GetFileNameWithoutExtension(file.FileName), // For files manually uploaded for now we treat name and source doc as the same
+            // Content = fileContents,
             Size = file.Length,
             CreatedAt = DateTime.UtcNow,
             UploadedBy = userId,
             SourceLink = request.SourceLink,
-            SourceType = request.SourceType
+            SourceType = request.SourceType,
         };
 
         var result = await _fileService.UploadFileAsync(fileEntity);
+
+        byte[] fileBytes;
+        using (var ms = new MemoryStream())
+        {
+            await file.CopyToAsync(ms);
+            fileBytes = ms.ToArray();
+        }
+
+        var success = await _chromaDBClient.AddSingleFileAsync(new AddFileRequest
+        {
+            FileContent = fileBytes,
+            FileName = file.FileName,
+            DocType = request.SourceType,
+            CollectionName = "oceanographic_data"
+        });
+
+        if (!success)
+        {
+            return StatusCode(500, new ApiResponse<object>
+            {
+                Success = false,
+                Error = "Failed to add document to ChromaDB.",
+                Data = null
+            });
+        }
+
         return Ok(new ApiResponse<int>
         {
             Success = true,

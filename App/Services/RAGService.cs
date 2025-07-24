@@ -34,9 +34,12 @@ public class RAGService : IRAGService
         var relevantDocuments = (await _chromaDbClient.GetRelevantDataAsync(userQuery, similarityThreshold: 0.5)).RelevantDocuments;
 
         var relevantDocTitles = relevantDocuments
-            .Select(doc => doc.Id.Split('_')[0])
+            .Select(doc => doc.Metadata?["source_doc"]?.ToString())
+            .Where(title => !string.IsNullOrEmpty(title))
             .Distinct()
+            .Cast<string>()
             .ToList();
+
         // Console.WriteLine($"Relevant Document Titles: {string.Join(", ", relevantDocTitles)}");
         // TODO: Add reranker back once new prompts are working
         // var rerankRequest = new RerankRequest
