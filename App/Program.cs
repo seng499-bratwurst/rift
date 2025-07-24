@@ -53,6 +53,12 @@ builder.Services.AddDbContext<FileDbContext>(options =>
     var fileDbPassword = Environment.GetEnvironmentVariable("FILEDB_PASSWORD");
     var fileDbName = Environment.GetEnvironmentVariable("FILEDB_DB");
     var fileDbConnStr = $"Host={fileDbHost};Port={fileDbPort};Database={fileDbName};Username={fileDbUser};Password={fileDbPassword}";
+
+    if (string.IsNullOrEmpty(fileDbHost))
+    {
+        fileDbConnStr = builder.Configuration.GetConnectionString("FileDbConnection");
+    }
+
     options.UseNpgsql(fileDbConnStr);
 });
 
