@@ -134,6 +134,34 @@ public class ChromaDBClient
         }
     }
 
+    public async Task<bool> RemoveChunksFromSourceDocAsync(string sourceDoc, string collectionName = "oceanographic_data")
+    {
+        try
+        {
+            // Build the request URL (assuming _baseUrl matches your API root)
+            string url = $"{_baseUrl}/documents/by-source/{Uri.EscapeDataString(sourceDoc)}?collection_name={Uri.EscapeDataString(collectionName)}";
+
+            // Send DELETE request
+            var response = await _httpClient.DeleteAsync(url);
+
+            if (response.IsSuccessStatusCode)
+            {
+                _logger.LogInformation("Successfully removed chunks for source_doc '{SourceDoc}' from collection '{Collection}'",
+                    sourceDoc, collectionName);
+                return true;
+            }
+
+            var errorContent = await response.Content.ReadAsStringAsync();
+            _logger.LogError("Failed to remove chunks for source_doc '{SourceDoc}': {Error}", sourceDoc, errorContent);
+            return false;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Exception occurred while removing chunks for source_doc '{SourceDoc}'", sourceDoc);
+            return false;
+        }
+    }
+
     /// <summary>
     /// Add multiple documents to the vector database in batch
     /// </summary>

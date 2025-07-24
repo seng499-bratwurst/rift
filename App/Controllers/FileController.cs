@@ -125,6 +125,32 @@ public class FileController : ControllerBase
             return Forbid();
         }
 
+        var file = await _fileService.GetFileByIdAsync(id);
+
+        if (file == null)
+        {
+            return NotFound(new ApiResponse<object>
+            {
+                Success = false,
+                Error = "File not found",
+                Data = null
+            });
+        }
+
+        Console.WriteLine($"Deleting file with ID: {id}, Name: {file?.SourceDoc}");
+
+        var success = await _chromaDBClient.RemoveChunksFromSourceDocAsync(file.SourceDoc);
+
+        if (!success)
+        {
+            return StatusCode(500, new ApiResponse<object>
+            {
+                Success = false,
+                Error = "Failed to remove document from ChromaDB.",
+                Data = null
+            });
+        }
+
         var deleted = await _fileService.DeleteFileByIdAsync(id);
 
         if (deleted == null)

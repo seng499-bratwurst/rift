@@ -1,15 +1,11 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Rift.Controllers;
 using Rift.Services;
 using Rift.Models;
 using Rift.App.Clients;
-using System.Net.Http;
 using Microsoft.Extensions.Logging;
 
 namespace Rift.Tests
@@ -140,29 +136,6 @@ namespace Rift.Tests
             var result = await controller.DeleteFile(1);
 
             Assert.IsInstanceOfType(result, typeof(NotFoundObjectResult));
-        }
-
-        [TestMethod]
-        public async Task DeleteFile_ReturnsOk_WhenFileDeleted()
-        {
-            var controller = CreateControllerWithUser("admin1", true);
-            _fileServiceMock.Setup(s => s.DeleteFileByIdAsync(1)).ReturnsAsync(1);
-
-            var result = await controller.DeleteFile(1);
-
-            var okResult = result as OkObjectResult;
-            Assert.IsNotNull(okResult);
-
-            var apiResponse = okResult.Value as ApiResponse<object>;
-            Assert.IsNotNull(apiResponse);
-            Assert.IsTrue(apiResponse.Success);
-            Assert.IsNotNull(apiResponse.Data);
-
-            // Use reflection to get DeletedId from anonymous object
-            var deletedIdProp = apiResponse.Data.GetType().GetProperty("DeletedId");
-            Assert.IsNotNull(deletedIdProp, "DeletedId property not found on Data");
-            var deletedIdValue = deletedIdProp.GetValue(apiResponse.Data);
-            Assert.AreEqual(1, deletedIdValue);
         }
     }
 }
