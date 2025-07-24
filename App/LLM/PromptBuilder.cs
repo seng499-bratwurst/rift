@@ -14,7 +14,7 @@ public class PromptBuilder
         _systemPrompt = systemPrompt;
     }
 
-    public Prompt BuildPrompt(string userQuery, List<Message> messageHistory, string oncApiData, List<RelevantDocument> relevantDocuments)
+    public Prompt BuildPrompt(string userQuery, List<Message> messageHistory, string oncApiData, List<DocumentChunk> relevantDocuments)
     {
         var messages = new List<PromptMessage>
         {
@@ -43,20 +43,8 @@ public class PromptBuilder
         contextContent.Append("[API Data] \n\n" + oncApiData + "\n\n");
         
         contextContent.Append("[Relevant Document Chunks] \n\n");
-        var documentChunks = relevantDocuments.Select(doc => {
-            var docTitle = string.Empty;
-            if (doc.Metadata != null && doc.Metadata.ContainsKey("name"))
-            {
-                docTitle = doc.Metadata["name"].ToString() ?? string.Empty;
-            }
-            return new DocumentChunk
-            {
-                Title = docTitle,
-                Content = doc.Content
-            };
-        }).ToList();
 
-        foreach (var doc in documentChunks)
+        foreach (var doc in relevantDocuments)
         {
 
             contextContent.Append($"\t[Document {doc.Title}]\n {doc.Content}\n");
@@ -77,7 +65,7 @@ public class PromptBuilder
             UserQuery = userQuery,
             Messages = messages,
             OncAPIData = oncApiData,
-            RelevantDocumentChunks = documentChunks
+            RelevantDocumentChunks = relevantDocuments
         };
 
         return prompt;

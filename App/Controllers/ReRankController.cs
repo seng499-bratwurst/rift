@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Rift.App.Models;
 
 namespace Rift.App.Controllers;
 
@@ -24,9 +25,9 @@ public class ReRankerController : ControllerBase
     public class RerankRequestDto
     {
         [Required]
-        public string Query { get; set; }
+        public required string Query { get; set; }
         [Required]
-        public List<string> Docs { get; set; }
+        public required List<DocumentChunk> Docs { get; set; }
     }
 
     /// <summary>

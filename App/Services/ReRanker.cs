@@ -1,14 +1,16 @@
 using System.Text.Json;
+using Rift.App.Models;
 
 public class RerankRequest
 {
     public string? Query { get; set; }
-    public List<string>? Docs { get; set; }
+    public List<DocumentChunk>? Docs { get; set; }
 }
+
 
 public class RerankResponse
 {
-    public List<string>? Reranked_Docs { get; set; }
+    public List<DocumentChunk> Reranked_Docs { get; set; } = new List<DocumentChunk>();
 }
 
 public class ReRankerClient
@@ -21,12 +23,12 @@ public class ReRankerClient
         _httpClient.BaseAddress = new Uri("http://reranker:6000/");
     }
 
-    public async Task<RerankResponse?> RerankAsync(RerankRequest request)
+    public async Task<RerankResponse> RerankAsync(RerankRequest request)
     {
         var response = await _httpClient.PostAsJsonAsync("rerank", request);
         response.EnsureSuccessStatusCode();
         var json = await response.Content.ReadAsStringAsync();
-        return JsonSerializer.Deserialize<RerankResponse>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        return JsonSerializer.Deserialize<RerankResponse>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new RerankResponse();
     }
 
     public async Task<string> TestAsync()
