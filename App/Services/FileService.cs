@@ -48,6 +48,11 @@ public class FileService : IFileService
         return await _fileRepository.DeleteAsync(fileId);
     }
 
+    public async Task<FileEntity?> GetFileByIdAsync(int fileId)
+    {
+        return await _fileRepository.GetByIdAsync(fileId);
+    }
+
     public async Task<string> ExtractTextAsync(IFormFile file)
     {
         var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
