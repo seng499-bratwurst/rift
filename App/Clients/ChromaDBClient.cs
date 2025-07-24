@@ -89,6 +89,52 @@ public class ChromaDBClient
     }
 
     /// <summary>
+    /// Add a single file to the vector database
+    /// </summary>
+    public async Task<bool> AddSingleFileAsync(AddFileRequest request)
+    {
+        try
+        {
+            // Prepare multipart form data
+            using var form = new MultipartFormDataContent();
+
+            // Add file
+            if (request.FileContent == null || string.IsNullOrEmpty(request.FileName))
+                throw new ArgumentException("FileContent and FileName are required for document upload.");
+
+            var fileContent = new ByteArrayContent(request.FileContent);
+            // Optionally set the content type (e.g., "text/plain", "application/pdf", etc.)
+            fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
+            form.Add(fileContent, "file", request.FileName);
+
+            // Add doc_type (enum string value)
+            form.Add(new StringContent(request.DocType), "doc_type");
+
+            // Add collection_name (default to "oceanographic_data" if not provided)
+            form.Add(new StringContent(request.CollectionName ?? "oceanographic_data"), "collection_name");
+
+            // Send request
+            var response = await _httpClient.PostAsync($"{_baseUrl}/documents/add", form);
+
+            if (response.IsSuccessStatusCode)
+            {
+                _logger.LogInformation("Successfully added document {DocumentId} to collection {Collection}",
+                    request.FileName, request.CollectionName);
+                return true;
+            }
+
+            var errorContent = await response.Content.ReadAsStringAsync();
+            _logger.LogError("Failed to add document {DocumentId}: {Error}", request.FileName, errorContent);
+            return false;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Exception occurred while adding document {DocumentId}", request.FileName);
+            return false;
+        }
+    }
+
+    /// <summary>
     /// Add multiple documents to the vector database in batch
     /// </summary>
     public async Task<bool> AddDocumentsBatchAsync(BatchDocumentsRequest request)

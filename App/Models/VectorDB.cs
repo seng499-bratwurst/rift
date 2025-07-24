@@ -34,6 +34,14 @@ public class AddRequest
     public string CollectionName { get; set; } = "oceanographic_data";
 }
 
+public class AddFileRequest
+{
+    public required byte[] FileContent { get; set; }
+    public required string FileName { get; set; }
+    public required string DocType { get; set; }
+    public required string CollectionName { get; set; }
+}
+
 public class BatchDocumentsRequest
 {
     [Required]

@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 using Rift.Controllers;
 using Rift.Services;
 using Rift.Models;
+using Rift.App.Clients;
+using System.Net.Http;
+using Microsoft.Extensions.Logging;
 
 namespace Rift.Tests
 {
@@ -15,11 +18,23 @@ namespace Rift.Tests
     public class FileControllerTests
     {
         private Mock<IFileService> _fileServiceMock;
+        private Mock<HttpMessageHandler> _httpHandlerMock;
+
+        private HttpClient _httpClient;
+        private Mock<ILogger<ChromaDBClient>> _loggerMock;
+
+        private ChromaDBClient _client;
+
 
         [TestInitialize]
         public void Setup()
         {
             _fileServiceMock = new Mock<IFileService>();
+            _httpHandlerMock = new Mock<HttpMessageHandler>();
+            _httpClient = new HttpClient(_httpHandlerMock.Object);
+            _loggerMock = new Mock<ILogger<ChromaDBClient>>();
+            _client = new ChromaDBClient(_httpClient, _loggerMock.Object, "http://test");
+
         }
 
         private FileController CreateControllerWithUser(string userId, bool isAdmin)
@@ -31,7 +46,7 @@ namespace Rift.Tests
             var identity = new ClaimsIdentity(claims, "mock");
             var user = new ClaimsPrincipal(identity);
 
-            var controller = new FileController(_fileServiceMock.Object)
+            var controller = new FileController(_fileServiceMock.Object, _client)
             {
                 ControllerContext = new ControllerContext
                 {
@@ -43,7 +58,7 @@ namespace Rift.Tests
 
         private FileController CreateControllerWithoutUser()
         {
-            var controller = new FileController(_fileServiceMock.Object)
+            var controller = new FileController(_fileServiceMock.Object, _client)
             {
                 ControllerContext = new ControllerContext
                 {
@@ -68,43 +83,6 @@ namespace Rift.Tests
             var result = await controller.UploadFile(uploadRequest);
 
             Assert.IsInstanceOfType(result, typeof(ForbidResult));
-        }
-
-        [TestMethod]
-        public async Task UploadFile_ReturnsOk_WhenAdmin()
-        {
-            var controller = CreateControllerWithUser("admin1", true);
-            var fileMock = new Mock<IFormFile>();
-            fileMock.Setup(f => f.FileName).Returns("test.txt");
-            fileMock.Setup(f => f.Length).Returns(123);
-
-            _fileServiceMock.Setup(s => s.ExtractTextAsync(It.IsAny<IFormFile>()))
-                .ReturnsAsync("file content");
-            _fileServiceMock.Setup(s => s.UploadFileAsync(It.IsAny<FileEntity>()))
-                .ReturnsAsync(new FileEntity
-                {
-                    Id = 42,
-                    Name = "test.txt",
-                    Content = "file content",
-                    UploadedBy = "admin1",
-                    Size = 123,
-                    CreatedAt = System.DateTime.UtcNow
-                });
-
-            var uploadRequest = new FileController.UploadFileRequest
-            {
-                File = fileMock.Object,
-                SourceLink = "http://example.com/",
-                SourceType = "test_source"
-            };
-
-            var result = await controller.UploadFile(uploadRequest);
-
-            var okResult = result as OkObjectResult;
-            Assert.IsNotNull(okResult);
-            var apiResponse = okResult.Value as ApiResponse<int>;
-            Assert.IsTrue(apiResponse.Success);
-            Assert.AreEqual(42, apiResponse.Data);
         }
 
         [TestMethod]

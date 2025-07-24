@@ -58,6 +58,8 @@ public class SeedFiles
 
                 var sourceType = document.Metadata?.ContainsKey("source_type") == true ? document.Metadata["source_type"]?.ToString() : null;
                 var source = document.Metadata?.ContainsKey("source") == true ? document.Metadata["source"]?.ToString() : string.Empty;
+                var title = document.Metadata?.ContainsKey("title") == true ? document.Metadata["title"]?.ToString() : string.Empty;
+                var sourceDoc = document.Metadata?.ContainsKey("source_doc") == true ? document.Metadata["source_doc"]?.ToString() : string.Empty;
 
                 names.Add(name);
                 var fileEntity = new FileEntity
@@ -66,6 +68,8 @@ public class SeedFiles
                     UploadedBy = "system",
                     SourceLink = source ?? string.Empty,
                     SourceType = sourceType ?? string.Empty,
+                    Title = title ?? string.Empty,
+                    SourceDoc = sourceDoc ?? string.Empty,
                 };
                 fileEntities.Add(fileEntity);
             }

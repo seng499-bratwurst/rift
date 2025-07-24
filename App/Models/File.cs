@@ -1,6 +1,4 @@
-using System;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Rift.Models;
 
@@ -22,6 +20,8 @@ public class FileEntity
     public required string UploadedBy { get; set; }
     public string SourceLink { get; set; } = string.Empty;
     public string SourceType { get; set; } = string.Empty;
+    public string SourceDoc { get; set; } = string.Empty;
+    public string Title { get; set; } = string.Empty;
 }
 
 public class FileEntityDto

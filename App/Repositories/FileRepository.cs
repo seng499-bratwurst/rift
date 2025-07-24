@@ -70,7 +70,7 @@ namespace Rift.Repositories
         {
             var nameSet = new HashSet<string>(names);
             var result = await _dbContext.Files
-                .Where(f => nameSet.Contains(f.Name))
+                .Where(f => nameSet.Contains(f.SourceDoc))
                 .Select(f => new FileEntityDto
                 {
                     Name = f.Name,
