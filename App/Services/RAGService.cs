@@ -44,8 +44,10 @@ public class RAGService : IRAGService
             {
                 documentTitle = "ONC Confluence Data (" + doc.Metadata?.GetValueOrDefault("source_doc")?.ToString() + ")";
             }
+            
             return new DocumentChunk
             {
+                SourceId = doc.Id.Split('_')[0],
                 Title = documentTitle ?? string.Empty,
                 Content = doc.Content
             };
@@ -67,16 +69,16 @@ public class RAGService : IRAGService
             rerankedDocuments
         );
 
-        Console.WriteLine("Generated Prompt:");
-        Console.WriteLine("\tUser Query: " + prompt.UserQuery);
+        // Console.WriteLine("Generated Prompt:");
+        // Console.WriteLine("\tUser Query: " + prompt.UserQuery);
         // Console.WriteLine("\tMessages: " + JsonSerializer.Serialize(prompt.Messages));
-        Console.WriteLine("\tAPI Data:" + prompt.OncAPIData);
-        Console.WriteLine("\tRelevant Data: " + JsonSerializer.Serialize(prompt.RelevantDocumentChunks));
+        // Console.WriteLine("\tAPI Data:" + prompt.OncAPIData);
+        // Console.WriteLine("\tRelevant Data: " + JsonSerializer.Serialize(prompt.RelevantDocumentChunks));
 
         var finalResponse = await _llmProvider.GenerateFinalResponseRAG(prompt);
 
         var cleanedResponse = _responseProcessor.ProcessResponse(finalResponse);
 
-        return (cleanedResponse, rerankedDocuments.Select(doc => doc.Title).Distinct().ToList());
+        return (cleanedResponse, rerankedDocuments.Select(doc => doc.SourceId).Distinct().ToList());
     }
 }
