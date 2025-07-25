@@ -218,6 +218,51 @@ builder.Services.AddRateLimiter(options =>
         });
 
     });
+
+    options.AddPolicy("PerCompanyToken", context =>
+    {
+        var httpContext = context as HttpContext;
+        var scopedServices = httpContext?.RequestServices;
+
+        string? companyToken = httpContext?.Request.Headers["X-Company-Token"].FirstOrDefault();
+
+        if (string.IsNullOrWhiteSpace(companyToken))
+        {
+            Console.WriteLine("Company token not found in headers.");
+            return RateLimitPartition.GetNoLimiter("no-token");
+        }
+
+        var dbContext = scopedServices?.GetRequiredService<ApplicationDbContext>();
+        bool tokenExists = dbContext?.CompanyAPITokens.Any(t => t.ONCApiToken == companyToken) ?? false;
+
+        if (!tokenExists)
+        {
+            Console.WriteLine($"Company token '{companyToken}' not found in DB.");
+            // Apply restrictive rate limiting for invalid tokens to prevent abuse
+            return RateLimitPartition.GetTokenBucketLimiter($"invalid-{companyToken}", _ => new TokenBucketRateLimiterOptions
+            {
+                TokenLimit = 5, // Very restrictive for invalid tokens
+                TokensPerPeriod = 5,
+                ReplenishmentPeriod = TimeSpan.FromHours(1),
+                AutoReplenishment = true,
+                QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                QueueLimit = 0,
+            });
+        }
+
+        Console.WriteLine($"Applying company rate limiting for token: {companyToken}");
+
+        return RateLimitPartition.GetTokenBucketLimiter(companyToken, _ => new TokenBucketRateLimiterOptions
+        {
+            TokenLimit = 50, // Higher limit for company integrations
+            TokensPerPeriod = 50, // How many tokens are added per period
+            ReplenishmentPeriod = TimeSpan.FromHours(1), // How often are tokens replenished
+            AutoReplenishment = true, // Disable to manually control replenishment
+            QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+            QueueLimit = 0,
+        });
+        
+    });
 });
 
 
