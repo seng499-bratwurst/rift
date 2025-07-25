@@ -301,6 +301,34 @@ public class MessageController : ControllerBase
             });
         }
 
+        // Validate message history if provided
+        if (request.MessageHistory != null)
+        {
+            foreach (var historyItem in request.MessageHistory)
+            {
+                if (string.IsNullOrWhiteSpace(historyItem.Role) || 
+                    (historyItem.Role != "user" && historyItem.Role != "assistant"))
+                {
+                    return BadRequest(new ApiResponse<object>
+                    {
+                        Success = false,
+                        Error = "Message history role must be either 'user' or 'assistant'.",
+                        Data = null
+                    });
+                }
+                
+                if (string.IsNullOrWhiteSpace(historyItem.Content))
+                {
+                    return BadRequest(new ApiResponse<object>
+                    {
+                        Success = false,
+                        Error = "Message history content cannot be empty.",
+                        Data = null
+                    });
+                }
+            }
+        }
+
         // Get company token from header
         string? companyToken = Request.Headers["X-Company-Token"].FirstOrDefault();
         
@@ -331,12 +359,17 @@ public class MessageController : ControllerBase
 
         try
         {
+            // Log company API usage for monitoring
+            Console.WriteLine($"Company API request from token: {companyToken?.Substring(0, Math.Min(8, companyToken.Length))}... Content length: {request.Content.Length}");
+            
             // Generate LLM response using RAG service
             // Use provided message history or empty list if not provided
             var messageHistory = ConvertToMessageList(request.MessageHistory);
             var (llmResponse, relevantDocTitles) = await _ragService.GenerateResponseAsync(request.Content, messageHistory);
 
             var documents = await _fileService.GetFilesByTitlesAsync(relevantDocTitles);
+
+            Console.WriteLine($"Company API response generated. Documents found: {documents.Count()}");
 
             return Ok(new ApiResponse<object>
             {

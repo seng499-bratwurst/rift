@@ -215,7 +215,16 @@ builder.Services.AddRateLimiter(options =>
         if (!tokenExists)
         {
             Console.WriteLine($"Company token '{companyToken}' not found in DB.");
-            return RateLimitPartition.GetNoLimiter("not-limited");
+            // Apply restrictive rate limiting for invalid tokens to prevent abuse
+            return RateLimitPartition.GetTokenBucketLimiter($"invalid-{companyToken}", _ => new TokenBucketRateLimiterOptions
+            {
+                TokenLimit = 5, // Very restrictive for invalid tokens
+                TokensPerPeriod = 5,
+                ReplenishmentPeriod = TimeSpan.FromHours(1),
+                AutoReplenishment = true,
+                QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                QueueLimit = 0,
+            });
         }
 
         Console.WriteLine($"Applying company rate limiting for token: {companyToken}");
