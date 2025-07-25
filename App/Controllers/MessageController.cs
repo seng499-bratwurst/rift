@@ -360,7 +360,11 @@ public class MessageController : ControllerBase
         try
         {
             // Log company API usage for monitoring
-            Console.WriteLine($"Company API request from token: {companyToken?.Substring(0, Math.Min(8, companyToken.Length))}... Content length: {request.Content.Length}");
+            using (var sha256 = System.Security.Cryptography.SHA256.Create())
+            {
+                var tokenHash = BitConverter.ToString(sha256.ComputeHash(System.Text.Encoding.UTF8.GetBytes(companyToken ?? ""))).Replace("-", "");
+                Console.WriteLine($"Company API request from token hash: {tokenHash} Content length: {request.Content.Length}");
+            }
             
             // Generate LLM response using RAG service
             // Use provided message history or empty list if not provided
