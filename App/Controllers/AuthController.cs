@@ -157,8 +157,9 @@ public class AuthController : ControllerBase
         {
             HttpOnly = true,
             Secure = _isProduction,
-            SameSite = _isProduction ? SameSiteMode.Strict : SameSiteMode.Lax,
+            SameSite = SameSiteMode.None,
             Expires = DateTimeOffset.UtcNow.AddHours(1),
+            Domain = _isProduction ? ".coursesystem.app" : null
         });
     }
 
