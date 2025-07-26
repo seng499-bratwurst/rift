@@ -17,17 +17,14 @@ public class AdminRepository : IAdminRepository
 
     public async Task<List<(User user, IList<string> roles)>> GetUsersWithRolesAsync()
     {
-        var users = _userManager.Users.ToList();
+        var users = _userManager.Users.ToList(); // Materialize the users list
         var result = new List<(User, IList<string>)>();
 
-        var tasks = users.Select(async user => 
+        foreach (var user in users) // Iterate sequentially
         {
             var roles = await _userManager.GetRolesAsync(user);
-            return (user, roles);
-        }).ToList();
-        
-        var results = await Task.WhenAll(tasks);
-        result.AddRange(results);
+            result.Add((user, roles));
+        }
 
         return result;
     }

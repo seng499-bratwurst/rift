@@ -85,6 +85,9 @@ builder.Services.AddHttpClient<ReRankerClient>();
 
 builder.Services.AddScoped<IUserService, UserService>();
 
+builder.Services.AddScoped<IAdminService, AdminService>();
+builder.Services.AddScoped<IAdminRepository, AdminRepository>();
+
 builder.Services.AddScoped<IConversationService, ConversationService>();
 builder.Services.AddScoped<IConversationRepository, ConversationRepository>();
 
@@ -282,7 +285,7 @@ using (var scope = app.Services.CreateScope())
     var seedFiles = new SeedFiles(chromaDbClient: services.GetRequiredService<ChromaDBClient>());
     await seedFiles.SeedAsync(fileDb);
     // Uncomment the line below to seed the dev admin user. For development purposes only.
-    // await SeedDevAdmin.SeedAsync(services);
+    await SeedDevAdmin.SeedAsync(services);
 }
 
 app.UseRouting();
