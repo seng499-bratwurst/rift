@@ -148,7 +148,7 @@ X-Company-Token: your-company-token-here
 **Request:**
 
 ```bash
-curl -X POST "https://your-api-domain.com/api/messages/company" \
+curl -X POST "https://astrolabe.coursesystem.app/api/messages/company" \
   -H "Content-Type: application/json" \
   -H "X-Company-Token: your-company-token-here" \
   -d '{
@@ -189,7 +189,7 @@ curl -X POST "https://your-api-domain.com/api/messages/company" \
 **Request:**
 
 ```bash
-curl -X POST "https://your-api-domain.com/api/messages/company" \
+curl -X POST "https://astrolabe.coursesystem.app/api/messages/company" \
   -H "Content-Type: application/json" \
   -H "X-Company-Token: your-company-token-here" \
   -d '{
@@ -289,5 +289,5 @@ For technical support, API token requests, or integration assistance, please con
 
 ---
 
-**Last Updated:** July 24, 2025  
-**API Version:** 1.0
+**Last Updated:** July 25, 2025  
+**API Version:** 1.1
