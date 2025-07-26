@@ -33,9 +33,10 @@ public class RAGService : IRAGService
         var oncApiData = await _llmProvider.GatherOncAPIData(userQuery);
 
         var chromaDocuments = (await _chromaDbClient.GetRelevantDataAsync(userQuery, 20, similarityThreshold: 0.5)).RelevantDocuments;
-
+        var relevantDocTitles = new List<string>();
         var relevantDocuments = chromaDocuments.Select(doc => {
             var documentTitle = doc.Metadata?.GetValueOrDefault("source_doc")?.ToString();
+            relevantDocTitles.Add(documentTitle ?? string.Empty);
             if (doc.Metadata?.GetValueOrDefault("source_type")?.ToString() == "confluence_json")
             {
                 documentTitle = "ONC Confluence Data (" + doc.Metadata?.GetValueOrDefault("source_doc")?.ToString() + ")";
@@ -75,6 +76,6 @@ public class RAGService : IRAGService
 
         var cleanedResponse = _responseProcessor.ProcessResponse(finalResponse);
 
-        return (cleanedResponse, rerankedDocuments.Select(doc => doc.SourceId).Distinct().ToList());
+        return (cleanedResponse, relevantDocTitles.Distinct().ToList());
     }
 }

@@ -152,12 +152,14 @@ public class AuthController : ControllerBase
 
     private void SetJwtCookie(string jwt)
     {
+        Console.WriteLine($"Production mode: {_isProduction}");
         Response.Cookies.Append("jwt", jwt, new CookieOptions
         {
             HttpOnly = true,
             Secure = _isProduction,
-            SameSite = _isProduction ? SameSiteMode.Strict : SameSiteMode.Lax,
+            SameSite = SameSiteMode.None,
             Expires = DateTimeOffset.UtcNow.AddHours(1),
+            Domain = _isProduction ? ".coursesystem.app" : null
         });
     }
 
