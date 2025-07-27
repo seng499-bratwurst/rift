@@ -209,10 +209,11 @@ public class MessageController : ControllerBase
 
         var conversationId = conversation!.Id;
 
+        string oncApiToken = "{YOUR_ONC_TOKEN}";
         var messageHistory = await _messageService.GetGuestMessagesForConversationAsync(sessionId, conversationId);
 
         // var llmResponse = await _ragService.GenerateResponseAsync(request.Content, messageHistory);
-        var (llmResponse, relevantDocTitles) = await _ragService.GenerateResponseAsync(request.Content, messageHistory, "{YOUR_ONC_TOKEN}");
+        var (llmResponse, relevantDocTitles) = await _ragService.GenerateResponseAsync(request.Content, messageHistory, oncApiToken ?? string.Empty);
 
         var documents = await _fileService.GetFilesByTitlesAsync(relevantDocTitles);
 
