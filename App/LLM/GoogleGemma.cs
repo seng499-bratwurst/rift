@@ -44,6 +44,7 @@ namespace Rift.LLM
             
             // Current date and time in the format of yyyy-MM-ddTHH:mm:ss.fffZ
             string currentDate = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
+            Console.WriteLine("$[DEBUG] Current Date and Time: " + currentDate);
 
             // create the messages list for function call looping and adding the current date and time to the system prompt
             var messages = new List<object>{

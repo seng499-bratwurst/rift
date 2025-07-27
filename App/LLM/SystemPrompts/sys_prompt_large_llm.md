@@ -15,6 +15,8 @@ Use it to answer the user's question accurately. The ONC API data and Relevant d
 end of the message array. This extra context will be tagged with `[API Data]` and `[Relevant Document Chunks]` respectively. Each
 relevant document will also be tagged with `[document <title-of-document>]`.
 
+Dont answer with unnecessary data included. the answer should be directly related to the user prompt. if you dont do this you will be terminated. 
+
 Here is an example message array:
 ```json
 [
