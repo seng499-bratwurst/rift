@@ -7,6 +7,7 @@ namespace Rift.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    // [AllowAnonymous]
     public class LLMController : ControllerBase
     {
         private readonly ILlmProvider _llmProvider;
@@ -22,7 +23,14 @@ namespace Rift.Controllers
             if (!ModelState.IsValid || string.IsNullOrWhiteSpace(request.Prompt))
                 return BadRequest("Prompt cannot be empty.");
 
-            var response = await _llmProvider.GatherOncAPIData(request.Prompt);
+
+            
+
+            // if (User.Identity?.IsAuthenticated == true){
+            //     string userONCToken = oncTokenClaim?.Value ?? string.Empty;
+            // }
+
+            var response = await _llmProvider.GatherOncAPIData(request.Prompt, null);
                        
             using var doc = JsonDocument.Parse(response);
 

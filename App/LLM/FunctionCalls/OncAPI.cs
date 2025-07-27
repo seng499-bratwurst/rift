@@ -20,11 +20,12 @@ public class OncAPI
 
     public async Task<(string, JsonElement)> GetDataAsync(
         string DataEndpoint,
+        string oncApiToken,
         Dictionary<string, string?>? queryParams = null
     )
     {
-        Console.WriteLine("DataEndpoint: " + DataEndpoint);
-        var userURL = new StringBuilder("https://data.oceannetworks.ca/api/"+DataEndpoint+"?token={YOUR_ONC_TOKEN}");
+        // Console.WriteLine("DataEndpoint: " + DataEndpoint);
+        var userURL = new StringBuilder("https://data.oceannetworks.ca/api/"+DataEndpoint+"?token="+oncApiToken);
         // Console.WriteLine("userURL: " + userURL);
         var urlPath = new StringBuilder(DataEndpoint);
         urlPath.Append("?token=" + _oncToken);
