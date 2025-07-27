@@ -25,7 +25,11 @@ public class OncAPI
     )
     {
         // Console.WriteLine("DataEndpoint: " + DataEndpoint);
-        var userURL = new StringBuilder("https://data.oceannetworks.ca/api/"+DataEndpoint+"?token="+oncApiToken);
+        
+        // Use the user's token if provided and not empty, otherwise use the system token
+        string tokenForUrl = !string.IsNullOrEmpty(oncApiToken) ? oncApiToken : _oncToken;
+        
+        var userURL = new StringBuilder("https://data.oceannetworks.ca/api/"+DataEndpoint+"?token="+tokenForUrl);
         // Console.WriteLine("userURL: " + userURL);
         var urlPath = new StringBuilder(DataEndpoint);
         urlPath.Append("?token=" + _oncToken);

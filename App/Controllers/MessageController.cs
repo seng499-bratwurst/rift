@@ -209,7 +209,7 @@ public class MessageController : ControllerBase
 
         var conversationId = conversation!.Id;
 
-        string oncApiToken = "{YOUR_ONC_TOKEN}";
+        string oncApiToken = string.Empty; // Use empty string to fall back to system token
         var messageHistory = await _messageService.GetGuestMessagesForConversationAsync(sessionId, conversationId);
 
         // var llmResponse = await _ragService.GenerateResponseAsync(request.Content, messageHistory);
