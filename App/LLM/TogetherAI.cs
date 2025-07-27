@@ -37,7 +37,7 @@ namespace Rift.LLM
         // }
 
         // Sends a chat completion request to Hugging Face endpoint
-        public async Task<string> GatherOncAPIData(string prompt)
+        public async Task<string> GatherOncAPIData(string prompt, string? oncApiToken)
         {
             // Equivalent cURL:
             // curl https://router.huggingface.co/together/v1/chat/completions \

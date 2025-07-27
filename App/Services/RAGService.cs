@@ -26,11 +26,11 @@ public class RAGService : IRAGService
         _responseProcessor = responseProcessor;
     }
 
-    public async Task<(string cleanedResponse, List<string> relevantDocTitles)> GenerateResponseAsync(string userQuery, List<Message>? messageHistory)
+    public async Task<(string cleanedResponse, List<string> relevantDocTitles)> GenerateResponseAsync(string userQuery, List<Message>? messageHistory, string? oncApiToken)
     {
         messageHistory ??= new List<Message>();
 
-        var oncApiData = await _llmProvider.GatherOncAPIData(userQuery);
+        var oncApiData = await _llmProvider.GatherOncAPIData(userQuery, oncApiToken);
 
         var chromaDocuments = (await _chromaDbClient.GetRelevantDataAsync(userQuery, 20, similarityThreshold: 0.5)).RelevantDocuments;
         var relevantDocTitles = new List<string>();
@@ -67,7 +67,7 @@ public class RAGService : IRAGService
         );
 
         // Console.WriteLine("Generated Prompt:");
-        // Console.WriteLine("\tUser Query: " + prompt.UserQuery);
+        Console.WriteLine("\tUser Query: " + prompt.UserQuery);
         // Console.WriteLine("\tMessages: " + JsonSerializer.Serialize(prompt.Messages));
         // Console.WriteLine("\tAPI Data:" + prompt.OncAPIData);
         // Console.WriteLine("\tRelevant Data: " + JsonSerializer.Serialize(prompt.RelevantDocumentChunks));

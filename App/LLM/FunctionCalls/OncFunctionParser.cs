@@ -40,11 +40,11 @@ namespace Rift.LLM
             return (functionName, args);
         }
 
-        public async Task<(string, string)> OncAPICall(string functionName, Dictionary<string, string?> functionParams)
+        public async Task<(string, string)> OncAPICall(string functionName, Dictionary<string, string?> functionParams, string oncApiToken)
         {
             // Console.WriteLine($"Function Name ONC API Call function: {functionName}");
             // Console.WriteLine($"Function Params ONC API Call function: {functionParams}");
-            var (userURL, response) = await _oncApiClient.GetDataAsync(functionName, functionParams);
+            var (userURL, response) = await _oncApiClient.GetDataAsync(functionName, oncApiToken,functionParams );
             // Console.WriteLine($"ONC API Response: {response}");
             var serializedResponse = JsonSerializer.Serialize(response, new JsonSerializerOptions { WriteIndented = true });
 

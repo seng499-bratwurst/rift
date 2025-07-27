@@ -93,7 +93,9 @@ public class MessageController : ControllerBase
 
         var messageHistory = await _messageService.GetMessagesForConversationAsync(userId, conversationId);
 
-        var (llmResponse, relevantDocTitles) = await _ragService.GenerateResponseAsync(request.Content, messageHistory);
+        var oncApiToken = User.FindFirst("ONCApiToken")?.Value;
+
+        var (llmResponse, relevantDocTitles) = await _ragService.GenerateResponseAsync(request.Content, messageHistory, oncApiToken);
 
         var documents = await _fileService.GetFilesByTitlesAsync(relevantDocTitles);
 
@@ -184,6 +186,7 @@ public class MessageController : ControllerBase
             });
         }
 
+
         if (string.IsNullOrEmpty(request?.SessionId))
         {
             return BadRequest(new ApiResponse<object>
@@ -209,7 +212,7 @@ public class MessageController : ControllerBase
         var messageHistory = await _messageService.GetGuestMessagesForConversationAsync(sessionId, conversationId);
 
         // var llmResponse = await _ragService.GenerateResponseAsync(request.Content, messageHistory);
-        var (llmResponse, relevantDocTitles) = await _ragService.GenerateResponseAsync(request.Content, messageHistory);
+        var (llmResponse, relevantDocTitles) = await _ragService.GenerateResponseAsync(request.Content, messageHistory, "{YOUR_ONC_TOKEN}");
 
         var documents = await _fileService.GetFilesByTitlesAsync(relevantDocTitles);
 
