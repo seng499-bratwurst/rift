@@ -93,7 +93,7 @@ public class MessageController : ControllerBase
 
         var messageHistory = await _messageService.GetMessagesForConversationAsync(userId, conversationId);
 
-        var oncApiToken = User.FindFirst("ONCApiToken")?.Value;
+        var oncApiToken = User.FindFirst("ONCApiToken")?.Value ?? string.Empty;
 
         var (llmResponse, relevantDocTitles) = await _ragService.GenerateResponseAsync(request.Content, messageHistory, oncApiToken);
 
