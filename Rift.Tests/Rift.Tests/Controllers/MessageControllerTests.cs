@@ -144,7 +144,7 @@ namespace Rift.Tests
             _conversationServiceMock.Setup(s => s.GetOrCreateConversationByUserId(userId, null))
                 .ReturnsAsync(conversation);
 
-            _ragServiceMock.Setup(l => l.GenerateResponseAsync("Hello", null))
+            _ragServiceMock.Setup(l => l.GenerateResponseAsync("Hello", null, It.IsAny<string>()))
                 .ReturnsAsync(("Hi!", new List<string>()));
 
             _messageServiceMock.Setup(m => m.CreateMessageAsync(conversation.Id, null, "Hello", "user", 0, 0))
@@ -481,7 +481,7 @@ namespace Rift.Tests
 
             _conversationServiceMock.Setup(c => c.GetOrCreateConversationByUserId(userId, conversationId))
                 .ReturnsAsync(conversation);
-            _ragServiceMock.Setup(r => r.GenerateResponseAsync(userContent, It.IsAny<List<Message>>()))
+            _ragServiceMock.Setup(r => r.GenerateResponseAsync(userContent, It.IsAny<List<Message>>(), It.IsAny<string>()))
                 .ReturnsAsync((llmResponse, new List<string>()));
             _messageServiceMock.Setup(m => m.CreateMessageAsync(conversationId, null, userContent, "user", It.IsAny<float>(), It.IsAny<float>()))
                 .ReturnsAsync(promptMessage);
@@ -532,7 +532,7 @@ namespace Rift.Tests
 
             _conversationServiceMock.Setup(c => c.GetOrCreateConversationByUserId(userId, conversationId))
                 .ReturnsAsync(conversation);
-            _ragServiceMock.Setup(r => r.GenerateResponseAsync(userContent, It.IsAny<List<Message>>()))
+            _ragServiceMock.Setup(r => r.GenerateResponseAsync(userContent, It.IsAny<List<Message>>(), It.IsAny<string>()))
                 .ReturnsAsync((llmResponse, new List<string>()));
             _messageServiceMock.Setup(m => m.CreateMessageAsync(conversationId, null, userContent, "user", It.IsAny<float>(), It.IsAny<float>()))
                 .ReturnsAsync(promptMessage);
@@ -601,7 +601,7 @@ namespace Rift.Tests
 
             _conversationServiceMock.Setup(c => c.GetOrCreateConversationByUserId(userId, conversationId))
                 .ReturnsAsync(conversation);
-            _ragServiceMock.Setup(r => r.GenerateResponseAsync(userContent, It.IsAny<List<Message>>()))
+            _ragServiceMock.Setup(r => r.GenerateResponseAsync(userContent, It.IsAny<List<Message>>(), It.IsAny<string>()))
                 .ReturnsAsync((llmResponse, new List<string>()));
             _messageServiceMock.Setup(m => m.CreateMessageAsync(conversationId, null, userContent, "user", It.IsAny<float>(), It.IsAny<float>()))
                 .ReturnsAsync(promptMessage);
@@ -648,7 +648,7 @@ namespace Rift.Tests
 
             _conversationServiceMock.Setup(c => c.GetOrCreateConversationByUserId(userId, conversationId))
                 .ReturnsAsync(conversation);
-            _ragServiceMock.Setup(r => r.GenerateResponseAsync(userContent, It.IsAny<List<Message>>()))
+            _ragServiceMock.Setup(r => r.GenerateResponseAsync(userContent, It.IsAny<List<Message>>(), It.IsAny<string>()))
                 .ReturnsAsync((llmResponse, new List<string>()));
             _messageServiceMock.Setup(m => m.CreateMessageAsync(conversationId, null, userContent, "user", It.IsAny<float>(), It.IsAny<float>()))
                 .ReturnsAsync(promptMessage);
@@ -700,7 +700,7 @@ namespace Rift.Tests
 
             _conversationServiceMock.Setup(c => c.GetConversationsForSessionAsync(sessionId))
                 .ReturnsAsync(conversation);
-            _ragServiceMock.Setup(r => r.GenerateResponseAsync(userContent, It.IsAny<List<Message>>()))
+            _ragServiceMock.Setup(r => r.GenerateResponseAsync(userContent, It.IsAny<List<Message>>(), It.IsAny<string>()))
                 .ReturnsAsync((llmResponse, new List<string>()));
             _messageServiceMock.Setup(m => m.CreateMessageAsync(1, null, userContent, "user", It.IsAny<float>(), It.IsAny<float>()))
                 .ReturnsAsync(promptMessage);

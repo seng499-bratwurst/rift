@@ -40,55 +40,15 @@ namespace Rift.LLM
             return (functionName, args);
         }
 
-        public async Task<string> OncAPICall(string functionName, Dictionary<string, string?> functionParams)
+        public async Task<(string, string)> OncAPICall(string functionName, Dictionary<string, string?> functionParams, string oncApiToken)
         {
             // Console.WriteLine($"Function Name ONC API Call function: {functionName}");
             // Console.WriteLine($"Function Params ONC API Call function: {functionParams}");
-            var response = await _oncApiClient.GetDataAsync(functionName, functionParams);
+            var (userURL, response) = await _oncApiClient.GetDataAsync(functionName, oncApiToken,functionParams );
             // Console.WriteLine($"ONC API Response: {response}");
             var serializedResponse = JsonSerializer.Serialize(response, new JsonSerializerOptions { WriteIndented = true });
 
-            if (functionName == "rawdata/device"){
-                return ProcessSerializedResponse(serializedResponse);
-            }
-            
-            return serializedResponse;
-        }
-        private string ProcessSerializedResponse(string serializedResponse)
-        {
-            using var doc = JsonDocument.Parse(serializedResponse);
-            var root = doc.RootElement;
-
-            var rootDict = new Dictionary<string, object>();
-
-            // Copying everything except 'data'
-            foreach (var prop in root.EnumerateObject())
-            {
-                if (prop.Name != "data")
-                {
-                    rootDict[prop.Name] = prop.Value.Clone();
-                }
-            }
-
-            // getting rid of the lineTypes property
-            if (root.TryGetProperty("data", out var dataElement))
-            {
-                var dataDict = new Dictionary<string, object>();
-                foreach (var dataProp in dataElement.EnumerateObject())
-                {
-                    if (dataProp.Name != "lineTypes")
-                    {
-                        dataDict[dataProp.Name] = dataProp.Value.Clone();
-                    }
-                }
-                rootDict["data"] = dataDict;
-            }
-
-            // converting back to JSON
-            var options = new JsonSerializerOptions { WriteIndented = true };
-            string result = JsonSerializer.Serialize(rootDict, options);
-            // Console.WriteLine("result without LineTypes: "+result);
-            return result;
+            return (userURL, serializedResponse);
         }
     }
 }

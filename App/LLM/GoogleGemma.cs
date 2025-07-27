@@ -26,15 +26,6 @@ namespace Rift.LLM
         public GoogleGemma(IConfiguration config, OncFunctionParser parser)
         {
             _httpClient = new HttpClient();
-
-            // Example config section:
-            // "LLMSettings": {
-            //   "GoogleGemma": {
-            //     "ApiKey": "",
-            //     "Endpoint": "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions",
-            //     "ModelName": "gemma-3n"
-            //   }
-            // }
             _apiKey = config["LLMSettings:GoogleGemma:ApiKey"] ?? throw new ArgumentNullException("GoogleGemma ApiKey missing in config");
             _endpoint = config["LLMSettings:GoogleGemma:Endpoint"] ?? throw new ArgumentNullException("GoogleGemma Endpoint missing in config");
             _oncModelName = config["LLMSettings:GoogleGemma:ONCModelName"] ?? "gemini-2.5-flash";
@@ -45,7 +36,7 @@ namespace Rift.LLM
         /// <summary>
         /// Sends a the user prompt to the google 2.5 flash to generate an ONC API call if needed.
         /// </summary>
-        public async Task<string> GatherOncAPIData(string prompt)
+        public async Task<string> GatherOncAPIData(string prompt, string? oncApiToken)
         {
             // read the system prompt from the file
             string systemPrompt;
@@ -63,7 +54,6 @@ namespace Rift.LLM
             // infinite loop through the messages list and call the ONC API if needed, only break out of the loop when the LLM thinks the user prompt is answered
             // tools: scalardata_location, locations_tree, deployments, devices, properties
             while (true){
-                object? generalResponse = null;
                 var payload = new
                 {
                     // LLM Model: google 2.5 flash
@@ -79,7 +69,6 @@ namespace Rift.LLM
                 };
 
                 // creating the curl request and sending a post request 
-
                 var json = JsonSerializer.Serialize(payload);
                 var request = new HttpRequestMessage(HttpMethod.Post, _endpoint)
                 {
@@ -101,22 +90,13 @@ namespace Rift.LLM
 
                 using var doc = JsonDocument.Parse(responseContent);
                 var message = doc.RootElement.GetProperty("choices")[0].GetProperty("message");
-                string? content;
-                string? functionCallName;
-                string? functionCallParams;
+              
                 // if the response has tool_calls, then we need to call the ONC API
                 if (message.TryGetProperty("tool_calls", out var toolCalls) && toolCalls.GetArrayLength() > 0){
-                    functionCallName = toolCalls[0].GetProperty("function").GetProperty("name").GetString();
-                    if (functionCallName == null)
-                    {
-                        throw new Exception("Function Call Name is null");
-                    }
-                    // Console.WriteLine($"Function Call Name: {functionCallName}");
-                    functionCallParams = toolCalls[0].GetProperty("function").GetProperty("arguments").GetString();
-                    if (functionCallParams == null)
-                    {
-                        throw new Exception("Function Call Params is null");
-                    }
+
+                    string? functionCallName = toolCalls[0].GetProperty("function").GetProperty("name").GetString() ?? throw new Exception("Function Call Name is null");
+                    string? functionCallParams = toolCalls[0].GetProperty("function").GetProperty("arguments").GetString() ?? throw new Exception("Function Call Params is null");
+                    
                     // adding the tool call to the messages list (as the assistant)
                     messages.Add(new {
                         role = "assistant",
@@ -133,24 +113,23 @@ namespace Rift.LLM
                         }
                     });
 
-                    // Console.WriteLine($"Function Call Params: {functionCallParams}");
-
                     // extracting the function name and parameters from the tool call
                     var (functionName, functionParams) = _parser.ExtractFunctionAndQueries(functionCallName, functionCallParams);
                     // Console.WriteLine($"Function Name: {functionName}");
                     // Console.WriteLine($"Function Params: {functionParams}");
 
                     // calling the ONC API
-                    var result = await _parser.OncAPICall(functionName, functionParams);
+                    var (userURL, result) = await _parser.OncAPICall(functionName, functionParams, oncApiToken?? string.Empty);
+                    result = result + $"\n\nHere is the user URL: {userURL}";
+                    // Console.WriteLine("userURL from google.cs file: " + userURL);
 
                     // adding the result to the messages list (as the tool)
                     messages.Add(new {
                         tool_call_id = functionCallName,
                         role = "tool",
                         name = functionCallName,
-                        content = result,
+                        content = result
                     });
-                    //  Console.WriteLine($"MESSAGES: {messages}");
 
                     // continue the loop
                     continue;
@@ -159,19 +138,19 @@ namespace Rift.LLM
                 // if the response has content, it means the LLM has answered the user prompt and no more tool calls are needed
                 else if (message.TryGetProperty("content", out var contentElement))
                 {
-                    content = contentElement.GetString();
-                    if (content == null)
-                    {
-                        throw new Exception("Content is null");
-                    }
+                    string? content = contentElement.GetString() ?? throw new Exception("Content is null");
                     // Console.WriteLine($"Content: {content}");
 
                     // creating the general response object 
-                    generalResponse = new {
+                    var generalResponse = new {
                         response = content,
                         message = "Response from the ONC API Assistant."
-                    };
+                    } ?? throw new Exception("General Response is null");
+
+                    Console.WriteLine("General Response: " + generalResponse.response.ToString());
+
                     // returning the general response in json format
+                    Console.WriteLine("General Response: " + JsonSerializer.Serialize(generalResponse));
                     return JsonSerializer.Serialize(generalResponse);
                 }
             };
@@ -188,7 +167,7 @@ namespace Rift.LLM
             string jsonInput = JsonSerializer.Serialize(onc_api_response, new JsonSerializerOptions { WriteIndented = true });
             var systemPrompt = "You are a helpful Ocean Networks Canada assistant that interprets the data given and answers the user prompt with accuracy.";
 
-            string fullPrompt = $"{prompt}\n\nHere is the ONC API response:\n{jsonInput}";
+            string fullPrompt = $"{prompt}\n\nHere is the ONC API response:\n{jsonInput}\n\nReturn the most revelant user URL based on the user prompt (if there are any) otherwise dont mention it.";
 
             var payload = new
             {
@@ -266,6 +245,8 @@ namespace Rift.LLM
                             .GetProperty("message")
                             .GetProperty("content")
                             .GetString();
+
+            Console.WriteLine("Final Response: " + result);
 
             return result ?? "No response from Gemma model.";
         }

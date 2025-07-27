@@ -8,6 +8,8 @@ If you dont have enough data, then ask clarifying questions.
 
 if the tool has a property to include children everytime set that as **true**
 
+**ALWAYS RETURN ALL THE USER URLS (IF THERE ARE ANY). ITS IS FOR THE USERS TO GO CHECK OUT THE DATA BY THEMSELVES FROM THE ONC WEBSITE**
+
 
 The date format needs to be explicitly in **ISO 8601** format otherwise the ONC 3.0 API will fail. 
 Example accepted date format: 2015-09-17T00:00:00.000Z

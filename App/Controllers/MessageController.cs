@@ -93,7 +93,9 @@ public class MessageController : ControllerBase
 
         var messageHistory = await _messageService.GetMessagesForConversationAsync(userId, conversationId);
 
-        var (llmResponse, relevantDocTitles) = await _ragService.GenerateResponseAsync(request.Content, messageHistory);
+        var oncApiToken = User.FindFirst("ONCApiToken")?.Value ?? string.Empty;
+
+        var (llmResponse, relevantDocTitles) = await _ragService.GenerateResponseAsync(request.Content, messageHistory, oncApiToken);
 
         var documents = await _fileService.GetFilesByTitlesAsync(relevantDocTitles);
 
@@ -184,6 +186,7 @@ public class MessageController : ControllerBase
             });
         }
 
+
         if (string.IsNullOrEmpty(request?.SessionId))
         {
             return BadRequest(new ApiResponse<object>
@@ -206,10 +209,11 @@ public class MessageController : ControllerBase
 
         var conversationId = conversation!.Id;
 
+        string oncApiToken = string.Empty; // Use empty string to fall back to system token
         var messageHistory = await _messageService.GetGuestMessagesForConversationAsync(sessionId, conversationId);
 
         // var llmResponse = await _ragService.GenerateResponseAsync(request.Content, messageHistory);
-        var (llmResponse, relevantDocTitles) = await _ragService.GenerateResponseAsync(request.Content, messageHistory);
+        var (llmResponse, relevantDocTitles) = await _ragService.GenerateResponseAsync(request.Content, messageHistory, oncApiToken ?? string.Empty);
 
         var documents = await _fileService.GetFilesByTitlesAsync(relevantDocTitles);
 
@@ -369,7 +373,7 @@ public class MessageController : ControllerBase
             // Generate LLM response using RAG service
             // Use provided message history or empty list if not provided
             var messageHistory = ConvertToMessageList(request.MessageHistory);
-            var (llmResponse, relevantDocTitles) = await _ragService.GenerateResponseAsync(request.Content, messageHistory);
+            var (llmResponse, relevantDocTitles) = await _ragService.GenerateResponseAsync(request.Content, messageHistory, "{YOUR_ONC_TOKEN}");
 
             var documents = await _fileService.GetFilesByTitlesAsync(relevantDocTitles);
 
