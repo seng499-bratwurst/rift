@@ -31,6 +31,7 @@ public class RAGService : IRAGService
         messageHistory ??= new List<Message>();
 
         var oncApiData = await _llmProvider.GatherOncAPIData(userQuery, oncApiToken);
+        Console.WriteLine("$[DEBUG] ONC API DATA: " + JsonSerializer.Serialize(oncApiData));
 
         var chromaDocuments = (await _chromaDbClient.GetRelevantDataAsync(userQuery, 20, similarityThreshold: 0.5)).RelevantDocuments;
         var relevantDocTitles = new List<string>();
