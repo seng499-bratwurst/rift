@@ -31,7 +31,7 @@ namespace Rift.Tests
             var fakeApiResponse = "{\"answer\":\"The ocean is vast.\"}";
             var fakeFinalResponse = "The ocean is vast.";
 
-            llmProviderMock.Setup(x => x.GatherOncAPIData(fakePrompt))
+            llmProviderMock.Setup(x => x.GatherOncAPIData(fakePrompt, It.IsAny<string>()))
                 .ReturnsAsync(fakeApiResponse);
 
             llmProviderMock.Setup(x => x.GenerateFinalResponse(fakePrompt, It.IsAny<JsonElement>()))

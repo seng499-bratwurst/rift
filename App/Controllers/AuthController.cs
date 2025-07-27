@@ -156,7 +156,7 @@ public class AuthController : ControllerBase
         Response.Cookies.Append("jwt", jwt, new CookieOptions
         {
             HttpOnly = true,
-            Secure = _isProduction,
+            Secure = true,
             SameSite = SameSiteMode.None,
             Expires = DateTimeOffset.UtcNow.AddHours(1),
             Domain = _isProduction ? ".coursesystem.app" : null
