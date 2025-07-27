@@ -373,7 +373,7 @@ public class MessageController : ControllerBase
             // Generate LLM response using RAG service
             // Use provided message history or empty list if not provided
             var messageHistory = ConvertToMessageList(request.MessageHistory);
-            var (llmResponse, relevantDocTitles) = await _ragService.GenerateResponseAsync(request.Content, messageHistory);
+            var (llmResponse, relevantDocTitles) = await _ragService.GenerateResponseAsync(request.Content, messageHistory, "{YOUR_ONC_TOKEN}");
 
             var documents = await _fileService.GetFilesByTitlesAsync(relevantDocTitles);
 
