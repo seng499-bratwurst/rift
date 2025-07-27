@@ -36,7 +36,7 @@ namespace Rift.LLM
         /// <summary>
         /// Sends a the user prompt to the google 2.5 flash to generate an ONC API call if needed.
         /// </summary>
-        public async Task<string> GatherOncAPIData(string prompt)
+        public async Task<string> GatherOncAPIData(string prompt, string? oncApiToken)
         {
             // read the system prompt from the file
             string systemPrompt;
@@ -119,7 +119,7 @@ namespace Rift.LLM
                     // Console.WriteLine($"Function Params: {functionParams}");
 
                     // calling the ONC API
-                    var (userURL, result) = await _parser.OncAPICall(functionName, functionParams);
+                    var (userURL, result) = await _parser.OncAPICall(functionName, functionParams, oncApiToken?? string.Empty);
                     result = result + $"\n\nHere is the user URL: {userURL}";
                     // Console.WriteLine("userURL from google.cs file: " + userURL);
 
@@ -147,7 +147,10 @@ namespace Rift.LLM
                         message = "Response from the ONC API Assistant."
                     } ?? throw new Exception("General Response is null");
 
+                    Console.WriteLine("General Response: " + generalResponse.response.ToString());
+
                     // returning the general response in json format
+                    Console.WriteLine("General Response: " + JsonSerializer.Serialize(generalResponse));
                     return JsonSerializer.Serialize(generalResponse);
                 }
             };
@@ -242,6 +245,8 @@ namespace Rift.LLM
                             .GetProperty("message")
                             .GetProperty("content")
                             .GetString();
+
+            Console.WriteLine("Final Response: " + result);
 
             return result ?? "No response from Gemma model.";
         }
