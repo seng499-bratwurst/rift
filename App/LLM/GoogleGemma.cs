@@ -2,6 +2,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using System.Runtime.CompilerServices;
 using Rift.App.Models;
 using Rift.LLM.FunctionCalls;
 
@@ -249,6 +250,119 @@ namespace Rift.LLM
             Console.WriteLine("Final Response: " + result);
 
             return result ?? "No response from Gemma model.";
+        }
+
+        public async IAsyncEnumerable<string> StreamFinalResponseRAG(Prompt prompt)
+        {
+            string jsonInput = JsonSerializer.Serialize(prompt.RelevantDocumentChunks, new JsonSerializerOptions
+            {
+                WriteIndented = true
+            });
+
+            var systemPrompt = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "LLM/SystemPrompts", "sys_prompt_large_llm.md"));
+
+            string fullPrompt = $"{prompt.UserQuery}\n\nHere is the relevant context:\n{jsonInput}";
+            
+            await foreach (var chunk in StreamResponse(_finalModelName, systemPrompt, fullPrompt))
+            {
+                yield return chunk;
+            }
+        }
+
+        public async IAsyncEnumerable<string> StreamFinalResponse(string prompt, JsonElement onc_api_response)
+        {
+            string jsonInput = JsonSerializer.Serialize(onc_api_response, new JsonSerializerOptions
+            {
+                WriteIndented = true
+            });
+            var systemPrompt =
+                    "You are a helpful oncean network canada assistant that interprets the data given and answers the user prompt with accuracy.";
+
+            string fullPrompt = $"{prompt}\n\nHere is the ONC API response:\n{jsonInput}";
+            
+            await foreach (var chunk in StreamResponse(_finalModelName, systemPrompt, fullPrompt))
+            {
+                yield return chunk;
+            }
+        }
+
+        private async IAsyncEnumerable<string> StreamResponse(string model, string systemPrompt, string userPrompt, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        {
+            var payload = new
+            {
+                model = model,
+                messages = new[]
+                {
+                    new { role = "system", content = systemPrompt },
+                    new { role = "user", content = userPrompt }
+                },
+                stream = true
+            };
+
+            var json = JsonSerializer.Serialize(payload);
+
+            var request = new HttpRequestMessage(HttpMethod.Post, _endpoint)
+            {
+                Content = new StringContent(json, Encoding.UTF8, "application/json")
+            };
+
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
+
+            using var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
+            response.EnsureSuccessStatusCode();
+
+            using var stream = await response.Content.ReadAsStreamAsync();
+            using var reader = new StreamReader(stream);
+
+            string? line;
+            while ((line = await reader.ReadLineAsync()) != null)
+            {
+                if (cancellationToken.IsCancellationRequested)
+                    yield break;
+
+                if (string.IsNullOrWhiteSpace(line))
+                    continue;
+
+                if (line.StartsWith("data: "))
+                {
+                    var data = line.Substring(6);
+                    
+                    if (data == "[DONE]")
+                        yield break;
+
+                    var contentText = ParseStreamingContent(data);
+                    if (!string.IsNullOrEmpty(contentText))
+                    {
+                        yield return contentText;
+                    }
+                }
+            }
+        }
+
+        private string? ParseStreamingContent(string data)
+        {
+            try
+            {
+                using var doc = JsonDocument.Parse(data);
+                var choices = doc.RootElement.GetProperty("choices");
+                
+                if (choices.GetArrayLength() > 0)
+                {
+                    var choice = choices[0];
+                    if (choice.TryGetProperty("delta", out var delta))
+                    {
+                        if (delta.TryGetProperty("content", out var content))
+                        {
+                            return content.GetString();
+                        }
+                    }
+                }
+            }
+            catch (JsonException)
+            {
+                // Skip malformed JSON
+            }
+            return null;
         }
 
     }
