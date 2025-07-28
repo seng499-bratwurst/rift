@@ -68,6 +68,8 @@ Always assume that the location the prompt is related to is cambridge bay. and c
 11. REQUIRED CODES FOR "ship data": `DeviceCategory` CODE is **HYDROPHONE** AND THE `locationCode` IS **CBYIP**
     11.1 THERE IS NO NEED FOR PROPERTY CODE TO WHEN CALLING THE TOOL TO GET scalardata FOR ship data
 
+12. WHEN THE PROMPT IS RELATED TO "How cold" or "How hot" USE THE `propertyCode` **airtemperature**
+
 </MANDATORY_RULES>
 
 ---
