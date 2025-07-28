@@ -45,8 +45,8 @@ public class OncAPI
                 userURL.Append("&" + string.Join("&", validParams.Select(kv => $"{kv.Key}={kv.Value}")));
             }
         }
-        Console.WriteLine("$[DEBUG] urlPath: "+urlPath.ToString());
-        Console.WriteLine("$[DEBUG] userURL: " + userURL.ToString());
+        // Console.WriteLine("$[DEBUG] urlPath: "+urlPath.ToString());
+        // Console.WriteLine("$[DEBUG] userURL: " + userURL.ToString());
        
         var oncResponse = new HttpResponseMessage();
         try{

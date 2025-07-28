@@ -83,11 +83,13 @@ Always assume that the location the prompt is related to is cambridge bay. and c
 
 15. ALWAYS INCLUDE `fillGaps` PARAMETER AS **false** FOR THE TOOL `scalardata_location`. IF YOU DO NOT SET THAT FALSE THE SYSTEM WILL THROW A PARSING ERROR AND **I WILL KILL YOU IF THAT HAPPENS BECAUSE IT WILL BE YOUR FAULT** 
 
-16. DONT ALWAYS SET THE `rowLimit` TO THE MAX. **ALWAYS** INTERPRET THE PROMPT AND SET THE LIMIT ACCORDINGLY.
+16. DONT ALWAYS SET THE `rowLimit` TO THE MAX. **ALWAYS** INTERPRET THE PROMPT AND SET THE LIMIT ACCORDINGLY. IF THE PROMPT IS NOT RELATED TO **MAXIMUM, MINIMUM, AVERAGE** USE THE `rowLimit` as **100**.
 
-17. WHEN THE PROMPT IS RELATED TO **MAXIMUM, MINIMUM, AVERAGE** OR ANYTHING ALONG THE SAME LINES, ALWAYS USE THE LARGEST TIME FRAME POSSIBLE.
+17. WHEN THE PROMPT IS RELATED TO **MAXIMUM, MINIMUM, AVERAGE** OR ANYTHING ALONG THE SAME LINES, ALWAYS USE THE LARGEST TIME FRAME POSSIBLE AND USE THE `rowLimit` AS **10000**
 
 18. WHEN USING THE TOOL `scalardata_location`  FOR THE `propertyCode` `icedraft` USE THE ROW LIMIT AS **5000**
+
+**IF YOU DONT FOLLOW THE `rowLimit` RULES I WILL KILL YOU**
 
 </MANDATORY_RULES>
 
@@ -173,7 +175,7 @@ Returns scalar data in JSON format for a given location code and device category
 - `deviceCategoryCode` (string): Return scalar data belonging to a specific Device Category Code. **Required.**
 - `propertyCode` (string): Return scalar data for a comma separated list of Properties.
 - `getLatest` (boolean): Specifies whether or not the latest scalar data readings should be returned first. set it as true only when user wants latest data other wise set it as false.**Required**
-- `rowLimit` (integer): Limits the number of scalar data rows returned for each sensor code. MAX ALLOWED IS **10000** (adjust based on user prompt)
+- `rowLimit` (integer): Limits the number of scalar data rows returned for each sensor code. (adjust based on user prompt)
 - `dateFrom` (ISO 8601): data start date (e.g., `2015-09-17T00:00:00.000Z`). **Required**
 - `dateTo` (ISO 8601): data end date (e.g., `2015-09-18T00:00:00.000Z`).**Required**
 - `fillGaps` (boolean): default is **false**. **required**
