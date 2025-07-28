@@ -46,6 +46,7 @@ namespace Rift.LLM
             // Console.WriteLine($"Function Params ONC API Call function: {functionParams}");
             var (userURL, response) = await _oncApiClient.GetDataAsync(functionName, oncApiToken,functionParams );
             // Console.WriteLine($"ONC API Response: {response}");
+            // Console.WriteLine("$[DEBUG] ONC User URL: " + userURL);
             var serializedResponse = JsonSerializer.Serialize(response, new JsonSerializerOptions { WriteIndented = true });
 
             return (userURL, serializedResponse);
