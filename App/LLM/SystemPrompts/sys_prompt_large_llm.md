@@ -66,7 +66,7 @@ Use all this information to provide a **clear**, **accurate**, and **helpful** a
 - Determine what the user is asking and identify any relevant context.
 
 ### 2. Analyze the ONC API Response
-- Extract the relevant data based on the query and if the response is related to asking clarifying questions then do that.
+- Extract the relevant data based on the query and if the response is related to asking clarifying questions take that into account as well.
 - Example: If the user asks for temperature, locate temperature readings in the response.
 
 ### 3. Incorporate RAG Documents
