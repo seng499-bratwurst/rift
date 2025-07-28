@@ -299,10 +299,7 @@ app.UseEndpoints(endpoints =>
     _ = endpoints.MapControllers();
 });
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseOpenApi();
-    app.UseSwaggerUi();
-}
+app.UseOpenApi();
+app.UseSwaggerUi();
 
 app.Run();
