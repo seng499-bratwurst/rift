@@ -79,4 +79,53 @@ public class RAGService : IRAGService
 
         return (cleanedResponse, relevantDocTitles.Distinct().ToList());
     }
+
+    public async IAsyncEnumerable<(string contentChunk, List<string> relevantDocTitles)> StreamResponseAsync(string userQuery, List<Message>? messageHistory, string? oncApiToken)
+    {
+        messageHistory ??= new List<Message>();
+
+        var oncApiData = await _llmProvider.GatherOncAPIData(userQuery, oncApiToken);
+
+        var chromaDocuments = (await _chromaDbClient.GetRelevantDataAsync(userQuery, 20, similarityThreshold: 0.5)).RelevantDocuments;
+        var relevantDocTitles = new List<string>();
+        var relevantDocuments = chromaDocuments.Select(doc => {
+            var documentTitle = doc.Metadata?.GetValueOrDefault("source_doc")?.ToString();
+            relevantDocTitles.Add(documentTitle ?? string.Empty);
+            if (doc.Metadata?.GetValueOrDefault("source_type")?.ToString() == "confluence_json")
+            {
+                documentTitle = "ONC Confluence Data (" + doc.Metadata?.GetValueOrDefault("source_doc")?.ToString() + ")";
+            }
+            
+            return new DocumentChunk
+            {
+                SourceId = doc.Metadata?.GetValueOrDefault("source_doc")?.ToString() ?? string.Empty,
+                Title = documentTitle ?? string.Empty,
+                Content = doc.Content
+            };
+        }).ToList();
+
+        var rerankRequest = new RerankRequest
+        {
+            Query = userQuery,
+            Docs = relevantDocuments
+        };
+        var rerankedDocuments = (await _reRankerClient.RerankAsync(rerankRequest)).Reranked_Docs;
+
+        var prompt = _promptBuilder.BuildPrompt(
+            userQuery,
+            messageHistory,
+            oncApiData,
+            rerankedDocuments
+        );
+
+        Console.WriteLine("\tUser Query: " + prompt.UserQuery);
+
+        var distinctRelevantDocTitles = relevantDocTitles.Distinct().ToList();
+
+        await foreach (var chunk in _llmProvider.StreamFinalResponseRAG(prompt))
+        {
+            var processedChunk = _responseProcessor.ProcessResponse(chunk);
+            yield return (processedChunk, distinctRelevantDocTitles);
+        }
+    }
 }
