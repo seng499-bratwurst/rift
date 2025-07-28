@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using System.Text;
+using System.Text.Json;
 using Rift.Models;
 using Rift.Services;
 using Microsoft.AspNetCore.RateLimiting;
@@ -170,6 +172,178 @@ public class MessageController : ControllerBase
     }
 
     /// <summary>
+    /// Streaming endpoint for authenticated users that streams LLM responses in real-time.
+    /// </summary>
+    [HttpPost("messages/stream")]
+    public async Task<IActionResult> CreateStreamingMessage([FromBody] CreateMessageRequest request)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (string.IsNullOrWhiteSpace(request.Content))
+        {
+            return BadRequest(new ApiResponse<Message>
+            {
+                Success = false,
+                Error = "Message content cannot be empty.",
+                Data = null
+            });
+        }
+
+        if (string.IsNullOrEmpty(userId))
+        {
+            return BadRequest(new ApiResponse<object>
+            {
+                Success = false,
+                Error = "User ID is required for authenticated requests",
+                Data = null
+            });
+        }
+
+        Conversation? conversation = await _conversationService.GetOrCreateConversationByUserId(userId, request.ConversationId);
+
+        if (conversation == null)
+        {
+            return NotFound(new ApiResponse<object>
+            {
+                Success = false,
+                Error = "Conversation not found.",
+                Data = null
+            });
+        }
+
+        var conversationId = request.ConversationId ?? conversation!.Id;
+        var messageHistory = await _messageService.GetMessagesForConversationAsync(userId, conversationId);
+        var oncApiToken = User.FindFirst("ONCApiToken")?.Value ?? string.Empty;
+
+        // Create the message with the user's prompt first
+        var promptMessage = await _messageService.CreateMessageAsync(
+            conversationId,
+            null,
+            request.Content,
+            "user",
+            request.XCoordinate,
+            request.YCoordinate
+        );
+
+        if (promptMessage == null)
+        {
+            return BadRequest(new ApiResponse<object>
+            {
+                Success = false,
+                Error = "Failed to create prompt message.",
+                Data = null
+            });
+        }
+
+        // Set up Server-Sent Events
+        Response.Headers["Content-Type"] = "text/event-stream";
+        Response.Headers["Cache-Control"] = "no-cache";
+        Response.Headers["Connection"] = "keep-alive";
+        Response.Headers["Access-Control-Allow-Origin"] = "*";
+
+        await Response.Body.FlushAsync();
+
+        var fullResponse = new StringBuilder();
+        List<string> relevantDocTitles = new();
+
+        try
+        {
+            await foreach (var (chunk, docTitles) in _ragService.StreamResponseAsync(request.Content, messageHistory, oncApiToken))
+            {
+                if (HttpContext.RequestAborted.IsCancellationRequested)
+                    break;
+
+                relevantDocTitles = docTitles;
+                fullResponse.Append(chunk);
+
+                var eventData = new
+                {
+                    type = "chunk",
+                    data = chunk,
+                    promptMessageId = promptMessage.Id
+                };
+
+                var jsonData = JsonSerializer.Serialize(eventData);
+                await Response.WriteAsync($"data: {jsonData}\n\n");
+                await Response.Body.FlushAsync();
+            }
+
+            // Create the response message with the complete response
+            var responseMessage = await _messageService.CreateMessageAsync(
+                conversationId,
+                promptMessage.Id,
+                fullResponse.ToString(),
+                "assistant",
+                request.ResponseXCoordinate,
+                request.ResponseYCoordinate
+            );
+
+            if (responseMessage != null)
+            {
+                var documents = await _fileService.GetFilesByTitlesAsync(relevantDocTitles);
+                await _messageFileService.InsertMessageFilesAsync(documents, responseMessage.Id);
+                await _conversationService.UpdateLastInteractionTime(conversationId);
+
+                await GenerateConversationTitleIfNeeded(conversationId, request.Content, fullResponse.ToString());
+
+                MessageEdge promptToResponseEdge = await _messageEdgeService.CreateEdgeAsync(new MessageEdge
+                {
+                    SourceMessageId = promptMessage.Id,
+                    TargetMessageId = responseMessage.Id,
+                    SourceHandle = request.SourceHandle,
+                    TargetHandle = request.TargetHandle
+                });
+
+                MessageEdge[] edges = Array.Empty<MessageEdge>();
+
+                if (request.Sources != null && request.Sources.Length > 0)
+                {
+                    edges = (await _messageEdgeService.CreateMessageEdgesFromSourcesAsync(
+                        promptMessage.Id,
+                        request.Sources
+                    )).ToArray();
+                }
+
+                // Send completion event
+                var completionData = new
+                {
+                    type = "complete",
+                    data = new
+                    {
+                        conversationId = conversationId,
+                        documents = documents,
+                        response = fullResponse.ToString(),
+                        promptMessageId = promptMessage.Id,
+                        responseMessageId = responseMessage.Id,
+                        createdEdges = (new[] { promptToResponseEdge }).Concat(edges).ToArray(),
+                    }
+                };
+
+                var completionJson = JsonSerializer.Serialize(completionData);
+                await Response.WriteAsync($"data: {completionJson}\n\n");
+                await Response.Body.FlushAsync();
+            }
+
+            await Response.WriteAsync("data: [DONE]\n\n");
+            await Response.Body.FlushAsync();
+        }
+        catch (Exception ex)
+        {
+            var errorData = new
+            {
+                type = "error",
+                error = ex.Message
+            };
+
+            var errorJson = JsonSerializer.Serialize(errorData);
+            await Response.WriteAsync($"data: {errorJson}\n\n");
+            await Response.Body.FlushAsync();
+        }
+
+        return new EmptyResult();
+    }
+
+    /// <summary>
     /// Endpoint for unauthenticated users using a temporary UUID session.
     /// </summary>
     [HttpPost("messages/guest")]
@@ -283,6 +457,175 @@ public class MessageController : ControllerBase
                 CreatedEdges = (new[] { promptToResponseEdge }).Concat(edges).ToArray(),
             }
         });
+    }
+
+    /// <summary>
+    /// Streaming endpoint for guest users using a temporary UUID session.
+    /// </summary>
+    [HttpPost("messages/guest/stream")]
+    [AllowAnonymous]
+    public async Task<IActionResult> CreateGuestStreamingMessage([FromBody] CreateMessageRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(request.Content))
+        {
+            return BadRequest(new ApiResponse<Message>
+            {
+                Success = false,
+                Error = "Message content cannot be empty.",
+                Data = null
+            });
+        }
+
+        if (string.IsNullOrEmpty(request?.SessionId))
+        {
+            return BadRequest(new ApiResponse<object>
+            {
+                Success = false,
+                Error = "Session ID is required for guest requests",
+                Data = null
+            });
+        }
+
+        var sessionId = request.SessionId;
+
+        // If there is no conversationId, create a new conversation for the session
+        Conversation? conversation = await _conversationService.GetConversationsForSessionAsync(sessionId);
+
+        if (conversation == null)
+        {
+            conversation = await _conversationService.CreateConversationBySessionId(sessionId);
+        }
+
+        var conversationId = conversation!.Id;
+        var messageHistory = await _messageService.GetGuestMessagesForConversationAsync(sessionId, conversationId);
+        var oncApiToken = string.Empty; // Guests don't have ONC tokens
+
+        // Create the message with the user's prompt first
+        var promptMessage = await _messageService.CreateMessageAsync(
+            conversationId,
+            null,
+            request.Content,
+            "user",
+            request.XCoordinate,
+            request.YCoordinate
+        );
+
+        if (promptMessage == null)
+        {
+            return BadRequest(new ApiResponse<object>
+            {
+                Success = false,
+                Error = "Failed to create prompt message.",
+                Data = null
+            });
+        }
+
+        // Set up Server-Sent Events
+        Response.Headers["Content-Type"] = "text/event-stream";
+        Response.Headers["Cache-Control"] = "no-cache";
+        Response.Headers["Connection"] = "keep-alive";
+        Response.Headers["Access-Control-Allow-Origin"] = "*";
+
+        await Response.Body.FlushAsync();
+
+        var fullResponse = new StringBuilder();
+        List<string> relevantDocTitles = new();
+
+        try
+        {
+            await foreach (var (chunk, docTitles) in _ragService.StreamResponseAsync(request.Content, messageHistory, oncApiToken))
+            {
+                if (HttpContext.RequestAborted.IsCancellationRequested)
+                    break;
+
+                relevantDocTitles = docTitles;
+                fullResponse.Append(chunk);
+
+                var eventData = new
+                {
+                    type = "chunk",
+                    data = chunk,
+                    promptMessageId = promptMessage.Id
+                };
+
+                var jsonData = JsonSerializer.Serialize(eventData);
+                await Response.WriteAsync($"data: {jsonData}\n\n");
+                await Response.Body.FlushAsync();
+            }
+
+            // Create the response message with the complete response
+            var responseMessage = await _messageService.CreateMessageAsync(
+                conversationId,
+                promptMessage.Id,
+                fullResponse.ToString(),
+                "assistant",
+                request.ResponseXCoordinate,
+                request.ResponseYCoordinate
+            );
+
+            if (responseMessage != null)
+            {
+                var documents = await _fileService.GetFilesByTitlesAsync(relevantDocTitles);
+                await _messageFileService.InsertMessageFilesAsync(documents, responseMessage.Id);
+                await _conversationService.UpdateLastInteractionTime(conversationId);
+
+                await GenerateConversationTitleIfNeeded(conversationId, request.Content, fullResponse.ToString());
+
+                MessageEdge promptToResponseEdge = await _messageEdgeService.CreateEdgeAsync(new MessageEdge
+                {
+                    SourceMessageId = promptMessage.Id,
+                    TargetMessageId = responseMessage.Id,
+                    SourceHandle = request.SourceHandle,
+                    TargetHandle = request.TargetHandle
+                });
+
+                MessageEdge[] edges = Array.Empty<MessageEdge>();
+
+                if (request.Sources != null && request.Sources.Length > 0)
+                {
+                    edges = (await _messageEdgeService.CreateMessageEdgesFromSourcesAsync(
+                        promptMessage.Id,
+                        request.Sources
+                    )).ToArray();
+                }
+
+                // Send completion event
+                var completionData = new
+                {
+                    type = "complete",
+                    data = new
+                    {
+                        response = fullResponse.ToString(),
+                        documents = documents,
+                        sessionId = sessionId,
+                        promptMessageId = promptMessage.Id,
+                        responseMessageId = responseMessage.Id,
+                        createdEdges = (new[] { promptToResponseEdge }).Concat(edges).ToArray(),
+                    }
+                };
+
+                var completionJson = JsonSerializer.Serialize(completionData);
+                await Response.WriteAsync($"data: {completionJson}\n\n");
+                await Response.Body.FlushAsync();
+            }
+
+            await Response.WriteAsync("data: [DONE]\n\n");
+            await Response.Body.FlushAsync();
+        }
+        catch (Exception ex)
+        {
+            var errorData = new
+            {
+                type = "error",
+                error = ex.Message
+            };
+
+            var errorJson = JsonSerializer.Serialize(errorData);
+            await Response.WriteAsync($"data: {errorJson}\n\n");
+            await Response.Body.FlushAsync();
+        }
+
+        return new EmptyResult();
     }
 
     /// <summary>
