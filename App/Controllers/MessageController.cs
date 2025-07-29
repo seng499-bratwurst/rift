@@ -280,7 +280,9 @@ public class MessageController : ControllerBase
 
             if (responseMessage != null)
             {
+                Console.WriteLine($"[STREAMING DEBUG - Auth] RAG service returned {relevantDocTitles.Count} document titles");
                 var documents = await _fileService.GetFilesByTitlesAsync(relevantDocTitles);
+                Console.WriteLine($"[STREAMING DEBUG - Auth] File service returned {documents.Count()} documents");
                 await _messageFileService.InsertMessageFilesAsync(documents, responseMessage.Id);
                 await _conversationService.UpdateLastInteractionTime(conversationId);
 
@@ -319,6 +321,7 @@ public class MessageController : ControllerBase
                     }
                 };
 
+                Console.WriteLine($"[STREAMING DEBUG - Auth] Sending completion with {documents.Count()} documents");
                 var completionJson = JsonSerializer.Serialize(completionData);
                 await Response.WriteAsync($"data: {completionJson}\n\n");
                 await Response.Body.FlushAsync();
@@ -565,7 +568,9 @@ public class MessageController : ControllerBase
 
             if (responseMessage != null)
             {
+                Console.WriteLine($"[STREAMING DEBUG - Guest] RAG service returned {relevantDocTitles.Count} document titles");
                 var documents = await _fileService.GetFilesByTitlesAsync(relevantDocTitles);
+                Console.WriteLine($"[STREAMING DEBUG - Guest] File service returned {documents.Count()} documents");
                 await _messageFileService.InsertMessageFilesAsync(documents, responseMessage.Id);
                 await _conversationService.UpdateLastInteractionTime(conversationId);
 
@@ -604,6 +609,7 @@ public class MessageController : ControllerBase
                     }
                 };
 
+                Console.WriteLine($"[STREAMING DEBUG - Guest] Sending completion with {documents.Count()} documents");
                 var completionJson = JsonSerializer.Serialize(completionData);
                 await Response.WriteAsync($"data: {completionJson}\n\n");
                 await Response.Body.FlushAsync();
