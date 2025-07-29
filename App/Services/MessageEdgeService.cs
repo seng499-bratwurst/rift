@@ -27,6 +27,10 @@ public class MessageEdgeService : IMessageEdgeService
         var edges = new List<MessageEdge>();
         foreach (var src in sources)
         {
+            // Skip invalid source message IDs to prevent foreign key constraint violations
+            if (src.SourceMessageId <= 0)
+                continue;
+
             var edge = new MessageEdge
             {
                 SourceMessageId = src.SourceMessageId,
@@ -36,6 +40,11 @@ public class MessageEdgeService : IMessageEdgeService
             };
             edges.Add(edge);
         }
+
+        // If no valid edges, return empty list without calling repository
+        if (!edges.Any())
+            return new List<MessageEdge>();
+
         return await _edgeRepository.AddEdgesAsync(edges.ToArray());
     }
     public async Task<List<MessageEdge>> GetEdgesForConversationAsync(string userId, int conversationId)
