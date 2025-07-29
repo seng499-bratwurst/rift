@@ -21,6 +21,7 @@ public class MessageController : ControllerBase
     private readonly IFileService _fileService;
     private readonly IMessageFilesService _messageFileService;
     private readonly IGeminiTitleService? _geminiTitleService;
+    private readonly IGroup2CompanyService _group2CompanyService;
 
     public MessageController(
         IMessageService messageService,
@@ -29,6 +30,7 @@ public class MessageController : ControllerBase
         IMessageEdgeService messageEdgeService,
         IFileService fileService,
         IMessageFilesService messageFileService,
+        IGroup2CompanyService group2CompanyService,
         IGeminiTitleService? geminiTitleService = null
         )
     {
@@ -39,6 +41,7 @@ public class MessageController : ControllerBase
         _conversationService = conversationService;
         _fileService = fileService;
         _geminiTitleService = geminiTitleService;
+        _group2CompanyService = group2CompanyService;
     }
 
     /// <summary>
@@ -97,78 +100,154 @@ public class MessageController : ControllerBase
 
         var oncApiToken = User.FindFirst("ONCApiToken")?.Value ?? string.Empty;
 
-        var (llmResponse, relevantDocTitles) = await _ragService.GenerateResponseAsync(request.Content, messageHistory, oncApiToken);
-
-        var documents = await _fileService.GetFilesByTitlesAsync(relevantDocTitles);
-
-        // Create the message with the users prompt
-        var promptMessage = await _messageService.CreateMessageAsync(
-            conversationId,
-            null,
-            request.Content,
-            "user",
-            request.XCoordinate,
-            request.YCoordinate
-        );
-
-        // Create the message with the LLM response
-        var responseMessage = await _messageService.CreateMessageAsync(
-            conversationId,
-            promptMessage?.Id,
-            llmResponse,
-            "assistant",
-            request.ResponseXCoordinate,
-            request.ResponseYCoordinate
-        );
-
-        if (responseMessage == null || promptMessage == null)
+        // if Company is Group2Company
+        if (request.Company == (int)Companies.Group2Company)
         {
-            return BadRequest(new ApiResponse<object>
+            // Use Group2Company service to get response
+            var (group2Response, responseType) = await _group2CompanyService.GetResponseAsync(request.Content, messageHistory, oncApiToken);
+
+            // Create the user prompt message
+            var promptMessage = await _messageService.CreateMessageAsync(
+                conversationId,
+                null,
+                request.Content,
+                "user",
+                request.XCoordinate,
+                request.YCoordinate
+            );
+
+            // Create the assistant response message
+            var responseMessage = await _messageService.CreateMessageAsync(
+                conversationId,
+                promptMessage?.Id,
+                group2Response,
+                "assistant",
+                request.ResponseXCoordinate,
+                request.ResponseYCoordinate
+            );
+
+            if (responseMessage == null || promptMessage == null)
             {
-                Success = false,
-                Error = "Failed to create messages.",
-                Data = null
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Error = "Failed to create messages.",
+                    Data = null
+                });
+            }
+
+            await _conversationService.UpdateLastInteractionTime(conversationId);
+            await GenerateConversationTitleIfNeeded(conversationId, request.Content, group2Response);
+
+            // Create edge between prompt and response
+            MessageEdge promptToResponseEdge = await _messageEdgeService.CreateEdgeAsync(new MessageEdge
+            {
+                SourceMessageId = promptMessage.Id,
+                TargetMessageId = responseMessage.Id,
+                SourceHandle = request.SourceHandle,
+                TargetHandle = request.TargetHandle
+            });
+
+            // Handle source edges if provided
+            MessageEdge[] edges = Array.Empty<MessageEdge>();
+            if (promptMessage?.Id != null && request.Sources != null && request.Sources.Length > 0)
+            {
+                edges = (await _messageEdgeService.CreateMessageEdgesFromSourcesAsync(
+                    promptMessage.Id,
+                    request.Sources
+                )).ToArray();
+            }
+
+            return Ok(new ApiResponse<object>
+            {
+                Success = true,
+                Error = null,
+                Data = new
+                {
+                    ConversationId = conversationId,
+                    Documents = (object?)null, // Group2Company service doesn't return documents
+                    Response = group2Response,
+                    PromptMessageId = promptMessage?.Id,
+                    ResponseMessageId = responseMessage?.Id,
+                    CreatedEdges = (new[] { promptToResponseEdge }).Concat(edges).ToArray(),
+                }
             });
         }
-
-        // Save the files that were used as context for the LLM response message
-        await _messageFileService.InsertMessageFilesAsync(documents, responseMessage.Id);
-        await _conversationService.UpdateLastInteractionTime(conversationId);
-
-        await GenerateConversationTitleIfNeeded(conversationId, request.Content, llmResponse);
-
-        MessageEdge promptToResponseEdge = await _messageEdgeService.CreateEdgeAsync(new MessageEdge
+        else
         {
-            SourceMessageId = promptMessage.Id,
-            TargetMessageId = responseMessage.Id,
-            SourceHandle = request.SourceHandle,
-            TargetHandle = request.TargetHandle
-        });
+            var (llmResponse, relevantDocTitles) = await _ragService.GenerateResponseAsync(request.Content, messageHistory, oncApiToken);
 
-        MessageEdge[] edges = Array.Empty<MessageEdge>();
+            var documents = await _fileService.GetFilesByTitlesAsync(relevantDocTitles);
 
-        if (promptMessage?.Id != null && request.Sources != null && request.Sources.Length > 0)
-        {
-            edges = (await _messageEdgeService.CreateMessageEdgesFromSourcesAsync(
-                promptMessage.Id,
-                request.Sources
-            )).ToArray();
-        }
+            // Create the message with the users prompt
+            var promptMessage = await _messageService.CreateMessageAsync(
+                conversationId,
+                null,
+                request.Content,
+                "user",
+                request.XCoordinate,
+                request.YCoordinate
+            );
 
-        return Ok(new ApiResponse<object>
-        {
-            Success = true,
-            Error = null,
-            Data = new
+            // Create the message with the LLM response
+            var responseMessage = await _messageService.CreateMessageAsync(
+                conversationId,
+                promptMessage?.Id,
+                llmResponse,
+                "assistant",
+                request.ResponseXCoordinate,
+                request.ResponseYCoordinate
+            );
+
+            if (responseMessage == null || promptMessage == null)
             {
-                ConversationId = conversationId,
-                Documents = documents,
-                Response = llmResponse,
-                PromptMessageId = promptMessage?.Id,
-                ResponseMessageId = responseMessage?.Id,
-                CreatedEdges = (new[] { promptToResponseEdge }).Concat(edges).ToArray(),
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Error = "Failed to create messages.",
+                    Data = null
+                });
             }
-        });
+
+            // Save the files that were used as context for the LLM response message
+            await _messageFileService.InsertMessageFilesAsync(documents, responseMessage.Id);
+            await _conversationService.UpdateLastInteractionTime(conversationId);
+
+            await GenerateConversationTitleIfNeeded(conversationId, request.Content, llmResponse);
+
+            MessageEdge promptToResponseEdge = await _messageEdgeService.CreateEdgeAsync(new MessageEdge
+            {
+                SourceMessageId = promptMessage.Id,
+                TargetMessageId = responseMessage.Id,
+                SourceHandle = request.SourceHandle,
+                TargetHandle = request.TargetHandle
+            });
+
+            MessageEdge[] edges = Array.Empty<MessageEdge>();
+
+            if (promptMessage?.Id != null && request.Sources != null && request.Sources.Length > 0)
+            {
+                edges = (await _messageEdgeService.CreateMessageEdgesFromSourcesAsync(
+                    promptMessage.Id,
+                    request.Sources
+                )).ToArray();
+            }
+
+            return Ok(new ApiResponse<object>
+            {
+                Success = true,
+                Error = null,
+                Data = new
+                {
+                    ConversationId = conversationId,
+                    Documents = documents,
+                    Response = llmResponse,
+                    PromptMessageId = promptMessage?.Id,
+                    ResponseMessageId = responseMessage?.Id,
+                    CreatedEdges = (new[] { promptToResponseEdge }).Concat(edges).ToArray(),
+                }
+            });
+        }
     }
 
     /// <summary>
@@ -964,6 +1043,7 @@ public class MessageController : ControllerBase
         public string TargetHandle { get; set; } = string.Empty;
         public string? SessionId { get; set; } = null;
         public PartialMessageEdge[]? Sources { get; set; } = null;
+        public int? Company { get; set; } = 0; // 0 = BratwurstCompany (default), 1 = Group2Company
     }
 
     public class UpdateCoordinatesRequest

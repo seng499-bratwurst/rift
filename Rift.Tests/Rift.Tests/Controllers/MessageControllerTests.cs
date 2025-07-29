@@ -22,6 +22,7 @@ namespace Rift.Tests
         private Mock<IRAGService> _ragServiceMock;
         private Mock<IFileService> _fileServiceMock;
         private Mock<IMessageFilesService> _messageFilesServiceMock;
+        private Mock<IGroup2CompanyService> _group2CompanyServiceMock = null!;
         private Mock<IGeminiTitleService> _geminiTitleServiceMock = null!;
         [TestInitialize]
         public void Setup()
@@ -32,6 +33,7 @@ namespace Rift.Tests
             _ragServiceMock = new Mock<IRAGService>();
             _fileServiceMock = new Mock<IFileService>();
             _messageFilesServiceMock = new Mock<IMessageFilesService>();
+            _group2CompanyServiceMock = new Mock<IGroup2CompanyService>();
             _geminiTitleServiceMock = new Mock<IGeminiTitleService>();
         }
 
@@ -49,6 +51,7 @@ namespace Rift.Tests
                 _messageEdgeServiceMock.Object,
                 _fileServiceMock.Object,
                 _messageFilesServiceMock.Object,
+                _group2CompanyServiceMock.Object,
                 _geminiTitleServiceMock.Object
             );
             controller.ControllerContext = new ControllerContext
@@ -67,6 +70,7 @@ namespace Rift.Tests
                 _messageEdgeServiceMock.Object,
                 _fileServiceMock.Object,
                 _messageFilesServiceMock.Object,
+                _group2CompanyServiceMock.Object,
                 _geminiTitleServiceMock.Object
             );
             controller.ControllerContext = new ControllerContext
@@ -587,6 +591,7 @@ namespace Rift.Tests
                 _messageEdgeServiceMock.Object,
                 _fileServiceMock.Object,
                 _messageFilesServiceMock.Object,
+                _group2CompanyServiceMock.Object,
                 null // No Gemini service
             );
 

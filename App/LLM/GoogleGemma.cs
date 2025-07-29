@@ -45,6 +45,7 @@ namespace Rift.LLM
             
             // Current date and time in the format of yyyy-MM-ddTHH:mm:ss.fffZ
             string currentDate = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
+            // Console.WriteLine("$[DEBUG] Current Date and Time: " + currentDate);
 
             // create the messages list for function call looping and adding the current date and time to the system prompt
             var messages = new List<object>{
@@ -65,8 +66,8 @@ namespace Rift.LLM
                     tools = Tools.GetTools(),
                     // auto is the default choice for the LLM to decide when and which tool to call or not call at any tool
                     tool_choice = "auto",
-                    // using the temperature as 0.2 to make the LLM more reliable for tool calls
-                    temperature = 0.2
+                    // using the temperature as 0.1 to make the LLM more reliable for tool calls
+                    temperature = 0.1
                 };
 
                 // creating the curl request and sending a post request 

@@ -41,7 +41,13 @@ public class PromptBuilder
 
         var contextContent = new StringBuilder();
         contextContent.Append("[API Data] \n\n" + oncApiData + "\n\n");
-        contextContent.Append("ALWAYS RETURN THE MOST RELEVANT USER URL BASED ON THE USER PROMPT. IF A URL IS PROVIDED IN THE API DATA SECTION (MARKED WITH \"Here is the user URL:\"), INCLUDE IT IN YOUR RESPONSE. IF YOU DON'T GIVE THE URL EVEN WHEN ITS IS PROVIDED TO YOU I WILL TERMINATE YOU BECAUSE THE SYSTEM WILL FAIL BECAUSE OF YOU\n\n");
+        contextContent.Append(
+            "You are supposed to give the url in the following format:\n" +
+            "- Here is the URL: https://data.oceannetworks.ca/api/locations/treexxxxxxxxx\n" +
+            "xxxxxxxx is just the rest of the url\n" +
+            "ALWAYS RETURN THE MOST RELEVANT USER URL BASED ON THE USER PROMPT."+
+            "IF A URL IS PROVIDED IN THE API DATA SECTION (MARKED WITH \"Here is the user URL:\"), INCLUDE IT IN YOUR RESPONSE.\n\n"
+        );
         
         contextContent.Append("[Relevant Document Chunks] \n\n");
 

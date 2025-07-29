@@ -83,6 +83,11 @@ builder.Services.AddControllers();
 builder.Services.AddHttpClient<ChromaDBClient>();
 builder.Services.AddHttpClient<ReRankerClient>();
 
+builder.Services.AddHttpClient<IGroup2CompanyService, Group2CompanyService>(client =>
+{
+    // HttpClient configuration if needed
+});
+
 builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddScoped<IAdminService, AdminService>();
@@ -299,10 +304,7 @@ app.UseEndpoints(endpoints =>
     _ = endpoints.MapControllers();
 });
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseOpenApi();
-    app.UseSwaggerUi();
-}
+app.UseOpenApi();
+app.UseSwaggerUi();
 
 app.Run();
