@@ -175,9 +175,9 @@ public class MessageController : ControllerBase
         }
         else
         {
-            var (llmResponse, relevantDocTitles) = await _ragService.GenerateResponseAsync(request.Content, messageHistory, oncApiToken);
+            var (llmResponse, relevantDocs) = await _ragService.GenerateResponseAsync(request.Content, messageHistory, oncApiToken);
 
-            var documents = await _fileService.GetFilesByTitlesAsync(relevantDocTitles);
+            var documents = await _fileService.GetFilesByTitlesAsync(relevantDocs.Select(doc => doc.Title).ToList());
 
             // Create the message with the users prompt
             var promptMessage = await _messageService.CreateMessageAsync(
@@ -240,7 +240,7 @@ public class MessageController : ControllerBase
                 Data = new
                 {
                     ConversationId = conversationId,
-                    Documents = documents,
+                    Documents = relevantDocs,
                     Response = llmResponse,
                     PromptMessageId = promptMessage?.Id,
                     ResponseMessageId = responseMessage?.Id,
@@ -323,16 +323,16 @@ public class MessageController : ControllerBase
         await Response.Body.FlushAsync();
 
         var fullResponse = new StringBuilder();
-        List<string> relevantDocTitles = new();
+        List<App.Models.DocumentChunk> relevantDocs = new();
 
         try
         {
-            await foreach (var (chunk, docTitles) in _ragService.StreamResponseAsync(request.Content, messageHistory, oncApiToken))
+            await foreach (var (chunk, relevantDoc) in _ragService.StreamResponseAsync(request.Content, messageHistory, oncApiToken))
             {
                 if (HttpContext.RequestAborted.IsCancellationRequested)
                     break;
 
-                relevantDocTitles = docTitles;
+                relevantDocs = relevantDoc;
                 fullResponse.Append(chunk);
 
                 var eventData = new
@@ -359,9 +359,7 @@ public class MessageController : ControllerBase
 
             if (responseMessage != null)
             {
-                Console.WriteLine($"[STREAMING DEBUG - Auth] RAG service returned {relevantDocTitles.Count} document titles");
-                var documents = await _fileService.GetFilesByTitlesAsync(relevantDocTitles);
-                Console.WriteLine($"[STREAMING DEBUG - Auth] File service returned {documents.Count()} documents");
+                var documents = await _fileService.GetFilesByTitlesAsync(relevantDocs.Select(doc => doc.Title).ToList());
                 await _messageFileService.InsertMessageFilesAsync(documents, responseMessage.Id);
                 await _conversationService.UpdateLastInteractionTime(conversationId);
 
@@ -392,7 +390,7 @@ public class MessageController : ControllerBase
                     data = new
                     {
                         conversationId = conversationId,
-                        documents = documents,
+                        documents = relevantDocs,
                         response = fullResponse.ToString(),
                         promptMessageId = promptMessage.Id,
                         responseMessageId = responseMessage.Id,
@@ -469,9 +467,9 @@ public class MessageController : ControllerBase
         var messageHistory = await _messageService.GetGuestMessagesForConversationAsync(sessionId, conversationId);
 
         // var llmResponse = await _ragService.GenerateResponseAsync(request.Content, messageHistory);
-        var (llmResponse, relevantDocTitles) = await _ragService.GenerateResponseAsync(request.Content, messageHistory, oncApiToken ?? string.Empty);
+        var (llmResponse, relevantDocs) = await _ragService.GenerateResponseAsync(request.Content, messageHistory, oncApiToken ?? string.Empty);
 
-        var documents = await _fileService.GetFilesByTitlesAsync(relevantDocTitles);
+        var documents = await _fileService.GetFilesByTitlesAsync(relevantDocs.Select(doc => doc.Title).ToList());
 
         // Store the user's message
         var promptMessage = await _messageService.CreateMessageAsync(
@@ -532,7 +530,7 @@ public class MessageController : ControllerBase
             Data = new
             {
                 Response = llmResponse,
-                Documents = documents,
+                Documents = relevantDocs,
                 SessionId = sessionId,
                 PromptMessageId = promptMessage?.Id,
                 ResponseMessageId = responseMessage?.Id,
@@ -615,12 +613,12 @@ public class MessageController : ControllerBase
 
         try
         {
-            await foreach (var (chunk, docTitles) in _ragService.StreamResponseAsync(request.Content, messageHistory, oncApiToken))
+            await foreach (var (chunk, relevantDocs) in _ragService.StreamResponseAsync(request.Content, messageHistory, oncApiToken))
             {
                 if (HttpContext.RequestAborted.IsCancellationRequested)
                     break;
 
-                relevantDocTitles = docTitles;
+                relevantDocTitles = relevantDocs.Select(doc => doc.Title).ToList();
                 fullResponse.Append(chunk);
 
                 var eventData = new
@@ -801,9 +799,9 @@ public class MessageController : ControllerBase
             // Generate LLM response using RAG service
             // Use provided message history or empty list if not provided
             var messageHistory = ConvertToMessageList(request.MessageHistory);
-            var (llmResponse, relevantDocTitles) = await _ragService.GenerateResponseAsync(request.Content, messageHistory, "{YOUR_ONC_TOKEN}");
+            var (llmResponse, relevantDocs) = await _ragService.GenerateResponseAsync(request.Content, messageHistory, "{YOUR_ONC_TOKEN}");
 
-            var documents = await _fileService.GetFilesByTitlesAsync(relevantDocTitles);
+            var documents = await _fileService.GetFilesByTitlesAsync(relevantDocs.Select(doc => doc.Title).ToList());
 
             Console.WriteLine($"Company API response generated. Documents found: {documents.Count()}");
 
@@ -814,7 +812,7 @@ public class MessageController : ControllerBase
                 Data = new
                 {
                     Response = llmResponse,
-                    Documents = documents,
+                    Documents = relevantDocs,
                 }
             });
         }

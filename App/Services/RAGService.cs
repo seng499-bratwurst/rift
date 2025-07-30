@@ -26,7 +26,7 @@ public class RAGService : IRAGService
         _responseProcessor = responseProcessor;
     }
 
-    public async Task<(string cleanedResponse, List<string> relevantDocTitles)> GenerateResponseAsync(string userQuery, List<Message>? messageHistory, string? oncApiToken)
+    public async Task<(string cleanedResponse, List<DocumentChunk> relevantDocs)> GenerateResponseAsync(string userQuery, List<Message>? messageHistory, string? oncApiToken)
     {
         messageHistory ??= new List<Message>();
 
@@ -36,6 +36,9 @@ public class RAGService : IRAGService
         var chromaDocuments = (await _chromaDbClient.GetRelevantDataAsync(userQuery, 20, similarityThreshold: 0.5)).RelevantDocuments;
         var relevantDocTitles = new List<string>();
         var relevantDocuments = chromaDocuments.Select(doc => {
+            
+            // Console.WriteLine("\tDocument Metadata: " + doc.Metadata);
+
             var documentTitle = doc.Metadata?.GetValueOrDefault("source_doc")?.ToString();
             relevantDocTitles.Add(documentTitle ?? string.Empty);
             if (doc.Metadata?.GetValueOrDefault("source_type")?.ToString() == "confluence_json")
@@ -45,17 +48,15 @@ public class RAGService : IRAGService
             
             return new DocumentChunk
             {
-                SourceId = doc.Metadata?.GetValueOrDefault("source_doc")?.ToString() ?? string.Empty,
                 Title = documentTitle ?? string.Empty,
-                Content = doc.Content
+                Content = doc.Content,
+                FileLink = doc.Metadata?.GetValueOrDefault("source")?.ToString() ?? string.Empty
             };
         }).ToList();
 
-
-        // Console.WriteLine($"Relevant Document Titles: {string.Join(", ", relevantDocuments.Select(doc => doc.Title))}");
         var rerankRequest = new RerankRequest
         {
-            Query = userQuery,
+            Query = userQuery,  
             Docs = relevantDocuments
         };
         var rerankedDocuments = (await _reRankerClient.RerankAsync(rerankRequest)).Reranked_Docs;
@@ -71,16 +72,16 @@ public class RAGService : IRAGService
         Console.WriteLine("\tUser Query: " + prompt.UserQuery);
         // Console.WriteLine("\tMessages: " + JsonSerializer.Serialize(prompt.Messages));
         // Console.WriteLine("\tAPI Data:" + prompt.OncAPIData);
-        // Console.WriteLine("\tRelevant Data: " + JsonSerializer.Serialize(prompt.RelevantDocumentChunks));
+        // Console.WriteLine("\tRelevant Data: " + JsonSerializer.Serialize(rerankedDocuments.Select(doc => new { doc.SourceId, doc.Title })));
 
         var finalResponse = await _llmProvider.GenerateFinalResponseRAG(prompt);
 
         var cleanedResponse = _responseProcessor.ProcessResponse(finalResponse);
 
-        return (cleanedResponse, relevantDocTitles.Distinct().ToList());
+        return (cleanedResponse, rerankedDocuments);
     }
 
-    public async IAsyncEnumerable<(string contentChunk, List<string> relevantDocTitles)> StreamResponseAsync(string userQuery, List<Message>? messageHistory, string? oncApiToken)
+    public async IAsyncEnumerable<(string contentChunk, List<DocumentChunk> relevantDocs)> StreamResponseAsync(string userQuery, List<Message>? messageHistory, string? oncApiToken)
     {
         messageHistory ??= new List<Message>();
 
@@ -98,9 +99,9 @@ public class RAGService : IRAGService
             
             return new DocumentChunk
             {
-                SourceId = doc.Metadata?.GetValueOrDefault("source_doc")?.ToString() ?? string.Empty,
                 Title = documentTitle ?? string.Empty,
-                Content = doc.Content
+                Content = doc.Content,
+                FileLink = doc.Metadata?.GetValueOrDefault("source")?.ToString() ?? string.Empty
             };
         }).ToList();
 
@@ -125,7 +126,7 @@ public class RAGService : IRAGService
         await foreach (var chunk in _llmProvider.StreamFinalResponseRAG(prompt))
         {
             var processedChunk = _responseProcessor.ProcessResponse(chunk);
-            yield return (processedChunk, distinctRelevantDocTitles);
+            yield return (processedChunk, rerankedDocuments);
         }
     }
 }

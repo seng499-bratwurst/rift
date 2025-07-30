@@ -10,6 +10,7 @@ using Rift.Services;
 using Rift.LLM;
 using Rift.Models;
 using System.Text.Json;
+using Rift.App.Models;
 
 namespace Rift.Tests
 {
@@ -149,7 +150,7 @@ namespace Rift.Tests
                 .ReturnsAsync(conversation);
 
             _ragServiceMock.Setup(l => l.GenerateResponseAsync("Hello", null, It.IsAny<string>()))
-                .ReturnsAsync(("Hi!", new List<string>()));
+                .ReturnsAsync(("Hi!", new List<DocumentChunk>()));
 
             _messageServiceMock.Setup(m => m.CreateMessageAsync(conversation.Id, null, "Hello", "user", 0, 0))
                 .ReturnsAsync(promptMessage);
@@ -486,7 +487,7 @@ namespace Rift.Tests
             _conversationServiceMock.Setup(c => c.GetOrCreateConversationByUserId(userId, conversationId))
                 .ReturnsAsync(conversation);
             _ragServiceMock.Setup(r => r.GenerateResponseAsync(userContent, It.IsAny<List<Message>>(), It.IsAny<string>()))
-                .ReturnsAsync((llmResponse, new List<string>()));
+                .ReturnsAsync((llmResponse, new List<DocumentChunk>()));
             _messageServiceMock.Setup(m => m.CreateMessageAsync(conversationId, null, userContent, "user", It.IsAny<float>(), It.IsAny<float>()))
                 .ReturnsAsync(promptMessage);
             _messageServiceMock.Setup(m => m.CreateMessageAsync(conversationId, 1, llmResponse, "assistant", It.IsAny<float>(), It.IsAny<float>()))
@@ -537,7 +538,7 @@ namespace Rift.Tests
             _conversationServiceMock.Setup(c => c.GetOrCreateConversationByUserId(userId, conversationId))
                 .ReturnsAsync(conversation);
             _ragServiceMock.Setup(r => r.GenerateResponseAsync(userContent, It.IsAny<List<Message>>(), It.IsAny<string>()))
-                .ReturnsAsync((llmResponse, new List<string>()));
+                .ReturnsAsync((llmResponse, new List<DocumentChunk>()));
             _messageServiceMock.Setup(m => m.CreateMessageAsync(conversationId, null, userContent, "user", It.IsAny<float>(), It.IsAny<float>()))
                 .ReturnsAsync(promptMessage);
             _messageServiceMock.Setup(m => m.CreateMessageAsync(conversationId, 1, llmResponse, "assistant", It.IsAny<float>(), It.IsAny<float>()))
@@ -607,7 +608,7 @@ namespace Rift.Tests
             _conversationServiceMock.Setup(c => c.GetOrCreateConversationByUserId(userId, conversationId))
                 .ReturnsAsync(conversation);
             _ragServiceMock.Setup(r => r.GenerateResponseAsync(userContent, It.IsAny<List<Message>>(), It.IsAny<string>()))
-                .ReturnsAsync((llmResponse, new List<string>()));
+                .ReturnsAsync((llmResponse, new List<DocumentChunk>()));
             _messageServiceMock.Setup(m => m.CreateMessageAsync(conversationId, null, userContent, "user", It.IsAny<float>(), It.IsAny<float>()))
                 .ReturnsAsync(promptMessage);
             _messageServiceMock.Setup(m => m.CreateMessageAsync(conversationId, 1, llmResponse, "assistant", It.IsAny<float>(), It.IsAny<float>()))
@@ -654,7 +655,7 @@ namespace Rift.Tests
             _conversationServiceMock.Setup(c => c.GetOrCreateConversationByUserId(userId, conversationId))
                 .ReturnsAsync(conversation);
             _ragServiceMock.Setup(r => r.GenerateResponseAsync(userContent, It.IsAny<List<Message>>(), It.IsAny<string>()))
-                .ReturnsAsync((llmResponse, new List<string>()));
+                .ReturnsAsync((llmResponse, new List<DocumentChunk>()));
             _messageServiceMock.Setup(m => m.CreateMessageAsync(conversationId, null, userContent, "user", It.IsAny<float>(), It.IsAny<float>()))
                 .ReturnsAsync(promptMessage);
             _messageServiceMock.Setup(m => m.CreateMessageAsync(conversationId, 1, llmResponse, "assistant", It.IsAny<float>(), It.IsAny<float>()))
@@ -706,7 +707,7 @@ namespace Rift.Tests
             _conversationServiceMock.Setup(c => c.GetConversationsForSessionAsync(sessionId))
                 .ReturnsAsync(conversation);
             _ragServiceMock.Setup(r => r.GenerateResponseAsync(userContent, It.IsAny<List<Message>>(), It.IsAny<string>()))
-                .ReturnsAsync((llmResponse, new List<string>()));
+                .ReturnsAsync((llmResponse, new List<DocumentChunk>()));
             _messageServiceMock.Setup(m => m.CreateMessageAsync(1, null, userContent, "user", It.IsAny<float>(), It.IsAny<float>()))
                 .ReturnsAsync(promptMessage);
             _messageServiceMock.Setup(m => m.CreateMessageAsync(1, 1, llmResponse, "assistant", It.IsAny<float>(), It.IsAny<float>()))
