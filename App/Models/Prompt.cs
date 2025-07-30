@@ -11,6 +11,7 @@ public class PromptMessage
 
 public class DocumentChunk
 {
+    public string SourceId { get; set; } = string.Empty;
     public string Title { get; set; } = string.Empty;
     public string Content { get; set; } = string.Empty;
     public string FileLink { get; set; } = string.Empty;
