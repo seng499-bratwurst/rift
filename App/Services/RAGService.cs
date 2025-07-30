@@ -37,7 +37,7 @@ public class RAGService : IRAGService
         var relevantDocTitles = new List<string>();
         var relevantDocuments = chromaDocuments.Select(doc => {
             
-            Console.WriteLine("\tDocument Metadata: " + doc.Metadata);
+            // Console.WriteLine("\tDocument Metadata: " + doc.Metadata);
 
             var documentTitle = doc.Metadata?.GetValueOrDefault("source_doc")?.ToString();
             relevantDocTitles.Add(documentTitle ?? string.Empty);
