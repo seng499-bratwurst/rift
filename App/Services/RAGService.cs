@@ -54,8 +54,6 @@ public class RAGService : IRAGService
             };
         }).ToList();
 
-        // TODO: Update the Document Chunk Object to include the Link and Title
-        // Console.WriteLine($"Relevant Document Titles: {string.Join(", ", relevantDocuments.Select(doc => doc.Title))}");
         var rerankRequest = new RerankRequest
         {
             Query = userQuery,  
