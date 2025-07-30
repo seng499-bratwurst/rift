@@ -14,6 +14,7 @@ model.eval()
 class RerankedDocument(BaseModel):
     title: str
     content: str
+    fileLink: str
 
 class RerankRequest(BaseModel):
     query: str
