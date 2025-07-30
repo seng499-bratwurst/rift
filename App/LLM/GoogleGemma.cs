@@ -27,6 +27,7 @@ namespace Rift.LLM
         public GoogleGemma(IConfiguration config, OncFunctionParser parser)
         {
             _httpClient = new HttpClient();
+            _httpClient.Timeout = TimeSpan.FromMinutes(5); // Add timeout for streaming requests
             _apiKey = config["LLMSettings:GoogleGemma:ApiKey"] ?? throw new ArgumentNullException("GoogleGemma ApiKey missing in config");
             _endpoint = config["LLMSettings:GoogleGemma:Endpoint"] ?? throw new ArgumentNullException("GoogleGemma Endpoint missing in config");
             _oncModelName = config["LLMSettings:GoogleGemma:ONCModelName"] ?? "gemini-2.5-flash";
@@ -158,12 +159,12 @@ namespace Rift.LLM
             };
         }
 
-        /// <summary>
-        /// Sends a prompt and ONC API response to the Gemma 3n model to generate a final user-facing answer.
-        /// </summary>
-        /// !!! DEPRECATED  !!!
-        /// The message pipeline from the frontend uses the GenerateFinalResponseRAG method instead.
-        /// Just keeping this so Ishan is happy :)
+        // / <summary>
+        // / Sends a prompt and ONC API response to the Gemma 3n model to generate a final user-facing answer.
+        // / </summary>
+        // / !!! DEPRECATED  !!!
+        // / The message pipeline from the frontend uses the GenerateFinalResponseRAG method instead.
+        // / Just keeping this so Ishan is happy :)
         public async Task<string> GenerateFinalResponse(string prompt, JsonElement onc_api_response)
         {
             string jsonInput = JsonSerializer.Serialize(onc_api_response, new JsonSerializerOptions { WriteIndented = true });
@@ -255,18 +256,55 @@ namespace Rift.LLM
 
         public async IAsyncEnumerable<string> StreamFinalResponseRAG(Prompt prompt)
         {
-            string jsonInput = JsonSerializer.Serialize(prompt.RelevantDocumentChunks, new JsonSerializerOptions
+            var payload = new
             {
-                WriteIndented = true
-            });
+                model = _finalModelName,
+                messages = prompt.Messages,
+                stream = true,
+                temperature = 0.5 // Same temperature as non-streaming version
+            };
 
-            var systemPrompt = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "LLM/SystemPrompts", "sys_prompt_large_llm.md"));
+            var json = JsonSerializer.Serialize(payload);
 
-            string fullPrompt = $"{prompt.UserQuery}\n\nHere is the relevant context:\n{jsonInput}";
+            var request = new HttpRequestMessage(HttpMethod.Post, _endpoint)
+            {
+                Content = new StringContent(json, Encoding.UTF8, "application/json")
+            };
+
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
+
+            using var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
             
-            await foreach (var chunk in StreamResponse(_finalModelName, systemPrompt, fullPrompt))
+            if (!response.IsSuccessStatusCode)
             {
-                yield return chunk;
+                var errorContent = await response.Content.ReadAsStringAsync();
+                throw new HttpRequestException($"Streaming failed: {response.StatusCode} - {errorContent}");
+            }
+
+            response.EnsureSuccessStatusCode();
+
+            using var stream = await response.Content.ReadAsStreamAsync();
+            using var reader = new StreamReader(stream);
+
+            string? line;
+            while ((line = await reader.ReadLineAsync()) != null)
+            {
+                if (string.IsNullOrWhiteSpace(line))
+                    continue;
+
+                if (line.StartsWith("data: "))
+                {
+                    var data = line.Substring(6);
+                    
+                    if (data == "[DONE]")
+                        yield break;
+
+                    var contentText = ParseStreamingContent(data);
+                    if (!string.IsNullOrEmpty(contentText))
+                    {
+                        yield return contentText;
+                    }
+                }
             }
         }
 
@@ -276,12 +314,18 @@ namespace Rift.LLM
             {
                 WriteIndented = true
             });
-            var systemPrompt =
-                    "You are a helpful oncean network canada assistant that interprets the data given and answers the user prompt with accuracy.";
-
-            string fullPrompt = $"{prompt}\n\nHere is the ONC API response:\n{jsonInput}";
             
-            await foreach (var chunk in StreamResponse(_finalModelName, systemPrompt, fullPrompt))
+            // read the system prompt from the file
+            string systemPrompt;
+            systemPrompt = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "LLM/SystemPrompts", "onc_sys_prompt.md"));
+            
+            // Current date and time in the format of yyyy-MM-ddTHH:mm:ss.fffZ
+            string currentDate = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
+            // Console.WriteLine("$[DEBUG] Current Date and Time: " + currentDate);
+
+            string fullPrompt = $"{prompt}\n\nHere is the ONC API response:\n{jsonInput}\n\nReturn the most revelant user URL based on the user prompt (if there are any) otherwise dont mention it.";
+            
+            await foreach (var chunk in StreamResponse(_finalModelName, systemPrompt + $"\n\nCurrent Date and Time: {currentDate}", fullPrompt))
             {
                 yield return chunk;
             }
@@ -310,6 +354,13 @@ namespace Rift.LLM
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
 
             using var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
+            
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                throw new HttpRequestException($"Streaming failed: {response.StatusCode} - {errorContent}");
+            }
+
             response.EnsureSuccessStatusCode();
 
             using var stream = await response.Content.ReadAsStreamAsync();
