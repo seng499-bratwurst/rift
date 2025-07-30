@@ -177,7 +177,7 @@ public class MessageController : ControllerBase
         {
             var (llmResponse, relevantDocs) = await _ragService.GenerateResponseAsync(request.Content, messageHistory, oncApiToken);
 
-            var documents = await _fileService.GetFilesByTitlesAsync(relevantDocs.Select(doc => doc.Title).ToList());
+            var documents = await _fileService.GetFilesByTitlesAsync(relevantDocs.Select(doc => doc.SourceId).ToList());
 
             // Create the message with the users prompt
             var promptMessage = await _messageService.CreateMessageAsync(
@@ -359,7 +359,7 @@ public class MessageController : ControllerBase
 
             if (responseMessage != null)
             {
-                var documents = await _fileService.GetFilesByTitlesAsync(relevantDocs.Select(doc => doc.Title).ToList());
+                var documents = await _fileService.GetFilesByTitlesAsync(relevantDocs.Select(doc => doc.SourceId).ToList());
                 await _messageFileService.InsertMessageFilesAsync(documents, responseMessage.Id);
                 await _conversationService.UpdateLastInteractionTime(conversationId);
 
@@ -469,7 +469,7 @@ public class MessageController : ControllerBase
         // var llmResponse = await _ragService.GenerateResponseAsync(request.Content, messageHistory);
         var (llmResponse, relevantDocs) = await _ragService.GenerateResponseAsync(request.Content, messageHistory, oncApiToken ?? string.Empty);
 
-        var documents = await _fileService.GetFilesByTitlesAsync(relevantDocs.Select(doc => doc.Title).ToList());
+        var documents = await _fileService.GetFilesByTitlesAsync(relevantDocs.Select(doc => doc.SourceId).ToList());
 
         // Store the user's message
         var promptMessage = await _messageService.CreateMessageAsync(
@@ -618,7 +618,7 @@ public class MessageController : ControllerBase
                 if (HttpContext.RequestAborted.IsCancellationRequested)
                     break;
 
-                relevantDocTitles = relevantDocs.Select(doc => doc.Title).ToList();
+                relevantDocTitles = relevantDocs.Select(doc => doc.SourceId).ToList();
                 fullResponse.Append(chunk);
 
                 var eventData = new
@@ -801,7 +801,7 @@ public class MessageController : ControllerBase
             var messageHistory = ConvertToMessageList(request.MessageHistory);
             var (llmResponse, relevantDocs) = await _ragService.GenerateResponseAsync(request.Content, messageHistory, "{YOUR_ONC_TOKEN}");
 
-            var documents = await _fileService.GetFilesByTitlesAsync(relevantDocs.Select(doc => doc.Title).ToList());
+            var documents = await _fileService.GetFilesByTitlesAsync(relevantDocs.Select(doc => doc.SourceId).ToList());
 
             Console.WriteLine($"Company API response generated. Documents found: {documents.Count()}");
 

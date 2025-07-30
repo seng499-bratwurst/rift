@@ -12,6 +12,7 @@ model = AutoModelForSequenceClassification.from_pretrained("BAAI/bge-reranker-ba
 model.eval()
 
 class RerankedDocument(BaseModel):
+    sourceId: str
     title: str
     content: str
     fileLink: str

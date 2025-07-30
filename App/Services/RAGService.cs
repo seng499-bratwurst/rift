@@ -48,6 +48,7 @@ public class RAGService : IRAGService
             
             return new DocumentChunk
             {
+                SourceId = doc.Metadata?.GetValueOrDefault("source_doc")?.ToString() ?? string.Empty,
                 Title = documentTitle ?? string.Empty,
                 Content = doc.Content,
                 FileLink = doc.Metadata?.GetValueOrDefault("source")?.ToString() ?? string.Empty
@@ -78,7 +79,7 @@ public class RAGService : IRAGService
 
         var cleanedResponse = _responseProcessor.ProcessResponse(finalResponse);
 
-        return (cleanedResponse, rerankedDocuments);
+        return (cleanedResponse, rerankedDocuments.DistinctBy(doc => doc.Title).ToList());
     }
 
     public async IAsyncEnumerable<(string contentChunk, List<DocumentChunk> relevantDocs)> StreamResponseAsync(string userQuery, List<Message>? messageHistory, string? oncApiToken)
@@ -99,6 +100,7 @@ public class RAGService : IRAGService
             
             return new DocumentChunk
             {
+                SourceId = doc.Metadata?.GetValueOrDefault("source_doc")?.ToString() ?? string.Empty,
                 Title = documentTitle ?? string.Empty,
                 Content = doc.Content,
                 FileLink = doc.Metadata?.GetValueOrDefault("source")?.ToString() ?? string.Empty
@@ -126,7 +128,7 @@ public class RAGService : IRAGService
         await foreach (var chunk in _llmProvider.StreamFinalResponseRAG(prompt))
         {
             var processedChunk = _responseProcessor.ProcessResponse(chunk);
-            yield return (processedChunk, rerankedDocuments);
+            yield return (processedChunk, rerankedDocuments.DistinctBy(doc => doc.Title).ToList());
         }
     }
 }
